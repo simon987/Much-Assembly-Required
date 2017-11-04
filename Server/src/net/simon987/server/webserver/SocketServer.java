@@ -39,14 +39,13 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         LogManager.LOGGER.info("(WS) New Websocket connection " + conn.getRemoteSocketAddress());
-
         userManager.add(new OnlineUser(conn));
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         LogManager.LOGGER.info("(WS) Closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
-        userManager.add(new OnlineUser(conn));
+        userManager.remove(userManager.getUser(conn));
     }
 
     @Override
@@ -110,6 +109,8 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onError(WebSocket conn, Exception ex) {
         System.err.println("an error occured on connection " + conn.getRemoteSocketAddress() + ':' + ex);
+        userManager.remove(userManager.getUser(conn));
+
         ex.printStackTrace();
     }
 

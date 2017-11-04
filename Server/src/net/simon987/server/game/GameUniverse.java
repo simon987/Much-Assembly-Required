@@ -98,23 +98,24 @@ public class GameUniverse implements JSONSerialisable{
             try {
                 if(makeControlledUnit) {
                     user = new User();
+                    user.setCpu(new CPU(GameServer.INSTANCE.getConfig(), user));
+                    user.setUserCode(GameServer.INSTANCE.getConfig().getString("new_user_code"));
+
+                    //Compile user code
+                    AssemblyResult ar = new Assembler(user.getCpu().getInstructionSet(), user.getCpu().getRegisterSet(),
+                            GameServer.INSTANCE.getConfig()).parse(user.getUserCode());
+
+                    user.getCpu().getMemory().clear();
+
+                    //Write assembled code to mem
+                    user.getCpu().getMemory().write((short) ar.origin, ar.bytes, ar.bytes.length);
+                    user.getCpu().setCodeSegmentOffset(ar.origin);
+
                 } else {
                     user = new User(null);
                 }
 
                 user.setUsername(username);
-                user.setCpu(new CPU(GameServer.INSTANCE.getConfig(), user));
-                user.setUserCode(GameServer.INSTANCE.getConfig().getString("new_user_code"));
-
-                //Compile user code
-                AssemblyResult ar = new Assembler(user.getCpu().getInstructionSet(), user.getCpu().getRegisterSet(),
-                        GameServer.INSTANCE.getConfig()).parse(user.getUserCode());
-
-                user.getCpu().getMemory().clear();
-
-                //Write assembled code to mem
-                user.getCpu().getMemory().write((short) ar.origin, ar.bytes, ar.bytes.length);
-                user.getCpu().setCodeSegmentOffset(ar.origin);
 
                 users.add(user);
 

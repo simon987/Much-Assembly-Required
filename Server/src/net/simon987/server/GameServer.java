@@ -104,10 +104,11 @@ public class GameServer implements Runnable {
 
         //Process user code
         for(User user : gameUniverse.getUsers()){
-            user.getCpu().reset();
-            user.getCpu().execute();
 
-//            System.out.println(user.getCpu());
+            if(user.getCpu() != null){
+                user.getCpu().reset();
+                user.getCpu().execute();
+            }
         }
 
         //Process each worlds
