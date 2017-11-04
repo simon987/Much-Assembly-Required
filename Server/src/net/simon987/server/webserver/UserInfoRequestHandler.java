@@ -1,5 +1,6 @@
 package net.simon987.server.webserver;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
@@ -11,18 +12,33 @@ public class UserInfoRequestHandler implements MessageHandler {
     public void handle(OnlineUser user, JSONObject message) {
 
         if (message.get("t").equals("userInfo")) {
+
             LogManager.LOGGER.info("(WS) User info request from " + user.getUser().getUsername());
 
-            GameObject object = (GameObject)user.getUser().getControlledUnit();
+            if(user.isGuest()) {
+                JSONObject json = new JSONObject();
+                json.put("t", "userInfo");
+                json.put("worldX", GameServer.INSTANCE.getConfig().getInt("new_user_worldX"));
+                json.put("worldY", GameServer.INSTANCE.getConfig().getInt("new_user_worldY"));
+                json.put("x", 1);
+                json.put("y", 1);
 
-            JSONObject json = new JSONObject();
-            json.put("t", "userInfo");
-            json.put("worldX", object.getWorld().getX());
-            json.put("worldY", object.getWorld().getY());
-            json.put("x", object.getX());
-            json.put("y", object.getY());
+                user.getWebSocket().send(json.toJSONString());
+            } else {
+                GameObject object = (GameObject)user.getUser().getControlledUnit();
 
-            user.getWebSocket().send(json.toJSONString());
+                JSONObject json = new JSONObject();
+                json.put("t", "userInfo");
+                json.put("worldX", object.getWorld().getX());
+                json.put("worldY", object.getWorld().getY());
+                json.put("x", object.getX());
+                json.put("y", object.getY());
+
+                user.getWebSocket().send(json.toJSONString());
+            }
+
+
+
 
         }
     }

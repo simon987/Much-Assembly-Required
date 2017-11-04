@@ -68,7 +68,7 @@ public class SocketServer extends WebSocketServer {
                     String username = database.validateAuthToken(message);
 
                     if (username != null) {
-                        User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(username);
+                        User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(username, true);
 
                         LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
 
@@ -78,12 +78,18 @@ public class SocketServer extends WebSocketServer {
                         conn.send("{\"t\":\"auth\", \"m\":\"ok\"}");
 
                     } else {
-                        LogManager.LOGGER.info("(WS) Unsuccessful authentication attempt " + conn.getRemoteSocketAddress());
-                        conn.send("{\"t\":\"auth\", \"m\":\"failed\"}");
-                        conn.close();
+
+                        User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(GameServer.INSTANCE.getGameUniverse().getGuestUsername(), false);
+                        onlineUser.setUser(user);
+                        onlineUser.setAuthenticated(true);
+                        onlineUser.setGuest(true);
+
+                        LogManager.LOGGER.info("(WS) Created guest user " +
+                                onlineUser.getUser().getUsername() + conn.getRemoteSocketAddress());
+
+                        conn.send("{\"t\":\"auth\", \"m\":\"ok\"}");
                     }
                 }
-
 
             }
 
@@ -125,17 +131,26 @@ public class SocketServer extends WebSocketServer {
         for (OnlineUser user : userManager.getOnlineUsers()) {
 
             if (user.getWebSocket().isOpen()) {
-                //Send keyboard updated buffer
-                try{
-                    ArrayList<Integer> kbBuffer = user.getUser().getControlledUnit().getKeyboardBuffer();
-                    JSONArray keys = new JSONArray();
-                    keys.addAll(kbBuffer);
-                    json.put("keys", keys);
-                    //Send tick message
+
+                if(user.isGuest()) {
+
                     user.getWebSocket().send(json.toJSONString());
-                } catch (NullPointerException e){
-                    //User is online but not completely initialised
+
+                } else {
+                    //Send keyboard updated buffer
+                    try{
+                        ArrayList<Integer> kbBuffer = user.getUser().getControlledUnit().getKeyboardBuffer();
+                        JSONArray keys = new JSONArray();
+                        keys.addAll(kbBuffer);
+                        json.put("keys", keys);
+                        //Send tick message
+                        user.getWebSocket().send(json.toJSONString());
+                    } catch (NullPointerException e){
+                        //User is online but not completely initialised
+                    }
                 }
+
+
 
             }
         }

@@ -86,7 +86,7 @@ public class GameUniverse implements JSONSerialisable{
         return null;
     }
 
-    public User getOrCreateUser(String username){
+    public User getOrCreateUser(String username, boolean makeControlledUnit){
         User user = getUser(username);
 
         if(user != null) {
@@ -96,7 +96,12 @@ public class GameUniverse implements JSONSerialisable{
             LogManager.LOGGER.info("Creating new User: " + username);
 
             try {
-                user = new User();
+                if(makeControlledUnit) {
+                    user = new User();
+                } else {
+                    user = new User(null);
+                }
+
                 user.setUsername(username);
                 user.setCpu(new CPU(GameServer.INSTANCE.getConfig(), user));
                 user.setUserCode(GameServer.INSTANCE.getConfig().getString("new_user_code"));
@@ -208,5 +213,21 @@ public class GameUniverse implements JSONSerialisable{
 
     public int getNextObjectId() {
         return ++nextObjectId;
+    }
+
+    public String getGuestUsername() {
+        int i = 1;
+
+        while (i < 1000) { //todo get Max guest user cap from config
+            if(getUser("guest" + String.valueOf(i)) != null) {
+                i++;
+                continue;
+            }
+
+            return "guest" + String.valueOf(i);
+        }
+
+        return null;
+
     }
 }

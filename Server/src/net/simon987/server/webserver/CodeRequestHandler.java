@@ -11,12 +11,26 @@ public class CodeRequestHandler implements MessageHandler {
 
             LogManager.LOGGER.info("(WS) Code request from " + user.getUser().getUsername());
 
-            JSONObject response = new JSONObject();
+            if(user.isGuest()) {
 
-            response.put("t", "code");
-            response.put("code", user.getUser().getUserCode());
+                JSONObject response = new JSONObject();
 
-            user.getWebSocket().send(response.toJSONString());
+                response.put("t", "code");
+                response.put("code", "; Create a free account to control your own Cubot with assembly language!"); //todo load from config
+
+                user.getWebSocket().send(response.toJSONString());
+
+            } else {
+
+                JSONObject response = new JSONObject();
+
+                response.put("t", "code");
+                response.put("code", user.getUser().getUserCode());
+
+                user.getWebSocket().send(response.toJSONString());
+            }
+
+
 
         }
     }

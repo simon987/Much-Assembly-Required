@@ -10,6 +10,8 @@ public class OnlineUser {
 
     private WebSocket webSocket;
 
+    private boolean guest;
+
     /**
      * Associated game user (if authenticated)
      */
@@ -38,5 +40,13 @@ public class OnlineUser {
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
+    }
+
+    public void setGuest(boolean guest) {
+        this.guest = guest;
+    }
+
+    public boolean isGuest() {
+        return guest;
     }
 }

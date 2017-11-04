@@ -8,13 +8,16 @@ public class KeypressHandler implements MessageHandler {
 
     @Override
     public void handle(OnlineUser user, JSONObject json) {
-        if(json.get("t").equals("k")){
 
-            LogManager.LOGGER.info("(WS) Received keypress");
+        if(!user.isGuest()) {
+            if(json.get("t").equals("k")){
 
-            int key = (int)(long)json.get("k");
+                LogManager.LOGGER.info("(WS) Received keypress");
 
-            user.getUser().getControlledUnit().getKeyboardBuffer().add(key);
+                int key = (int)(long)json.get("k");
+
+                user.getUser().getControlledUnit().getKeyboardBuffer().add(key);
+            }
         }
     }
 }

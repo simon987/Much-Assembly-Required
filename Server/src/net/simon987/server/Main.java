@@ -10,6 +10,11 @@ import java.net.InetSocketAddress;
 public class Main {
     public static void main(String[] args){
 
+        //TODO: Confirmation on code upload
+        //TODO: Copper/Iron/Biomass: on hover only
+        //TODO: Docs
+        //TODO:
+
         LogManager.initialize();
         ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
 

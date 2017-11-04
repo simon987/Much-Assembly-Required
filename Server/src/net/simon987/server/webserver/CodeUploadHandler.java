@@ -14,18 +14,25 @@ public class CodeUploadHandler implements MessageHandler {
 
             LogManager.LOGGER.info("(WS) Code upload from " + user.getUser().getUsername());
 
-            //TODO Should we wait at the end of the tick to modify the CPU ?
-            user.getUser().setUserCode((String)json.get("code"));
+            if(user.isGuest()) {
+                //Ignore
 
-            AssemblyResult ar = new Assembler(user.getUser().getCpu().getInstructionSet(),
-                    user.getUser().getCpu().getRegisterSet(),
-                    GameServer.INSTANCE.getConfig()).parse(user.getUser().getUserCode());
+            } else {
+                //TODO Should we wait at the end of the tick to modify the CPU ?
+                user.getUser().setUserCode((String)json.get("code"));
 
-            user.getUser().getCpu().getMemory().clear();
+                AssemblyResult ar = new Assembler(user.getUser().getCpu().getInstructionSet(),
+                        user.getUser().getCpu().getRegisterSet(),
+                        GameServer.INSTANCE.getConfig()).parse(user.getUser().getUserCode());
 
-            //Write assembled code to mem
-            user.getUser().getCpu().getMemory().write((char) ar.origin, ar.bytes, ar.bytes.length);
-            user.getUser().getCpu().setCodeSegmentOffset(ar.origin);
+                user.getUser().getCpu().getMemory().clear();
+
+                //Write assembled code to mem
+                user.getUser().getCpu().getMemory().write((char) ar.origin, ar.bytes, ar.bytes.length);
+                user.getUser().getCpu().setCodeSegmentOffset(ar.origin);
+            }
+
+
 
         }
     }
