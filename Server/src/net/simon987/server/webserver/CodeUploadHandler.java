@@ -30,6 +30,12 @@ public class CodeUploadHandler implements MessageHandler {
                 //Write assembled code to mem
                 user.getUser().getCpu().getMemory().write((char) ar.origin, ar.bytes, ar.bytes.length);
                 user.getUser().getCpu().setCodeSegmentOffset(ar.origin);
+
+                JSONObject response = new JSONObject();
+                response.put("t", "codeResponse");
+                response.put("bytes", ar.bytes.length);
+
+                user.getWebSocket().send(response.toJSONString());
             }
 
 
