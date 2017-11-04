@@ -18,7 +18,7 @@ public class MulInstruction extends Instruction {
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
 
-        int result = (char)cpu.getRegisterSet().getRegister("A").getValue() * (char)src.get(srcIndex);
+        int result = cpu.getRegisterSet().getRegister("A").getValue() * (char)src.get(srcIndex);
 
         int hWord = Util.getHigherWord(result);
         if (hWord != 0) {

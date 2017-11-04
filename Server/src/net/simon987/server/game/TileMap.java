@@ -4,9 +4,11 @@ package net.simon987.server.game;
 import net.simon987.server.io.JSONSerialisable;
 import org.json.simple.JSONObject;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
@@ -156,5 +158,28 @@ public class TileMap implements JSONSerialisable {
         }
 
         return null;
+    }
+
+    public Point getRandomPlainTile() {
+
+        Random random = new Random();
+
+        int counter = 0;
+        while (true) {
+            counter++;
+
+            //Prevent infinite loop
+            if (counter >= 2500) {
+                return null;
+            }
+
+            int rx = random.nextInt(World.WORLD_SIZE);
+            int ry = random.nextInt(World.WORLD_SIZE);
+
+            if (tiles[rx][ry] == TileMap.PLAIN_TILE) {
+                return new Point(rx, ry);
+            }
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.game.*;
+import net.simon987.server.user.User;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private CubotAction lastAction = CubotAction.IDLE;
 
     private ArrayList<Integer> keyboardBuffer = new ArrayList<>();
+
+    private User parent;
 
     public Cubot() {
 
@@ -67,6 +70,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
+        if(parent != null){
+            json.put("parent", parent.getUsername()); //Only used client-side for now
+        }
 
         return json;
     }
@@ -79,6 +85,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         cubot.setY((int)(long)json.get("y"));
         cubot.hp = (int)(long)json.get("hp");
         cubot.setDirection(Direction.getDirection((int)(long)json.get("direction")));
+        cubot.heldItem = (int)(long)json.get("heldItem");
         cubot.heldItem = (int)(long)json.get("heldItem");
 
         return cubot;
@@ -109,5 +116,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     public void setCurrentAction(CubotAction currentAction) {
         this.currentAction = currentAction;
+    }
+
+    public User getParent() {
+        return parent;
+    }
+
+    public void setParent(User parent) {
+        this.parent = parent;
     }
 }

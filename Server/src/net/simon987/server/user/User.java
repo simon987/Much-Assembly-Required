@@ -55,6 +55,8 @@ public class User implements JSONSerialisable{
         user.username = (String)userJson.get("username");
         user.userCode = (String)userJson.get("code");
 
+        user.getControlledUnit().setParent(user);
+
         user.cpu = CPU.deserialize((JSONObject)userJson.get("cpu"), user);
 
         return user;

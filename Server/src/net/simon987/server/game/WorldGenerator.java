@@ -81,29 +81,6 @@ public class WorldGenerator {
 
     }
 
-    public static Point getRandomPlainTile(int[][] tiles) {
-
-        Random random = new Random();
-
-        int counter = 0;
-        while (true) {
-            counter++;
-
-            //Prevent infinite loop
-            if (counter >= 1000) {
-                return null;
-            }
-
-            int rx = random.nextInt(World.WORLD_SIZE);
-            int ry = random.nextInt(World.WORLD_SIZE);
-
-            if (tiles[rx][ry] == TileMap.PLAIN_TILE) {
-                return new Point(rx, ry);
-            }
-        }
-
-    }
-
     /**
      * Generates an empty World
      */
@@ -192,7 +169,7 @@ public class WorldGenerator {
 
         for (int i = 0; i < ironCount; i++) {
 
-            Point p = getRandomPlainTile(world.getTileMap().getTiles());
+            Point p = world.getTileMap().getRandomPlainTile();
 
             if (p != null) {
                 world.getTileMap().getTiles()[p.x][p.y] = TileMap.IRON_TILE;
@@ -200,7 +177,7 @@ public class WorldGenerator {
         }
         for (int i = 0; i < copperCount; i++) {
 
-            Point p = getRandomPlainTile(world.getTileMap().getTiles());
+            Point p = world.getTileMap().getRandomPlainTile();
 
             if (p != null) {
                 world.getTileMap().getTiles()[p.x][p.y] = TileMap.COPPER_TILE;

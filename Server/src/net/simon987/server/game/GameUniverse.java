@@ -1,6 +1,10 @@
 package net.simon987.server.game;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
+import net.simon987.server.assembly.Assembler;
+import net.simon987.server.assembly.AssemblyResult;
+import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.logging.LogManager;
@@ -80,6 +84,43 @@ public class GameUniverse implements JSONSerialisable{
         }
 
         return null;
+    }
+
+    public User getOrCreateUser(String username){
+        User user = getUser(username);
+
+        if(user != null) {
+            return user;
+        } else {
+
+            LogManager.LOGGER.info("Creating new User: " + username);
+
+            try {
+                user = new User();
+                user.setUsername(username);
+                user.setCpu(new CPU(GameServer.INSTANCE.getConfig(), user));
+                user.setUserCode(GameServer.INSTANCE.getConfig().getString("new_user_code"));
+
+                //Compile user code
+                AssemblyResult ar = new Assembler(user.getCpu().getInstructionSet(), user.getCpu().getRegisterSet(),
+                        GameServer.INSTANCE.getConfig()).parse(user.getUserCode());
+
+                user.getCpu().getMemory().clear();
+
+                //Write assembled code to mem
+                user.getCpu().getMemory().write((short) ar.origin, ar.bytes, ar.bytes.length);
+                user.getCpu().setCodeSegmentOffset(ar.origin);
+
+                users.add(user);
+
+                return user;
+
+            } catch (CancelledException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
     }
 
     public GameObject getObject(int id) {

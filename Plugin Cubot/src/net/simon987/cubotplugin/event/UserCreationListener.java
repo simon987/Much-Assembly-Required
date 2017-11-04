@@ -7,6 +7,8 @@ import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.UserCreationEvent;
 import net.simon987.server.user.User;
 
+import java.awt.*;
+
 public class UserCreationListener implements GameEventListener {
     @Override
     public Class getListenedEventType() {
@@ -20,12 +22,18 @@ public class UserCreationListener implements GameEventListener {
 
 
         Cubot cubot = new Cubot();
+
         cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(0,0));
+        cubot.getWorld().getGameObjects().add(cubot);
 
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
 
-        cubot.setX(6);
-        cubot.setY(6);
+        cubot.setParent(user);
+
+        Point point = cubot.getWorld().getRandomPassableTile();
+
+        cubot.setX(point.x);
+        cubot.setY(point.y);
 
         user.setControlledUnit(cubot);
 

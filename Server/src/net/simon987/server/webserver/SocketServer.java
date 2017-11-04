@@ -62,20 +62,26 @@ public class SocketServer extends WebSocketServer {
             } else {
                 LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + conn.getRemoteSocketAddress());
 
-                String username = database.validateAuthToken(message);
-                User user = GameServer.INSTANCE.getGameUniverse().getUser(username);
+                //We expect a 128 characters long token
+                if(message.length() == 128) {
 
-                if (user != null) {
-                    LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
+                    String username = database.validateAuthToken(message);
 
-                    onlineUser.setUser(user);
-                    onlineUser.setAuthenticated(true);
+                    if (username != null) {
+                        User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(username);
 
-                    conn.send("{\"t\":\"auth\", \"m\":\"ok\"}");
+                        LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
 
-                } else {
-                    LogManager.LOGGER.info("(WS) Unsuccessful authentication attempt " + conn.getRemoteSocketAddress());
-                    conn.send("{\"t\":\"auth\", \"m\":\"failed\"}");
+                        onlineUser.setUser(user);
+                        onlineUser.setAuthenticated(true);
+
+                        conn.send("{\"t\":\"auth\", \"m\":\"ok\"}");
+
+                    } else {
+                        LogManager.LOGGER.info("(WS) Unsuccessful authentication attempt " + conn.getRemoteSocketAddress());
+                        conn.send("{\"t\":\"auth\", \"m\":\"failed\"}");
+                        conn.close();
+                    }
                 }
 
 

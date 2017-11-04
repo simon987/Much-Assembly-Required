@@ -61,7 +61,7 @@ public class WorldCreationListener implements GameEventListener {
         outerLoop:
         for (int i = 0; i < treeCount; i++) {
 
-            Point p = WorldGenerator.getRandomPlainTile(world.getTileMap().getTiles());
+            Point p = world.getTileMap().getRandomPlainTile();
 
             if (p != null) {
 

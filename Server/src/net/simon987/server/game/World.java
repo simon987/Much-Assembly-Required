@@ -1,10 +1,13 @@
 package net.simon987.server.game;
 
+import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.JSONSerialisable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class World implements JSONSerialisable{
 
@@ -166,6 +169,42 @@ public class World implements JSONSerialisable{
 
         return mapInfo;
 
+    }
+
+    /**
+     * Get a random tile that is empty and passable
+     * The function ensures that a object spawned there will not be trapped
+     * and will be able to leave the World
+     * <br>
+     * Note: This function is quite expensive and shouldn't be used
+     * by some CpuHardware in its current state
+     *
+     * @return random non-blocked tile
+     */
+    public Point getRandomPassableTile(){
+        Random random = new Random();
+
+        int counter = 0;
+        while (true) {
+            counter++;
+
+            //Prevent infinite loop
+            if (counter >= 2500) {
+                return null;
+            }
+
+            int rx = random.nextInt(World.WORLD_SIZE);
+            int ry = random.nextInt(World.WORLD_SIZE);
+
+            if(!isTileBlocked(rx, ry)){
+
+                Object path = Pathfinder.findPath(this, rx, ry, 1,1,0);
+
+                if(path != null) {
+                    return new Point(rx, ry);
+                }
+            }
+        }
     }
 
     /**

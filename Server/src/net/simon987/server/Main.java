@@ -10,9 +10,6 @@ import java.net.InetSocketAddress;
 public class Main {
     public static void main(String[] args){
 
-        //todo: User registration
-        //todo: Display usernames under cubot
-
         LogManager.initialize();
         ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
 
