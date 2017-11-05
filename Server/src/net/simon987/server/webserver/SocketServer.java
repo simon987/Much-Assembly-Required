@@ -110,6 +110,7 @@ public class SocketServer extends WebSocketServer {
     public void onError(WebSocket conn, Exception ex) {
         System.err.println("an error occured on connection " + conn.getRemoteSocketAddress() + ':' + ex);
         userManager.remove(userManager.getUser(conn));
+        conn.close();
 
         ex.printStackTrace();
     }

@@ -10,7 +10,7 @@ public class CubotInventory extends CpuHardware {
     /**
      * Hardware ID (Should be unique)
      */
-    public static final int HWID = 0x0006;
+    static final int HWID = 0x0006;
 
     public static final int DEFAULT_ADDRESS = 6;
 
@@ -21,6 +21,11 @@ public class CubotInventory extends CpuHardware {
 
     public CubotInventory(Cubot cubot) {
         this.cubot = cubot;
+    }
+
+    @Override
+    public char getId() {
+        return HWID;
     }
 
     @Override

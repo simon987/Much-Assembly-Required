@@ -70,7 +70,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
-        if(parent != null){
+        if (parent != null) {
             json.put("parent", parent.getUsername()); //Only used client-side for now
         }
 
@@ -85,7 +85,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         cubot.setY((int)(long)json.get("y"));
         cubot.hp = (int)(long)json.get("hp");
         cubot.setDirection(Direction.getDirection((int)(long)json.get("direction")));
-        cubot.heldItem = (int)(long)json.get("heldItem");
         cubot.heldItem = (int)(long)json.get("heldItem");
 
         return cubot;
@@ -124,5 +123,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     public void setParent(User parent) {
         this.parent = parent;
+    }
+
+    public CubotAction getAction() {
+        return lastAction;
     }
 }

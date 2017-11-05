@@ -16,7 +16,7 @@ public class CubotRadar extends CpuHardware implements JSONSerialisable {
     /**
      * Hardware ID (Should be unique)
      */
-    public static final int HWID = 0x0003;
+    public static final char HWID = 0x0003;
 
     public static final int DEFAULT_ADDRESS = 3;
 
@@ -28,6 +28,12 @@ public class CubotRadar extends CpuHardware implements JSONSerialisable {
 
     public CubotRadar(Cubot cubot) {
         this.cubot = cubot;
+    }
+
+
+    @Override
+    public char getId() {
+        return HWID;
     }
 
     @Override

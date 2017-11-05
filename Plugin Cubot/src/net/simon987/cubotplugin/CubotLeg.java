@@ -19,12 +19,17 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
     /**
      * Hardware ID (Should be unique)
      */
-    public static final int HWID = 0x0001;
+    static final int HWID = 0x0001;
 
     private Cubot cubot;
 
     public CubotLeg(Cubot cubot) {
         this.cubot = cubot;
+    }
+
+    @Override
+    public char getId() {
+        return HWID;
     }
 
     @Override

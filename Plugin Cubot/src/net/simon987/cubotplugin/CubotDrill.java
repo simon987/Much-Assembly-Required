@@ -11,7 +11,7 @@ public class CubotDrill extends CpuHardware {
     /**
      * Hardware ID (Should be unique)
      */
-    public static final int HWID = 0x0005;
+    static final char HWID = 0x0005;
 
     public static final int DEFAULT_ADDRESS = 5;
 
@@ -24,22 +24,33 @@ public class CubotDrill extends CpuHardware {
     }
 
     @Override
+    public char getId() {
+        return HWID;
+    }
+
+    @Override
     public void handleInterrupt(Status status) {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
         if (a == GATHER) {
 
-            int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
+            if (cubot.getAction() != CubotAction.IDLE) {
+                int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
 
-            if (tile == TileMap.IRON_TILE) {
-                cubot.setHeldItem(TileMap.ITEM_IRON);
+                if (tile == TileMap.IRON_TILE) {
+                    cubot.setHeldItem(TileMap.ITEM_IRON);
+                    cubot.setCurrentAction(CubotAction.DIGGING);
 
-            } else if (tile == TileMap.COPPER_TILE) {
-                cubot.setHeldItem(TileMap.ITEM_COPPER);
+                } else if (tile == TileMap.COPPER_TILE) {
+                    cubot.setHeldItem(TileMap.ITEM_COPPER);
+                    cubot.setCurrentAction(CubotAction.DIGGING);
 
-            } else {
-                System.out.println("FAILED: dig");
+                } else {
+                    System.out.println("FAILED: dig");
+                }
             }
+
+
 
         }
     }

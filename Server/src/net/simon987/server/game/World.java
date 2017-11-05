@@ -67,12 +67,12 @@ public class World implements JSONSerialisable{
         ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
 
         for(GameObject object : gameObjects_){
-            if(object instanceof Updatable){
-                ((Updatable) object).update();
-            }
             if(object.isDead()){
                 System.out.println("Removed" + object.getObjectId());
                 gameObjects.remove(object);
+            }
+            if (object instanceof Updatable) {
+                ((Updatable) object).update();
             }
         }
     }
@@ -145,17 +145,17 @@ public class World implements JSONSerialisable{
         for (int y = 0; y < World.WORLD_SIZE; y++) {
             for (int x = 0; x < World.WORLD_SIZE; x++) {
 
-
-                if (tiles[y][x] == TileMap.PLAIN_TILE) {
+                if (tiles[x][y] == TileMap.PLAIN_TILE) {
 
                     mapInfo[x][y] = 0;
-
-                } else if (tiles[y][x] == TileMap.WALL_TILE) {
+                } else if (tiles[x][y] == TileMap.WALL_TILE) {
 
                     mapInfo[x][y] = INFO_BLOCKED;
-                } else if (tiles[y][x] == TileMap.COPPER_TILE) {
+                } else if (tiles[x][y] == TileMap.COPPER_TILE) {
+
                     mapInfo[x][y] = INFO_COPPER;
-                } else if (tiles[y][x] == TileMap.IRON_TILE) {
+                } else if (tiles[x][y] == TileMap.IRON_TILE) {
+
                     mapInfo[x][y] = INFO_IRON;
                 }
             }

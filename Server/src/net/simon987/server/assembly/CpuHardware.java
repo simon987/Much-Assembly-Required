@@ -24,6 +24,8 @@ public abstract class CpuHardware implements JSONSerialisable {
         this.cpu = cpu;
     }
 
+    public abstract char getId();
+
     public static CpuHardware deserialize(JSONObject hwJson){
 
         for(ServerPlugin plugin : GameServer.INSTANCE.getPluginManager().getPlugins()){

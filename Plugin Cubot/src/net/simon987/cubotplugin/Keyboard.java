@@ -18,12 +18,17 @@ public class Keyboard extends CpuHardware {
     /**
      * Hardware ID (Should be unique)
      */
-    public static final int HWID = 0x0004;
+    public static final char HWID = 0x0004;
 
     private Cubot cubot;
 
     public Keyboard(Cubot cubot) {
         this.cubot = cubot;
+    }
+
+    @Override
+    public char getId() {
+        return HWID;
     }
 
     @Override

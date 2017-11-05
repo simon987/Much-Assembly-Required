@@ -20,8 +20,6 @@ public class UserInfoRequestHandler implements MessageHandler {
                 json.put("t", "userInfo");
                 json.put("worldX", GameServer.INSTANCE.getConfig().getInt("new_user_worldX"));
                 json.put("worldY", GameServer.INSTANCE.getConfig().getInt("new_user_worldY"));
-                json.put("x", 1);
-                json.put("y", 1);
 
                 user.getWebSocket().send(json.toJSONString());
             } else {
@@ -31,8 +29,6 @@ public class UserInfoRequestHandler implements MessageHandler {
                 json.put("t", "userInfo");
                 json.put("worldX", object.getWorld().getX());
                 json.put("worldY", object.getWorld().getY());
-                json.put("x", object.getX());
-                json.put("y", object.getY());
 
                 user.getWebSocket().send(json.toJSONString());
             }

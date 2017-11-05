@@ -92,6 +92,7 @@ public class CPU implements JSONSerialisable{
         instructionSet.add(new JnsInstruction(this));
         instructionSet.add(new JsInstruction(this));
         instructionSet.add(new HwiInstruction(this));
+        instructionSet.add(new HwqInstruction(this));
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
@@ -423,6 +424,17 @@ public class CPU implements JSONSerialisable{
         }
     }
 
+    public void hardwareQuery(int address) {
+        CpuHardware hardware = attachedHardware.get(address);
+
+        if (hardware != null) {
+
+            registerSet.getRegister("B").setValue(hardware.getId());
+        } else {
+            registerSet.getRegister("B").setValue(0);
+        }
+    }
+
     @Override
     public String toString() {
 
@@ -433,4 +445,6 @@ public class CPU implements JSONSerialisable{
 
         return str;
     }
+
+
 }

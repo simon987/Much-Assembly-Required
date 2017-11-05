@@ -1,6 +1,5 @@
 package net.simon987.server.webserver;
 
-import net.simon987.server.GameServer;
 import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class OnlineUserManager {
      */
     public void remove(OnlineUser user) {
         onlineUsers.remove(user);
-        GameServer.INSTANCE.getGameUniverse().removeUser(user.getUser());
     }
 
     public ArrayList<OnlineUser> getOnlineUsers() {

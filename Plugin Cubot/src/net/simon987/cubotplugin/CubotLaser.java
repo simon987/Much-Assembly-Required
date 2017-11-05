@@ -15,7 +15,7 @@ public class CubotLaser extends CpuHardware {
     /**
      * Hardware ID (Should be unique)
      */
-    public static final int HWID = 0x0002;
+    static final int HWID = 0x0002;
 
     public static final int DEFAULT_ADDRESS = 2;
 
@@ -26,6 +26,11 @@ public class CubotLaser extends CpuHardware {
 
     public CubotLaser(Cubot cubot) {
         this.cubot = cubot;
+    }
+
+    @Override
+    public char getId() {
+        return HWID;
     }
 
     @Override
@@ -42,7 +47,8 @@ public class CubotLaser extends CpuHardware {
             Point frontTile = cubot.getFrontTile();
             ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
 
-            if(objects.size() > 0){
+
+            if (cubot.getAction() != CubotAction.IDLE && objects.size() > 0) {
 
                 if (objects.get(0) instanceof InventoryHolder) {
                     //Take the item
@@ -50,6 +56,7 @@ public class CubotLaser extends CpuHardware {
 
                         cubot.setHeldItem(b);
                         System.out.println("took " + b);
+                        cubot.setCurrentAction(CubotAction.WITHDRAWING);
 
                     } else {
                         //The inventory holder can't provide this item
@@ -60,8 +67,7 @@ public class CubotLaser extends CpuHardware {
                 }
             } else {
                 //Nothing in front
-                //todo Add emote here
-                System.out.println("DEBUG: FAILED: take (Nothing in front)");
+                System.out.println("DEBUG: FAILED: take (Nothing in front or Cubot is busy)");
             }
         }
 

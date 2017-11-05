@@ -6,7 +6,6 @@ import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldGenerationEvent;
 import net.simon987.server.game.World;
-import net.simon987.server.game.WorldGenerator;
 import net.simon987.server.logging.LogManager;
 
 import java.awt.*;
@@ -62,8 +61,12 @@ public class WorldCreationListener implements GameEventListener {
         for (int i = 0; i < treeCount; i++) {
 
             Point p = world.getTileMap().getRandomPlainTile();
-
             if (p != null) {
+
+                //Don't block worlds
+                while (p.x == 0 || p.y == 0 || p.x == World.WORLD_SIZE - 1 || p.y == World.WORLD_SIZE - 1) {
+                    p = world.getTileMap().getRandomPlainTile();
+                }
 
                 for (Plant plant : plants) {
                     if (plant.getX() == p.x && plant.getY() == p.y) {
