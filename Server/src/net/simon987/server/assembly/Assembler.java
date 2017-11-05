@@ -98,7 +98,7 @@ public class Assembler {
             line = line.substring(0, line.indexOf(':'));
             String label = line.trim();
 
-            System.out.println("Label " + label + " @ " + (result.origin + currentOffset));
+            System.out.println("DEBUG: Label " + label + " @ " + (result.origin + currentOffset));
             result.labels.put(label, (char) (result.origin + currentOffset));
         }
     }

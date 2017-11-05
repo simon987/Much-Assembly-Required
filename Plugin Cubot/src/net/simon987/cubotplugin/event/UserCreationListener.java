@@ -5,6 +5,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.UserCreationEvent;
+import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 
 import java.awt.*;
@@ -20,6 +21,7 @@ public class UserCreationListener implements GameEventListener {
 
         User user = (User)event.getSource();
 
+        LogManager.LOGGER.fine("(Plugin) Handled User creation event (Cubot Plugin)");
 
         Cubot cubot = new Cubot();
 
@@ -27,6 +29,8 @@ public class UserCreationListener implements GameEventListener {
         cubot.getWorld().getGameObjects().add(cubot);
 
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+
+        cubot.setHeldItem(GameServer.INSTANCE.getConfig().getInt("new_user_item"));
 
         cubot.setParent(user);
 

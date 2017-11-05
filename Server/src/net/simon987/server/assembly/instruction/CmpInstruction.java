@@ -34,8 +34,6 @@ public class CmpInstruction extends Instruction {
         status.setOverflowFlag(Util.checkOverFlowAdd16(a, b));
         status.setCarryFlag(Util.checkCarry16(result));
 
-
-        //  System.out.println(a + " ?= " + b);
         return status;
     }
 

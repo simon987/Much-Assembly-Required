@@ -98,7 +98,7 @@ public class CubotRadar extends CpuHardware implements JSONSerialisable {
                     mem[counter] = -1;
                 }
 
-                System.out.println("path to" + destX + "," + destY);
+                System.out.println("DEBUG: path to" + destX + "," + destY);
                 break;
 
             case GET_MAP:

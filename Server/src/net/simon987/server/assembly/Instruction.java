@@ -1,6 +1,8 @@
 package net.simon987.server.assembly;
 
 
+import net.simon987.server.assembly.exception.IllegalOperandException;
+
 import java.io.ByteArrayOutputStream;
 
 /**

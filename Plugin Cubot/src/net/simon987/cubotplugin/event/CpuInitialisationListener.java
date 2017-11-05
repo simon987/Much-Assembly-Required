@@ -5,6 +5,7 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
+import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 
 public class CpuInitialisationListener implements GameEventListener {
@@ -15,7 +16,7 @@ public class CpuInitialisationListener implements GameEventListener {
 
     @Override
     public void handle(GameEvent event) {
-        System.out.println("CPU Init");
+        LogManager.LOGGER.fine("(Plugin) Handled CPU Initialisation event (Cubot Plugin)");
 
         CPU cpu = (CPU)event.getSource();
         User user = ((CpuInitialisationEvent)event).getUser();

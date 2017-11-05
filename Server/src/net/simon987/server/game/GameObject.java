@@ -1,6 +1,7 @@
 package net.simon987.server.game;
 
 import net.simon987.server.GameServer;
+import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.plugin.ServerPlugin;
 import org.json.simple.JSONObject;

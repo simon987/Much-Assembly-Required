@@ -116,7 +116,7 @@ public class Pathfinder {
         }
 
         //Incomplete path
-        LogManager.LOGGER.info("Incomplete path! " + counter);
+        LogManager.LOGGER.fine("Incomplete path! " + counter);
         return null;
 
     }

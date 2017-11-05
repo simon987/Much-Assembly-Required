@@ -231,4 +231,9 @@ public class GameUniverse implements JSONSerialisable{
         return null;
 
     }
+
+    public void removeUser(User user) {
+        users.remove(user);
+
+    }
 }

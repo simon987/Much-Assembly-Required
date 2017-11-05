@@ -54,14 +54,14 @@ public class CubotLaser extends CpuHardware {
                     } else {
                         //The inventory holder can't provide this item
                         //todo Add emote here
-                        System.out.println("FAILED: take (The inventory holder can't provide this item)");
+                        System.out.println("DEBUG: FAILED: take (The inventory holder can't provide this item)");
                     }
 
                 }
             } else {
                 //Nothing in front
                 //todo Add emote here
-                System.out.println("FAILED: take (Nothing in front)");
+                System.out.println("DEBUG: FAILED: take (Nothing in front)");
             }
         }
 
