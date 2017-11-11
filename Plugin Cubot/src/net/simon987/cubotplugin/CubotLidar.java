@@ -64,7 +64,7 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 //Write to memory
                 byte[] mem = getCpu().getMemory().getBytes();
 
-                int counter = 0; //todo get memory address from config/constant
+                int counter = MEMORY_PATH_START;
 
                 if (nodes != null) {
 

@@ -20,10 +20,15 @@ public class Main {
          * - Instruction set
          * -
          */
+        //TODO: Random number generator
+        //TODO: Clock hardware
+        //TODO: Floppy drive hardware (and item?)
+        //TODO: LEA instruction
+        //TODO: NOT instruction
+        //TODO: Battery Hardware
 
         //---------------------------------
 
-        //TODO: Random number generator
         //TODO: favicon
         //TODO: Email verification
         //TODO: Real account page
@@ -35,9 +40,6 @@ public class Main {
          * - INT/INTO instruction
          * - IRET instruction
          */
-        //TODO: Clock hardware
-        //TODO: Floppy drive hardware (and item?)
-        //TODO: LEA instruction
         //TODO: XCHG instruction
         //TODO: SAL/SAR instruction
         //TODO: ROL/ROR/RCL/RCR instruction
@@ -56,7 +58,6 @@ public class Main {
         //TODO: Multiple Biomass style (and yield, rarity)
         //TODO: Clean sprites
         //TODO: Auto-resize
-        //TODO: Battery Hardware
 
 
         LogManager.initialize();
