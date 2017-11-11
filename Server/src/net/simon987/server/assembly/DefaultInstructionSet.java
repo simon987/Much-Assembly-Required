@@ -36,6 +36,7 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new TestInstruction());
         add(new CmpInstruction());
         add(new NegInstruction());
+        add(new NotInstruction());
     }
 
     /**
