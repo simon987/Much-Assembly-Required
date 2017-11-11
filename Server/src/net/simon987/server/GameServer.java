@@ -116,6 +116,11 @@ public class GameServer implements Runnable {
            world.update();
         }
 
+        //Save
+        if (gameUniverse.getTime() % config.getInt("save_interval") == 0) {
+            save(new File("save.json"));
+        }
+
         socketServer.tick();
 
         LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds");

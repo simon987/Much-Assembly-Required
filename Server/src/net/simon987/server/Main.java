@@ -11,24 +11,24 @@ public class Main {
     public static void main(String[] args){
 
 
-        //TODO: Object information Window (Hover, click ?)
         //TODO: Docs
         /*
          * - Intel 8086 p.14 design
          * - Memory: Storage organisation: From a storage pov, 8086 memory spaces are
          * organised as identical arrays of 16-bit words
+         * - Microprocessor
+         * - Instruction set
+         * -
          */
-        //TODO: Website front page
-        //TODO: Account page
-        //TODO: Chat (Slack?)
-        //TODO: Change code documentation (Check for "Database" etc..)
-        //TODO: Load and save: handle no save / invalid save
-        // - Make sure the Hardware is saved and can be loaded
-        //TODO: Add more logs
-        //TODO: Clean sprites
 
         //---------------------------------
 
+        //TODO: Random number generator
+        //TODO: favicon
+        //TODO: Email verification
+        //TODO: Real account page
+        //  Change/reset password
+        //TODO: Object information Window (Hover, click ?)
         //TODO: Inventory indicator (Multiple items)
         //TODO: Software Interrupts (PIC): Interupt flag?
         /*
@@ -54,7 +54,9 @@ public class Main {
         //TODO: Withdraw animation / action
         //TODO: Prevent World creation out of bounds, warp around universe
         //TODO: Multiple Biomass style (and yield, rarity)
-
+        //TODO: Clean sprites
+        //TODO: Auto-resize
+        //TODO: Battery Hardware
 
 
         LogManager.initialize();

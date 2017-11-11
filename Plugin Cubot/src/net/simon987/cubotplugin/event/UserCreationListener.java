@@ -25,7 +25,9 @@ public class UserCreationListener implements GameEventListener {
 
         Cubot cubot = new Cubot();
 
-        cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(0,0));
+        cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(
+                GameServer.INSTANCE.getConfig().getInt("new_user_worldX"),
+                GameServer.INSTANCE.getConfig().getInt("new_user_worldY")));
         cubot.getWorld().getGameObjects().add(cubot);
 
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());

@@ -6,13 +6,33 @@ import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.java_websocket.server.WebSocketServer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.xml.bind.DatatypeConverter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
+
 
 public class SocketServer extends WebSocketServer {
 
@@ -24,6 +44,21 @@ public class SocketServer extends WebSocketServer {
 
     public SocketServer(InetSocketAddress address, ServerConfiguration config) {
         super(address);
+
+        if (config.getInt("use_secure_webSocket") != 0) {
+
+            SSLContext context = getContext(config.getString("cert_path"));
+            if (context != null) {
+                setWebSocketFactory(new DefaultSSLWebSocketServerFactory(context));
+
+                LogManager.LOGGER.info("(WS) Enabled secure webSocket");
+            } else {
+                LogManager.LOGGER.severe("(WS) Failed to create SSL context");
+            }
+        }
+
+        setConnectionLostTimeout(30);
+
 
         database = new SocketServerDatabase(config);
 
@@ -94,7 +129,7 @@ public class SocketServer extends WebSocketServer {
 
         } else {
 
-            LogManager.LOGGER.info("(WS) FIXME: SocketServer:onMessage");
+            LogManager.LOGGER.severe("(WS) FIXME: SocketServer:onMessage");
 
         }
 
@@ -103,12 +138,13 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer message) {
-        System.out.println("received ByteBuffer from " + conn.getRemoteSocketAddress());
+        //System.out.println("received ByteBuffer from " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        System.err.println("an error occured on connection " + conn.getRemoteSocketAddress() + ':' + ex);
+
+        LogManager.LOGGER.severe("an error occured on connection " + conn.getRemoteSocketAddress() + ':' + ex);
         userManager.remove(userManager.getUser(conn));
         conn.close();
 
@@ -161,5 +197,90 @@ public class SocketServer extends WebSocketServer {
 
     public OnlineUserManager getUserManager() {
         return userManager;
+    }
+
+
+    /**
+     * See https://github.com/TooTallNate/Java-WebSocket/blob/master/src/main/example/SSLServerLetsEncryptExample.java
+     */
+    /*
+     *      * Copyright (c) 2010-2017 Nathan Rajlich
+     *
+     *  Permission is hereby granted, free of charge, to any person
+     *  obtaining a copy of this software and associated documentation
+     *  files (the "Software"), to deal in the Software without
+     *  restriction, including without limitation the rights to use,
+     *  copy, modify, merge, publish, distribute, sublicense, and/or sell
+     *  copies of the Software, and to permit persons to whom the
+     *  Software is furnished to do so, subject to the following
+     *  conditions:
+     *
+     *  The above copyright notice and this permission notice shall be
+     *  included in all copies or substantial portions of the Software.
+     */
+    private static SSLContext getContext(String pathTo) {
+        SSLContext context;
+        String password = "MAR";
+        try {
+            context = SSLContext.getInstance("TLS");
+
+            byte[] certBytes = parseDERFromPEM(getBytes(new File(pathTo + File.separator + "cert.pem")),
+                    "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
+            byte[] keyBytes = parseDERFromPEM(getBytes(new File(pathTo + File.separator + "privkey.pem")),
+                    "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
+
+            X509Certificate cert = generateCertificateFromDER(certBytes);
+            RSAPrivateKey key = generatePrivateKeyFromDER(keyBytes);
+
+            KeyStore keystore = KeyStore.getInstance("JKS");
+            keystore.load(null);
+            keystore.setCertificateEntry("cert-alias", cert);
+            keystore.setKeyEntry("key-alias", key, password.toCharArray(), new Certificate[]{cert});
+
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(keystore, password.toCharArray());
+
+            KeyManager[] km = kmf.getKeyManagers();
+
+            context.init(km, null, null);
+        } catch (Exception e) {
+            context = null;
+        }
+        return context;
+    }
+
+    private static byte[] parseDERFromPEM(byte[] pem, String beginDelimiter, String endDelimiter) {
+        String data = new String(pem);
+        String[] tokens = data.split(beginDelimiter);
+        tokens = tokens[1].split(endDelimiter);
+        return DatatypeConverter.parseBase64Binary(tokens[0]);
+    }
+
+    private static RSAPrivateKey generatePrivateKeyFromDER(byte[] keyBytes) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+
+        KeyFactory factory = KeyFactory.getInstance("RSA");
+
+        return (RSAPrivateKey) factory.generatePrivate(spec);
+    }
+
+    private static X509Certificate generateCertificateFromDER(byte[] certBytes) throws CertificateException {
+        CertificateFactory factory = CertificateFactory.getInstance("X.509");
+
+        return (X509Certificate) factory.generateCertificate(new ByteArrayInputStream(certBytes));
+    }
+
+    private static byte[] getBytes(File file) {
+        byte[] bytesArray = new byte[(int) file.length()];
+
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(file);
+            fis.read(bytesArray); //read file into bytes[]
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytesArray;
     }
 }

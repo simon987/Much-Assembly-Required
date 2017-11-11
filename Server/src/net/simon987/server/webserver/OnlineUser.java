@@ -44,6 +44,7 @@ public class OnlineUser {
 
     public void setGuest(boolean guest) {
         this.guest = guest;
+        user.setGuest(guest);
     }
 
     public boolean isGuest() {

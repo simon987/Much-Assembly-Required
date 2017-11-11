@@ -98,7 +98,7 @@ public class Assembler {
             line = line.substring(0, line.indexOf(':'));
             String label = line.trim();
 
-            System.out.println("DEBUG: Label " + label + " @ " + (result.origin + currentOffset));
+            LogManager.LOGGER.fine("DEBUG: Label " + label + " @ " + (result.origin + currentOffset));
             result.labels.put(label, (char) (result.origin + currentOffset));
         }
     }
@@ -127,7 +127,7 @@ public class Assembler {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(bos);
 
-        System.out.println(line);
+        //System.out.println(line);
 
         if (line.substring(0, 2).toUpperCase().equals("DW")) {
 
@@ -337,7 +337,7 @@ public class Assembler {
 
             } catch (AssemblyException e) {
                 //Ignore error on pass 2
-                System.out.println(e);
+                //System.out.println(e);
             }
         }
 

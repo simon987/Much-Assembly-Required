@@ -15,7 +15,7 @@ public class CubotLaser extends CpuHardware {
     /**
      * Hardware ID (Should be unique)
      */
-    static final int HWID = 0x0002;
+    static final char HWID = 0x0002;
 
     public static final int DEFAULT_ADDRESS = 2;
 
@@ -42,7 +42,7 @@ public class CubotLaser extends CpuHardware {
 
         if(a == WITHDRAW) {
 
-            System.out.println("withdraw");
+            //System.out.println("withdraw");
 
             Point frontTile = cubot.getFrontTile();
             ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
@@ -55,19 +55,19 @@ public class CubotLaser extends CpuHardware {
                     if (((InventoryHolder) objects.get(0)).takeItem(b)) {
 
                         cubot.setHeldItem(b);
-                        System.out.println("took " + b);
+                        //System.out.println("took " + b);
                         cubot.setCurrentAction(CubotAction.WITHDRAWING);
 
                     } else {
                         //The inventory holder can't provide this item
                         //todo Add emote here
-                        System.out.println("DEBUG: FAILED: take (The inventory holder can't provide this item)");
+                        //  System.out.println("DEBUG: FAILED: take (The inventory holder can't provide this item)");
                     }
 
                 }
             } else {
                 //Nothing in front
-                System.out.println("DEBUG: FAILED: take (Nothing in front or Cubot is busy)");
+                //    System.out.println("DEBUG: FAILED: take (Nothing in front or Cubot is busy)");
             }
         }
 
@@ -77,7 +77,7 @@ public class CubotLaser extends CpuHardware {
     public JSONObject serialise() {
 
         JSONObject json = new JSONObject();
-        json.put("hwid", HWID);
+        json.put("hwid", (int) HWID);
         json.put("cubot", cubot.getObjectId());
 
         return json;

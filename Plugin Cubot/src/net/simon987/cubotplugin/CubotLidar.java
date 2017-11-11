@@ -7,11 +7,12 @@ import net.simon987.server.game.World;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class CubotRadar extends CpuHardware implements JSONSerialisable {
+public class CubotLidar extends CpuHardware implements JSONSerialisable {
 
     /**
      * Hardware ID (Should be unique)
@@ -26,7 +27,10 @@ public class CubotRadar extends CpuHardware implements JSONSerialisable {
     private static final int GET_PATH = 2;
     private static final int GET_MAP = 3;
 
-    public CubotRadar(Cubot cubot) {
+    private static final int MEMORY_MAP_START = 0x0100;
+    private static final int MEMORY_PATH_START = 0x0000;
+
+    public CubotLidar(Cubot cubot) {
         this.cubot = cubot;
     }
 
@@ -104,13 +108,13 @@ public class CubotRadar extends CpuHardware implements JSONSerialisable {
                     mem[counter] = -1;
                 }
 
-                System.out.println("DEBUG: path to" + destX + "," + destY);
+                LogManager.LOGGER.fine("DEBUG: path to" + destX + "," + destY);
                 break;
 
             case GET_MAP:
                 char[][] mapInfo = cubot.getWorld().getMapInfo();
 
-                int i = 0;
+                int i = MEMORY_MAP_START;
                 for (int y = 0; y < World.WORLD_SIZE; y++) {
                     for (int x = 0; x < World.WORLD_SIZE; x++) {
                         getCpu().getMemory().set(i++, mapInfo[x][y]);
@@ -125,13 +129,13 @@ public class CubotRadar extends CpuHardware implements JSONSerialisable {
     public JSONObject serialise() {
 
         JSONObject json = new JSONObject();
-        json.put("hwid", HWID);
+        json.put("hwid", (int) HWID);
         json.put("cubot", cubot.getObjectId());
 
         return json;
     }
 
-    public static CubotRadar deserialize(JSONObject hwJSON){
-        return new CubotRadar((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int)(long)hwJSON.get("cubot")));
+    public static CubotLidar deserialize(JSONObject hwJSON) {
+        return new CubotLidar((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) hwJSON.get("cubot")));
     }
 }

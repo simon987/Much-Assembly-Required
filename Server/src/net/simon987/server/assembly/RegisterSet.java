@@ -149,7 +149,7 @@ public class RegisterSet implements Target, JSONSerialisable {
 
             register.put("index", index);
             register.put("name", getRegister(index).getName());
-            register.put("value", getRegister(index).getValue());
+            register.put("value", (int) getRegister(index).getValue());
 
             registers.add(register);
         }

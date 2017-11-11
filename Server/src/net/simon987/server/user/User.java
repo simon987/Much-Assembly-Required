@@ -22,6 +22,8 @@ public class User implements JSONSerialisable{
 
     private ControllableUnit controlledUnit;
 
+    private boolean guest;
+
     public User() throws CancelledException {
         GameEvent event = new UserCreationEvent(this);
         GameServer.INSTANCE.getEventDispatcher().dispatch(event);
@@ -47,6 +49,8 @@ public class User implements JSONSerialisable{
         json.put("cpu", cpu.serialise());
 
         return json;
+
+
     }
 
     public static User deserialize(JSONObject userJson) throws CancelledException {
@@ -96,5 +100,11 @@ public class User implements JSONSerialisable{
         this.username = username;
     }
 
+    public boolean isGuest() {
+        return guest;
+    }
 
+    public void setGuest(boolean guest) {
+        this.guest = guest;
+    }
 }

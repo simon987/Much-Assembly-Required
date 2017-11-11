@@ -167,7 +167,10 @@ public class GameUniverse implements JSONSerialisable{
 
         JSONArray users = new JSONArray();
         for(User user : this.users){
-            users.add(user.serialise());
+            if (!user.isGuest()) {
+                users.add(user.serialise());
+            }
+
         }
 
 
@@ -187,28 +190,34 @@ public class GameUniverse implements JSONSerialisable{
 
         JSONParser parser = new JSONParser();
 
-        try {
-            FileReader reader = new FileReader(file);
-            JSONObject universeJson = (JSONObject)parser.parse(reader);
+        if (file.isFile()) {
+            try {
 
-            time = (long)universeJson.get("time");
-            nextObjectId = (int)(long)universeJson.get("nextObjectId");
+                FileReader reader = new FileReader(file);
+                JSONObject universeJson = (JSONObject) parser.parse(reader);
 
-            for(JSONObject worldJson : (ArrayList<JSONObject>)universeJson.get("worlds")){
-                worlds.add(World.deserialize(worldJson));
+                time = (long) universeJson.get("time");
+                nextObjectId = (int) (long) universeJson.get("nextObjectId");
+
+                for (JSONObject worldJson : (ArrayList<JSONObject>) universeJson.get("worlds")) {
+                    worlds.add(World.deserialize(worldJson));
+                }
+
+                for (JSONObject userJson : (ArrayList<JSONObject>) universeJson.get("users")) {
+                    users.add(User.deserialize(userJson));
+                }
+
+                LogManager.LOGGER.info("Loaded " + worlds.size() + " worlds from file");
+
+                reader.close();
+
+            } catch (IOException | ParseException | CancelledException e) {
+                e.printStackTrace();
             }
-
-            for(JSONObject userJson : (ArrayList<JSONObject>)universeJson.get("users")){
-                users.add(User.deserialize(userJson));
-            }
-
-            System.out.println("Loaded " + worlds.size());
-
-            reader.close();
-
-        } catch (IOException | ParseException | CancelledException e) {
-            e.printStackTrace();
+        } else {
+            LogManager.LOGGER.severe("Couldn't load save file save.json, creating empty game universe.");
         }
+
 
     }
 

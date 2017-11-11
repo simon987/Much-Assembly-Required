@@ -125,7 +125,7 @@ public class CPU implements JSONSerialisable{
 
             if(counter % 1000 == 0){
                 if (System.currentTimeMillis() >= (startTime + timeout)) {
-                    System.out.println("CPU Timeout " + this + " after " + counter + "instructions (" + timeout + "ms): " + (double)counter/((double)timeout/1000)/1000000 + "MHz");
+                    LogManager.LOGGER.fine("CPU Timeout " + this + " after " + counter + "instructions (" + timeout + "ms): " + (double) counter / ((double) timeout / 1000) / 1000000 + "MHz");
                     return;
                 }
             }
@@ -147,7 +147,7 @@ public class CPU implements JSONSerialisable{
 //            LogManager.LOGGER.info(instruction.getMnemonic());
         }
         double elapsed = (System.currentTimeMillis() - startTime);
-        System.out.println("----------\n" + counter + " instruction in " + elapsed + "ms : " + (double)counter/(elapsed/1000)/1000000 + "MHz");
+        LogManager.LOGGER.fine("----------\n" + counter + " instruction in " + elapsed + "ms : " + (double) counter / (elapsed / 1000) / 1000000 + "MHz");
     }
 
     public void executeInstruction(Instruction instruction, int source, int destination) {
@@ -343,12 +343,9 @@ public class CPU implements JSONSerialisable{
 
             CpuHardware hardware = attachedHardware.get(address);
 
-            if(hardware instanceof JSONSerialisable){
-
-                JSONObject serialisedHw = ((JSONSerialisable) hardware).serialise();
-                serialisedHw.put("address", address);
-                hardwareList.add(serialisedHw);
-            }
+            JSONObject serialisedHw = hardware.serialise();
+            serialisedHw.put("address", address);
+            hardwareList.add(serialisedHw);
         }
 
         json.put("hardware", hardwareList);

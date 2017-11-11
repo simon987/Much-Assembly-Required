@@ -2,6 +2,7 @@ package net.simon987.server.game;
 
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -68,8 +69,8 @@ public class World implements JSONSerialisable{
 
         for(GameObject object : gameObjects_){
             if(object.isDead()){
-                System.out.println("Removed" + object.getObjectId());
                 gameObjects.remove(object);
+                LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
             }
             if (object instanceof Updatable) {
                 ((Updatable) object).update();
@@ -198,7 +199,7 @@ public class World implements JSONSerialisable{
 
             if(!isTileBlocked(rx, ry)){
 
-                Object path = Pathfinder.findPath(this, rx, ry, 1,1,0);
+                Object path = Pathfinder.findPath(this, rx, ry, 0, 6, 0);
 
                 if(path != null) {
                     return new Point(rx, ry);

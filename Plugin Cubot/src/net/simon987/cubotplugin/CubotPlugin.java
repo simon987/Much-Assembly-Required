@@ -43,12 +43,14 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
                 return CubotLeg.deserialize(hwJson);
             case CubotLaser.HWID:
                 return CubotLaser.deserialize(hwJson);
-            case CubotRadar.HWID:
-                return CubotRadar.deserialize(hwJson);
+            case CubotLidar.HWID:
+                return CubotLidar.deserialize(hwJson);
             case CubotDrill.HWID:
                 return CubotDrill.deserialize(hwJson);
             case CubotInventory.HWID:
                 return CubotInventory.deserialize(hwJson);
+            case Keyboard.HWID:
+                return Keyboard.deserialize(hwJson);
         }
 
         return null;

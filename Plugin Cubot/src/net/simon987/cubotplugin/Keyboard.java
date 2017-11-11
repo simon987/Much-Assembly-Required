@@ -58,7 +58,7 @@ public class Keyboard extends CpuHardware {
     public JSONObject serialise() {
 
         JSONObject json = new JSONObject();
-        json.put("hwid", HWID);
+        json.put("hwid", (int) HWID);
         json.put("cubot", cubot.getObjectId());
 
         return json;

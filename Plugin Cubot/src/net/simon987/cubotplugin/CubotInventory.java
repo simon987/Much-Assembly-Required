@@ -10,7 +10,7 @@ public class CubotInventory extends CpuHardware {
     /**
      * Hardware ID (Should be unique)
      */
-    static final int HWID = 0x0006;
+    static final char HWID = 0x0006;
 
     public static final int DEFAULT_ADDRESS = 6;
 
@@ -47,7 +47,7 @@ public class CubotInventory extends CpuHardware {
     public JSONObject serialise() {
 
         JSONObject json = new JSONObject();
-        json.put("hwid", HWID);
+        json.put("hwid", (int) HWID);
         json.put("cubot", cubot.getObjectId());
 
         return json;

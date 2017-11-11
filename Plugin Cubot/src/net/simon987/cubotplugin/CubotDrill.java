@@ -15,7 +15,9 @@ public class CubotDrill extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 5;
 
-    private static final int GATHER = 1;
+    private static final int POLL = 1;
+    private static final int GATHER_SLOW = 2;
+    private static final int GATHER_FAST = 3;
 
     private Cubot cubot;
 
@@ -32,7 +34,11 @@ public class CubotDrill extends CpuHardware {
     public void handleInterrupt(Status status) {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == GATHER) {
+        if (a == POLL) {
+
+            getCpu().getRegisterSet().getRegister("B").setValue(0);
+
+        } else if (a == GATHER_SLOW || a == GATHER_FAST) {
 
             if (cubot.getAction() != CubotAction.IDLE) {
                 int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
@@ -46,10 +52,9 @@ public class CubotDrill extends CpuHardware {
                     cubot.setCurrentAction(CubotAction.DIGGING);
 
                 } else {
-                    System.out.println("FAILED: dig");
+                    //System.out.println("FAILED: dig");
                 }
             }
-
 
 
         }
@@ -58,7 +63,7 @@ public class CubotDrill extends CpuHardware {
     @Override
     public JSONObject serialise() {
         JSONObject json = new JSONObject();
-        json.put("hwid", HWID);
+        json.put("hwid", (int) HWID);
         json.put("cubot", cubot.getObjectId());
 
         return json;

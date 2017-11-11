@@ -19,7 +19,7 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
     /**
      * Hardware ID (Should be unique)
      */
-    static final int HWID = 0x0001;
+    static final char HWID = 0x0001;
 
     private Cubot cubot;
 
@@ -68,7 +68,7 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
     public JSONObject serialise() {
 
         JSONObject json = new JSONObject();
-        json.put("hwid", HWID);
+        json.put("hwid", (int) HWID);
         json.put("cubot", cubot.getObjectId());
 
         return json;

@@ -25,7 +25,7 @@ public class CpuInitialisationListener implements GameEventListener {
         legHw.setCpu(cpu);
         CubotLaser laserHw = new CubotLaser((Cubot) user.getControlledUnit());
         laserHw.setCpu(cpu);
-        CubotRadar radarHw = new CubotRadar((Cubot) user.getControlledUnit());
+        CubotLidar radarHw = new CubotLidar((Cubot) user.getControlledUnit());
         radarHw.setCpu(cpu);
         Keyboard keyboard = new Keyboard((Cubot) user.getControlledUnit());
         keyboard.setCpu(cpu);
@@ -36,7 +36,7 @@ public class CpuInitialisationListener implements GameEventListener {
 
         cpu.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
         cpu.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
-        cpu.attachHardware(radarHw, CubotRadar.DEFAULT_ADDRESS);
+        cpu.attachHardware(radarHw, CubotLidar.DEFAULT_ADDRESS);
         cpu.attachHardware(keyboard, Keyboard.DEFAULT_ADDRESS);
         cpu.attachHardware(drillHw, CubotDrill.DEFAULT_ADDRESS);
         cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
