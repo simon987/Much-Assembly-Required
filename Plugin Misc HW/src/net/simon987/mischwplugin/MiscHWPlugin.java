@@ -24,6 +24,8 @@ public class MiscHWPlugin extends ServerPlugin implements CpuHardwareDeserialize
         switch (hwid) {
             case RandomNumberGenerator.HWID:
                 return RandomNumberGenerator.deserialize(hwJson);
+            case Clock.HWID:
+                return Clock.deserialize(hwJson);
         }
 
         return null;

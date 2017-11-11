@@ -1,5 +1,6 @@
 package net.simon987.mischwplugin.event;
 
+import net.simon987.mischwplugin.Clock;
 import net.simon987.mischwplugin.RandomNumberGenerator;
 import net.simon987.server.assembly.CPU;
 import net.simon987.server.event.CpuInitialisationEvent;
@@ -19,5 +20,6 @@ public class CpuInitialisationListener implements GameEventListener {
         CPU cpu = (CPU) event.getSource();
 
         cpu.attachHardware(new RandomNumberGenerator(), RandomNumberGenerator.DEFAULT_ADDRESS);
+        cpu.attachHardware(new Clock(), Clock.DEFAULT_ADDRESS);
     }
 }
