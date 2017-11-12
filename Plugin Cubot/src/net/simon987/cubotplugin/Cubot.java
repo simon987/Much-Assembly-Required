@@ -1,6 +1,9 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.game.*;
+import net.simon987.server.game.ControllableUnit;
+import net.simon987.server.game.Direction;
+import net.simon987.server.game.GameObject;
+import net.simon987.server.game.Updatable;
 import net.simon987.server.user.User;
 import org.json.simple.JSONObject;
 
@@ -11,7 +14,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
 
-    private EffectType currentEmote = null;
+    private char hologram = 0;
+    private char lastHologram = 0;
 
     /**
      * Hit points
@@ -45,11 +49,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
             }
         }
 
-        if (currentEmote != null) {
-           // getWorld().getQueuedGameEffects().add(new GameEffect(currentEmote, getX(), getY()));
-            currentEmote = null;
-        }
-
         /*
          * CurrentAction is set during the code execution and this function is called right after
          * If no action as been set, the action sent to the client is the action in currentAction that
@@ -57,6 +56,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
          */
         lastAction = currentAction;
         currentAction = CubotAction.IDLE;
+
+        //Same principle for hologram
+        lastHologram = hologram;
+        hologram = 0;
     }
 
     @Override
@@ -70,6 +73,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
+        json.put("holo", (int) lastHologram);
+
         if (parent != null) {
             json.put("parent", parent.getUsername()); //Only used client-side for now
         }
@@ -127,5 +132,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     public CubotAction getAction() {
         return lastAction;
+    }
+
+    public void setHologram(char hologram) {
+        this.hologram = hologram;
+    }
+
+    public char getHologram() {
+        return lastHologram;
     }
 }

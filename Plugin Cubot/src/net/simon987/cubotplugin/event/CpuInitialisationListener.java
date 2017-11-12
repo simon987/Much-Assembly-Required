@@ -33,6 +33,8 @@ public class CpuInitialisationListener implements GameEventListener {
         drillHw.setCpu(cpu);
         CubotInventory invHw = new CubotInventory((Cubot) user.getControlledUnit());
         invHw.setCpu(cpu);
+        CubotHologram emoteHw = new CubotHologram((Cubot) user.getControlledUnit());
+        emoteHw.setCpu(cpu);
 
         cpu.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
         cpu.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
@@ -40,5 +42,7 @@ public class CpuInitialisationListener implements GameEventListener {
         cpu.attachHardware(keyboard, Keyboard.DEFAULT_ADDRESS);
         cpu.attachHardware(drillHw, CubotDrill.DEFAULT_ADDRESS);
         cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
+        cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
+        cpu.attachHardware(emoteHw, CubotHologram.DEFAULT_ADDRESS);
     }
 }
