@@ -444,5 +444,11 @@ public class CPU implements JSONSerialisable{
         return str;
     }
 
+    public CpuHardware getHardware(int address) {
+
+        return attachedHardware.get(address);
+
+    }
+
 
 }

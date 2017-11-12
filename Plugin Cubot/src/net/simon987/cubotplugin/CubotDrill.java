@@ -40,19 +40,19 @@ public class CubotDrill extends CpuHardware {
 
         } else if (a == GATHER_SLOW || a == GATHER_FAST) {
 
-            if (cubot.getAction() == CubotAction.IDLE) {
-                int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
+            if (cubot.spendEnergy(1400)) {
+                if (cubot.getAction() == CubotAction.IDLE) {
+                    int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
 
-                if (tile == TileMap.IRON_TILE) {
-                    cubot.setHeldItem(TileMap.ITEM_IRON);
-                    cubot.setCurrentAction(CubotAction.DIGGING);
+                    if (tile == TileMap.IRON_TILE) {
+                        cubot.setHeldItem(TileMap.ITEM_IRON);
+                        cubot.setCurrentAction(CubotAction.DIGGING);
 
-                } else if (tile == TileMap.COPPER_TILE) {
-                    cubot.setHeldItem(TileMap.ITEM_COPPER);
-                    cubot.setCurrentAction(CubotAction.DIGGING);
+                    } else if (tile == TileMap.COPPER_TILE) {
+                        cubot.setHeldItem(TileMap.ITEM_COPPER);
+                        cubot.setCurrentAction(CubotAction.DIGGING);
 
-                } else {
-                    //System.out.println("FAILED: dig");
+                    }
                 }
             }
 

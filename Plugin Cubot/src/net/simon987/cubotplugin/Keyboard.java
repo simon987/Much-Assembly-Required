@@ -9,9 +9,6 @@ public class Keyboard extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 4;
 
-    public static final String NAME = "Wireless Keyboard";
-
-
     private static final int CLEAR_BUFFER = 0;
     private static final int FETCH_KEY = 1;
     

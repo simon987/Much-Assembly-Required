@@ -132,30 +132,28 @@ public class Plant extends GameObject implements Updatable, InventoryHolder{
         return false;
     }
 
+    @Override
+    public boolean canTakeItem(int item) {
+        return item == ITM_BIOMASS && grown && biomassCount >= 1;
+    }
+
     /**
      * Called when an object attempts to take an item from this Plant.
      * If the object requests biomass, it will be subtracted from biomassCount, and
      * if it reaches 0, the plant is deleted
      *
      * @param item item id (see MarConstants.ITEM_*)
-     * @return true if the requested item is ITEM_BIOMASS and if the plant is grown
      */
     @Override
-    public boolean takeItem(int item) {
+    public void takeItem(int item) {
 
         if (item == ITM_BIOMASS) {
             if (grown && biomassCount > 1) {
                 biomassCount--;
-                return true;
             } else if (grown) {
                 //Delete plant
                 setDead(true);
-                return true;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
 
     }

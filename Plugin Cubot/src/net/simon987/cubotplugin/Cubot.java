@@ -1,5 +1,6 @@
 package net.simon987.cubotplugin;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.game.ControllableUnit;
 import net.simon987.server.game.Direction;
 import net.simon987.server.game.GameObject;
@@ -30,6 +31,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     private User parent;
 
+    private int energy;
+    private int maxEnergy;
+
     public Cubot() {
 
     }
@@ -43,8 +47,12 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     public void update() {
 
         if (currentAction == CubotAction.WALKING) {
-            if (!incrementLocation()) {
-                //Couldn't walk
+            if (spendEnergy(100)) {
+                if (!incrementLocation()) {
+                    //Couldn't walk
+                    currentAction = CubotAction.IDLE;
+                }
+            } else {
                 currentAction = CubotAction.IDLE;
             }
         }
@@ -74,6 +82,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
         json.put("holo", (int) lastHologram);
+        json.put("energy", (int) lastHologram);
 
         if (parent != null) {
             json.put("parent", parent.getUsername()); //Only used client-side for now
@@ -91,6 +100,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         cubot.hp = (int)(long)json.get("hp");
         cubot.setDirection(Direction.getDirection((int)(long)json.get("direction")));
         cubot.heldItem = (int)(long)json.get("heldItem");
+        cubot.energy = (int) (long) json.get("energy");
+        cubot.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
 
         return cubot;
 
@@ -140,5 +151,34 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     public char getHologram() {
         return lastHologram;
+    }
+
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public boolean spendEnergy(int spent) {
+
+        if (energy - spent < 0) {
+            return false;
+        } else {
+            energy -= spent;
+            return true;
+        }
+
+
+    }
+
+    public void setMaxEnergy(int maxEnergy) {
+        this.maxEnergy = maxEnergy;
+    }
+
+    public int getMaxEnergy() {
+        return maxEnergy;
     }
 }

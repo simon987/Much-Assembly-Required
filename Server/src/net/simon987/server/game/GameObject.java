@@ -120,9 +120,6 @@ public abstract class GameObject implements JSONSerialisable {
             x = newX;
             y = newY;
         } else {
-            //Display error when object is trying to walk in a wall
-            //TODO Add emote here
-            //System.out.println("DEBUG: FAILED walk");
             return false;
         }
 

@@ -34,6 +34,9 @@ public class UserCreationListener implements GameEventListener {
 
         cubot.setHeldItem(GameServer.INSTANCE.getConfig().getInt("new_user_item"));
 
+        cubot.setEnergy(GameServer.INSTANCE.getConfig().getInt("battery_max_energy"));
+        cubot.setMaxEnergy(GameServer.INSTANCE.getConfig().getInt("battery_max_energy"));
+
         cubot.setParent(user);
 
         Point point = cubot.getWorld().getRandomPassableTile();

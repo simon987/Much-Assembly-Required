@@ -15,6 +15,7 @@ import org.json.simple.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameServer implements Runnable {
 
@@ -112,7 +113,9 @@ public class GameServer implements Runnable {
         }
 
         //Process each worlds
-        for (World world : gameUniverse.getWorlds()) {
+        //Avoid concurrent modification
+        ArrayList<World> worlds = new ArrayList<>(gameUniverse.getWorlds());
+        for (World world : worlds) {
            world.update();
         }
 

@@ -39,11 +39,14 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
 
         if(a == SET_DIR){
 
+
             Direction dir = Direction.getDirection(b);
 
             if(dir != null){
-                cubot.setDirection(Direction.getDirection(b));
-                status.setErrorFlag(false);
+                if (cubot.spendEnergy(20)) {
+                    cubot.setDirection(Direction.getDirection(b));
+                    status.setErrorFlag(false);
+                }
             } else {
                 status.setErrorFlag(true);
             }

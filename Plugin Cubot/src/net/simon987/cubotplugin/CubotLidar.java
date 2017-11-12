@@ -52,75 +52,79 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getY());
                 break;
             case GET_PATH:
-                int b = getCpu().getRegisterSet().getRegister("B").getValue();
-                int destX = getCpu().getRegisterSet().getRegister("X").getValue();
-                int destY = getCpu().getRegisterSet().getRegister("Y").getValue();
+                if (cubot.spendEnergy(50)) {
+                    int b = getCpu().getRegisterSet().getRegister("B").getValue();
+                    int destX = getCpu().getRegisterSet().getRegister("X").getValue();
+                    int destY = getCpu().getRegisterSet().getRegister("Y").getValue();
 
-                //Get path
-                ArrayList<Node> nodes = Pathfinder.findPath(cubot.getWorld(), cubot.getX(), cubot.getY(),
-                        destX, destY, b);
+                    //Get path
+                    ArrayList<Node> nodes = Pathfinder.findPath(cubot.getWorld(), cubot.getX(), cubot.getY(),
+                            destX, destY, b);
 
-//                System.out.println(nodes.size() + " nodes");
+                    //Write to memory
+                    byte[] mem = getCpu().getMemory().getBytes();
 
-                //Write to memory
-                byte[] mem = getCpu().getMemory().getBytes();
+                    int counter = MEMORY_PATH_START;
 
-                int counter = MEMORY_PATH_START;
+                    if (nodes != null) {
 
-                if (nodes != null) {
+                        Node lastNode = null;
 
-                    Node lastNode = null;
+                        for (Node n : nodes) {
+                            //Store the path as a sequence of directions
 
-                    for (Node n : nodes) {
-                        //Store the path as a sequence of directions
+                            if (lastNode == null) {
+                                lastNode = n;
+                                continue;
+                            }
 
-                        if (lastNode == null) {
+                            if (n.x < lastNode.x) {
+                                //West
+                                mem[counter++] = 0;
+                                mem[counter++] = 3;
+                            } else if (n.x > lastNode.x) {
+                                //East
+                                mem[counter++] = 0;
+                                mem[counter++] = 1;
+                            } else if (n.y < lastNode.y) {
+                                //North
+                                mem[counter++] = 0;
+                                mem[counter++] = 0;
+                            } else if (n.y > lastNode.y) {
+                                //South
+                                mem[counter++] = 0;
+                                mem[counter++] = 2;
+                            }
+
                             lastNode = n;
-                            continue;
                         }
 
-                        if (n.x < lastNode.x) {
-                            //West
-                            mem[counter++] = 0;
-                            mem[counter++] = 3;
-                        } else if (n.x > lastNode.x) {
-                            //East
-                            mem[counter++] = 0;
-                            mem[counter++] = 1;
-                        } else if (n.y < lastNode.y) {
-                            //North
-                            mem[counter++] = 0;
-                            mem[counter++] = 0;
-                        } else if (n.y > lastNode.y) {
-                            //South
-                            mem[counter++] = 0;
-                            mem[counter++] = 2;
-                        }
-
-                        lastNode = n;
+                        //Indicate end of path with 0xAAAA
+                        mem[counter++] = -86;
+                        mem[counter] = -86;
+                    } else {
+                        //Indicate invalid path 0xFFFF
+                        mem[counter++] = -1;
+                        mem[counter] = -1;
                     }
 
-                    //Indicate end of path with 0xAAAA
-                    mem[counter++] = -86;
-                    mem[counter] = -86;
-                } else {
-                    //Indicate invalid path 0xFFFF
-                    mem[counter++] = -1;
-                    mem[counter] = -1;
+                    LogManager.LOGGER.fine("DEBUG: path to" + destX + "," + destY);
                 }
 
-                LogManager.LOGGER.fine("DEBUG: path to" + destX + "," + destY);
                 break;
 
             case GET_MAP:
-                char[][] mapInfo = cubot.getWorld().getMapInfo();
+                if (cubot.spendEnergy(10)) {
+                    char[][] mapInfo = cubot.getWorld().getMapInfo();
 
-                int i = MEMORY_MAP_START;
-                for (int y = 0; y < World.WORLD_SIZE; y++) {
-                    for (int x = 0; x < World.WORLD_SIZE; x++) {
-                        getCpu().getMemory().set(i++, mapInfo[x][y]);
+                    int i = MEMORY_MAP_START;
+                    for (int y = 0; y < World.WORLD_SIZE; y++) {
+                        for (int x = 0; x < World.WORLD_SIZE; x++) {
+                            getCpu().getMemory().set(i++, mapInfo[x][y]);
+                        }
                     }
                 }
+
                 break;
             case GET_WORLD_POS:
                 getCpu().getRegisterSet().getRegister("X").setValue(cubot.getWorld().getX());

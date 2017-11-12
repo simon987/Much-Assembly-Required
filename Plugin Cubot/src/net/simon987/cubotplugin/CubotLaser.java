@@ -22,6 +22,7 @@ public class CubotLaser extends CpuHardware {
     private Cubot cubot;
 
     private static final int WITHDRAW = 1;
+    private static final int DEPOSIT = 2;
 
 
     public CubotLaser(Cubot cubot) {
@@ -42,33 +43,29 @@ public class CubotLaser extends CpuHardware {
 
         if(a == WITHDRAW) {
 
-            //System.out.println("withdraw");
 
             Point frontTile = cubot.getFrontTile();
             ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
 
 
             if (cubot.getAction() != CubotAction.IDLE && objects.size() > 0) {
-
+                //FIXME: Problem here if more than 1 object
                 if (objects.get(0) instanceof InventoryHolder) {
-                    //Take the item
-                    if (((InventoryHolder) objects.get(0)).takeItem(b)) {
+                    if (((InventoryHolder) objects.get(0)).canTakeItem(b)) {
+                        if (cubot.spendEnergy(30)) {
+                            //Take the item
+                            ((InventoryHolder) objects.get(0)).takeItem(b);
 
-                        cubot.setHeldItem(b);
-                        //System.out.println("took " + b);
-                        cubot.setCurrentAction(CubotAction.WITHDRAWING);
-
-                    } else {
-                        //The inventory holder can't provide this item
-                        //todo Add emote here
-                        //  System.out.println("DEBUG: FAILED: take (The inventory holder can't provide this item)");
+                            cubot.setHeldItem(b);
+                            cubot.setCurrentAction(CubotAction.WITHDRAWING);
+                        }
                     }
-
                 }
-            } else {
-                //Nothing in front
-                //    System.out.println("DEBUG: FAILED: take (Nothing in front or Cubot is busy)");
             }
+
+
+        } else if (a == DEPOSIT) {
+
         }
 
     }

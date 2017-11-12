@@ -38,7 +38,9 @@ public class CubotInventory extends CpuHardware {
             getCpu().getRegisterSet().getRegister("B").setValue(cubot.getHeldItem());
 
         } else if (a == CLEAR) {
-            cubot.setHeldItem(0);
+            if (cubot.spendEnergy(100)) {
+                cubot.setHeldItem(0);
+            }
         }
 
     }

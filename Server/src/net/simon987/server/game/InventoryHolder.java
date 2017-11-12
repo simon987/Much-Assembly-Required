@@ -13,8 +13,12 @@ public interface InventoryHolder {
     /**
      * Take an item from the inventory
      * @param item Desired item id (see MarConstants.ITEM_*)
-     * @return true is the take item action executed properly, true also means that the desired item
-     * was removed from the inventory
      */
-    boolean takeItem(int item);
+    void takeItem(int item);
+
+    /**
+     * @param item item to take
+     * @return true if the InventoryHolder can provide this item
+     */
+    boolean canTakeItem(int item);
 }

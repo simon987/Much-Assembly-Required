@@ -19,7 +19,12 @@ public class CpuInitialisationListener implements GameEventListener {
 
         CPU cpu = (CPU) event.getSource();
 
-        cpu.attachHardware(new RandomNumberGenerator(), RandomNumberGenerator.DEFAULT_ADDRESS);
-        cpu.attachHardware(new Clock(), Clock.DEFAULT_ADDRESS);
+        RandomNumberGenerator rngHW = new RandomNumberGenerator();
+        rngHW.setCpu(cpu);
+        Clock clock = new Clock();
+        clock.setCpu(cpu);
+
+        cpu.attachHardware(rngHW, RandomNumberGenerator.DEFAULT_ADDRESS);
+        cpu.attachHardware(clock, Clock.DEFAULT_ADDRESS);
     }
 }
