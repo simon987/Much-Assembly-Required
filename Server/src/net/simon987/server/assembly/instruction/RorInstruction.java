@@ -5,9 +5,10 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
 /**
- * Rotate right
- * <br>
- * ->  destination -(CF)> 
+ *  +-----------------+
+ *  |                 |
+ *  +-> 0>0>0>0>0>0>0>0 > CF
+ *
  */
 public class RorInstruction extends Instruction {
 
@@ -20,7 +21,7 @@ public class RorInstruction extends Instruction {
     @Override
     public Status execute(Target dst, int dstIndex, Target src, int srcIndex, Status status) {
 
-        int count = src.get(srcIndex);
+        int count = src.get(srcIndex) % 16;
 
         int destination = dst.get(dstIndex);
         int signBit = (destination & 0x8000);
@@ -37,11 +38,12 @@ public class RorInstruction extends Instruction {
     @Override
     public Status execute(Target dst, int dstIndex, int src, Status status) {
 
+        int count = src % 16;
         int destination = dst.get(dstIndex);
         int signBit = (destination & 0x8000);
 
-        destination = (destination >>> src) | (destination << (16 - src));
-        if (src == 1) {
+        destination = (destination >>> count) | (destination << (16 - count));
+        if (count == 1) {
             status.setOverflowFlag((destination & 0x8000) != signBit); //Set OF if sign bit changed
         }
         dst.set(dstIndex, destination);

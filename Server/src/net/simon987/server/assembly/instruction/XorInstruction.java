@@ -5,15 +5,13 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 import net.simon987.server.assembly.Util;
 
-/**
- * Created by Gilbert Fortier on 3/12/2017.
- */
+
 public class XorInstruction extends Instruction {
 
     /**
      * Opcode of the instruction
      */
-    public static final int OPCODE = 5;
+    public static final int OPCODE = 38;
 
     public XorInstruction() {
         super("xor", OPCODE);

@@ -1,6 +1,7 @@
 package net.simon987.server.assembly;
 
 import net.simon987.server.assembly.instruction.*;
+import net.simon987.server.logging.LogManager;
 
 import java.util.HashMap;
 
@@ -31,6 +32,7 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new AndInstruction());
         add(new OrInstruction());
         add(new ShlInstruction());
+        add(new SalInstruction()); //Alias is added
         add(new ShrInstruction());
         add(new XorInstruction());
         add(new TestInstruction());
@@ -85,6 +87,12 @@ public class DefaultInstructionSet implements InstructionSet {
 
     @Override
     public void add(Instruction instruction) {
-        instructionMap.put(instruction.getOpCode(), instruction);
+        if (instructionMap.containsKey(instruction.getOpCode())) {
+            LogManager.LOGGER.fine(instruction.getMnemonic() + " instruction is an alias for " +
+                    instructionMap.get(instruction.getOpCode()).getMnemonic());
+        } else {
+            instructionMap.put(instruction.getOpCode(), instruction);
+
+        }
     }
 }
