@@ -129,8 +129,17 @@ public class GameUniverse implements JSONSerialisable{
         }
     }
 
+    /**
+     * Get an object by id
+     * <br>
+     * ConcurrentModificationException risk when inside game loop
+     *
+     * @param id id of the game object
+     * @return GameObject, null if not found
+     */
     public GameObject getObject(int id) {
 
+        //
         for (World world : worlds) {
             for(GameObject object : world.getGameObjects()){
                 if(object.getObjectId() == id){
@@ -161,12 +170,14 @@ public class GameUniverse implements JSONSerialisable{
 
         JSONArray worlds = new JSONArray();
 
-        for(World world : this.worlds){
+        ArrayList<World> worlds_ = new ArrayList<>(this.worlds);
+        for (World world : worlds_){
             worlds.add(world.serialise());
         }
 
         JSONArray users = new JSONArray();
-        for(User user : this.users){
+        ArrayList<User> users_ = new ArrayList<User>(this.users);
+        for (User user : users_){
             if (!user.isGuest()) {
                 users.add(user.serialise());
             }

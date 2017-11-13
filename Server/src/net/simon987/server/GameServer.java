@@ -104,7 +104,8 @@ public class GameServer implements Runnable {
         gameUniverse.incrementTime();
 
         //Process user code
-        for(User user : gameUniverse.getUsers()){
+        ArrayList<User> users_ = gameUniverse.getUsers();
+        for (User user : users_) {
 
             if(user.getCpu() != null){
                 user.getCpu().reset();

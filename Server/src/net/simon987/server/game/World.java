@@ -83,7 +83,8 @@ public class World implements JSONSerialisable{
         JSONObject json = new JSONObject();
 
         JSONArray objects = new JSONArray();
-        for(GameObject obj : gameObjects){
+        ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
+        for (GameObject obj : gameObjects_) {
             objects.add(obj.serialise());
         }
         json.put("objects", objects);

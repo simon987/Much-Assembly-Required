@@ -271,7 +271,7 @@ public class Assembler {
          *  usage: constant_name EQU <immediate_value>
          *  A constant treated the same way as a label.
         */
-
+        line = line.trim();
         String[] tokens = line.split("\\s+");
 
 

@@ -37,6 +37,8 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new CmpInstruction());
         add(new NegInstruction());
         add(new NotInstruction());
+        add(new RorInstruction());
+        add(new RolInstruction());
     }
 
     /**
