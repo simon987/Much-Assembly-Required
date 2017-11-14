@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.GameServer;
+import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.ControllableUnit;
 import net.simon987.server.game.Direction;
 import net.simon987.server.game.GameObject;
@@ -28,6 +29,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private CubotAction lastAction = CubotAction.IDLE;
 
     private ArrayList<Integer> keyboardBuffer = new ArrayList<>();
+
+    private FloppyDisk floppyDisk;
 
     private User parent;
 
@@ -180,5 +183,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     public int getMaxEnergy() {
         return maxEnergy;
+    }
+
+    @Override
+    public Memory getFloppyData() {
+        return ((CubotFloppyDrive) getParent().getCpu().getHardware(CubotFloppyDrive.DEFAULT_ADDRESS)).getFloppy().getMemory();
     }
 }

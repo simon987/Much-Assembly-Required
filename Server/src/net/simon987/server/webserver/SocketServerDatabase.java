@@ -4,10 +4,7 @@ import net.simon987.server.ServerConfiguration;
 import net.simon987.server.io.DatabaseManager;
 import net.simon987.server.logging.LogManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 class SocketServerDatabase extends DatabaseManager {
 
@@ -47,5 +44,40 @@ class SocketServerDatabase extends DatabaseManager {
 
         return null;
     }
+
+    byte[] getFloppy(String username) {
+
+        Connection connection = null;
+        try {
+            connection = getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT floppyData FROM mar_user WHERE username=?");
+            p.setString(1, username);
+
+            ResultSet rs = p.executeQuery();
+
+            if (rs.next()) {
+                Blob blob = rs.getBlob("floppyData");
+
+                if (blob != null) {
+                    return blob.getBytes(1, (int) blob.length() - 1);
+                }
+            }
+
+        } catch (SQLException e) {
+            LogManager.LOGGER.severe("MySQL Error " + e.getErrorCode() + ": " + e.getMessage());
+
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+
+    }
+
+
 
 }

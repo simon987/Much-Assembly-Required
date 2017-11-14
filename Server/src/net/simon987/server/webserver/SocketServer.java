@@ -68,6 +68,7 @@ public class SocketServer extends WebSocketServer {
         messageEventDispatcher.addHandler(new CodeUploadHandler());
         messageEventDispatcher.addHandler(new CodeRequestHandler());
         messageEventDispatcher.addHandler(new KeypressHandler());
+        messageEventDispatcher.addHandler(new FloppyHandler());
 
     }
 

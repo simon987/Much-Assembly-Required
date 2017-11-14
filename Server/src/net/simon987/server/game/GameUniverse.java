@@ -29,7 +29,7 @@ public class GameUniverse implements JSONSerialisable{
 
     private int nextObjectId = 0;
 
-    private int maxWidth = 3; //0xFFFF
+    private int maxWidth = 0xFFFF;
 
     public GameUniverse(ServerConfiguration config) {
 
@@ -113,8 +113,10 @@ public class GameUniverse implements JSONSerialisable{
                     user.getCpu().getMemory().clear();
 
                     //Write assembled code to mem
-                    user.getCpu().getMemory().write((short) ar.origin, ar.bytes, ar.bytes.length);
+                    user.getCpu().getMemory().write((short) ar.origin, ar.bytes, 0, ar.bytes.length);
                     user.getCpu().setCodeSegmentOffset(ar.origin);
+
+                    //Init
 
                 } else {
                     user = new User(null);

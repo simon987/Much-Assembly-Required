@@ -55,7 +55,7 @@ public class Memory implements Target, JSONSerialisable {
     /**
      * Write x words from an array at an offset
      */
-    public boolean write(int offset, byte[] bytes, int count) {
+    public boolean write(int offset, byte[] bytes, int srcOffset, int count) {
 
         offset = (char)offset * 2;
 
@@ -64,7 +64,7 @@ public class Memory implements Target, JSONSerialisable {
             return false;
         }
 
-        System.arraycopy(bytes, 0, this.bytes, offset, count);
+        System.arraycopy(bytes, srcOffset, this.bytes, offset, count);
         return true;
     }
 
@@ -122,18 +122,6 @@ public class Memory implements Target, JSONSerialisable {
             e.printStackTrace();
         }
 
-        //To deflate
-
-        /*
-        ByteArrayOutputStream stream2 = new ByteArrayOutputStream();
-        Inflater decompresser = new Inflater(true);
-        InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(stream2, decompresser);
-        inflaterOutputStream.write(output);
-        inflaterOutputStream.close();
-        byte[] output2 = stream2.toByteArray();
-         */
-
-
         return json;
     }
 
@@ -156,5 +144,9 @@ public class Memory implements Target, JSONSerialisable {
         }
 
         return memory;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 }
