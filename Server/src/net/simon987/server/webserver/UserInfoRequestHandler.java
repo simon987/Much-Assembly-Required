@@ -14,26 +14,22 @@ public class UserInfoRequestHandler implements MessageHandler {
         if (message.get("t").equals("userInfo")) {
 
             LogManager.LOGGER.info("(WS) User info request from " + user.getUser().getUsername());
+            JSONObject json = new JSONObject();
 
             if(user.isGuest()) {
-                JSONObject json = new JSONObject();
-                json.put("t", "userInfo");
                 json.put("worldX", GameServer.INSTANCE.getConfig().getInt("new_user_worldX"));
                 json.put("worldY", GameServer.INSTANCE.getConfig().getInt("new_user_worldY"));
 
-                user.getWebSocket().send(json.toJSONString());
             } else {
                 GameObject object = (GameObject)user.getUser().getControlledUnit();
-
-                JSONObject json = new JSONObject();
-                json.put("t", "userInfo");
                 json.put("worldX", object.getWorld().getX());
                 json.put("worldY", object.getWorld().getY());
 
-                user.getWebSocket().send(json.toJSONString());
             }
 
-
+            json.put("t", "userInfo");
+            json.put("maxWidth", GameServer.INSTANCE.getGameUniverse().getMaxWidth());
+            user.getWebSocket().send(json.toJSONString());
 
 
         }

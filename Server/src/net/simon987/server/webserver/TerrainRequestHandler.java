@@ -10,13 +10,19 @@ public class TerrainRequestHandler implements MessageHandler {
 
     @Override
     public void handle(OnlineUser user, JSONObject json) {
-        if (json.get("t").equals("terrain")) {
+        if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y")) {
 
             LogManager.LOGGER.info("Terrain request from " + user.getUser().getUsername());
+            World world;
+            try {
+                world = GameServer.INSTANCE.getGameUniverse().getWorld(
+                        Long.valueOf((long) json.get("x")).intValue(),
+                        Long.valueOf((long) json.get("y")).intValue());
+            } catch (NullPointerException e) {
+                LogManager.LOGGER.severe("FIXME: handle TerrainRequestHandler");
+                return;
+            }
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(
-                    Long.valueOf((long) json.get("x")).intValue(),
-                    Long.valueOf((long) json.get("y")).intValue());
 
             //todo It might be a good idea to cache this
             if (world != null) {

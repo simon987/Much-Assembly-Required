@@ -2,7 +2,7 @@ package net.simon987.server.webserver;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.GameObject;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.game.World;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,24 +18,27 @@ public class ObjectsRequestHandler implements MessageHandler {
         if (json.get("t").equals("object")) {
             LogManager.LOGGER.info("(WS) Objects request from " + user.getUser().getUsername());
 
+            int x, y;
+            try {
+                x = Long.valueOf((long) json.get("x")).intValue();
+                y = Long.valueOf((long) json.get("y")).intValue();
+            } catch (Exception e) {
+                LogManager.LOGGER.info("(WS) Malformed Objects request from " + user.getUser().getUsername());
+                return;
+            }
 
-            if (json.containsKey("x") && json.containsKey("y")) {
-                int x = Long.valueOf((long) json.get("x")).intValue();
-                int y = Long.valueOf((long) json.get("y")).intValue();
+            World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y);
 
-                ArrayList<GameObject> gameObjects = GameServer.INSTANCE.getGameUniverse().getWorld(x, y).getGameObjects();
+            if (world != null) {
+                ArrayList<GameObject> gameObjects = world.getGameObjects();
 
                 JSONObject response = new JSONObject();
                 JSONArray objects = new JSONArray();
 
 
                 for (GameObject object : gameObjects) {
-
-                    if (object instanceof JSONSerialisable) {
                         objects.add(object.serialise());
                     }
-
-                }
 
                 response.put("t", "object");
                 response.put("objects", objects);
@@ -44,8 +47,6 @@ public class ObjectsRequestHandler implements MessageHandler {
                 if (user.getWebSocket().isOpen()) {
                     user.getWebSocket().send(response.toJSONString());
                 }
-            } else {
-                LogManager.LOGGER.info("(WS) Malformed Objects request from " + user.getUser().getUsername());
             }
         }
     }

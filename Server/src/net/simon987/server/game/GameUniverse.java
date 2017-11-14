@@ -29,6 +29,8 @@ public class GameUniverse implements JSONSerialisable{
 
     private int nextObjectId = 0;
 
+    private int maxWidth = 3; //0xFFFF
+
     public GameUniverse(ServerConfiguration config) {
 
         worlds = new ArrayList<>(32);
@@ -50,15 +52,18 @@ public class GameUniverse implements JSONSerialisable{
             }
         }
 
-        //World does not exist
-        LogManager.LOGGER.severe("Trying to read a World that does not exist!");
+        if (x >= 0 && x <= maxWidth && y >= 0 && y <= maxWidth) {
+            //World does not exist
+            LogManager.LOGGER.severe("Trying to read a World that does not exist!");
 
-        World world = createWorld(x,y);
+            World world = createWorld(x, y);
 
-        worlds.add(world);
+            worlds.add(world);
 
-        return world;
-
+            return world;
+        } else {
+            return null;
+        }
     }
 
     public World createWorld(int x, int y) {
@@ -255,5 +260,9 @@ public class GameUniverse implements JSONSerialisable{
     public void removeUser(User user) {
         users.remove(user);
 
+    }
+
+    public int getMaxWidth() {
+        return maxWidth;
     }
 }

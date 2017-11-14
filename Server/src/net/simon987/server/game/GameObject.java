@@ -71,7 +71,14 @@ public abstract class GameObject implements JSONSerialisable {
         //Check if out of World bounds / collision
         if(newX < 0) {
             //Move object to adjacent World (left)
-            World leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() - 1, world.getY());
+            World leftWorld;
+            if (world.getX() == 0) {
+                //Warp around
+                leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(
+                        GameServer.INSTANCE.getGameUniverse().getMaxWidth(), world.getY());
+            } else {
+                leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() - 1, world.getY());
+            }
 
             if(leftWorld != null){
                 world.getGameObjects().remove(this);
@@ -82,7 +89,13 @@ public abstract class GameObject implements JSONSerialisable {
             }
         } else if(newX >= World.WORLD_SIZE) {
             //Move object to adjacent World (right)
-            World rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() + 1, world.getY());
+            World rightWorld;
+            if (world.getX() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
+                //Warp around
+                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(0, world.getY());
+            } else {
+                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() + 1, world.getY());
+            }
 
             if(rightWorld != null){
                 world.getGameObjects().remove(this);
@@ -92,24 +105,38 @@ public abstract class GameObject implements JSONSerialisable {
                 x = 0;
             }
         } else if (newY < 0) {
-            //Move object to adjacent World (down)
-            World downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() - 1);
-
-            if(downWorld != null){
-                world.getGameObjects().remove(this);
-                downWorld.getGameObjects().add(this);
-                setWorld(downWorld);
-
-                y = World.WORLD_SIZE - 1;
-            }
-        } else if(newY >= World.WORLD_SIZE) {
             //Move object to adjacent World (up)
-            World upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() + 1);
+            World upWorld;
+            if (world.getY() == 0) {
+                //Warp around
+                upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(),
+                        GameServer.INSTANCE.getGameUniverse().getMaxWidth());
+            } else {
+                upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() - 1);
+            }
 
             if(upWorld != null){
                 world.getGameObjects().remove(this);
                 upWorld.getGameObjects().add(this);
                 setWorld(upWorld);
+
+                y = World.WORLD_SIZE - 1;
+            }
+        } else if (newY >= World.WORLD_SIZE) {
+            //Move object to adjacent World (down)
+            World downWorld;
+            if (world.getY() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
+                //Warp around
+                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), 0);
+            } else {
+                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() + 1);
+            }
+
+
+            if (downWorld != null) {
+                world.getGameObjects().remove(this);
+                downWorld.getGameObjects().add(this);
+                setWorld(downWorld);
 
                 y = 0;
             }
