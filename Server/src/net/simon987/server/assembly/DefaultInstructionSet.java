@@ -41,6 +41,9 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new NotInstruction());
         add(new RorInstruction());
         add(new RolInstruction());
+        add(new RclInstruction());
+        add(new RcrInstruction());
+        add(new SarInstruction());
     }
 
     /**
