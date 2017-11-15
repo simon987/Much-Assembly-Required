@@ -108,8 +108,14 @@ public class GameServer implements Runnable {
         for (User user : users_) {
 
             if(user.getCpu() != null){
-                user.getCpu().reset();
-                user.getCpu().execute();
+                try {
+                    user.getCpu().reset();
+                    user.getCpu().execute();
+                } catch (Exception e) {
+                    LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
+                    e.printStackTrace();
+                }
+
             }
         }
 

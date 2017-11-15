@@ -60,7 +60,7 @@ public class Memory implements Target, JSONSerialisable {
         offset = (char)offset * 2;
 
 
-        if (offset + count > this.bytes.length || count < 0 || offset < 0) {
+        if (offset + count > this.bytes.length || count < 0 || offset < 0 || srcOffset >= bytes.length) {
             return false;
         }
 

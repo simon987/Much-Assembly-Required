@@ -3,7 +3,6 @@ package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.io.JSONSerialisable;
-import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
 /**
@@ -39,19 +38,21 @@ public class FloppyDisk implements JSONSerialisable {
      */
     public boolean readSector(int sector, Memory cpuMemory, int ramAddress) {
 
-        cpuMemory.write(ramAddress, memory.getBytes(), sector * 512, 1024);
+        if (sector <= 1440) {
+            cpuMemory.write(ramAddress, memory.getBytes(), sector * 1024, 1024);
 
-        LogManager.LOGGER.fine("Read 512 words from floppy sector:" + sector + " to memory addr:" + ramAddress);
+            //Calculate seek time
+            int deltaTrack = (sector / 80) - rwHeadTrack;
 
-        //Calculate seek time
-        int deltaTrack = (sector / 80) - rwHeadTrack;
-
-        if (deltaTrack != 0) {
-            rwHeadTrack = (sector / 80);
-            return false;
-        } else {
-            return true;
+            if (deltaTrack != 0) {
+                rwHeadTrack = (sector / 80);
+                return false;
+            } else {
+                return true;
+            }
         }
+        return false;
+
     }
 
     /**
@@ -64,18 +65,20 @@ public class FloppyDisk implements JSONSerialisable {
      */
     public boolean writeSector(int sector, Memory cpuMemory, int ramAddress) {
 
-        memory.write(sector * 512, cpuMemory.getBytes(), ramAddress * 2, 1024);
+        if (sector <= 1440) {
+            memory.write(sector * 512, cpuMemory.getBytes(), ramAddress * 2, 1024);
 
-        LogManager.LOGGER.fine("Wrote 512 words to floppy sector:" + sector + " from memory addr:" + ramAddress);
+            //Calculate seek time
+            int deltaTrack = (sector / 80) - rwHeadTrack;
 
-        //Calculate seek time
-        int deltaTrack = (sector / 80) - rwHeadTrack;
-
-        if (deltaTrack != 0) {
-            rwHeadTrack = (sector / 80);
-            return false;
+            if (deltaTrack != 0) {
+                rwHeadTrack = (sector / 80);
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
     }
 

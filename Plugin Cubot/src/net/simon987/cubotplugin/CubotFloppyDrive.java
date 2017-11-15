@@ -23,8 +23,6 @@ public class CubotFloppyDrive extends CpuHardware {
 
     public CubotFloppyDrive(Cubot cubot) {
         this.cubot = cubot;
-
-        this.floppyDisk = new FloppyDisk();//todo remove
     }
 
     @Override
@@ -44,12 +42,14 @@ public class CubotFloppyDrive extends CpuHardware {
             if (floppyDisk == null) {
                 getCpu().getRegisterSet().getRegister("B").setValue(0);
             } else {
-                getCpu().getRegisterSet().getRegister("B").setValue(1);
+                if (cubot.spendEnergy(1)) {
+                    getCpu().getRegisterSet().getRegister("B").setValue(1);
 
-                int x = getCpu().getRegisterSet().getRegister("X").getValue();
-                int y = getCpu().getRegisterSet().getRegister("Y").getValue();
+                    int x = getCpu().getRegisterSet().getRegister("X").getValue();
+                    int y = getCpu().getRegisterSet().getRegister("Y").getValue();
 
-                floppyDisk.readSector(x, cubot.getParent().getCpu().getMemory(), y);
+                    floppyDisk.readSector(x, cubot.getParent().getCpu().getMemory(), y);
+                }
             }
 
 
@@ -57,12 +57,14 @@ public class CubotFloppyDrive extends CpuHardware {
             if (floppyDisk == null) {
                 getCpu().getRegisterSet().getRegister("B").setValue(0);
             } else {
-                getCpu().getRegisterSet().getRegister("B").setValue(1);
+                if (cubot.spendEnergy(1)) {
+                    getCpu().getRegisterSet().getRegister("B").setValue(1);
 
-                int x = getCpu().getRegisterSet().getRegister("X").getValue();
-                int y = getCpu().getRegisterSet().getRegister("Y").getValue();
+                    int x = getCpu().getRegisterSet().getRegister("X").getValue();
+                    int y = getCpu().getRegisterSet().getRegister("Y").getValue();
 
-                floppyDisk.writeSector(x, cubot.getParent().getCpu().getMemory(), y);
+                    floppyDisk.writeSector(x, cubot.getParent().getCpu().getMemory(), y);
+                }
             }
         }
 
