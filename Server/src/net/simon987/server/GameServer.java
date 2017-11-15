@@ -29,12 +29,16 @@ public class GameServer implements Runnable {
 
     private SocketServer socketServer;
 
+    private int maxExecutionTime;
+
     public GameServer() {
 
         this.config = new ServerConfiguration(new File("config.properties"));
 
         gameUniverse = new GameUniverse(config);
         pluginManager = new PluginManager();
+
+        maxExecutionTime = config.getInt("user_timeout");
 
         //Load all plugins in plugins folder, if it doesn't exist, create it
         File pluginDir = new File("plugins/");
@@ -109,8 +113,13 @@ public class GameServer implements Runnable {
 
             if(user.getCpu() != null){
                 try {
+
+                    int timeout = Math.min(user.getControlledUnit().getEnergy(), maxExecutionTime);
+
                     user.getCpu().reset();
-                    user.getCpu().execute();
+                    int cost = user.getCpu().execute(timeout);
+                    user.getControlledUnit().spendEnergy(cost);
+
                 } catch (Exception e) {
                     LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
                     e.printStackTrace();

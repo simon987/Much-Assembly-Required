@@ -3,6 +3,7 @@ package net.simon987.server.assembly;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.AssemblyException;
 import net.simon987.server.assembly.exception.DuplicateSegmentException;
+import net.simon987.server.logging.LogManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class AssemblyResult {
     /**
      * Offset of the code segment
      */
-    private int codeSegmentOffset;
+    public int codeSegmentOffset;
     /**
      * Line of the code segment definition (for editor icons)
      */
@@ -77,6 +78,10 @@ public class AssemblyResult {
             if (!codeSegmentSet) {
                 codeSegmentOffset = origin + currentOffset;
                 codeSegmentLine = currentLine;
+
+                LogManager.LOGGER.fine("DEBUG: .text offset @" + codeSegmentOffset);
+
+
                 codeSegmentSet = true;
             } else {
                 throw new DuplicateSegmentException(currentLine);
@@ -87,6 +92,9 @@ public class AssemblyResult {
             if (!dataSegmentSet) {
                 dataSegmentOffset = origin + currentOffset;
                 dataSegmentLine = currentLine;
+
+                LogManager.LOGGER.fine("DEBUG: .data offset @" + dataSegmentOffset);
+
                 dataSegmentSet = true;
             } else {
                 throw new DuplicateSegmentException(currentLine);

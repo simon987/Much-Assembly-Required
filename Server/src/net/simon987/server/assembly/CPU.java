@@ -60,9 +60,10 @@ public class CPU implements JSONSerialisable{
 
     private ServerConfiguration config;
 
-    private long timeout;
-
     private int registerSetSize;
+
+    private static final char EXECUTION_COST_ADDR = 0x0300;
+    private static final char EXECUTED_INS_ADDR = 0x0301;
 
     /**
      * Creates a new CPU
@@ -73,8 +74,6 @@ public class CPU implements JSONSerialisable{
         registerSet = new DefaultRegisterSet();
         attachedHardware = new HashMap<>();
         codeSegmentOffset = config.getInt("org_offset");
-
-        timeout = config.getInt("user_timeout");
 
         instructionSet.add(new JmpInstruction(this));
         instructionSet.add(new JnzInstruction(this));
@@ -116,7 +115,7 @@ public class CPU implements JSONSerialisable{
         ip = codeSegmentOffset;
     }
 
-    public void execute() {
+    public int execute(int timeout) {
 
         long startTime = System.currentTimeMillis();
         int counter = 0;
@@ -128,10 +127,16 @@ public class CPU implements JSONSerialisable{
         while (!status.isBreakFlag()) {
             counter++;
 
-            if(counter % 1000 == 0){
+            if (counter % 10000 == 0) {
                 if (System.currentTimeMillis() >= (startTime + timeout)) {
                     LogManager.LOGGER.fine("CPU Timeout " + this + " after " + counter + "instructions (" + timeout + "ms): " + (double) counter / ((double) timeout / 1000) / 1000000 + "MHz");
-                    return;
+
+                    //Write execution cost and instruction count to memory
+                    memory.set(EXECUTION_COST_ADDR, timeout);
+                    memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
+                    memory.set(EXECUTED_INS_ADDR, Util.getLowerWord(counter));
+
+                    return timeout;
                 }
             }
 
@@ -151,8 +156,17 @@ public class CPU implements JSONSerialisable{
             executeInstruction(instruction, source, destination);
 //            LogManager.LOGGER.info(instruction.getMnemonic());
         }
-        double elapsed = (System.currentTimeMillis() - startTime);
+        int elapsed = (int) (System.currentTimeMillis() - startTime);
+
         LogManager.LOGGER.fine(counter + " instruction in " + elapsed + "ms : " + (double) counter / (elapsed / 1000) / 1000000 + "MHz");
+
+
+        //Write execution cost and instruction count to memory
+        memory.set(EXECUTION_COST_ADDR, elapsed);
+        memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
+        memory.set(EXECUTED_INS_ADDR, Util.getLowerWord(counter));
+
+        return elapsed;
     }
 
     public void executeInstruction(Instruction instruction, int source, int destination) {

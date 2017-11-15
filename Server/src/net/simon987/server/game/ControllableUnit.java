@@ -17,4 +17,8 @@ public interface ControllableUnit {
 
     Memory getFloppyData();
 
+    boolean spendEnergy(int energy);
+
+    int getEnergy();
+
 }

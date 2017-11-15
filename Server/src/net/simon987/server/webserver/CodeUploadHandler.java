@@ -29,7 +29,7 @@ public class CodeUploadHandler implements MessageHandler {
 
                 //Write assembled code to mem
                 user.getUser().getCpu().getMemory().write((char) ar.origin, ar.bytes, 0, ar.bytes.length);
-                user.getUser().getCpu().setCodeSegmentOffset(ar.origin);
+                user.getUser().getCpu().setCodeSegmentOffset(ar.codeSegmentOffset);
 
                 JSONObject response = new JSONObject();
                 response.put("t", "codeResponse");

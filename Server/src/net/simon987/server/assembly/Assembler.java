@@ -253,6 +253,8 @@ public class Assembler {
 
         } else if (tokens[0].toUpperCase().equals(".DATA")) {
 
+            LogManager.LOGGER.fine("DEBUG: .data @" + currentLine);
+
             result.defineSegment(Segment.DATA, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
         }

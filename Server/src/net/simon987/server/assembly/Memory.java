@@ -42,14 +42,14 @@ public class Memory implements Target, JSONSerialisable {
      */
     @Override
     public int get(int address) {
-        address = (char)address * 2; //Because our Memory is only divisible by 16bits
+        address = address * 2; //Because our Memory is only divisible by 16bits
 
-        if (address < 0 || address + 2 > bytes.length) {
+        if (address + 2 > bytes.length) {
             LogManager.LOGGER.info("DEBUG: Trying to get memory out of bounds " + address);
             return 0;
         }
 
-        return (((bytes[address] & 0xFF) << 8) | (bytes[address + 1] & 0xFF));
+        return ((bytes[address] & 0xFF) << 8) | (bytes[address + 1] & 0xFF);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Memory implements Target, JSONSerialisable {
         offset = (char)offset * 2;
 
 
-        if (offset + count > this.bytes.length || count < 0 || offset < 0 || srcOffset >= bytes.length) {
+        if (offset + count > this.bytes.length || srcOffset >= bytes.length || count < 0 || offset < 0) {
             return false;
         }
 
@@ -80,12 +80,12 @@ public class Memory implements Target, JSONSerialisable {
         address = (char)address * 2;
 
 
-        if (address < 0 || address + 2 > bytes.length) {
+        if (address + 2 > bytes.length) {
             LogManager.LOGGER.info("DEBUG: Trying to set memory out of bounds: " + address);
             return;
         }
 
-        bytes[address] = (byte) ((value >> 8) & 0xFF);
+        bytes[address] = (byte) ((value >> 8));
         bytes[address + 1] = (byte) (value & 0xFF);
     }
 
