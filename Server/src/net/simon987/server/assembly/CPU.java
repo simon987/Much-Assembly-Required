@@ -62,8 +62,8 @@ public class CPU implements JSONSerialisable{
 
     private int registerSetSize;
 
-    private static final char EXECUTION_COST_ADDR = 0x0300;
-    private static final char EXECUTED_INS_ADDR = 0x0301;
+    private static final char EXECUTION_COST_ADDR = 0x0050;
+    private static final char EXECUTED_INS_ADDR = 0x0051;
 
     /**
      * Creates a new CPU
@@ -128,13 +128,13 @@ public class CPU implements JSONSerialisable{
             counter++;
 
             if (counter % 10000 == 0) {
-                if (System.currentTimeMillis() >= (startTime + timeout)) {
+                if (System.currentTimeMillis() > (startTime + timeout)) {
                     LogManager.LOGGER.fine("CPU Timeout " + this + " after " + counter + "instructions (" + timeout + "ms): " + (double) counter / ((double) timeout / 1000) / 1000000 + "MHz");
 
                     //Write execution cost and instruction count to memory
                     memory.set(EXECUTION_COST_ADDR, timeout);
                     memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
-                    memory.set(EXECUTED_INS_ADDR, Util.getLowerWord(counter));
+                    memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
 
                     return timeout;
                 }
@@ -164,7 +164,7 @@ public class CPU implements JSONSerialisable{
         //Write execution cost and instruction count to memory
         memory.set(EXECUTION_COST_ADDR, elapsed);
         memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
-        memory.set(EXECUTED_INS_ADDR, Util.getLowerWord(counter));
+        memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
 
         return elapsed;
     }
@@ -295,7 +295,7 @@ public class CPU implements JSONSerialisable{
             } else if (destination <= registerSetSize) {
                 //Destination is a register
                 ip++;
-                instruction.execute(registerSet, destination, memory, registerSet.get(source), status);
+                instruction.execute(registerSet, destination, memory, registerSet.get(source - registerSetSize), status);
             } else if (destination <= registerSetSize * 2) {
                 //Destination is [reg]
                 ip++;
