@@ -55,10 +55,10 @@ public class AddInstructionTest {
         assertFalse(status.isBreakFlag());
 
         memory.clear();
-        memory.set(memorySize, 10);
+        memory.set(memorySize - 1, 10);
         memory.set(1, 10);
-        addInstruction.execute(memory, memorySize, memory, 1, status);
-        assertEquals(20, memory.get(memorySize));
+        addInstruction.execute(memory, memorySize - 1, memory, 1, status);
+        assertEquals(20, memory.get(memorySize - 1));
         assertEquals(10, memory.get(1));
         //FLAGS Should be CF=0 ZF=0 SF=0 OF=0
         assertFalse(status.isSignFlag());

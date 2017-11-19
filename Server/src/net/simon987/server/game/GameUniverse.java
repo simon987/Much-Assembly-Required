@@ -113,10 +113,11 @@ public class GameUniverse implements JSONSerialisable{
                     user.getCpu().getMemory().clear();
 
                     //Write assembled code to mem
-                    user.getCpu().getMemory().write((short) ar.origin, ar.bytes, 0, ar.bytes.length);
-                    user.getCpu().setCodeSegmentOffset(ar.codeSegmentOffset);
+                    char[] assembledCode = ar.getWords();
 
-                    //Init
+                    user.getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
+                    user.getCpu().setCodeSegmentOffset(ar.getCodeSegmentOffset());
+
 
                 } else {
                     user = new User(null);

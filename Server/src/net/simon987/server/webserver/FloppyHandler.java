@@ -15,11 +15,15 @@ public class FloppyHandler implements MessageHandler {
 
             LogManager.LOGGER.info("(WS) Floppy download request from " + user.getUser().getUsername());
 
+            if (user.isGuest()) {
+                return;
+            }
 
-            //floppy
-            byte[] bytes = user.getUser().getControlledUnit().getFloppyData().getBytes();
+            if (user.getUser().getControlledUnit().getFloppyData() != null) {
+                byte[] bytes = user.getUser().getControlledUnit().getFloppyData().getBytes();
+                user.getWebSocket().send(bytes);
+            }
 
-            user.getWebSocket().send(bytes);
 
         } else if (json.get("t").equals("floppyUp")) {
 

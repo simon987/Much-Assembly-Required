@@ -187,6 +187,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     @Override
     public Memory getFloppyData() {
-        return ((CubotFloppyDrive) getParent().getCpu().getHardware(CubotFloppyDrive.DEFAULT_ADDRESS)).getFloppy().getMemory();
+
+        CubotFloppyDrive drive = ((CubotFloppyDrive) getParent().getCpu().getHardware(CubotFloppyDrive.DEFAULT_ADDRESS));
+
+        if (drive.getFloppy() != null) {
+            return drive.getFloppy().getMemory();
+        } else {
+            return null;
+        }
     }
 }

@@ -23,6 +23,8 @@ public class CubotFloppyDrive extends CpuHardware {
 
     public CubotFloppyDrive(Cubot cubot) {
         this.cubot = cubot;
+
+        floppyDisk = new FloppyDisk();
     }
 
     @Override
@@ -94,8 +96,6 @@ public class CubotFloppyDrive extends CpuHardware {
 
         if (hwJSON.containsKey("floppy")) {
             drive.floppyDisk = FloppyDisk.deserialise((JSONObject) hwJSON.get("floppy"));
-        } else {
-            drive.floppyDisk = new FloppyDisk();
         }
 
         return drive;

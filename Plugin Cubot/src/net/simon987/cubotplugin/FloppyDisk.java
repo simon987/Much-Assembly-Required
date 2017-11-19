@@ -25,7 +25,7 @@ public class FloppyDisk implements JSONSerialisable {
 
 
     public FloppyDisk() {
-        this.memory = new Memory(1024 * 1440);
+        this.memory = new Memory(512 * 1440);
     }
 
     /**
@@ -39,7 +39,7 @@ public class FloppyDisk implements JSONSerialisable {
     public boolean readSector(int sector, Memory cpuMemory, int ramAddress) {
 
         if (sector <= 1440) {
-            cpuMemory.write(ramAddress, memory.getBytes(), sector * 1024, 1024);
+            cpuMemory.write(ramAddress, memory.getWords(), sector * 512, 512);
 
             //Calculate seek time
             int deltaTrack = (sector / 80) - rwHeadTrack;
@@ -66,7 +66,7 @@ public class FloppyDisk implements JSONSerialisable {
     public boolean writeSector(int sector, Memory cpuMemory, int ramAddress) {
 
         if (sector <= 1440) {
-            memory.write(sector * 512, cpuMemory.getBytes(), ramAddress * 2, 1024);
+            memory.write(sector * 512, cpuMemory.getWords(), ramAddress, 512);
 
             //Calculate seek time
             int deltaTrack = (sector / 80) - rwHeadTrack;

@@ -5,6 +5,8 @@ import net.simon987.server.assembly.exception.AssemblyException;
 import net.simon987.server.assembly.exception.DuplicateSegmentException;
 import net.simon987.server.logging.LogManager;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +32,7 @@ public class AssemblyResult {
     /**
      * Offset of the code segment
      */
-    public int codeSegmentOffset;
+    private int codeSegmentOffset;
     /**
      * Line of the code segment definition (for editor icons)
      */
@@ -102,6 +104,22 @@ public class AssemblyResult {
 
         }
 
+    }
+
+    public char[] getWords() {
+
+        char[] assembledCode = new char[bytes.length / 2];
+        ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).asCharBuffer().get(assembledCode);
+
+        return assembledCode;
+    }
+
+    public int getCodeSegmentOffset() {
+        if (codeSegmentSet) {
+            return codeSegmentOffset;
+        } else {
+            return origin;
+        }
     }
 
 }

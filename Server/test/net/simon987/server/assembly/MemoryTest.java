@@ -36,14 +36,14 @@ public class MemoryTest {
         Memory memory = new Memory(memorySize);
 
 
-        assertTrue(memory.write(0, new byte[memorySize], 0, memorySize));
-        assertFalse(memory.write(0, new byte[memorySize], 0, memorySize + 1));
-        assertFalse(memory.write(0, new byte[memorySize], 0, -1));
-        assertFalse(memory.write(-1, new byte[memorySize], 0, 10));
+        assertTrue(memory.write(0, new char[memorySize], 0, memorySize));
+        assertFalse(memory.write(0, new char[memorySize], 0, memorySize + 1));
+        assertFalse(memory.write(0, new char[memorySize], 0, -1));
+        assertFalse(memory.write(-1, new char[memorySize], 0, 10));
 
-        assertFalse(memory.write(memorySize / 2, new byte[15], 0, 1));
-        assertFalse(memory.write((memorySize / 2) - 5, new byte[11], 0, 11));
-        assertTrue(memory.write((memorySize / 2) - 5, new byte[11], 0, 10));
+        assertFalse(memory.write(memorySize, new char[15], 0, 1));
+        assertFalse(memory.write((memorySize) - 5, new char[11], 0, 6));
+        assertTrue(memory.write((memorySize) - 5, new char[11], 0, 5));
 
     }
 

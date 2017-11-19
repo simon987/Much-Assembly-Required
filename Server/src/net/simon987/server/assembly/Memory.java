@@ -1,12 +1,15 @@
 package net.simon987.server.assembly;
 
 
+import net.simon987.server.GameServer;
 import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.zip.Deflater;
@@ -23,7 +26,7 @@ public class Memory implements Target, JSONSerialisable {
     /**
      * Contents of the memory
      */
-    private byte[] bytes;
+    private char[] words;
 
     /**
      * Create an empty Memory object
@@ -31,7 +34,7 @@ public class Memory implements Target, JSONSerialisable {
      * @param size Size of the memory, in words
      */
     public Memory(int size) {
-        bytes = new byte[size];
+        words = new char[size];
     }
 
     /**
@@ -42,29 +45,26 @@ public class Memory implements Target, JSONSerialisable {
      */
     @Override
     public int get(int address) {
-        address = address * 2; //Because our Memory is only divisible by 16bits
+        address = (char) address;
 
-        if (address + 2 > bytes.length) {
+        if (address >= words.length) {
             LogManager.LOGGER.info("DEBUG: Trying to get memory out of bounds " + address);
             return 0;
         }
 
-        return ((bytes[address] & 0xFF) << 8) | (bytes[address + 1] & 0xFF);
+        return words[address];
     }
 
     /**
      * Write x words from an array at an offset
      */
-    public boolean write(int offset, byte[] bytes, int srcOffset, int count) {
+    public boolean write(int offset, char[] src, int srcOffset, int count) {
 
-        offset = (char)offset * 2;
-
-
-        if (offset + count > this.bytes.length || srcOffset >= bytes.length || count < 0 || offset < 0) {
+        if (offset + count > this.words.length || srcOffset >= src.length || count < 0 || offset < 0) {
             return false;
         }
 
-        System.arraycopy(bytes, srcOffset, this.bytes, offset, count);
+        System.arraycopy(src, srcOffset, this.words, offset, count);
         return true;
     }
 
@@ -76,30 +76,31 @@ public class Memory implements Target, JSONSerialisable {
      */
     @Override
     public void set(int address, int value) {
+        address = (char) address;
 
-        address = (char)address * 2;
-
-
-        if (address + 2 > bytes.length) {
+        if (address >= words.length) {
             LogManager.LOGGER.info("DEBUG: Trying to set memory out of bounds: " + address);
             return;
         }
 
-        bytes[address] = (byte) ((value >> 8));
-        bytes[address + 1] = (byte) (value & 0xFF);
+        words[address] = (char) value;
     }
 
     /**
      * Fill the memory with 0s
      */
     public void clear() {
-        Arrays.fill(bytes, (byte) 0);
+        Arrays.fill(words, (char) 0);
     }
 
     /**
      * Get byte array of the Memory object
      */
     public byte[] getBytes() {
+
+        byte[] bytes = new byte[words.length * 2];
+        ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).asCharBuffer().put(words);
+
         return bytes;
     }
 
@@ -112,7 +113,7 @@ public class Memory implements Target, JSONSerialisable {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION, true);
             DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(stream, compressor);
-            deflaterOutputStream.write(bytes);
+            deflaterOutputStream.write(getBytes());
             deflaterOutputStream.close();
             byte[] compressedBytes = stream.toByteArray();
 
@@ -128,25 +129,39 @@ public class Memory implements Target, JSONSerialisable {
     public static Memory deserialize(JSONObject json){
 
         Memory memory = new Memory(0);
-        byte[] compressedBytes = Base64.getDecoder().decode((String)json.get("zipBytes"));
 
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Inflater decompressor = new Inflater(true);
-            InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
-            inflaterOutputStream.write(compressedBytes);
-            inflaterOutputStream.close();
+        String zipBytesStr = (String) json.get("zipBytes");
 
-            memory.bytes = baos.toByteArray();
+        if (zipBytesStr != null) {
+            byte[] compressedBytes = Base64.getDecoder().decode((String) json.get("zipBytes"));
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Inflater decompressor = new Inflater(true);
+                InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
+                inflaterOutputStream.write(compressedBytes);
+                inflaterOutputStream.close();
+
+                memory.setBytes(baos.toByteArray());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            LogManager.LOGGER.severe("Memory was manually deleted");
+            memory = new Memory(GameServer.INSTANCE.getConfig().getInt("memory_size"));
         }
+
 
         return memory;
     }
 
     public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
+        this.words = new char[bytes.length / 2];
+        ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).asCharBuffer().get(this.words);
+    }
+
+    public char[] getWords() {
+        return words;
     }
 }
