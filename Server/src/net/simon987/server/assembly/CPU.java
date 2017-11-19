@@ -282,7 +282,7 @@ public class CPU implements JSONSerialisable{
             if (destination == 0) {
                 //Single operand
                 ip++;
-                instruction.execute(memory, registerSet.get(source), status);
+                instruction.execute(memory, registerSet.get(source - registerSetSize), status);
             } else if (destination == Operand.IMMEDIATE_VALUE) {
                 //Destination is an immediate value
                 //this shouldn't happen
@@ -299,7 +299,7 @@ public class CPU implements JSONSerialisable{
             } else if (destination <= registerSetSize * 2) {
                 //Destination is [reg]
                 ip++;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize), memory, registerSet.get(source), status);
+                instruction.execute(memory, registerSet.get(destination - registerSetSize), memory, registerSet.get(source - registerSetSize), status);
             } else {
                 //Assuming that destination is [reg + x]
                 ip += 2;
@@ -327,7 +327,7 @@ public class CPU implements JSONSerialisable{
                 ip += 2;
                 instruction.execute(memory, memory.get(ip - 1), memory,
                         registerSet.get(source - registerSetSize - registerSetSize) + sourceDisp, status);
-            } else if (destination < registerSetSize) {
+            } else if (destination <= registerSetSize) {
                 //Destination is a register
                 ip++;
                 instruction.execute(registerSet, destination, memory,
