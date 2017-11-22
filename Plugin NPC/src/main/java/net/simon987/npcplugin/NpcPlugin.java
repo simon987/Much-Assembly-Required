@@ -20,7 +20,7 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer {
 
     @Override
     public GameObject deserializeObject(JSONObject object) {
-        ;
+
         int objType = (int) (long) object.get("type");
 
         if (objType == HarvesterNPC.ID) {
