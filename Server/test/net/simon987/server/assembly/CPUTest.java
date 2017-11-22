@@ -23,7 +23,8 @@ public class CPUTest {
             cpu.reset();
             cpu.getMemory().clear();
             Random random = new Random();
-            random.nextBytes(cpu.getMemory().getBytes());
+            byte[] randomBytes = new byte[cpu.getMemory().getWords().length * 2];
+            random.nextBytes(randomBytes);
 
             for (int machineCode = Character.MIN_VALUE; machineCode < Character.MAX_VALUE; machineCode++) {
                 Instruction instruction = cpu.getInstructionSet().get(machineCode & 0x03F); // 0000 0000 00XX XXXX
