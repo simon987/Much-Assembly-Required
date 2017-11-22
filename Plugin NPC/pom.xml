@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.simon987.pluginnpc</groupId>
-    <artifactId>Plugin NPC</artifactId>
+    <artifactId>plugin-npc</artifactId>
     <version>1.2a</version>
     <build>
         <plugins>
@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>net.simon987.server</groupId>
-            <artifactId>Server</artifactId>
+            <artifactId>server</artifactId>
             <version>1.2a</version>
         </dependency>
     </dependencies>
