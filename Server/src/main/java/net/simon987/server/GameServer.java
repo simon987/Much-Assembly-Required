@@ -1,6 +1,5 @@
 package net.simon987.server;
 
-
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
 import net.simon987.server.event.TickEvent;
@@ -21,177 +20,195 @@ import java.util.ArrayList;
 
 public class GameServer implements Runnable {
 
-    public final static GameServer INSTANCE = new GameServer();
+	public final static GameServer INSTANCE = new GameServer();
 
-    private GameUniverse gameUniverse;
-    private GameEventDispatcher eventDispatcher;
-    private PluginManager pluginManager;
+	private GameUniverse gameUniverse;
+	private GameEventDispatcher eventDispatcher;
+	private PluginManager pluginManager;
 
-    private ServerConfiguration config;
+	private ServerConfiguration config;
 
-    private SocketServer socketServer;
+	private SocketServer socketServer;
 
-    private int maxExecutionTime;
+	private int maxExecutionTime;
 
-    public GameServer() {
+	public ArrayList<byte[]> saveArchive;
+	
+	public int maxArchiveSize;
 
-        this.config = new ServerConfiguration(new File("config.properties"));
+	public GameServer() {
 
-        gameUniverse = new GameUniverse(config);
-        pluginManager = new PluginManager();
+		this.config = new ServerConfiguration(new File("config.properties"));
 
-        maxExecutionTime = config.getInt("user_timeout");
+		gameUniverse = new GameUniverse(config);
+		pluginManager = new PluginManager();
 
-        //Load all plugins in plugins folder, if it doesn't exist, create it
-        File pluginDir = new File("plugins/");
-        File[] pluginDirListing = pluginDir.listFiles();
+		maxExecutionTime = config.getInt("user_timeout");
 
-        if (pluginDirListing != null) {
-            for (File pluginFile : pluginDirListing) {
+		// Load all plugins in plugins folder, if it doesn't exist, create it
+		File pluginDir = new File("plugins/");
+		File[] pluginDirListing = pluginDir.listFiles();
 
-                if (pluginFile.getName().endsWith(".jar")) {
-                    pluginManager.load(pluginFile);
-                }
+		if (pluginDirListing != null) {
+			for (File pluginFile : pluginDirListing) {
 
-            }
-        } else {
-            if (!pluginDir.mkdir()) {
-                LogManager.LOGGER.severe("Couldn't create plugin directory");
-            }
-        }
+				if (pluginFile.getName().endsWith(".jar")) {
+					pluginManager.load(pluginFile);
+				}
 
-        eventDispatcher = new GameEventDispatcher(pluginManager);
+			}
+		} else {
+			if (!pluginDir.mkdir()) {
+				LogManager.LOGGER.severe("Couldn't create plugin directory");
+			}
+		}
 
-    }
+		eventDispatcher = new GameEventDispatcher(pluginManager);
+		
+		saveArchive = new ArrayList<byte[]>();
+		
+		maxArchiveSize = config.getInt("max_archive_size");
+	}
 
-    public GameUniverse getGameUniverse() {
-        return gameUniverse;
-    }
+	public GameUniverse getGameUniverse() {
+		return gameUniverse;
+	}
 
-    public GameEventDispatcher getEventDispatcher() {
-        return eventDispatcher;
-    }
+	public GameEventDispatcher getEventDispatcher() {
+		return eventDispatcher;
+	}
 
-    @Override
-    public void run() {
-        LogManager.LOGGER.info("(G) Started game loop");
+	@Override
+	public void run() {
+		LogManager.LOGGER.info("(G) Started game loop");
 
-        long startTime; //Start time of the loop
-        long uTime;     //update time
-        long waitTime;  //time to wait
+		long startTime; // Start time of the loop
+		long uTime; // update time
+		long waitTime; // time to wait
 
-        boolean running = true;
+		boolean running = true;
 
-        while (running) {
+		while (running) {
 
-            startTime = System.currentTimeMillis();
+			startTime = System.currentTimeMillis();
 
-            tick();
+			tick();
 
-            uTime = System.currentTimeMillis() - startTime;
-            waitTime = config.getInt("tick_length") - uTime;
+			uTime = System.currentTimeMillis() - startTime;
+			waitTime = config.getInt("tick_length") - uTime;
 
-            LogManager.LOGGER.info("Wait time : " + waitTime + "ms | Update time: " + uTime + "ms | " + (int) (((double) uTime / waitTime) * 100) + "% load");
+			LogManager.LOGGER.info("Wait time : " + waitTime + "ms | Update time: " + uTime + "ms | "
+					+ (int) (((double) uTime / waitTime) * 100) + "% load");
 
-            try {
-                if (waitTime >= 0) {
-                    Thread.sleep(waitTime);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+			try {
+				if (waitTime >= 0) {
+					Thread.sleep(waitTime);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
-        }
+		}
 
+	}
 
-    }
+	private void tick() {
+		gameUniverse.incrementTime();
 
-    private void tick() {
-        gameUniverse.incrementTime();
+		// Dispatch tick event
+		GameEvent event = new TickEvent(gameUniverse.getTime());
+		GameServer.INSTANCE.getEventDispatcher().dispatch(event); // Ignore cancellation
 
-        //Dispatch tick event
-        GameEvent event = new TickEvent(gameUniverse.getTime());
-        GameServer.INSTANCE.getEventDispatcher().dispatch(event); //Ignore cancellation
+		// Process user code
+		ArrayList<User> users_ = gameUniverse.getUsers();
+		for (User user : users_) {
 
+			if (user.getCpu() != null) {
+				try {
 
-        //Process user code
-        ArrayList<User> users_ = gameUniverse.getUsers();
-        for (User user : users_) {
+					int timeout = Math.min(user.getControlledUnit().getEnergy(), maxExecutionTime);
 
-            if (user.getCpu() != null) {
-                try {
+					user.getCpu().reset();
+					int cost = user.getCpu().execute(timeout);
+					user.getControlledUnit().spendEnergy(cost);
 
-                    int timeout = Math.min(user.getControlledUnit().getEnergy(), maxExecutionTime);
+				} catch (Exception e) {
+					LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
+					e.printStackTrace();
+				}
 
-                    user.getCpu().reset();
-                    int cost = user.getCpu().execute(timeout);
-                    user.getControlledUnit().spendEnergy(cost);
+			}
+		}
 
-                } catch (Exception e) {
-                    LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
-                    e.printStackTrace();
-                }
+		// Process each worlds
+		// Avoid concurrent modification
+		ArrayList<World> worlds = new ArrayList<>(gameUniverse.getWorlds());
+		for (World world : worlds) {
+			world.update();
+		}
 
-            }
-        }
+		// Save
+		if (gameUniverse.getTime() % config.getInt("save_interval") == 0) {
+			save(new File("save.json"));
+		}
 
-        //Process each worlds
-        //Avoid concurrent modification
-        ArrayList<World> worlds = new ArrayList<>(gameUniverse.getWorlds());
-        for (World world : worlds) {
-            world.update();
-        }
+		socketServer.tick();
 
-        //Save
-        if (gameUniverse.getTime() % config.getInt("save_interval") == 0) {
-            save(new File("save.json"));
-        }
+		LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds");
+	}
 
-        socketServer.tick();
+	/**
+	 * Save game universe to file in JSON format
+	 *
+	 * @param file
+	 *            JSON file to save
+	 */
+	public void save(File file) {
 
-        LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds");
-    }
+		if (new File(new File("save.json").getAbsolutePath()).exists()) {
+			saveArchive.add(ZipUtils.bytifyFile("save.json"));
+			while(saveArchive.size() > maxArchiveSize) {
+				saveArchive.remove(0);
+			}
+		}
+		
+		try {
+			FileWriter fileWriter = new FileWriter(file);
 
-    /**
-     * Save game universe to file in JSON format
-     *
-     * @param file JSON file to save
-     */
-    public void save(File file) {
+			JSONObject universe = gameUniverse.serialise();
 
-        try {
-            FileWriter fileWriter = new FileWriter(file);
+			JSONArray plugins = new JSONArray();
 
-            JSONObject universe = gameUniverse.serialise();
+			for (ServerPlugin plugin : pluginManager.getPlugins()) {
+				plugins.add(plugin.serialise());
+			}
 
-            JSONArray plugins = new JSONArray();
+			universe.put("plugins", plugins);
 
-            for (ServerPlugin plugin : pluginManager.getPlugins()) {
-                plugins.add(plugin.serialise());
-            }
+			fileWriter.write(universe.toJSONString());
+			fileWriter.close();
 
-            universe.put("plugins", plugins);
+			LogManager.LOGGER.info("Saved to file " + file.getName());
 
-            fileWriter.write(universe.toJSONString());
-            fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-            LogManager.LOGGER.info("Saved to file " + file.getName());
+	}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+	public ServerConfiguration getConfig() {
+		return config;
+	}
 
-    }
+	public PluginManager getPluginManager() {
+		return pluginManager;
+	}
 
-    public ServerConfiguration getConfig() {
-        return config;
-    }
-
-    public PluginManager getPluginManager() {
-        return pluginManager;
-    }
-
-    public void setSocketServer(SocketServer socketServer) {
-        this.socketServer = socketServer;
-    }
+	public void setSocketServer(SocketServer socketServer) {
+		this.socketServer = socketServer;
+	}
+	
+	public ArrayList<byte[]> getSaveArchive() {
+		return this.saveArchive;
+	}
 }
