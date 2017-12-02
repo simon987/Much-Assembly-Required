@@ -35,19 +35,17 @@ public class WorldUpdateListener implements GameEventListener {
 
                 NonPlayerCharacter npc = new HarvesterNPC();
 
-                //todo set max iteration
-                Point p = null;
-                while (p == null) {
-                    p = world.getRandomPassableTile();
+                Point p = world.getRandomPassableTile();
+
+                if (p != null) {
+                    npc.setWorld(world);
+                    npc.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                    npc.setX(p.x);
+                    npc.setY(p.y);
+                    world.getGameObjects().add(npc);
                 }
 
 
-                npc.setWorld(world);
-                npc.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
-                npc.setX(p.x);
-                npc.setY(p.y);
-
-                world.getGameObjects().add(npc);
             }
 
 

@@ -1,6 +1,7 @@
 package net.simon987.mischwplugin;
 
 import net.simon987.mischwplugin.event.CpuInitialisationListener;
+import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.logging.LogManager;
@@ -11,7 +12,7 @@ public class MiscHWPlugin extends ServerPlugin implements CpuHardwareDeserialize
 
 
     @Override
-    public void init() {
+    public void init(ServerConfiguration config) {
         listeners.add(new CpuInitialisationListener());
 
         LogManager.LOGGER.info("Initialised Misc Hardware Plugin");

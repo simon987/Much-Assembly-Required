@@ -50,7 +50,7 @@ public class GameServer implements Runnable {
             for (File pluginFile : pluginDirListing) {
 
                 if (pluginFile.getName().endsWith(".jar")) {
-                    pluginManager.load(pluginFile);
+                    pluginManager.load(pluginFile, config);
                 }
 
             }

@@ -1,5 +1,6 @@
 package net.simon987.server.plugin;
 
+import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.io.JSONSerialisable;
 import org.json.simple.JSONObject;
@@ -26,7 +27,7 @@ public abstract class ServerPlugin implements JSONSerialisable {
     /**
      * Called when the plugin is loaded
      */
-    public abstract void init();
+    public abstract void init(ServerConfiguration config);
 
     public String getName() {
         return name;

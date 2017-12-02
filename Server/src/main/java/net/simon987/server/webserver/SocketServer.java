@@ -145,9 +145,8 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onError(WebSocket conn, Exception ex) {
 
-        LogManager.LOGGER.severe("an error occured on connection " + conn.getRemoteSocketAddress() + ':' + ex);
+        LogManager.LOGGER.severe("an error occurred on connection " + conn + ": " + ex);
         userManager.remove(userManager.getUser(conn));
-        conn.close();
 
         ex.printStackTrace();
     }

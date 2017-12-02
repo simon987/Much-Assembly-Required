@@ -2,7 +2,6 @@ package net.simon987.server.game.pathfinding;
 
 import net.simon987.server.assembly.Util;
 import net.simon987.server.game.World;
-import net.simon987.server.logging.LogManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,7 +115,7 @@ public class Pathfinder {
         }
 
         //Incomplete path
-        LogManager.LOGGER.fine("Incomplete path! " + counter);
+        // LogManager.LOGGER.fine("Incomplete path! " + counter);
         return null;
 
     }

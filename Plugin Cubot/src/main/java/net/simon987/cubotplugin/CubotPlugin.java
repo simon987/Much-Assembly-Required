@@ -2,6 +2,7 @@ package net.simon987.cubotplugin;
 
 import net.simon987.cubotplugin.event.CpuInitialisationListener;
 import net.simon987.cubotplugin.event.UserCreationListener;
+import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.io.CpuHardwareDeserializer;
@@ -14,7 +15,7 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
 
 
     @Override
-    public void init() {
+    public void init(ServerConfiguration config) {
         listeners.add(new CpuInitialisationListener());
         listeners.add(new UserCreationListener());
 

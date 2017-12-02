@@ -62,10 +62,31 @@ public class World implements JSONSerialisable {
         return y;
     }
 
+    /**
+     * Get all the game objects that are instances of the specified class
+     */
+    public ArrayList getGameObjects(Class<? extends GameObject> clazz) {
+
+        ArrayList<GameObject> objects = new ArrayList<>(gameObjects.size());
+
+        for (GameObject object : gameObjects) {
+            if (object.getClass().equals(clazz)) {
+                objects.add(object);
+            }
+        }
+
+        return objects;
+    }
+
     public ArrayList<GameObject> getGameObjects() {
         return gameObjects;
     }
 
+    /**
+     * Update this World and its GameObjects
+     * <br>
+     * The update is handled by plugins first
+     */
     public void update() {
 
         //Dispatch update event
@@ -75,11 +96,11 @@ public class World implements JSONSerialisable {
         ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
 
         for (GameObject object : gameObjects_) {
+            //Clean up dead objects
             if (object.isDead()) {
                 gameObjects.remove(object);
                 LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
-            }
-            if (object instanceof Updatable) {
+            } else if (object instanceof Updatable) {
                 ((Updatable) object).update();
             }
         }
@@ -198,7 +219,7 @@ public class World implements JSONSerialisable {
             counter++;
 
             //Prevent infinite loop
-            if (counter >= 2500) {
+            if (counter >= 1000) {
                 return null;
             }
 

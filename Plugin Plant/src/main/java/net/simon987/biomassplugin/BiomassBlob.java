@@ -1,19 +1,20 @@
-package net.simon987.plantplugin;
+package net.simon987.biomassplugin;
 
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.InventoryHolder;
 import org.json.simple.JSONObject;
 
-public class Plant extends GameObject implements InventoryHolder {
+public class BiomassBlob extends GameObject implements InventoryHolder {
+
     private static final char MAP_INFO = 0x4000;
     public static final int ID = 2;
 
     /**
-     * Yield of the plant, in biomass units
+     * Yield of the blob, in biomass units
      */
     private int biomassCount;
     /**
-     * Style of the plant (Only visual)
+     * Style of the blob (Only visual)
      */
     private int style;
 
@@ -56,28 +57,28 @@ public class Plant extends GameObject implements InventoryHolder {
         this.style = style;
     }
 
-    public static Plant deserialize(JSONObject json) {
+    public static BiomassBlob deserialize(JSONObject json) {
 
-        Plant plant = new Plant();
+        BiomassBlob biomassBlob = new BiomassBlob();
 
-        plant.setObjectId((int) (long) json.get("id"));
-        plant.setX((int) (long) json.get("x"));
-        plant.setY((int) (long) json.get("y"));
-        plant.style = (int) (long) json.get("style");
-        plant.biomassCount = (int) (long) json.get("biomassCount");
+        biomassBlob.setObjectId((int) (long) json.get("id"));
+        biomassBlob.setX((int) (long) json.get("x"));
+        biomassBlob.setY((int) (long) json.get("y"));
+        biomassBlob.style = (int) (long) json.get("style");
+        biomassBlob.biomassCount = (int) (long) json.get("biomassCount");
 
-        return plant;
+        return biomassBlob;
     }
 
     /**
-     * Called when an object attempts to place an item in this Plant
+     * Called when an object attempts to place an item in this BiomassBlob
      *
      * @param item item id (see MarConstants.ITEM_*)
      * @return Always returns false
      */
     @Override
     public boolean placeItem(int item) {
-        //Why would you want to place an item in a plant?
+        //Why would you want to place an item in a blob?
         return false;
     }
 
@@ -87,7 +88,7 @@ public class Plant extends GameObject implements InventoryHolder {
     }
 
     /**
-     * Called when an object attempts to take an item from this Plant.
+     * Called when an object attempts to take an item from this BiomassBlob.
      * If the object requests biomass, it will be subtracted from biomassCount, and
      * if it reaches 0, the plant is deleted
      *

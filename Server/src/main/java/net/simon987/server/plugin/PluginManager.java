@@ -1,5 +1,6 @@
 package net.simon987.server.plugin;
 
+import net.simon987.server.ServerConfiguration;
 import net.simon987.server.logging.LogManager;
 
 import java.io.File;
@@ -20,7 +21,7 @@ public class PluginManager {
         this.plugins = new ArrayList<>(10);
     }
 
-    public void load(File pluginFile) {
+    public void load(File pluginFile, ServerConfiguration config) {
 
         LogManager.LOGGER.info("Loading plugin file " + pluginFile.getName());
 
@@ -33,18 +34,18 @@ public class PluginManager {
             if (configEntry != null) {
 
                 InputStream stream = zipFile.getInputStream(configEntry);
-                Properties config = new Properties();
-                config.load(stream);
+                Properties pluginConfig = new Properties();
+                pluginConfig.load(stream);
 
                 //Load the plugin
                 ClassLoader loader = URLClassLoader.newInstance(new URL[]{pluginFile.toURI().toURL()});
-                Class<?> aClass = Class.forName(config.getProperty("classpath"), true, loader);
+                Class<?> aClass = Class.forName(pluginConfig.getProperty("classpath"), true, loader);
                 Class<? extends ServerPlugin> pluginClass = aClass.asSubclass(ServerPlugin.class);
                 Constructor<? extends ServerPlugin> constructor = pluginClass.getConstructor();
 
                 ServerPlugin plugin = constructor.newInstance();
-                plugin.setName(config.getProperty("name"));
-                plugin.setVersion(config.getProperty("version"));
+                plugin.setName(pluginConfig.getProperty("name"));
+                plugin.setVersion(pluginConfig.getProperty("version"));
 
                 LogManager.LOGGER.info("Loaded " + plugin.name + " V" + plugin.version);
 
@@ -52,7 +53,7 @@ public class PluginManager {
                 plugins.add(plugin);
 
                 //Init the plugin
-                plugin.init();
+                plugin.init(config);
 
             } else {
                 LogManager.LOGGER.severe("Couldn't find plugin.properties in " + pluginFile.getName());
