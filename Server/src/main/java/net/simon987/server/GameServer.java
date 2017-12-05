@@ -22,8 +22,9 @@ import java.util.ArrayList;
 public class GameServer implements Runnable {
 
     public final static GameServer INSTANCE = new GameServer();
-
-    private GameUniverse gameUniverse;
+	private final static String SAVE_JSON = "save.json";
+    
+	private GameUniverse gameUniverse;
     private GameEventDispatcher eventDispatcher;
     private PluginManager pluginManager;
 
@@ -146,6 +147,11 @@ public class GameServer implements Runnable {
         if (gameUniverse.getTime() % config.getInt("save_interval") == 0) {
             save(new File("save.json"));
         }
+        
+		// Clean up history files
+		if(gameUniverse.getTime() % config.getInt("clean_interval") == 0) {
+			FileUtils.cleanHistory(config.getInt("history_size"));
+		}
 
         socketServer.tick();
 
@@ -159,6 +165,18 @@ public class GameServer implements Runnable {
      */
     public void save(File file) {
 
+		boolean dirExists = FileUtils.prepDirectory(FileUtils.DIR_PATH);
+		
+		if (new File(new File(SAVE_JSON).getAbsolutePath()).exists() && dirExists) {
+			byte[] data = FileUtils.bytifyFile(new File(SAVE_JSON).toPath());
+			try {
+				FileUtils.writeSaveToZip(SAVE_JSON, data);
+			} catch (IOException e) {
+				System.out.println("Failed to write " + SAVE_JSON + " to zip file");
+				e.printStackTrace();
+			}
+		}
+		
         try {
             FileWriter fileWriter = new FileWriter(file);
 
