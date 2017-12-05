@@ -16,11 +16,13 @@ import org.json.simple.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class GameServer implements Runnable {
 
 	public final static GameServer INSTANCE = new GameServer();
+	private static final String SAVE_JSON = "save.json";
 
 	private GameUniverse gameUniverse;
 	private GameEventDispatcher eventDispatcher;
@@ -31,10 +33,6 @@ public class GameServer implements Runnable {
 	private SocketServer socketServer;
 
 	private int maxExecutionTime;
-
-	public ArrayList<byte[]> saveArchive;
-	
-	public int maxArchiveSize;
 
 	public GameServer() {
 
@@ -64,10 +62,6 @@ public class GameServer implements Runnable {
 		}
 
 		eventDispatcher = new GameEventDispatcher(pluginManager);
-		
-		saveArchive = new ArrayList<byte[]>();
-		
-		maxArchiveSize = config.getInt("max_archive_size");
 	}
 
 	public GameUniverse getGameUniverse() {
@@ -149,9 +143,14 @@ public class GameServer implements Runnable {
 
 		// Save
 		if (gameUniverse.getTime() % config.getInt("save_interval") == 0) {
-			save(new File("save.json"));
+			save(new File(SAVE_JSON));
 		}
-
+		
+		// Clean up history files
+		if(gameUniverse.getTime() % config.getInt("clean_interval") == 0) {
+			FileUtils.cleanHistory(config.getInt("history_size"));
+		}
+		
 		socketServer.tick();
 
 		LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds");
@@ -164,11 +163,16 @@ public class GameServer implements Runnable {
 	 *            JSON file to save
 	 */
 	public void save(File file) {
-
-		if (new File(new File("save.json").getAbsolutePath()).exists()) {
-			saveArchive.add(ZipUtils.bytifyFile("save.json"));
-			while(saveArchive.size() > maxArchiveSize) {
-				saveArchive.remove(0);
+		
+		boolean dirExists = FileUtils.prepDirectory(FileUtils.DIR_PATH);
+		
+		if (new File(new File(SAVE_JSON).getAbsolutePath()).exists() && dirExists) {
+			byte[] data = FileUtils.bytifyFile(new File(SAVE_JSON).toPath());
+			try {
+				FileUtils.writeSaveToZip(SAVE_JSON, data);
+			} catch (IOException e) {
+				System.out.println("Failed to write " + SAVE_JSON + " to zip file");
+				e.printStackTrace();
 			}
 		}
 		
@@ -206,9 +210,5 @@ public class GameServer implements Runnable {
 
 	public void setSocketServer(SocketServer socketServer) {
 		this.socketServer = socketServer;
-	}
-	
-	public ArrayList<byte[]> getSaveArchive() {
-		return this.saveArchive;
 	}
 }
