@@ -1,16 +1,10 @@
-package net.simon987.server;
+package net.simon987.server.io;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -48,9 +42,9 @@ public class FileUtils {
 
 	/**
 	 * Created a directory if none exists with the specified name
-	 * 
-	 * @param name folder to create
-	 * @return true is the file exists or create operation is successful
+	 *
+     * @param directory folder to create
+     * @return true is the file exists or create operation is successful
 	 */
 	public static boolean prepDirectory(Path directory) {	
 		File file = directory.toFile();
@@ -67,9 +61,9 @@ public class FileUtils {
 	
 	/**
 	 * Converts a file into an array of bytes
-	 * 
-	 * @param fileName the file to be converted into bytes
-	 * @return the byte array of the given file
+	 *
+     * @param path the file to be converted into bytes
+     * @return the byte array of the given file
 	 */
 	public static byte[] bytifyFile(Path path) {
 		byte[] bytes = null;
@@ -88,9 +82,9 @@ public class FileUtils {
 	/**
 	 * Takes in a file that had been converted to a byte[] to be written to a new
 	 * zip file
-	 * 
-	 * @param payload
-	 *            contains data in byte array form to be written, typically a file
+	 *
+     * @param data
+     *            contains data in byte array form to be written, typically a file
 	 *            that has been converted with bytifyFile()
 	 * @throws IOException
 	 *             if an error occurs during the write process

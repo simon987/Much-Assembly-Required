@@ -4,8 +4,10 @@ package net.simon987.server;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
 import net.simon987.server.event.TickEvent;
+import net.simon987.server.game.DayNightCycle;
 import net.simon987.server.game.GameUniverse;
 import net.simon987.server.game.World;
+import net.simon987.server.io.FileUtils;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.plugin.ServerPlugin;
@@ -34,6 +36,8 @@ public class GameServer implements Runnable {
 
     private int maxExecutionTime;
 
+    private DayNightCycle dayNightCycle;
+
     public GameServer() {
 
         this.config = new ServerConfiguration(new File("config.properties"));
@@ -42,6 +46,9 @@ public class GameServer implements Runnable {
         pluginManager = new PluginManager();
 
         maxExecutionTime = config.getInt("user_timeout");
+
+
+        dayNightCycle = new DayNightCycle();
 
         //Load all plugins in plugins folder, if it doesn't exist, create it
         File pluginDir = new File("plugins/");
@@ -62,6 +69,7 @@ public class GameServer implements Runnable {
         }
 
         eventDispatcher = new GameEventDispatcher(pluginManager);
+        eventDispatcher.getListeners().add(dayNightCycle);
 
     }
 
@@ -112,7 +120,7 @@ public class GameServer implements Runnable {
 
         //Dispatch tick event
         GameEvent event = new TickEvent(gameUniverse.getTime());
-        GameServer.INSTANCE.getEventDispatcher().dispatch(event); //Ignore cancellation
+        eventDispatcher.dispatch(event); //Ignore cancellation
 
 
         //Process user code
@@ -211,5 +219,9 @@ public class GameServer implements Runnable {
 
     public void setSocketServer(SocketServer socketServer) {
         this.socketServer = socketServer;
+    }
+
+    public DayNightCycle getDayNightCycle() {
+        return dayNightCycle;
     }
 }
