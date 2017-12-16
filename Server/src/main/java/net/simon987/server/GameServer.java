@@ -147,8 +147,12 @@ public class GameServer implements Runnable {
         //Process each worlds
         //Avoid concurrent modification
         ArrayList<World> worlds = new ArrayList<>(gameUniverse.getWorlds());
+        int updatedWorlds = 0;
         for (World world : worlds) {
-            world.update();
+            if (world.shouldUpdate()) {
+                world.update();
+                updatedWorlds++;
+            }
         }
 
         //Save
@@ -163,7 +167,8 @@ public class GameServer implements Runnable {
 
         socketServer.tick();
 
-        LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds");
+        LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds (" + updatedWorlds +
+                ") updated");
     }
 
     /**

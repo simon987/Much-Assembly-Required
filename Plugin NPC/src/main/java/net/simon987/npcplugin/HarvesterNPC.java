@@ -37,14 +37,14 @@ public class HarvesterNPC extends NonPlayerCharacter {
     public JSONObject serialise() {
         JSONObject json = super.serialise();
 
-        json.put("id", getObjectId());
+        json.put("i", getObjectId());
         json.put("x", getX());
         json.put("y", getY());
         json.put("direction", getDirection().ordinal());
         json.put("hp", hp);
         json.put("energy", energy);
         json.put("action", getAction().ordinal());
-        json.put("type", 10);
+        json.put("t", 10);
 
         return json;
     }
@@ -52,7 +52,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
     public static HarvesterNPC deserialize(JSONObject json) {
 
         HarvesterNPC npc = new HarvesterNPC();
-        npc.setObjectId((int) (long) json.get("id"));
+        npc.setObjectId((int) (long) json.get("i"));
         npc.setX((int) (long) json.get("x"));
         npc.setY((int) (long) json.get("y"));
         npc.hp = (int) (long) json.get("hp");

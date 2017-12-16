@@ -23,7 +23,7 @@ public class BiomassPlugin extends ServerPlugin implements GameObjectDeserialize
     @Override
     public GameObject deserializeObject(JSONObject object) {
 
-        int objType = (int) (long) object.get("type");
+        int objType = (int) (long) object.get("t");
 
         if (objType == BiomassBlob.ID) {
 

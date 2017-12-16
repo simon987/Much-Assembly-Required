@@ -25,7 +25,7 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
     @Override
     public GameObject deserializeObject(JSONObject object) {
 
-        int objType = (int) (long) object.get("type");
+        int objType = (int) (long) object.get("t");
 
         if (objType == Cubot.ID) {
 

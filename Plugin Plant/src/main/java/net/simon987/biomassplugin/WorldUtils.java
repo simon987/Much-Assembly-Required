@@ -65,7 +65,7 @@ public class WorldUtils {
 
                 BiomassBlob biomassBlob = new BiomassBlob();
                 biomassBlob.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
-                biomassBlob.setStyle(0); //TODO: set style depending on difficulty level? or random? from config?
+                // biomassBlob.setStyle(0); //TODO: set style depending on difficulty level? or random? from config?
                 biomassBlob.setBiomassCount(yield);
                 biomassBlob.setX(p.x);
                 biomassBlob.setY(p.y);

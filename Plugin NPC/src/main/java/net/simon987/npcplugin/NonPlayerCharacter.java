@@ -57,8 +57,6 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
     public boolean gotoWorld(Direction direction) {
 
-        System.out.println("going " + direction);
-
         if (direction == Direction.NORTH) {
             if (!moveTo(8, 0, 0)) {
                 setDirection(Direction.NORTH);

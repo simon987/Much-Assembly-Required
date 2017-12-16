@@ -16,7 +16,7 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
     /**
      * Style of the blob (Only visual)
      */
-    private int style;
+    //  private int style;
 
     private static final int ITM_BIOMASS = 1;
 
@@ -30,12 +30,12 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
 
         JSONObject json = new JSONObject();
 
-        json.put("type", ID);
-        json.put("id", getObjectId());
+        json.put("t", ID);
+        json.put("i", getObjectId());
         json.put("x", getX());
         json.put("y", getY());
-        json.put("biomassCount", biomassCount);
-        json.put("style", style);
+        json.put("b", biomassCount);
+        //  json.put("style", style);
 
         return json;
     }
@@ -49,23 +49,23 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
         this.biomassCount = biomassCount;
     }
 
-    public int getStyle() {
-        return style;
-    }
-
-    public void setStyle(int style) {
-        this.style = style;
-    }
+//    public int getStyle() {
+//        return style;
+//    }
+//
+//    public void setStyle(int style) {
+//        this.style = style;
+//    }
 
     public static BiomassBlob deserialize(JSONObject json) {
 
         BiomassBlob biomassBlob = new BiomassBlob();
 
-        biomassBlob.setObjectId((int) (long) json.get("id"));
+        biomassBlob.setObjectId((int) (long) json.get("i"));
         biomassBlob.setX((int) (long) json.get("x"));
         biomassBlob.setY((int) (long) json.get("y"));
-        biomassBlob.style = (int) (long) json.get("style");
-        biomassBlob.biomassCount = (int) (long) json.get("biomassCount");
+        //   biomassBlob.style = (int) (long) json.get("style");
+        biomassBlob.biomassCount = (int) (long) json.get("b");
 
         return biomassBlob;
     }

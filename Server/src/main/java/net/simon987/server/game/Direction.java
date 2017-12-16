@@ -58,4 +58,26 @@ public enum Direction {
         }
 
     }
+
+    /**
+     * Get direction to move from (x1, y1) to (x2, y2)
+     */
+    public static Direction getDirectionTo(int x1, int y1, int x2, int y2) {
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
+        if (dx > 0 && dx >= dy) {
+            return Direction.EAST;
+        } else if (dx < 0 && dx <= dy) {
+            return Direction.WEST;
+        } else if (dy > 0 && dy >= dx) {
+            return Direction.NORTH;
+        } else if (dy < 0 && dy <= dx) {
+            return Direction.SOUTH;
+        } else {
+            return null;
+        }
+
+    }
 }

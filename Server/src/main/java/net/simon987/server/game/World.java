@@ -30,6 +30,11 @@ public class World implements JSONSerialisable {
 
     private ArrayList<GameObject> gameObjects = new ArrayList<>(16);
 
+    /**
+     * If this number is greater than 0, the World will be updated.
+     */
+    private int updatable = 0;
+
     public World(int x, int y, TileMap tileMap) {
         this.x = x;
         this.y = y;
@@ -114,12 +119,14 @@ public class World implements JSONSerialisable {
         for (GameObject obj : gameObjects_) {
             objects.add(obj.serialise());
         }
-        json.put("objects", objects);
+        json.put("o", objects);
 
-        json.put("terrain", tileMap.serialise());
+        json.put("t", tileMap.serialise());
 
         json.put("x", x);
         json.put("y", y);
+
+        json.put("u", updatable);
 
         return json;
     }
@@ -145,10 +152,11 @@ public class World implements JSONSerialisable {
         World world = new World();
         world.x = (int) (long) json.get("x");
         world.y = (int) (long) json.get("y");
+        world.updatable = (int) (long) json.get("u");
 
-        world.tileMap = TileMap.deserialize((JSONObject) json.get("terrain"));
+        world.tileMap = TileMap.deserialize((JSONObject) json.get("t"));
 
-        for (JSONObject objJson : (ArrayList<JSONObject>) json.get("objects")) {
+        for (JSONObject objJson : (ArrayList<JSONObject>) json.get("o")) {
 
             GameObject object = GameObject.deserialize(objJson);
 
@@ -258,4 +266,15 @@ public class World implements JSONSerialisable {
         return gameObjects;
     }
 
+    public void incUpdatable() {
+        updatable++;
+    }
+
+    public void decUpdatable() {
+        updatable--;
+    }
+
+    public boolean shouldUpdate() {
+        return updatable > 0;
+    }
 }

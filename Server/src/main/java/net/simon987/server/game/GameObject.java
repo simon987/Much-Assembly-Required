@@ -82,7 +82,9 @@ public abstract class GameObject implements JSONSerialisable {
 
             if (leftWorld != null) {
                 world.getGameObjects().remove(this);
+                world.decUpdatable();
                 leftWorld.getGameObjects().add(this);
+                leftWorld.incUpdatable();
                 setWorld(leftWorld);
 
                 x = World.WORLD_SIZE - 1;
@@ -99,7 +101,9 @@ public abstract class GameObject implements JSONSerialisable {
 
             if (rightWorld != null) {
                 world.getGameObjects().remove(this);
+                world.decUpdatable();
                 rightWorld.getGameObjects().add(this);
+                rightWorld.incUpdatable();
                 setWorld(rightWorld);
 
                 x = 0;
@@ -117,7 +121,9 @@ public abstract class GameObject implements JSONSerialisable {
 
             if (upWorld != null) {
                 world.getGameObjects().remove(this);
+                world.decUpdatable();
                 upWorld.getGameObjects().add(this);
+                upWorld.incUpdatable();
                 setWorld(upWorld);
 
                 y = World.WORLD_SIZE - 1;
@@ -135,7 +141,9 @@ public abstract class GameObject implements JSONSerialisable {
 
             if (downWorld != null) {
                 world.getGameObjects().remove(this);
+                world.decUpdatable();
                 downWorld.getGameObjects().add(this);
+                downWorld.incUpdatable();
                 setWorld(downWorld);
 
                 y = 0;

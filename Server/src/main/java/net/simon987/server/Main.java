@@ -17,6 +17,7 @@ public class Main {
         //Load
         GameServer.INSTANCE.getGameUniverse().load(new File("save.json"));
 
+
         SocketServer socketServer = new SocketServer(new InetSocketAddress(config.getString("webSocket_host"),
                 config.getInt("webSocket_port")), config);
 

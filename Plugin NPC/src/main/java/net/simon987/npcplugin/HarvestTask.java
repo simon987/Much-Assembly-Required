@@ -1,6 +1,7 @@
 package net.simon987.npcplugin;
 
 
+import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Util;
 import net.simon987.server.game.Direction;
 import net.simon987.server.game.GameObject;
@@ -83,7 +84,18 @@ public class HarvestTask extends NPCTask {
             } else {
 
                 if (nextWorldDirection == null) {
-                    nextWorldDirection = Direction.getDirection(random.nextInt(3));
+
+                    //Stay near the center of the map 50% of the time
+                    if (random.nextBoolean()) {
+
+                        nextWorldDirection = Direction.getDirectionTo(npc.getX(), npc.getY(),
+                                GameServer.INSTANCE.getConfig().getInt("new_user_worldX"),
+                                GameServer.INSTANCE.getConfig().getInt("new_user_worldY"));
+
+                    } else {
+                        nextWorldDirection = Direction.getDirection(random.nextInt(3));
+                    }
+
                     pause += 6;
                 }
                 npc.gotoWorld(nextWorldDirection);

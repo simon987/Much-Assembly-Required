@@ -43,9 +43,8 @@ public class WorldUpdateListener implements GameEventListener {
                     npc.setX(p.x);
                     npc.setY(p.y);
                     world.getGameObjects().add(npc);
+                    world.incUpdatable();
                 }
-
-
             }
 
 
