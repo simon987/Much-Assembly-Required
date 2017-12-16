@@ -34,6 +34,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private int energy;
     private int maxEnergy;
 
+    private static final float SOLAR_PANEL_MULTIPLIER = 1;
+
     public Cubot() {
 
     }
@@ -45,6 +47,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     @Override
     public void update() {
+
+        storeEnergy((int) (SOLAR_PANEL_MULTIPLIER * GameServer.INSTANCE.getDayNightCycle().getSunIntensity()));
 
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
@@ -170,7 +174,11 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
             energy -= spent;
             return true;
         }
+    }
 
+    public void storeEnergy(int qty) {
+
+        energy = Math.min(energy + qty, maxEnergy);
 
     }
 

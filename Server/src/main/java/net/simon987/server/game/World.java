@@ -5,7 +5,6 @@ import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.JSONSerialisable;
-import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -99,7 +98,7 @@ public class World implements JSONSerialisable {
             //Clean up dead objects
             if (object.isDead()) {
                 gameObjects.remove(object);
-                LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
+                //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
             } else if (object instanceof Updatable) {
                 ((Updatable) object).update();
             }
