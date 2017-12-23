@@ -119,7 +119,7 @@ public class TileMap implements JSONSerialisable {
             deflaterOutputStream.close();
             byte[] compressedBytes = stream.toByteArray();
 
-            json.put("zipTerrain", new String(Base64.getEncoder().encode(compressedBytes)));
+            json.put("z", new String(Base64.getEncoder().encode(compressedBytes)));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,7 +133,7 @@ public class TileMap implements JSONSerialisable {
         TileMap tileMap = new TileMap(World.WORLD_SIZE, World.WORLD_SIZE);
 
 
-        byte[] compressedBytes = Base64.getDecoder().decode((String) object.get("zipTerrain"));
+        byte[] compressedBytes = Base64.getDecoder().decode((String) object.get("z"));
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

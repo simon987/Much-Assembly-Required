@@ -26,6 +26,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer {
 
         if (objType == HarvesterNPC.ID) {
             return HarvesterNPC.deserialize(object);
+        } else if (objType == Factory.ID) {
+            return Factory.deserialise(object);
         }
 
         return null;

@@ -1,5 +1,6 @@
 package net.simon987.npcplugin.event;
 
+import net.simon987.npcplugin.Factory;
 import net.simon987.npcplugin.HarvesterNPC;
 import net.simon987.npcplugin.NonPlayerCharacter;
 import net.simon987.server.GameServer;
@@ -31,7 +32,7 @@ public class WorldUpdateListener implements GameEventListener {
 
             if (ok) {
                 ok = false;
-                LogManager.LOGGER.info("Spawning Harvester\n--------------------------------------");
+                LogManager.LOGGER.info("Spawning Harvester + Factory\n--------------------------------------");
 
                 NonPlayerCharacter npc = new HarvesterNPC();
 
@@ -45,12 +46,22 @@ public class WorldUpdateListener implements GameEventListener {
                     world.getGameObjects().add(npc);
                     world.incUpdatable();
                 }
+
+                //Factory test
+                Factory factory = new Factory();
+
+                factory.setWorld(world);
+                factory.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                factory.setX(7);
+                factory.setY(11);
+                world.getGameObjects().add(factory);
+                world.incUpdatable();
+
             }
 
 
         }
-
-
     }
+
 
 }

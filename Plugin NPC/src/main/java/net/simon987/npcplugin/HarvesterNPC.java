@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 
 public class HarvesterNPC extends NonPlayerCharacter {
 
-    public static final int ID = 10; //todo change
+    public static final int ID = 10;
 
 
     public HarvesterNPC() {
@@ -44,7 +44,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
         json.put("hp", hp);
         json.put("energy", energy);
         json.put("action", getAction().ordinal());
-        json.put("t", 10);
+        json.put("t", ID);
 
         return json;
     }
