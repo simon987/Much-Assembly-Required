@@ -61,7 +61,7 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
 
         BiomassBlob biomassBlob = new BiomassBlob();
 
-        biomassBlob.setObjectId((int) (long) json.get("i"));
+        biomassBlob.setObjectId((long) json.get("i"));
         biomassBlob.setX((int) (long) json.get("x"));
         biomassBlob.setY((int) (long) json.get("y"));
         //   biomassBlob.style = (int) (long) json.get("style");

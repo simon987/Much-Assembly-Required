@@ -1,5 +1,7 @@
 package net.simon987.npcplugin;
 
+import net.simon987.server.GameServer;
+import net.simon987.server.assembly.Util;
 import net.simon987.server.game.Action;
 import net.simon987.server.game.Direction;
 import net.simon987.server.game.GameObject;
@@ -14,22 +16,65 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
     private static final int MAP_INFO = 0x0040;
 
-    protected int hp;
+    private static final int MAX_FACTORY_DISTANCE = GameServer.INSTANCE.getConfig().getInt("npc_max_factory_distance");
 
-    protected int energy;
-    protected int maxEnergy;
+    public static final int LIFETIME = GameServer.INSTANCE.getConfig().getInt("npc_lifetime");
 
+    //Unused
+    int hp;
+    int energy;
+    int maxEnergy;
+
+    /**
+     * Current task
+     */
     private NPCTask task;
 
     private Action lastAction = Action.IDLE;
+
+    /**
+     * Factory that created this NPC
+     */
+    private Factory factory;
+
+    /**
+     * If set to true, the NPC will be destroyed next tick if it is
+     * not linked to a Factory
+     */
+    private boolean selfDestroyNextTick = false;
+
+    /**
+     * Age of the npc, in ticks
+     */
+    private int age = 0;
 
     @Override
     public char getMapInfo() {
         return MAP_INFO;
     }
 
+    @Override
+    public void update() {
 
-    public boolean moveTo(int x, int y, int range) {
+        age++;
+
+        //Destroy NPCs that are not linked with a Factory
+        if (factory == null) {
+            if (selfDestroyNextTick) {
+                setDead(true);
+            }
+
+            selfDestroyNextTick = true;
+        }
+    }
+
+    /**
+     * Attempt to move the NPC to the specified coordinates
+     *
+     * @param range distance to the desired coordinates, in tiles
+     * @return true if the path is passable
+     */
+    boolean moveTo(int x, int y, int range) {
 
         ArrayList<Node> path = Pathfinder.findPath(getWorld(), getX(), getY(), x, y, range);
 
@@ -55,33 +100,62 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
         return false;
     }
 
-    public boolean gotoWorld(Direction direction) {
+    /**
+     * Go to the next World in the specified Direction.
+     *
+     * @return true if the World in the specified Direction is within the max. distance from the Factory
+     */
+    boolean gotoWorld(Direction direction) {
 
         if (direction == Direction.NORTH) {
-            if (!moveTo(8, 0, 0)) {
-                setDirection(Direction.NORTH);
-                return incrementLocation();
+
+            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+                    getWorld().getX(), getWorld().getY() - 1) <= MAX_FACTORY_DISTANCE) {
+                if (!moveTo(8, 0, 0)) {
+                    setDirection(Direction.NORTH);
+                    incrementLocation();
+                }
+                return true;
+            } else {
+                return false;
             }
+
         } else if (direction == Direction.EAST) {
-            if (!moveTo(15, 8, 0)) {
-                setDirection(Direction.EAST);
-                return incrementLocation();
+            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+                    getWorld().getX() + 1, getWorld().getY()) <= MAX_FACTORY_DISTANCE) {
+                if (!moveTo(15, 7, 0)) {
+                    setDirection(Direction.EAST);
+                    incrementLocation();
+                }
+                return true;
+            } else {
+                return false;
             }
         } else if (direction == Direction.SOUTH) {
-            if (!moveTo(7, 15, 0)) {
-                setDirection(Direction.SOUTH);
-                return incrementLocation();
+            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+                    getWorld().getX(), getWorld().getY() + 1) <= MAX_FACTORY_DISTANCE) {
+                if (!moveTo(8, 15, 0)) {
+                    setDirection(Direction.SOUTH);
+                    incrementLocation();
+                }
+                return true;
+            } else {
+                return false;
             }
         } else if (direction == Direction.WEST) {
-            if (!moveTo(0, 7, 0)) {
-                setDirection(Direction.WEST);
-                return incrementLocation();
+            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+                    getWorld().getX() - 1, getWorld().getY()) <= MAX_FACTORY_DISTANCE) {
+                if (!moveTo(0, 7, 0)) {
+                    setDirection(Direction.WEST);
+                    incrementLocation();
+                }
+                return true;
+            } else {
+                return false;
             }
         } else {
             return false;
         }
-
-        return true;
     }
 
     public NPCTask getTask() {
@@ -94,5 +168,17 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
     public Action getAction() {
         return lastAction;
+    }
+
+    public Factory getFactory() {
+        return factory;
+    }
+
+    public void setFactory(Factory factory) {
+        this.factory = factory;
+    }
+
+    public int getAge() {
+        return age;
     }
 }

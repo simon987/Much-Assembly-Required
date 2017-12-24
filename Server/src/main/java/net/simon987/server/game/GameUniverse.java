@@ -241,7 +241,7 @@ public class GameUniverse implements JSONSerialisable {
 
     }
 
-    public int getNextObjectId() {
+    public long getNextObjectId() {
         return ++nextObjectId;
     }
 

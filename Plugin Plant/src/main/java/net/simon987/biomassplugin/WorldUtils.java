@@ -15,8 +15,6 @@ public class WorldUtils {
      */
     public static ArrayList<BiomassBlob> generateBlobs(World world, int minCount, int maxCount, int yield) {
 
-        System.out.println("Generating blobs...");
-
         Random random = new Random();
         int blobCount = random.nextInt(maxCount - minCount) + minCount;
         ArrayList<BiomassBlob> biomassBlobs = new ArrayList<>(maxCount);

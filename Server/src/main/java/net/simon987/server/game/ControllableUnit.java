@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface ControllableUnit {
 
-    int getObjectId();
+    long getObjectId();
 
     void setKeyboardBuffer(ArrayList<Integer> kbBuffer);
 

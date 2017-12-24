@@ -84,11 +84,14 @@ public class HarvestTask extends NPCTask {
 
                 if (nextWorldDirection == null) {
 
-                    nextWorldDirection = Direction.getDirection(random.nextInt(3));
+                    while (!npc.gotoWorld(nextWorldDirection)) {
+                        nextWorldDirection = Direction.getDirection(random.nextInt(4));
+                    }
 
                     pause += 6;
+                } else {
+                    npc.gotoWorld(nextWorldDirection);
                 }
-                npc.gotoWorld(nextWorldDirection);
             }
 
 

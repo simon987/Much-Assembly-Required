@@ -98,7 +98,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     public static Cubot deserialize(JSONObject json) {
 
         Cubot cubot = new Cubot();
-        cubot.setObjectId((int) (long) json.get("i"));
+        cubot.setObjectId((long) json.get("i"));
         cubot.setX((int) (long) json.get("x"));
         cubot.setY((int) (long) json.get("y"));
         cubot.hp = (int) (long) json.get("hp");

@@ -18,7 +18,7 @@ public abstract class GameObject implements JSONSerialisable {
     /**
      * Object's unique identifier
      */
-    private int objectId;
+    private long objectId;
 
     /**
      * X coordinate of the object in its World
@@ -178,11 +178,11 @@ public abstract class GameObject implements JSONSerialisable {
 
     }
 
-    public int getObjectId() {
+    public long getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(int objectId) {
+    public void setObjectId(long objectId) {
         this.objectId = objectId;
     }
 

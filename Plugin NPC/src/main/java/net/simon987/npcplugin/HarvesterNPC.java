@@ -17,19 +17,22 @@ public class HarvesterNPC extends NonPlayerCharacter {
     @Override
     public void update() {
 
-        if (hp <= 0) {
-            setDead(true);
-            //TODO: drop biomass
+        super.update();
 
-        }
+        if (getFactory() != null) {
+            if (getTask().checkCompleted()) {
 
+                setTask(new HarvestTask());
 
-        if (getTask().checkCompleted()) {
+            } else {
+                getTask().tick(this);
+            }
 
-            setTask(new HarvestTask());
-
-        } else {
-            getTask().tick(this);
+            //Self-destroy when age limit is reached
+            if (getAge() >= NonPlayerCharacter.LIFETIME) {
+                setDead(true);
+                getFactory().getNpcs().remove(this);
+            }
         }
     }
 
@@ -52,7 +55,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
     public static HarvesterNPC deserialize(JSONObject json) {
 
         HarvesterNPC npc = new HarvesterNPC();
-        npc.setObjectId((int) (long) json.get("i"));
+        npc.setObjectId((long) json.get("i"));
         npc.setX((int) (long) json.get("x"));
         npc.setY((int) (long) json.get("y"));
         npc.hp = (int) (long) json.get("hp");

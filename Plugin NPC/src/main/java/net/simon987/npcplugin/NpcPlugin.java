@@ -1,6 +1,6 @@
 package net.simon987.npcplugin;
 
-import net.simon987.npcplugin.event.WorldUpdateListener;
+import net.simon987.npcplugin.event.WorldCreationListener;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.io.GameObjectDeserializer;
@@ -14,7 +14,7 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer {
     @Override
     public void init(ServerConfiguration configuration) {
 
-        listeners.add(new WorldUpdateListener());
+        listeners.add(new WorldCreationListener());
 
         LogManager.LOGGER.info("Initialised NPC plugin");
     }
