@@ -1,0 +1,14 @@
+
+plugins/Plugin NPC.jar
+plugins/Plugin Misc HW.jar
+plugins/Plant.jar
+plugins/Cubot.jar
+.idea/*
+mar.log
+mar.log.lck
+*.iml
+*.class
+*/target/*
+plugins/*.jar
+save.json
+Server/Server.iml
