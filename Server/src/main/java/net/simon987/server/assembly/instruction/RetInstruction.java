@@ -33,7 +33,7 @@ public class RetInstruction extends Instruction {
     @Override
     public Status execute(int src, Status status) {
         cpu.setIp((char) cpu.getMemory().get(cpu.getRegisterSet().get(7))); //Jmp
-        cpu.getRegisterSet().set(7, cpu.getRegisterSet().get(7) + src); //Inc SP
+        cpu.getRegisterSet().set(7, cpu.getRegisterSet().get(7) + src + 1); //Inc SP
 
         return status;
     }
