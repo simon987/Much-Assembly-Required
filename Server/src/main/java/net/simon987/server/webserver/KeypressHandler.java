@@ -3,6 +3,8 @@ package net.simon987.server.webserver;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class KeypressHandler implements MessageHandler {
 
@@ -16,7 +18,11 @@ public class KeypressHandler implements MessageHandler {
 
                 int key = (int) (long) json.get("k");
 
-                user.getUser().getControlledUnit().getKeyboardBuffer().add(key);
+                ArrayList<Integer> buffer = user.getUser().getControlledUnit().getKeyboardBuffer();
+
+                if (buffer.size() < 16) {
+                    buffer.add(key);
+                }
             }
         }
     }
