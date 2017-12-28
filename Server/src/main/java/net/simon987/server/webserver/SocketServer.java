@@ -57,8 +57,7 @@ public class SocketServer extends WebSocketServer {
             }
         }
 
-        setConnectionLostTimeout(30);
-
+        setConnectionLostTimeout(120);
 
         database = new SocketServerDatabase(config);
 
