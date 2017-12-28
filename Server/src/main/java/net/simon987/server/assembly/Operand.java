@@ -113,6 +113,18 @@ public class Operand {
             value = IMMEDIATE_VALUE;
             return true;
         } catch (NumberFormatException e) {
+
+            //Try Binary number (format 0bXXXX)
+            if (text.startsWith("0b")) {
+                try {
+                    data = Integer.parseInt(text.substring(2), 2);
+                    value = IMMEDIATE_VALUE;
+                    return true;
+                } catch (NumberFormatException e2) {
+                    return false;
+                }
+            }
+
             return false;
         }
     }
