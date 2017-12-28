@@ -219,8 +219,7 @@ public class CPU implements JSONSerialisable {
             if (destination == 0) {
                 //Single operand
                 ip++;
-                instruction.execute(sourceValue, status);
-                instruction.execute(memory, memory.get(ip - 1), status); //For POP instruction
+                instruction.execute(memory, memory.get(ip - 1), status);
             } else if (destination == Operand.IMMEDIATE_VALUE) {
                 //Destination is an immediate value
 
