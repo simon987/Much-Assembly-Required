@@ -201,4 +201,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
             return null;
         }
     }
+
+    @Override
+    public boolean isAt(int x, int y) {
+        return false;
+    }
 }

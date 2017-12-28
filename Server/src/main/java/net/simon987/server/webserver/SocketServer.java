@@ -166,7 +166,8 @@ public class SocketServer extends WebSocketServer {
 
         LogManager.LOGGER.info("Notified " + userManager.getOnlineUsers().size() + " users");
 
-        for (OnlineUser user : userManager.getOnlineUsers()) {
+        ArrayList<OnlineUser> onlineUsers = new ArrayList<>(userManager.getOnlineUsers()); //Avoid ConcurrentModificationException
+        for (OnlineUser user : onlineUsers) {
 
             if (user.getWebSocket().isOpen()) {
 

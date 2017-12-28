@@ -67,7 +67,6 @@ class MachineCode {
             LogManager.LOGGER.severe("Couldn't write the dst operand for instruction :" + dst);
         } else {
 
-            //Src is the 5 most significant bits
             value &= 0xF83F; //1111 1000 0011 1111
             dst <<= 6; //0000 0XXX XX00 0000
             value |= dst;
