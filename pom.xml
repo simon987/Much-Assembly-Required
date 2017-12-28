@@ -13,7 +13,7 @@
     <build>
         <resources>
             <resource>
-                <directory>../</directory>
+                <directory>/src/main/java/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.properties</include>

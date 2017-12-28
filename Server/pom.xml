@@ -13,10 +13,10 @@
     <build>
         <resources>
             <resource>
-                <directory>../</directory>
+                <directory>/</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>**/*.properties</include>
+                    <include>../config.properties</include>
                 </includes>
             </resource>
         </resources>
