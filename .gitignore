@@ -12,3 +12,4 @@ mar.log.lck
 plugins/*.jar
 save.json
 Server/Server.iml
+target/server-1.2a.jar

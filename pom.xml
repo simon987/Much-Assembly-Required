@@ -11,6 +11,15 @@
 
 
     <build>
+        <resources>
+            <resource>
+                <directory>../</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <version>3.6.2</version>
@@ -35,6 +44,12 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <outputDirectory>../target/plugins</outputDirectory>
+                        <archive>
+                            <manifest>
+                                <addClasspath>false</addClasspath>
+                                <mainClass>net.simon987.server.Main</mainClass>
+                            </manifest>
+                        </archive>
                     </configuration>
                 </plugin>
         </plugins>
