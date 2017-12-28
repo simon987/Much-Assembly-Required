@@ -124,7 +124,7 @@ public class GameServer implements Runnable {
 
 
         //Process user code
-        ArrayList<User> users_ = gameUniverse.getUsers();
+        ArrayList<User> users_ = new ArrayList<>(gameUniverse.getUsers());
         for (User user : users_) {
 
             if (user.getCpu() != null) {
