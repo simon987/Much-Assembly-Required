@@ -14,6 +14,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     public static final int ID = 1;
 
     private char hologram = 0;
+    private String hologramString = "";
+    private HologramMode hologramMode = HologramMode.CLEARED;
+
     private char lastHologram = 0;
 
     /**
@@ -86,6 +89,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
         json.put("holo", (int) lastHologram);
+        json.put("holoStr", hologramString);
+        json.put("holoMode", hologramMode.ordinal());
         json.put("energy", energy);
 
         if (parent != null) {
@@ -149,6 +154,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         return lastAction;
     }
 
+    public Action getCurrentAction() {
+        return currentAction;
+    }
+
     public void setHologram(char hologram) {
         this.hologram = hologram;
     }
@@ -157,6 +166,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         return lastHologram;
     }
 
+    public void setHologramString(String hologramString) {
+        this.hologramString = hologramString;
+    }
 
     public int getEnergy() {
         return energy;
@@ -205,5 +217,15 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     @Override
     public boolean isAt(int x, int y) {
         return false;
+    }
+
+    public void setHologramMode(HologramMode hologramMode) {
+        this.hologramMode = hologramMode;
+    }
+
+    public enum HologramMode {
+        CLEARED,
+        HEX,
+        STRING
     }
 }

@@ -7,6 +7,7 @@ import net.simon987.server.logging.LogManager;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 /**
@@ -144,6 +145,9 @@ public class Assembler {
                     //Handle DUP operator
                     if (valueTokens.length == 2 && valueTokens[1].toUpperCase().contains("DUP(")) {
                         out.write(parseDUPOperator16(valueTokens, labels, currentLine));
+                    } else if (value.startsWith("\"") && value.endsWith("\"")) {
+                        //Handle string
+                        out.write(value.substring(1, value.length() - 1).getBytes(StandardCharsets.UTF_16));
                     } else if (labels != null && labels.containsKey(value)) {
                         //Handle label
                         out.writeChar(labels.get(value));
