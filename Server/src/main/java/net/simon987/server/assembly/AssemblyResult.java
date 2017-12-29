@@ -15,9 +15,8 @@ import java.util.HashMap;
  */
 public class AssemblyResult {
 
-
     /**
-     * The origin of the program, default is 0x400
+     * The origin of the program, default is 0x200
      */
     public int origin;
     /**
@@ -34,7 +33,7 @@ public class AssemblyResult {
      */
     private int codeSegmentOffset;
     /**
-     * Line of the code segment definition (for editor icons)
+     * Line of the code segment definition
      */
     private int codeSegmentLine;
 
@@ -44,11 +43,11 @@ public class AssemblyResult {
      */
     public byte[] bytes;
     /**
-     * Offset of the data segment, default is 0x4000
+     * Offset of the data segment
      */
     private int dataSegmentOffset;
     /**
-     * Line of the data segment definition (for editor icons)
+     * Line of the data segment definition
      */
     private int dataSegmentLine;
     /**
