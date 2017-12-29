@@ -46,9 +46,11 @@ public class MulInstruction extends Instruction {
             status.setOverflowFlag(true);
             status.setCarryFlag(true);
             cpu.getRegisterSet().getRegister("Y").setValue(hWord);//Don't overwrite Y register if it's blank
+        } else {
+            status.setOverflowFlag(false);
+            status.setCarryFlag(false);
         }
-        status.setOverflowFlag(false);
-        status.setCarryFlag(false);
+
         cpu.getRegisterSet().getRegister("A").setValue(Util.getLowerWord(result));
 
         return status;
