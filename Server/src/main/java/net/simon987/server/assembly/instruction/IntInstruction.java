@@ -4,10 +4,12 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.Instruction;
 import net.simon987.server.assembly.Status;
 /**
- *  Sets the PC to 0x0200 + Immediate operand
+ *  Software Interrupt
+ *  Pushes the flags register and the IP to the stack then
+ *   Sets the IP to 0x0200 + 2*src. 
+ *  (x2 is to align with jmp instructions)
  *  
- * 
- *
+ *  No reserved interrupt vectors yet
  */
 public class IntInstruction extends Instruction{
 	
