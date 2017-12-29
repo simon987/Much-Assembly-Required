@@ -149,6 +149,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         return lastAction;
     }
 
+    public Action getCurrentAction() {
+        return currentAction;
+    }
+
     public void setHologram(char hologram) {
         this.hologram = hologram;
     }

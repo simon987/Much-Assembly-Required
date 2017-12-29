@@ -42,7 +42,7 @@ public class CubotDrill extends CpuHardware {
         } else if (a == GATHER_SLOW || a == GATHER_FAST) {
 
             if (cubot.spendEnergy(1400)) {
-                if (cubot.getAction() == Action.IDLE) {
+                if (cubot.getCurrentAction() == Action.IDLE) {
                     int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
 
                     if (tile == TileMap.IRON_TILE) {
