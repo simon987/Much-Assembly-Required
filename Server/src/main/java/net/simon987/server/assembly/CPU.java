@@ -44,7 +44,7 @@ public class CPU implements JSONSerialisable {
 
     /**
      * Offset of the code segment. The code starts to get
-     * executed at this address each tick. Defaults to 0x4000
+     * executed at this address each tick. Defaults to org_offset@config.properties
      */
     private int codeSegmentOffset;
 

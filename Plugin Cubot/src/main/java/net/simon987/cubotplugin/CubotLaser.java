@@ -49,7 +49,7 @@ public class CubotLaser extends CpuHardware {
             ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
 
 
-            if (cubot.getAction() == Action.IDLE && objects.size() > 0) {
+            if (cubot.getCurrentAction() == Action.IDLE && objects.size() > 0) {
                 //FIXME: Problem here if more than 1 object
                 if (objects.get(0) instanceof InventoryHolder) {
                     if (((InventoryHolder) objects.get(0)).canTakeItem(b)) {
@@ -62,6 +62,8 @@ public class CubotLaser extends CpuHardware {
                         }
                     }
                 }
+            } else {
+                System.out.println("\n\n\n\n\n It did it");
             }
 
 

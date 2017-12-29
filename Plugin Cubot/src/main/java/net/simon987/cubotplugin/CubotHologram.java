@@ -17,6 +17,12 @@ public class CubotHologram extends CpuHardware {
 
     private Cubot cubot;
 
+    private static final int CLEAR = 0;
+    private static final int DISPLAY_HEX = 1;
+    private static final int DISPLAY_STRING = 2;
+
+    private static final int STR_MAX_LEN = 8;
+
     public CubotHologram(Cubot cubot) {
         this.cubot = cubot;
     }
@@ -25,7 +31,33 @@ public class CubotHologram extends CpuHardware {
     public void handleInterrupt(Status status) {
 
         char a = getCpu().getRegisterSet().getRegister("A").getValue();
-        cubot.setHologram(a);
+
+        if (a == CLEAR) {
+            cubot.setHologramMode(Cubot.HologramMode.CLEARED);
+        } else if (a == DISPLAY_HEX) {
+            char b = getCpu().getRegisterSet().getRegister("B").getValue();
+            cubot.setHologram(b);
+            cubot.setHologramMode(Cubot.HologramMode.HEX);
+        } else if (a == DISPLAY_STRING) {
+            char x = getCpu().getRegisterSet().getRegister("X").getValue();
+            //Display zero-terminated string starting at X (max 8 chars)
+
+            StringBuilder holoString = new StringBuilder();
+
+            for (int i = 0; i < STR_MAX_LEN; i++) {
+
+                char nextChar = (char) getCpu().getMemory().get(x + i);
+
+                if (nextChar != 0) {
+                    holoString.append((char) getCpu().getMemory().get(x + i));
+                } else {
+                    break;
+                }
+            }
+
+            cubot.setHologramString(holoString.toString());
+            cubot.setHologramMode(Cubot.HologramMode.STRING);
+        }
 
     }
 
