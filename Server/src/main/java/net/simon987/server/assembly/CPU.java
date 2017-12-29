@@ -473,9 +473,9 @@ public class CPU implements JSONSerialisable {
      * 
      */
     public void Interrupt(int hw, int offset, boolean retry) {
-    	Instruction push = instructionSet.get("push");
-    	push.execute(status.toByte(), status);
+        Instruction push = instructionSet.get("push");
+        push.execute(status.toByte(), status);
         push.execute(ip, status);
-		this.setIp((char)(0x0200 + offset*2 + 0x0080*hw));
+        this.setIp((char)(0x0200 + offset*2 + 0x0080*hw));
     }    
 }
