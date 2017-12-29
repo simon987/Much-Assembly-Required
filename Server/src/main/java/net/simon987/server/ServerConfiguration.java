@@ -22,7 +22,7 @@ public class ServerConfiguration {
     public ServerConfiguration(String file) {
         try {
             properties = new Properties();
-            InputStream is = ServerConfiguration.class.getClassLoader().getResourceAsStream("config.properties");
+            InputStream is = new FileInputStream("config.properties");
             properties.load(is);
 
         } catch (IOException e) {
