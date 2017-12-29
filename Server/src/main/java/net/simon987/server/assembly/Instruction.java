@@ -120,8 +120,8 @@ public abstract class Instruction {
      * Whether or not the instruction is valid without any
      * operands
      */
-    private static boolean noOperandsValid() {
-        return true;
+    public boolean noOperandsValid() {
+        return false;
     }
 
     String getMnemonic() {
