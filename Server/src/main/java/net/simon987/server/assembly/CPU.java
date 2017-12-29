@@ -97,6 +97,8 @@ public class CPU implements JSONSerialisable {
         instructionSet.add(new JncInstruction(this));
         instructionSet.add(new JnoInstruction(this));
         instructionSet.add(new JoInstruction(this));
+        instructionSet.add(new IntInstruction(this));
+        instructionSet.add(new IntrInstruction(this));
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
@@ -466,6 +468,14 @@ public class CPU implements JSONSerialisable {
         return attachedHardware.get(address);
 
     }
-
-
+    /**
+     * Sets the IP to 0x0200 + Offset and pushes flags then the old IP
+     * 
+     */
+    public void Interrupt(int hw, int offset, boolean retry) {
+    	Instruction push = instructionSet.get("push");
+    	push.execute(status.toByte(), status);
+        push.execute(ip, status);
+		this.setIp((char)(0x0200 + offset*2 + 0x0080*hw));
+    }    
 }

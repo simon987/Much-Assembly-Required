@@ -132,4 +132,20 @@ public class Status {
     public void setErrorFlag(boolean errorFlag) {
         this.errorFlag = errorFlag;
     }
+    
+    public char toByte() {
+    	char stat = 0; 
+    	stat = (char) (stat | ((signFlag ? 1 : 0) << 3));
+    	stat = (char) (stat | ((zeroFlag ? 1 : 0) << 2));
+    	stat = (char) (stat | ((carryFlag ? 1 : 0) << 1));
+    	stat = (char) (stat | (overflowFlag ? 1 : 0));
+    	return stat;
+    }
+    
+    public void fromByte(char stat) {
+    	setSignFlag((stat & (1 << 3)) != 0);
+    	setZeroFlag((stat & (1 << 2)) != 0);
+    	setCarryFlag((stat & (1 << 1)) != 0);
+    	setOverflowFlag((stat & 1) != 0);    	
+    }
 }
