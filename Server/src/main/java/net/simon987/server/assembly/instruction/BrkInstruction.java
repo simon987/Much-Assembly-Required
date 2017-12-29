@@ -20,4 +20,8 @@ public class BrkInstruction extends Instruction {
 
         return status;
     }
+
+    public boolean noOperandsValid() {
+        return true;
+    }
 }
