@@ -11,15 +11,6 @@
 
 
     <build>
-        <resources>
-            <resource>
-                <directory>/src/main/java/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <version>3.6.2</version>

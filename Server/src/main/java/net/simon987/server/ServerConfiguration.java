@@ -6,6 +6,7 @@ import net.simon987.server.logging.LogManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -18,11 +19,11 @@ public class ServerConfiguration {
      */
     private Properties properties;
 
-    public ServerConfiguration(File file) {
+    public ServerConfiguration(String file) {
         try {
             properties = new Properties();
-
-            properties.load(new FileInputStream(file));
+            InputStream is = ServerConfiguration.class.getClassLoader().getResourceAsStream("config.properties");
+            properties.load(is);
 
         } catch (IOException e) {
             LogManager.LOGGER.severe("Problem loading server configuration: " + e.getMessage());

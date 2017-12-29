@@ -13,10 +13,10 @@
     <build>
         <resources>
             <resource>
-                <directory>/</directory>
+                <directory>../Server/src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>../config.properties</include>
+                    <include>config.properties</include>
                 </includes>
             </resource>
         </resources>
@@ -32,12 +32,31 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>../target/libs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <outputDirectory>../target</outputDirectory>
                     <archive>
                         <manifest>
                             <mainClass>net.simon987.server.Main</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs/</classpathPrefix>
                         </manifest>
                     </archive>
                 </configuration>
