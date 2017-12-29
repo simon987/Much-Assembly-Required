@@ -37,4 +37,9 @@ public class RetInstruction extends Instruction {
 
         return status;
     }
+
+    @Override
+    public boolean noOperandsValid() {
+        return true;
+    }
 }
