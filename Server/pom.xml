@@ -3,15 +3,37 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<groupId>net.simon987.server</groupId>
-		<artifactId>server_root</artifactId>
-		<version>1.2a</version>
-    </parent>
+
 
     <build>
+
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>../target/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../Server/src/main/resources</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>config.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <version>3.6.2</version>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -23,9 +45,34 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>../target/libs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
                 <configuration>
                     <outputDirectory>../target</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.simon987.server.Main</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>libs/</classpathPrefix>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
@@ -59,5 +106,10 @@
         </dependency>
 
     </dependencies>
+
+    <properties>
+        <!-- explicitly set build encoding so not altered by build platform defaults -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 </project>

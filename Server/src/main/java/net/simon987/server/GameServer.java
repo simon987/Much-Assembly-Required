@@ -40,7 +40,7 @@ public class GameServer implements Runnable {
 
     public GameServer() {
 
-        this.config = new ServerConfiguration(new File("config.properties"));
+        this.config = new ServerConfiguration("config.properties");
 
         gameUniverse = new GameUniverse(config);
         pluginManager = new PluginManager();

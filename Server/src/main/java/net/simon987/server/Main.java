@@ -12,8 +12,7 @@ public class Main {
 
 
         LogManager.initialize();
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
-
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         //Load
         GameServer.INSTANCE.getGameUniverse().load(new File("save.json"));
 
