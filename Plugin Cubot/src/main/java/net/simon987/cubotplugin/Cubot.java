@@ -17,7 +17,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private String hologramString = "";
     private HologramMode hologramMode = HologramMode.CLEARED;
 
-    private char lastHologram = 0;
+    private HologramMode lastHologramMode = HologramMode.CLEARED;
 
     /**
      * Hit points
@@ -73,8 +73,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         currentAction = Action.IDLE;
 
         //Same principle for hologram
-        lastHologram = hologram;
-        hologram = 0;
+        lastHologramMode = hologramMode;
+        hologramMode = HologramMode.CLEARED;
     }
 
     @Override
@@ -88,9 +88,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
-        json.put("holo", (int) lastHologram);
+        json.put("holo", (int) hologram);
         json.put("holoStr", hologramString);
-        json.put("holoMode", hologramMode.ordinal());
+        json.put("holoMode", lastHologramMode.ordinal());
         json.put("energy", energy);
 
         if (parent != null) {
@@ -162,9 +162,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         this.hologram = hologram;
     }
 
-    public char getHologram() {
-        return lastHologram;
-    }
 
     public void setHologramString(String hologramString) {
         this.hologramString = hologramString;
