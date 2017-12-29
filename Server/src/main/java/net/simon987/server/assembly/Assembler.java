@@ -3,6 +3,7 @@ package net.simon987.server.assembly;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.*;
 import net.simon987.server.logging.LogManager;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -135,7 +136,6 @@ public class Assembler {
 
             try {
 
-
                 //Special thanks to https://stackoverflow.com/questions/1757065/
                 String[] values = line.substring(2, line.length()).split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
@@ -150,7 +150,12 @@ public class Assembler {
                         out.write(parseDUPOperator16(valueTokens, labels, currentLine));
                     } else if (value.startsWith("\"") && value.endsWith("\"")) {
                         //Handle string
-                        out.write(value.substring(1, value.length() - 1).getBytes(StandardCharsets.UTF_16));
+
+                        //Unescape the string
+                        String string = value.substring(1, value.length() - 1);
+                        string = StringEscapeUtils.unescapeJava(string);
+
+                        out.write(string.getBytes(StandardCharsets.UTF_16));
                     } else if (labels != null && labels.containsKey(value)) {
                         //Handle label
                         out.writeChar(labels.get(value));
