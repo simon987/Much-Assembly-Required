@@ -38,7 +38,8 @@ public class RadioReceiverHardware extends CpuHardware {
 
             ArrayList<RadioTower> towers = new ArrayList<>(NpcPlugin.getRadioTowers()); //Avoid ConcurrentModificationException
             for (RadioTower tower : towers) {
-                if (Util.manhattanDist(tower.getX(), tower.getY(), cubot.getX(), cubot.getY()) <= RadioTower.MAX_RANGE) {
+                if (Util.manhattanDist(tower.getWorld().getX(), tower.getWorld().getY(), cubot.getWorld().getX(),
+                        cubot.getWorld().getY()) <= RadioTower.MAX_RANGE) {
                     //Tower is in range
                     messages.addAll(tower.getMessages());
                 }
