@@ -13,7 +13,7 @@ public class UserInfoRequestHandler implements MessageHandler {
 
         if (message.get("t").equals("userInfo")) {
 
-            LogManager.LOGGER.info("(WS) User info request from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) User info request from " + user.getUser().getUsername());
             JSONObject json = new JSONObject();
 
             if (user.isGuest()) {

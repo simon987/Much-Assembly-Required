@@ -12,7 +12,7 @@ public class CodeUploadHandler implements MessageHandler {
     public void handle(OnlineUser user, JSONObject json) {
         if (json.get("t").equals("uploadCode")) {
 
-            LogManager.LOGGER.info("(WS) Code upload from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) Code upload from " + user.getUser().getUsername());
 
             if (user.isGuest()) {
                 //Ignore

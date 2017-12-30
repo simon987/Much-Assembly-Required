@@ -15,14 +15,14 @@ public class ObjectsRequestHandler implements MessageHandler {
     @Override
     public void handle(OnlineUser user, JSONObject json) {
         if (json.get("t").equals("object")) {
-            LogManager.LOGGER.info("(WS) Objects request from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
 
             int x, y;
             try {
                 x = Long.valueOf((long) json.get("x")).intValue();
                 y = Long.valueOf((long) json.get("y")).intValue();
             } catch (Exception e) {
-                LogManager.LOGGER.info("(WS) Malformed Objects request from " + user.getUser().getUsername());
+                LogManager.LOGGER.severe("(WS) Malformed Objects request from " + user.getUser().getUsername());
                 return;
             }
 

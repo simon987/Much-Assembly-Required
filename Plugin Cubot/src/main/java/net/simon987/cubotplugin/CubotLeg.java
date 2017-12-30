@@ -55,16 +55,18 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
 
         } else if (a == SET_DIR_AND_WALK) {
 
-            Direction dir = Direction.getDirection(b);
+            if (cubot.getMaxEnergy() >= 100) {
+                Direction dir = Direction.getDirection(b);
 
-            if (dir != null) {
-                cubot.setDirection(Direction.getDirection(b));
-                status.setErrorFlag(false);
-            } else {
-                status.setErrorFlag(true);
+                if (dir != null) {
+                    cubot.setDirection(Direction.getDirection(b));
+                    status.setErrorFlag(false);
+                } else {
+                    status.setErrorFlag(true);
+                }
+
+                cubot.setCurrentAction(Action.WALKING);
             }
-
-            cubot.setCurrentAction(Action.WALKING);
         }
     }
 

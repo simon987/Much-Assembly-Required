@@ -9,7 +9,7 @@ public class CodeRequestHandler implements MessageHandler {
 
         if (json.get("t").equals("codeRequest")) {
 
-            LogManager.LOGGER.info("(WS) Code request from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) Code request from " + user.getUser().getUsername());
 
             if (user.isGuest()) {
 

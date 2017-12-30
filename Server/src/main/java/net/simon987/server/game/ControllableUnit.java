@@ -28,4 +28,8 @@ public interface ControllableUnit {
     void setAction(Action listening);
 
     World getWorld();
+
+    ArrayList<char[]> getConsoleMessagesBuffer();
+
+    int getConsoleMode();
 }

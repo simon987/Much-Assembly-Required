@@ -155,7 +155,7 @@ public class Assembler {
                         String string = value.substring(1, value.length() - 1);
                         string = StringEscapeUtils.unescapeJava(string);
 
-                        out.write(string.getBytes(StandardCharsets.UTF_16));
+                        out.write(string.getBytes(StandardCharsets.UTF_16BE));
                     } else if (labels != null && labels.containsKey(value)) {
                         //Handle label
                         out.writeChar(labels.get(value));

@@ -8,7 +8,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class Cubot extends GameObject implements Updatable, ControllableUnit {
+public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable {
 
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
@@ -16,7 +16,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private int hologram = 0;
     private String hologramString = "";
     private HologramMode hologramMode = HologramMode.CLEARED;
-
     private HologramMode lastHologramMode = HologramMode.CLEARED;
 
     /**
@@ -30,6 +29,11 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     private ArrayList<Integer> keyboardBuffer = new ArrayList<>();
 
+    private ArrayList<char[]> consoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
+    private ArrayList<char[]> lastConsoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
+    private ConsoleMode consoleMode = ConsoleMode.NORMAL;
+    private ConsoleMode lastConsoleMode = ConsoleMode.NORMAL;
+
     private FloppyDisk floppyDisk;
 
     private User parent;
@@ -38,6 +42,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private int maxEnergy;
 
     private static final float SOLAR_PANEL_MULTIPLIER = 1;
+    private static final int CONSOLE_BUFFER_MAX_SIZE = 40;
 
     public Cubot() {
 
@@ -75,6 +80,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         //Same principle for hologram
         lastHologramMode = hologramMode;
         hologramMode = HologramMode.CLEARED;
+
+        //And the console
+        lastConsoleMode = consoleMode;
+        consoleMode = ConsoleMode.NORMAL;
+
+        lastConsoleMessagesBuffer = new ArrayList<>(consoleMessagesBuffer);
+        consoleMessagesBuffer.clear();
     }
 
     @Override
@@ -228,8 +240,34 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         COLOR
     }
 
+    public enum ConsoleMode {
+        CLEAR,
+        NORMAL
+    }
+
     @Override
     public void setAction(Action action) {
         currentAction = action;
+    }
+
+    @Override
+    public void sendMessage(char[] message) {
+
+        if (consoleMessagesBuffer.size() < CONSOLE_BUFFER_MAX_SIZE) {
+            consoleMessagesBuffer.add(message);
+        }
+    }
+
+    public ArrayList<char[]> getConsoleMessagesBuffer() {
+        return lastConsoleMessagesBuffer;
+    }
+
+
+    public int getConsoleMode() {
+        return lastConsoleMode.ordinal();
+    }
+
+    public void setConsoleMode(ConsoleMode consoleMode) {
+        this.consoleMode = consoleMode;
     }
 }
