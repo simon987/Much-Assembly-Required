@@ -173,6 +173,7 @@ public class SocketServer extends WebSocketServer {
 
                 if (user.isGuest()) {
 
+                    json.remove("c");
                     user.getWebSocket().send(json.toJSONString());
 
                 } else {
@@ -197,7 +198,7 @@ public class SocketServer extends WebSocketServer {
                             }
 
                             json.put("c", buff);
-                        } else if (json.containsKey("c")) {
+                        } else {
                             json.remove("c");
                         }
 
