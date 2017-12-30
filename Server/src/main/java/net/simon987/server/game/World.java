@@ -102,8 +102,8 @@ public class World implements JSONSerialisable {
         for (GameObject object : gameObjects_) {
             //Clean up dead objects
             if (object.isDead()) {
-                gameObjects.remove(object);
                 object.onDeadCallback();
+                gameObjects.remove(object);
                 //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
             } else if (object instanceof Updatable) {
                 ((Updatable) object).update();
