@@ -225,4 +225,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         HEX,
         STRING
     }
+
+    @Override
+    public void setAction(Action action) {
+        currentAction = action;
+    }
 }

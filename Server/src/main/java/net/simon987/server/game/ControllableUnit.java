@@ -21,4 +21,9 @@ public interface ControllableUnit {
 
     int getEnergy();
 
+    int getX();
+
+    int getY();
+
+    void setAction(Action listening);
 }

@@ -5,7 +5,6 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 
 public class CpuInitialisationListener implements GameEventListener {
@@ -16,7 +15,7 @@ public class CpuInitialisationListener implements GameEventListener {
 
     @Override
     public void handle(GameEvent event) {
-        LogManager.LOGGER.fine("(Plugin) Handled CPU Initialisation event (Cubot Plugin)");
+        //LogManager.LOGGER.fine("(Plugin) Handled CPU Initialisation event (Cubot Plugin)");
 
         CPU cpu = (CPU) event.getSource();
         User user = ((CpuInitialisationEvent) event).getUser();
@@ -39,6 +38,8 @@ public class CpuInitialisationListener implements GameEventListener {
         batteryHw.setCpu(cpu);
         CubotFloppyDrive floppyHw = new CubotFloppyDrive((Cubot) user.getControlledUnit());
         floppyHw.setCpu(cpu);
+        ComPort comPortHw = new ComPort((Cubot) user.getControlledUnit());
+        comPortHw.setCpu(cpu);
 
         cpu.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
         cpu.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
@@ -50,5 +51,6 @@ public class CpuInitialisationListener implements GameEventListener {
         cpu.attachHardware(emoteHw, CubotHologram.DEFAULT_ADDRESS);
         cpu.attachHardware(batteryHw, CubotBattery.DEFAULT_ADDRESS);
         cpu.attachHardware(floppyHw, CubotFloppyDrive.DEFAULT_ADDRESS);
+        cpu.attachHardware(comPortHw, ComPort.DEFAULT_ADDRESS);
     }
 }

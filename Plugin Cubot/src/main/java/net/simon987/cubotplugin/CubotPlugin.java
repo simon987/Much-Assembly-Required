@@ -58,6 +58,8 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
                 return CubotBattery.deserialize(hwJson);
             case CubotFloppyDrive.HWID:
                 return CubotFloppyDrive.deserialize(hwJson);
+            case ComPort.HWID:
+                return ComPort.deserialize(hwJson);
         }
 
         return null;

@@ -62,8 +62,6 @@ public class CubotLaser extends CpuHardware {
                         }
                     }
                 }
-            } else {
-                System.out.println("\n\n\n\n\n It did it");
             }
 
 
