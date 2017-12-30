@@ -54,7 +54,7 @@ public class World implements JSONSerialisable {
      */
     public boolean isTileBlocked(int x, int y) {
 
-        return getGameObjectsAt(x, y).size() > 0 || tileMap.getTileAt(x, y) == TileMap.WALL_TILE;
+        return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y) == TileMap.WALL_TILE;
 
     }
 
@@ -245,19 +245,43 @@ public class World implements JSONSerialisable {
     }
 
     /**
-     * Get the list of game objects at a location
+     * Get the list of game objects that are blocking a tile at a set of coordinates
      *
      * @param x X coordinate on the World
      * @param y Y coordinate on the World
-     * @return the list of game objects at a location
+     * @return the list of game objects blocking a location
      */
-    public ArrayList<GameObject> getGameObjectsAt(int x, int y) {
+    public ArrayList<GameObject> getGameObjectsBlockingAt(int x, int y) {
 
         ArrayList<GameObject> gameObjects = new ArrayList<>(2);
 
         for (GameObject obj : this.gameObjects) {
 
             if (obj.isAt(x, y)) {
+                gameObjects.add(obj);
+            }
+
+        }
+
+        return gameObjects;
+    }
+
+    /**
+     * Get the list of game objects that are exactly at a given location
+     * <br>
+     * Note: Objects like the Factory that are more than 1x1 tiles wide will only be returned
+     * when their exact coordinates are specified
+     *
+     * @param x X coordinate on the World
+     * @param y Y coordinate on the World
+     * @return the list of game objects at a location
+     */
+    public ArrayList<GameObject> getGameObjectsAt(int x, int y) {
+        ArrayList<GameObject> gameObjects = new ArrayList<>(2);
+
+        for (GameObject obj : this.gameObjects) {
+
+            if (obj.getX() == x && obj.getY() == y) {
                 gameObjects.add(obj);
             }
 

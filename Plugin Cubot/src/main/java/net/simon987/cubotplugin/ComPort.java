@@ -40,7 +40,7 @@ public class ComPort extends CpuHardware {
 
             //Get object directly in front of the Cubot
             Point frontTile = cubot.getFrontTile();
-            ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
+            ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsBlockingAt(frontTile.x, frontTile.y);
 
             if (objects.size() > 0 && objects.get(0) instanceof Programmable) {
 
