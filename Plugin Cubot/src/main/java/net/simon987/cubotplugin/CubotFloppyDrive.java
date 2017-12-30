@@ -14,9 +14,9 @@ public class CubotFloppyDrive extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 0x000B;
 
-    private static final int POLL = 1;
-    private static final int READ_SECTOR = 2;
-    private static final int WRITE_SECTOR = 3;
+    private static final int FLOPPY_POLL = 1;
+    private static final int FLOPPY_READ_SECTOR = 2;
+    private static final int FLOPPY_WRITE_SECTOR = 3;
 
     private Cubot cubot;
     private FloppyDisk floppyDisk;
@@ -31,7 +31,7 @@ public class CubotFloppyDrive extends CpuHardware {
     public void handleInterrupt(Status status) {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == POLL) {
+        if (a == FLOPPY_POLL) {
 
             if (floppyDisk != null) {
                 getCpu().getRegisterSet().getRegister("B").setValue(0);
@@ -39,7 +39,7 @@ public class CubotFloppyDrive extends CpuHardware {
                 getCpu().getRegisterSet().getRegister("B").setValue(1);
             }
 
-        } else if (a == READ_SECTOR) {
+        } else if (a == FLOPPY_READ_SECTOR) {
 
             if (floppyDisk == null) {
                 getCpu().getRegisterSet().getRegister("B").setValue(0);
@@ -55,7 +55,7 @@ public class CubotFloppyDrive extends CpuHardware {
             }
 
 
-        } else if (a == WRITE_SECTOR) {
+        } else if (a == FLOPPY_WRITE_SECTOR) {
             if (floppyDisk == null) {
                 getCpu().getRegisterSet().getRegister("B").setValue(0);
             } else {

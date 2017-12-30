@@ -17,11 +17,11 @@ public class CubotHologram extends CpuHardware {
 
     private Cubot cubot;
 
-    private static final int CLEAR = 0;
-    private static final int DISPLAY_HEX = 1;
-    private static final int DISPLAY_STRING = 2;
-    private static final int DISPLAY_DEC = 3;
-    private static final int DISPLAY_COLOR = 4;
+    private static final int HOLO_CLEAR = 0;
+    private static final int HOLO_DISPLAY_HEX = 1;
+    private static final int HOLO_DISPLAY_STRING = 2;
+    private static final int HOLO_DISPLAY_DEC = 3;
+    private static final int HOLO_DISPLAY_COLOR = 4;
 
     private static final int STR_MAX_LEN = 8;
 
@@ -34,13 +34,13 @@ public class CubotHologram extends CpuHardware {
 
         char a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == CLEAR) {
+        if (a == HOLO_CLEAR) {
             cubot.setHologramMode(Cubot.HologramMode.CLEARED);
-        } else if (a == DISPLAY_HEX) {
+        } else if (a == HOLO_DISPLAY_HEX) {
             char b = getCpu().getRegisterSet().getRegister("B").getValue();
             cubot.setHologram(b);
             cubot.setHologramMode(Cubot.HologramMode.HEX);
-        } else if (a == DISPLAY_STRING) {
+        } else if (a == HOLO_DISPLAY_STRING) {
             char x = getCpu().getRegisterSet().getRegister("X").getValue();
             //Display zero-terminated string starting at X (max 8 chars)
 
@@ -59,13 +59,13 @@ public class CubotHologram extends CpuHardware {
 
             cubot.setHologramString(holoString.toString());
             cubot.setHologramMode(Cubot.HologramMode.STRING);
-        } else if (a == DISPLAY_DEC) {
+        } else if (a == HOLO_DISPLAY_DEC) {
             //Display decimal number
             char b = getCpu().getRegisterSet().getRegister("B").getValue();
             cubot.setHologram(b);
             cubot.setHologramMode(Cubot.HologramMode.DEC);
 
-        } else if (a == DISPLAY_COLOR) {
+        } else if (a == HOLO_DISPLAY_COLOR) {
 
             if (cubot.spendEnergy(4)) {
                 int b = getCpu().getRegisterSet().getRegister("B").getValue();

@@ -9,8 +9,8 @@ public class Keyboard extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 4;
 
-    private static final int CLEAR_BUFFER = 0;
-    private static final int FETCH_KEY = 1;
+    private static final int KEYBOARD_CLEAR = 0;
+    private static final int KEYBOARD_FETCH_KEY = 1;
 
     /**
      * Hardware ID (Should be unique)
@@ -33,11 +33,11 @@ public class Keyboard extends CpuHardware {
 
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == CLEAR_BUFFER) {
+        if (a == KEYBOARD_CLEAR) {
 
             cubot.clearKeyboardBuffer();
 
-        } else if (a == FETCH_KEY) {
+        } else if (a == KEYBOARD_FETCH_KEY) {
             //pop
             int key = 0;
             if (cubot.getKeyboardBuffer().size() > 0) {

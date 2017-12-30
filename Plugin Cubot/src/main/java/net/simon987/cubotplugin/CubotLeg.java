@@ -14,8 +14,8 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
 
     public static final String NAME = "Cubot Leg";
 
-    private static final int SET_DIR = 1;
-    private static final int SET_DIR_AND_WALK = 2;
+    private static final int LEGS_SET_DIR = 1;
+    private static final int LEGS_SET_DIR_AND_WALK = 2;
 
     /**
      * Hardware ID (Should be unique)
@@ -38,7 +38,7 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
         int b = getCpu().getRegisterSet().getRegister("B").getValue();
 
-        if (a == SET_DIR) {
+        if (a == LEGS_SET_DIR) {
 
 
             Direction dir = Direction.getDirection(b);
@@ -53,7 +53,7 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
             }
 
 
-        } else if (a == SET_DIR_AND_WALK) {
+        } else if (a == LEGS_SET_DIR_AND_WALK) {
 
             if (cubot.getMaxEnergy() >= 100) {
                 Direction dir = Direction.getDirection(b);
