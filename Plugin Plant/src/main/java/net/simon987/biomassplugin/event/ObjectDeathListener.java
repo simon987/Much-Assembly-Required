@@ -4,8 +4,8 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.ObjectDeathEvent;
-import net.simon987.npcplugin.HarvesterNPC;
 import net.simon987.biomassplugin.BiomassBlob;
+import net.simon987.server.game.GameObject;
 import net.simon987.server.game.World;
 import net.simon987.server.logging.LogManager;
 
@@ -23,8 +23,9 @@ public class ObjectDeathListener implements GameEventListener {
     @Override
     public void handle(GameEvent event) {
         // a HarvesterNPC ObjectDeathEvent is received
-        if (((ObjectDeathEvent)event).getSourceObjectId().equals(HarvesterNPC.ID)) {
-            HarvesterNPC dyingHarvesterNPC = (HarvesterNPC)event.getSource();
+        // TODO: setup enum with all GameObject type IDs
+        if (((ObjectDeathEvent)event).getSourceObjectId().equals(10)) {
+            GameObject dyingHarvesterNPC = (GameObject)event.getSource();
 
             // create a new biomass
             BiomassBlob newBiomassBlob = createBiomassBlobAt(
