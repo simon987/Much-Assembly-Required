@@ -20,6 +20,8 @@ public class CubotHologram extends CpuHardware {
     private static final int CLEAR = 0;
     private static final int DISPLAY_HEX = 1;
     private static final int DISPLAY_STRING = 2;
+    private static final int DISPLAY_DEC = 3;
+    private static final int DISPLAY_COLOR = 4;
 
     private static final int STR_MAX_LEN = 8;
 
@@ -57,6 +59,21 @@ public class CubotHologram extends CpuHardware {
 
             cubot.setHologramString(holoString.toString());
             cubot.setHologramMode(Cubot.HologramMode.STRING);
+        } else if (a == DISPLAY_DEC) {
+            //Display decimal number
+            char b = getCpu().getRegisterSet().getRegister("B").getValue();
+            cubot.setHologram(b);
+            cubot.setHologramMode(Cubot.HologramMode.DEC);
+
+        } else if (a == DISPLAY_COLOR) {
+
+            if (cubot.spendEnergy(4)) {
+                int b = getCpu().getRegisterSet().getRegister("B").getValue();
+                int c = getCpu().getRegisterSet().getRegister("C").getValue();
+
+                cubot.setHologramMode(Cubot.HologramMode.COLOR);
+                cubot.setHologram((c | (b << 16)) & 0x00FFFFFF); //B:C, ignore first byte
+            }
         }
 
     }

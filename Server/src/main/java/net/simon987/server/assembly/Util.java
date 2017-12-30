@@ -42,7 +42,7 @@ public class Util {
     }
 
     public static String toHex(int a) {
-        return String.format("%04X ", uShort(a));
+        return String.format("%04X ", a);
     }
 
     public static String toHex(byte[] byteArray) {
