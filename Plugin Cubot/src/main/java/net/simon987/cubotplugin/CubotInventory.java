@@ -16,8 +16,8 @@ public class CubotInventory extends CpuHardware {
 
     private Cubot cubot;
 
-    private static final int CLEAR = 0;
-    private static final int POLL = 1;
+    private static final int INV_CLEAR = 0;
+    private static final int INV_POLL = 1;
 
     public CubotInventory(Cubot cubot) {
         this.cubot = cubot;
@@ -33,11 +33,11 @@ public class CubotInventory extends CpuHardware {
 
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == POLL) {
+        if (a == INV_POLL) {
 
             getCpu().getRegisterSet().getRegister("B").setValue(cubot.getHeldItem());
 
-        } else if (a == CLEAR) {
+        } else if (a == INV_CLEAR) {
             if (cubot.spendEnergy(100)) {
                 cubot.setHeldItem(0);
             }
