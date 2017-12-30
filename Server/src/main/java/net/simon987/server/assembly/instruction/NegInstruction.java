@@ -14,7 +14,23 @@ public class NegInstruction extends Instruction {
 
     @Override
     public Status execute(Target dst, int dstIndex, Status status) {
-        dst.set(dstIndex, -dst.get(dstIndex));
+        //If the operand is zero, the carry flag is cleared; in all other cases, the carry flag is set.
+
+        char destination = (char) dst.get(dstIndex);
+
+        if (destination == 0) {
+            status.setCarryFlag(false);
+            status.setZeroFlag(true);
+        } else {
+            status.setCarryFlag(true);
+        }
+
+        //Attempting to negate a word containing -32,768 causes no change to the operand and sets the Overflow Flag.
+        if (destination == 0x8000) {
+            status.setOverflowFlag(true);
+        } else {
+            dst.set(dstIndex, -destination);
+        }
 
         return status;
     }
