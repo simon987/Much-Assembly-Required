@@ -197,6 +197,8 @@ public class SocketServer extends WebSocketServer {
                             }
 
                             json.put("c", buff);
+                        } else if (json.containsKey("c")) {
+                            json.remove("c");
                         }
 
                         json.put("cm", unit.getConsoleMode());
