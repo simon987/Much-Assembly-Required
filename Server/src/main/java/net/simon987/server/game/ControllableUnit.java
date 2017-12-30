@@ -26,4 +26,6 @@ public interface ControllableUnit {
     int getY();
 
     void setAction(Action listening);
+
+    World getWorld();
 }
