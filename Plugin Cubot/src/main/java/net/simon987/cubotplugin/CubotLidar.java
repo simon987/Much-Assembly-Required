@@ -24,10 +24,10 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
 
     private Cubot cubot;
 
-    private static final int GET_POS = 1;
-    private static final int GET_PATH = 2;
-    private static final int GET_MAP = 3;
-    private static final int GET_WORLD_POS = 4;
+    private static final int LIDAR_GET_POS = 1;
+    private static final int LIDAR_GET_PATH = 2;
+    private static final int LIDAR_GET_MAP = 3;
+    private static final int LIDAR_GET_WORLD_POS = 4;
 
     private static final int MEMORY_MAP_START = 0x0100;
     private static final int MEMORY_PATH_START = 0x0000;
@@ -48,11 +48,11 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
         switch (a) {
-            case GET_POS:
+            case LIDAR_GET_POS:
                 getCpu().getRegisterSet().getRegister("X").setValue(cubot.getX());
                 getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getY());
                 break;
-            case GET_PATH:
+            case LIDAR_GET_PATH:
                 if (cubot.spendEnergy(50)) {
                     int b = getCpu().getRegisterSet().getRegister("B").getValue();
                     int destX = getCpu().getRegisterSet().getRegister("X").getValue();
@@ -108,7 +108,7 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
 
                 break;
 
-            case GET_MAP:
+            case LIDAR_GET_MAP:
                 if (cubot.spendEnergy(10)) {
                     char[][] mapInfo = cubot.getWorld().getMapInfo();
 
@@ -121,7 +121,7 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 }
 
                 break;
-            case GET_WORLD_POS:
+            case LIDAR_GET_WORLD_POS:
                 getCpu().getRegisterSet().getRegister("X").setValue(cubot.getWorld().getX());
                 getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getWorld().getY());
                 break;

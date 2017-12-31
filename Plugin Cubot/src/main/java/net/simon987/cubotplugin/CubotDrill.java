@@ -16,9 +16,9 @@ public class CubotDrill extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 5;
 
-    private static final int POLL = 1;
-    private static final int GATHER_SLOW = 2;
-    private static final int GATHER_FAST = 3;
+    private static final int DRILL_POLL = 1;
+    private static final int DRILL_GATHER_SLOW = 2;
+    private static final int DRILL_GATHER_FAST = 3;
 
     private Cubot cubot;
 
@@ -35,11 +35,11 @@ public class CubotDrill extends CpuHardware {
     public void handleInterrupt(Status status) {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == POLL) {
+        if (a == DRILL_POLL) {
 
             getCpu().getRegisterSet().getRegister("B").setValue(0);
 
-        } else if (a == GATHER_SLOW || a == GATHER_FAST) {
+        } else if (a == DRILL_GATHER_SLOW || a == DRILL_GATHER_FAST) {
 
             if (cubot.spendEnergy(1400)) {
                 if (cubot.getCurrentAction() == Action.IDLE) {
