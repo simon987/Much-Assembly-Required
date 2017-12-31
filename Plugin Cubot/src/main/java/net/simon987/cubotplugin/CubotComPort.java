@@ -17,10 +17,10 @@ public class CubotComPort extends CpuHardware {
 
     private Cubot cubot;
 
-    private static final int SELF_CLEAR = 0;
-    private static final int POLL = 1;
-    private static final int FRONT_PORT_OUT = 2;
-    private static final int SELF_OUT = 3;
+    private static final int COMPORT_SELF_CLEAR = 0;
+    private static final int COMPORT_POLL = 1;
+    private static final int COMPORT_FRONT_PORT_OUT = 2;
+    private static final int COMPORT_SELF_OUT = 3;
 
     public CubotComPort(Cubot cubot) {
         this.cubot = cubot;
@@ -33,12 +33,12 @@ public class CubotComPort extends CpuHardware {
 
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == SELF_CLEAR) {
+        if (a == COMPORT_SELF_CLEAR) {
 
             cubot.getConsoleMessagesBuffer().clear();
             cubot.setConsoleMode(Cubot.ConsoleMode.CLEAR);
 
-        } else if (a == POLL) {
+        } else if (a == COMPORT_POLL) {
 
             if (cubot.spendEnergy(4)) {
 
@@ -60,7 +60,7 @@ public class CubotComPort extends CpuHardware {
 
             }
 
-        } else if (a == FRONT_PORT_OUT) {
+        } else if (a == COMPORT_FRONT_PORT_OUT) {
 
             if (cubot.spendEnergy(20)) {
                 //Get object directly in front of the Cubot
@@ -89,7 +89,7 @@ public class CubotComPort extends CpuHardware {
                 }
             }
 
-        } else if (a == SELF_OUT) {
+        } else if (a == COMPORT_SELF_OUT) {
 
             if (cubot.spendEnergy(1)) {
 

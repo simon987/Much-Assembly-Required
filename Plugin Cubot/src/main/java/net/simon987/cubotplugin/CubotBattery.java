@@ -15,8 +15,8 @@ public class CubotBattery extends CpuHardware {
     public static final char HWID = 0x000A;
 
     private Cubot cubot;
-    private static final int POLL = 1;
-    private static final int GET_MAX_CAPACITY = 2;
+    private static final int BATTERY_POLL = 1;
+    private static final int BATTERY_GET_MAX_CAPACITY = 2;
 
     public CubotBattery(Cubot cubot) {
         this.cubot = cubot;
@@ -27,10 +27,10 @@ public class CubotBattery extends CpuHardware {
 
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == POLL) {
+        if (a == BATTERY_POLL) {
             getCpu().getRegisterSet().getRegister("B").setValue(cubot.getEnergy());
 
-        } else if (a == GET_MAX_CAPACITY) {
+        } else if (a == BATTERY_GET_MAX_CAPACITY) {
             getCpu().getRegisterSet().getRegister("B").setValue(cubot.getMaxEnergy());
         } else if (a == 0xFFFF) {
             cubot.setEnergy(cubot.getMaxEnergy());
