@@ -47,6 +47,11 @@ public class CPU implements JSONSerialisable {
      * executed at this address each tick. Defaults to org_offset@config.properties
      */
     private int codeSegmentOffset;
+    /**
+     * Offset of the code segment. The code starts to get
+     * executed at this address each tick. Defaults to org_hwIVoffset@config.properties
+     */
+    private int hardwareInterruptVectorOffset;
 
     /**
      * Instruction pointer, always points to the next instruction
@@ -74,6 +79,7 @@ public class CPU implements JSONSerialisable {
         registerSet = new DefaultRegisterSet();
         attachedHardware = new HashMap<>();
         codeSegmentOffset = config.getInt("org_offset");
+        hardwareInterruptVectorOffset = config.getInt("org_hwIVoffset");
 
         instructionSet.add(new JmpInstruction(this));
         instructionSet.add(new JnzInstruction(this));
@@ -469,13 +475,13 @@ public class CPU implements JSONSerialisable {
 
     }
     /**
-     * Sets the IP to 0x0200 + Offset and pushes flags then the old IP
+     * Sets the IP to codeSegmentOffset + Offset and pushes flags then the old IP
      * 
      */
-    public void Interrupt(int hw, int offset, boolean retry) {
-        Instruction push = instructionSet.get("push");
+    public void interrupt(boolean hw, int offset) {
+        Instruction push = instructionSet.get(PushInstruction.OPCODE);
         push.execute(status.toByte(), status);
         push.execute(ip, status);
-        this.setIp((char)(0x0200 + offset*2 + 0x0080*hw));
+        this.setIp((char)(codeSegmentOffset + offset*2 + (hw ? hardwareInterruptVectorOffset : 0)));
     }    
 }

@@ -16,13 +16,13 @@ public class IretInstruction extends Instruction{
     private CPU cpu;
 
     public IretInstruction(CPU cpu) {
-        super("intr", OPCODE);
+        super("iret", OPCODE);
         this.cpu = cpu;
     }
 		
     public Status execute(Status status) {
-        cpu.setIp((char)cpu.getMemory().get(cpu.getRegisterSet().getRegister("SP").getValue())); //IP (SP + 0)
-        status.fromByte((char) cpu.getMemory().get(cpu.getRegisterSet().getRegister("SP").getValue() + 1)); //Status (SP + 1)      
+        cpu.setIp((char)cpu.getMemory().get(cpu.getRegisterSet().getRegister("SP").getValue())); //IP = (SP + 0)
+        status.fromByte((char) cpu.getMemory().get(cpu.getRegisterSet().getRegister("SP").getValue() + 1)); //Status = (SP + 1)      
         cpu.getRegisterSet().getRegister("SP").setValue(cpu.getRegisterSet().getRegister("SP").getValue() + 2); //Increment SP (stack grows towards smaller)
         return status;
     }

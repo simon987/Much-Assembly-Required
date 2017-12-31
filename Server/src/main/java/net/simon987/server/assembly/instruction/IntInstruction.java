@@ -6,7 +6,7 @@ import net.simon987.server.assembly.Status;
 /**
  *  Software Interrupt
  *  Pushes the flags register and the IP to the stack then
- *   Sets the IP to 0x0200 + 2*src. 
+ *   Sets the IP to the CPU codeSegmentOffset + 2*src. 
  *  (x2 is to align with jmp instructions)
  *  
  *  No reserved interrupt vectors yet
@@ -23,12 +23,7 @@ public class IntInstruction extends Instruction{
 	
     @Override	
     public Status execute(int src, Status status) {
-        cpu.Interrupt(0, src, false);
+        cpu.interrupt(false, src);
         return status;
     }
-
-    public Status execute(Status status) {
-        cpu.Interrupt(0,0, false);
-        return status;
-    }	
 }
