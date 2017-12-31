@@ -22,8 +22,8 @@ public class CubotLaser extends CpuHardware {
 
     private Cubot cubot;
 
-    private static final int WITHDRAW = 1;
-    private static final int DEPOSIT = 2;
+    private static final int LASER_WITHDRAW = 1;
+    private static final int LASER_DEPOSIT = 2;
 
 
     public CubotLaser(Cubot cubot) {
@@ -42,7 +42,7 @@ public class CubotLaser extends CpuHardware {
         int b = getCpu().getRegisterSet().getRegister("B").getValue();
 
 
-        if (a == WITHDRAW) {
+        if (a == LASER_WITHDRAW) {
 
 
             Point frontTile = cubot.getFrontTile();
@@ -65,8 +65,8 @@ public class CubotLaser extends CpuHardware {
             }
 
 
-        } else if (a == DEPOSIT) {
-
+        } else if (a == LASER_DEPOSIT) {
+            // TODO
         }
 
     }
