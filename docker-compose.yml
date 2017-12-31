@@ -1,0 +1,21 @@
+version: "2.1"
+services:
+  server:
+    build:
+      context: .
+    command: sh -c "sed -i -e 's#localhost#db#' config.properties && /usr/bin/java -jar /app/target/server-1.2a.jar"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8887:8887"
+  db:
+    image: mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-umar", "-pmar"]
+    environment:
+      MYSQL_DATABASE: mar
+      MYSQL_PASSWORD: mar
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: something-secret
+      MYSQL_USER: mar
