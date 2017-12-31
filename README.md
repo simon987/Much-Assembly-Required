@@ -7,5 +7,20 @@ In its current state, players can walk around the game universe and collect Biom
 Wiki: [GitHub](https://github.com/simon987/Much-Assembly-Required/wiki)
 Chat: [Slack](https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg)
 
+## Requirements
 
-_Building instructions coming soon_
+1. [Docker Compose](https://docs.docker.com/compose/install/#install-compose) (and dependencies)
+
+## Installation
+
+Once Docker and Docker Compose are installed, you can build and start
+this application by running the following command inside this
+application's directory:
+
+    docker-compose up
+
+This will start MySQL and then build and run this application. It will
+be available via http://localhost.
+
+Note that there is currently no frontend web application serving the
+WebSocket feed served by the `Server` application!
