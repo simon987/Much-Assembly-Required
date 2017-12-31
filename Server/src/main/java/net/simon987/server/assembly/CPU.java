@@ -245,7 +245,7 @@ public class CPU implements JSONSerialisable {
             } else if (destination <= registerSetSize * 2) {
                 //Destination is [reg]
                 ip++;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize), memory, sourceValue, status);
+                instruction.execute(memory, registerSet.get(destination - registerSetSize), sourceValue, status);
             } else {
                 //Assuming that destination is [reg + x]
                 ip += 2;

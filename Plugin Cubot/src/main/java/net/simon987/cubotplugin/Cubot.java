@@ -8,16 +8,16 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class Cubot extends GameObject implements Updatable, ControllableUnit {
+public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable {
 
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
 
-    private char hologram = 0;
+    private int hologram = 0;
     private String hologramString = "";
     private HologramMode hologramMode = HologramMode.CLEARED;
-
-    private char lastHologram = 0;
+    private HologramMode lastHologramMode = HologramMode.CLEARED;
+    private int hologramColor = 0;
 
     /**
      * Hit points
@@ -30,7 +30,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
 
     private ArrayList<Integer> keyboardBuffer = new ArrayList<>();
 
-    private FloppyDisk floppyDisk;
+    private ArrayList<char[]> consoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
+    private ArrayList<char[]> lastConsoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
+    private ConsoleMode consoleMode = ConsoleMode.NORMAL;
+    private ConsoleMode lastConsoleMode = ConsoleMode.NORMAL;
 
     private User parent;
 
@@ -38,6 +41,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     private int maxEnergy;
 
     private static final float SOLAR_PANEL_MULTIPLIER = 1;
+    private static final int CONSOLE_BUFFER_MAX_SIZE = 40;
 
     public Cubot() {
 
@@ -73,8 +77,15 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         currentAction = Action.IDLE;
 
         //Same principle for hologram
-        lastHologram = hologram;
-        hologram = 0;
+        lastHologramMode = hologramMode;
+        hologramMode = HologramMode.CLEARED;
+
+        //And the console
+        lastConsoleMode = consoleMode;
+        consoleMode = ConsoleMode.NORMAL;
+
+        lastConsoleMessagesBuffer = new ArrayList<>(consoleMessagesBuffer);
+        consoleMessagesBuffer.clear();
     }
 
     @Override
@@ -88,9 +99,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("action", lastAction.ordinal());
-        json.put("holo", (int) lastHologram);
+        json.put("holo", hologram);
         json.put("holoStr", hologramString);
-        json.put("holoMode", hologramMode.ordinal());
+        json.put("holoMode", lastHologramMode.ordinal());
+        json.put("holoC", hologramColor);
         json.put("energy", energy);
 
         if (parent != null) {
@@ -158,13 +170,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
         return currentAction;
     }
 
-    public void setHologram(char hologram) {
+    public void setHologram(int hologram) {
         this.hologram = hologram;
     }
 
-    public char getHologram() {
-        return lastHologram;
-    }
 
     public void setHologramString(String hologramString) {
         this.hologramString = hologramString;
@@ -226,6 +235,42 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit {
     public enum HologramMode {
         CLEARED,
         HEX,
-        STRING
+        STRING,
+        DEC
+    }
+
+    public enum ConsoleMode {
+        CLEAR,
+        NORMAL
+    }
+
+    @Override
+    public void setAction(Action action) {
+        currentAction = action;
+    }
+
+    @Override
+    public void sendMessage(char[] message) {
+
+        if (consoleMessagesBuffer.size() < CONSOLE_BUFFER_MAX_SIZE) {
+            consoleMessagesBuffer.add(message);
+        }
+    }
+
+    public ArrayList<char[]> getConsoleMessagesBuffer() {
+        return lastConsoleMessagesBuffer;
+    }
+
+
+    public int getConsoleMode() {
+        return lastConsoleMode.ordinal();
+    }
+
+    public void setConsoleMode(ConsoleMode consoleMode) {
+        this.consoleMode = consoleMode;
+    }
+
+    public void setHologramColor(int hologramColor) {
+        this.hologramColor = hologramColor;
     }
 }

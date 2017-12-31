@@ -21,4 +21,15 @@ public interface ControllableUnit {
 
     int getEnergy();
 
+    int getX();
+
+    int getY();
+
+    void setAction(Action listening);
+
+    World getWorld();
+
+    ArrayList<char[]> getConsoleMessagesBuffer();
+
+    int getConsoleMode();
 }

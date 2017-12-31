@@ -124,7 +124,7 @@ public class Factory extends GameObject implements Updatable {
         factory.setX((int) (long) json.get("x"));
         factory.setY((int) (long) json.get("y"));
 
-        factory.tmpNpcArray = (Object[]) ((JSONArray) json.get("n")).toArray();
+        factory.tmpNpcArray = ((JSONArray) json.get("n")).toArray();
 
         return factory;
     }

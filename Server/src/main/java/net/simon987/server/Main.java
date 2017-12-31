@@ -12,8 +12,7 @@ public class Main {
 
 
         LogManager.initialize();
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
-
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         //Load
         GameServer.INSTANCE.getGameUniverse().load(new File("save.json"));
 
@@ -23,6 +22,7 @@ public class Main {
 
         GameServer.INSTANCE.setSocketServer(socketServer);
 
+        System.out.println(GameServer.INSTANCE.getGameUniverse().getWorld(0x7fff, 0x7fff));
 
         (new Thread(socketServer)).start();
         (new Thread(GameServer.INSTANCE)).start();

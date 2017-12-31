@@ -12,7 +12,7 @@ public class TerrainRequestHandler implements MessageHandler {
     public void handle(OnlineUser user, JSONObject json) {
         if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y")) {
 
-            LogManager.LOGGER.info("Terrain request from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("Terrain request from " + user.getUser().getUsername());
             World world;
             try {
                 world = GameServer.INSTANCE.getGameUniverse().getWorld(

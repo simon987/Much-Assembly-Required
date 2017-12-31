@@ -12,7 +12,7 @@ public class CodeUploadHandler implements MessageHandler {
     public void handle(OnlineUser user, JSONObject json) {
         if (json.get("t").equals("uploadCode")) {
 
-            LogManager.LOGGER.info("(WS) Code upload from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) Code upload from " + user.getUser().getUsername());
 
             if (user.isGuest()) {
                 //Ignore
@@ -32,6 +32,13 @@ public class CodeUploadHandler implements MessageHandler {
 
                 user.getUser().getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
                 user.getUser().getCpu().setCodeSegmentOffset(ar.getCodeSegmentOffset());
+
+                //Clear keyboard buffer
+                if (user.getUser().getControlledUnit() != null &&
+                        user.getUser().getControlledUnit().getKeyboardBuffer() != null) {
+                    user.getUser().getControlledUnit().getKeyboardBuffer().clear();
+                }
+
 
                 JSONObject response = new JSONObject();
                 response.put("t", "codeResponse");

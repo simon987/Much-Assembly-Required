@@ -3,12 +3,15 @@ package net.simon987.server.assembly;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.*;
 import net.simon987.server.logging.LogManager;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Top-level class for assembly operations.
@@ -48,11 +51,9 @@ public class Assembler {
      * @return The line without its label part
      */
     private static String removeLabel(String line) {
-        if (line.indexOf(':') != -1) {
-            return line.substring(line.indexOf(':') + 1);
-        } else {
-            return line;
-        }
+
+        return line.replaceAll("\\b\\w*\\b:", "");
+
     }
 
     /**
@@ -94,10 +95,11 @@ public class Assembler {
         line = removeComment(line);
 
         //Check for labels
-        if (line.indexOf(':') != -1) {
+        Pattern pattern = Pattern.compile("\\b\\w*\\b:");
+        Matcher matcher = pattern.matcher(line);
 
-            line = line.substring(0, line.indexOf(':'));
-            String label = line.trim();
+        if (matcher.find()) {
+            String label = matcher.group(0).substring(0, matcher.group(0).length() - 1);
 
             LogManager.LOGGER.fine("DEBUG: Label " + label + " @ " + (result.origin + currentOffset));
             result.labels.put(label, (char) (result.origin + currentOffset));
@@ -134,7 +136,8 @@ public class Assembler {
 
             try {
 
-                String[] values = line.substring(2, line.length()).split(",");
+                //Special thanks to https://stackoverflow.com/questions/1757065/
+                String[] values = line.substring(2, line.length()).split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
                 for (String value : values) {
 
@@ -147,7 +150,12 @@ public class Assembler {
                         out.write(parseDUPOperator16(valueTokens, labels, currentLine));
                     } else if (value.startsWith("\"") && value.endsWith("\"")) {
                         //Handle string
-                        out.write(value.substring(1, value.length() - 1).getBytes(StandardCharsets.UTF_16));
+
+                        //Unescape the string
+                        String string = value.substring(1, value.length() - 1);
+                        string = StringEscapeUtils.unescapeJava(string);
+
+                        out.write(string.getBytes(StandardCharsets.UTF_16BE));
                     } else if (labels != null && labels.containsKey(value)) {
                         //Handle label
                         out.writeChar(labels.get(value));

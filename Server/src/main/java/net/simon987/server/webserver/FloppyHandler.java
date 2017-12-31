@@ -13,7 +13,7 @@ public class FloppyHandler implements MessageHandler {
 
         if (json.get("t").equals("floppyDown")) {
 
-            LogManager.LOGGER.info("(WS) Floppy download request from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) Floppy download request from " + user.getUser().getUsername());
 
             if (user.isGuest()) {
                 return;
@@ -27,7 +27,7 @@ public class FloppyHandler implements MessageHandler {
 
         } else if (json.get("t").equals("floppyUp")) {
 
-            LogManager.LOGGER.info("(WS) Floppy upload request from " + user.getUser().getUsername());
+            LogManager.LOGGER.fine("(WS) Floppy upload request from " + user.getUser().getUsername());
 
             //Check newly uploaded file on the database
             byte[] bytes = db.getFloppy(user.getUser().getUsername());

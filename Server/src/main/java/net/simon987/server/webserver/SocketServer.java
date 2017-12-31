@@ -2,6 +2,7 @@ package net.simon987.server.webserver;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
+import net.simon987.server.game.ControllableUnit;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.java_websocket.WebSocket;
@@ -172,20 +173,42 @@ public class SocketServer extends WebSocketServer {
 
                 if (user.isGuest()) {
 
+                    json.remove("c");
                     user.getWebSocket().send(json.toJSONString());
 
                 } else {
-                    //Send keyboard updated buffer
                     try {
-                        ArrayList<Integer> kbBuffer = user.getUser().getControlledUnit().getKeyboardBuffer();
+                        ControllableUnit unit = user.getUser().getControlledUnit();
+
+                        //Send keyboard updated buffer
+                        ArrayList<Integer> kbBuffer = unit.getKeyboardBuffer();
                         JSONArray keys = new JSONArray();
                         keys.addAll(kbBuffer);
                         json.put("keys", keys);
+
+                        //Send console buffer
+                        if (unit.getConsoleMessagesBuffer().size() > 0) {
+
+                            JSONArray buff = new JSONArray();
+
+                            for (char[] message : unit.getConsoleMessagesBuffer()) {
+                                buff.add(new String(message));
+                            }
+
+                            json.put("c", buff);
+                        } else {
+                            json.remove("c");
+                        }
+
+                        json.put("cm", unit.getConsoleMode());
+
+
                         //Send tick message
                         user.getWebSocket().send(json.toJSONString());
                     } catch (NullPointerException e) {
                         //User is online but not completely initialised
                     }
+
                 }
 
 

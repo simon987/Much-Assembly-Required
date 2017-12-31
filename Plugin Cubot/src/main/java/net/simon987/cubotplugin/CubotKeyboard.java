@@ -5,7 +5,7 @@ import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import org.json.simple.JSONObject;
 
-public class Keyboard extends CpuHardware {
+public class CubotKeyboard extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 4;
 
@@ -19,7 +19,7 @@ public class Keyboard extends CpuHardware {
 
     private Cubot cubot;
 
-    public Keyboard(Cubot cubot) {
+    public CubotKeyboard(Cubot cubot) {
         this.cubot = cubot;
     }
 
@@ -61,7 +61,7 @@ public class Keyboard extends CpuHardware {
         return json;
     }
 
-    public static Keyboard deserialize(JSONObject hwJSON) {
-        return new Keyboard((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) hwJSON.get("cubot")));
+    public static CubotKeyboard deserialize(JSONObject hwJSON) {
+        return new CubotKeyboard((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) hwJSON.get("cubot")));
     }
 }

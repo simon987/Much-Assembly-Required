@@ -1,6 +1,5 @@
 package net.simon987.server.webserver;
 
-import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class KeypressHandler implements MessageHandler {
         if (!user.isGuest()) {
             if (json.get("t").equals("k")) {
 
-                LogManager.LOGGER.info("(WS) Received keypress");
+                //LogManager.LOGGER.fine("(WS) Received keypress");
 
                 int key = (int) (long) json.get("k");
 

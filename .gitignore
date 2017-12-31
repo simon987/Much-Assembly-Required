@@ -12,3 +12,6 @@ mar.log.lck
 plugins/*.jar
 save.json
 Server/Server.iml
+target/*
+Server/Server.iml
+Server/src/main/java/META-INF/MANIFEST.MF

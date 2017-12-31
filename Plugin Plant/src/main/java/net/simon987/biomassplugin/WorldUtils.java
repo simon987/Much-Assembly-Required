@@ -17,7 +17,7 @@ public class WorldUtils {
 
         Random random = new Random();
         int blobCount = random.nextInt(maxCount - minCount) + minCount;
-        ArrayList<BiomassBlob> biomassBlobs = new ArrayList<>(maxCount);
+        ArrayList<BiomassBlob> biomassBlobs = new ArrayList<>(blobCount);
 
         //Count number of plain tiles. If there is less plain tiles than desired amount of blobs,
         //set the desired amount of blobs to the plain tile count
@@ -45,7 +45,7 @@ public class WorldUtils {
                 //Don't block worlds
                 int counter = 0;
                 while (p.x == 0 || p.y == 0 || p.x == World.WORLD_SIZE - 1 || p.y == World.WORLD_SIZE - 1 ||
-                        world.isTileBlocked(p.x, p.y)) {
+                        world.getGameObjectsAt(p.x, p.y).size() != 0) {
                     p = world.getTileMap().getRandomPlainTile();
                     counter++;
 

@@ -16,8 +16,8 @@ public class CubotInventory extends CpuHardware {
 
     private Cubot cubot;
 
+    private static final int CLEAR = 0;
     private static final int POLL = 1;
-    private static final int CLEAR = 2;
 
     public CubotInventory(Cubot cubot) {
         this.cubot = cubot;

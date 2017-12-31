@@ -33,11 +33,11 @@ public class MessageEventDispatcher {
                     handler.handle(user, json);
                 }
             } else {
-                LogManager.LOGGER.info("Malformed JSON sent by " + user.getUser().getUsername());
+                LogManager.LOGGER.severe("Malformed JSON sent by " + user.getUser().getUsername());
             }
 
         } catch (ParseException e) {
-            LogManager.LOGGER.info("Malformed JSON sent by " + user.getUser().getUsername());
+            LogManager.LOGGER.severe("Malformed JSON sent by " + user.getUser().getUsername());
         }
     }
 }
