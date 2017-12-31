@@ -26,7 +26,7 @@ public class CpuInitialisationListener implements GameEventListener {
         laserHw.setCpu(cpu);
         CubotLidar radarHw = new CubotLidar((Cubot) user.getControlledUnit());
         radarHw.setCpu(cpu);
-        Keyboard keyboard = new Keyboard((Cubot) user.getControlledUnit());
+        CubotKeyboard keyboard = new CubotKeyboard((Cubot) user.getControlledUnit());
         keyboard.setCpu(cpu);
         CubotDrill drillHw = new CubotDrill((Cubot) user.getControlledUnit());
         drillHw.setCpu(cpu);
@@ -38,19 +38,19 @@ public class CpuInitialisationListener implements GameEventListener {
         batteryHw.setCpu(cpu);
         CubotFloppyDrive floppyHw = new CubotFloppyDrive((Cubot) user.getControlledUnit());
         floppyHw.setCpu(cpu);
-        ComPort comPortHw = new ComPort((Cubot) user.getControlledUnit());
+        CubotComPort comPortHw = new CubotComPort((Cubot) user.getControlledUnit());
         comPortHw.setCpu(cpu);
 
         cpu.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
         cpu.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
         cpu.attachHardware(radarHw, CubotLidar.DEFAULT_ADDRESS);
-        cpu.attachHardware(keyboard, Keyboard.DEFAULT_ADDRESS);
+        cpu.attachHardware(keyboard, CubotKeyboard.DEFAULT_ADDRESS);
         cpu.attachHardware(drillHw, CubotDrill.DEFAULT_ADDRESS);
         cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
         cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
         cpu.attachHardware(emoteHw, CubotHologram.DEFAULT_ADDRESS);
         cpu.attachHardware(batteryHw, CubotBattery.DEFAULT_ADDRESS);
         cpu.attachHardware(floppyHw, CubotFloppyDrive.DEFAULT_ADDRESS);
-        cpu.attachHardware(comPortHw, ComPort.DEFAULT_ADDRESS);
+        cpu.attachHardware(comPortHw, CubotComPort.DEFAULT_ADDRESS);
     }
 }

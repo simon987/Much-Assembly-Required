@@ -17,6 +17,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     private String hologramString = "";
     private HologramMode hologramMode = HologramMode.CLEARED;
     private HologramMode lastHologramMode = HologramMode.CLEARED;
+    private int hologramColor = 0;
 
     /**
      * Hit points
@@ -33,8 +34,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     private ArrayList<char[]> lastConsoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
     private ConsoleMode consoleMode = ConsoleMode.NORMAL;
     private ConsoleMode lastConsoleMode = ConsoleMode.NORMAL;
-
-    private FloppyDisk floppyDisk;
 
     private User parent;
 
@@ -103,6 +102,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         json.put("holo", hologram);
         json.put("holoStr", hologramString);
         json.put("holoMode", lastHologramMode.ordinal());
+        json.put("holoC", hologramColor);
         json.put("energy", energy);
 
         if (parent != null) {
@@ -236,8 +236,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         CLEARED,
         HEX,
         STRING,
-        DEC,
-        COLOR
+        DEC
     }
 
     public enum ConsoleMode {
@@ -269,5 +268,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     public void setConsoleMode(ConsoleMode consoleMode) {
         this.consoleMode = consoleMode;
+    }
+
+    public void setHologramColor(int hologramColor) {
+        this.hologramColor = hologramColor;
     }
 }

@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ComPort extends CpuHardware {
+public class CubotComPort extends CpuHardware {
 
     public static final char HWID = 0xD;
     public static final int DEFAULT_ADDRESS = 0xD;
@@ -22,7 +22,7 @@ public class ComPort extends CpuHardware {
     private static final int FRONT_PORT_OUT = 2;
     private static final int SELF_OUT = 3;
 
-    public ComPort(Cubot cubot) {
+    public CubotComPort(Cubot cubot) {
         this.cubot = cubot;
     }
 
@@ -126,7 +126,7 @@ public class ComPort extends CpuHardware {
         return json;
     }
 
-    public static ComPort deserialize(JSONObject json) {
-        return new ComPort((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) json.get("cubot")));
+    public static CubotComPort deserialize(JSONObject json) {
+        return new CubotComPort((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) json.get("cubot")));
     }
 }

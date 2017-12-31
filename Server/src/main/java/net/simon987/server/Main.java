@@ -22,6 +22,7 @@ public class Main {
 
         GameServer.INSTANCE.setSocketServer(socketServer);
 
+        System.out.println(GameServer.INSTANCE.getGameUniverse().getWorld(0x7fff, 0x7fff));
 
         (new Thread(socketServer)).start();
         (new Thread(GameServer.INSTANCE)).start();

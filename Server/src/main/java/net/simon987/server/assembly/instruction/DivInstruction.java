@@ -28,8 +28,8 @@ public class DivInstruction extends Instruction {
     public Status execute(Target src, int srcIndex, Status status) {
 
         //Source = Y:A
-        int source = ((((char) cpu.getRegisterSet().getRegister("Y").getValue() & 0xFFFF) << 16)) |
-                ((char) cpu.getRegisterSet().getRegister("A").getValue() & 0xFFFF);
+        int source = (((cpu.getRegisterSet().getRegister("Y").getValue() & 0xFFFF) << 16)) |
+                (cpu.getRegisterSet().getRegister("A").getValue() & 0xFFFF);
 
         if (src.get(srcIndex) == 0) {
             //Division by 0
@@ -48,8 +48,8 @@ public class DivInstruction extends Instruction {
 
 
         //Source = Y:A
-        int source = ((((char) cpu.getRegisterSet().getRegister("Y").getValue() & 0xFFFF) << 16)) |
-                ((char) cpu.getRegisterSet().getRegister("A").getValue() & 0xFFFF);
+        int source = (((cpu.getRegisterSet().getRegister("Y").getValue() & 0xFFFF) << 16)) |
+                (cpu.getRegisterSet().getRegister("A").getValue() & 0xFFFF);
 
         if (src == 0) {
             //Division by 0

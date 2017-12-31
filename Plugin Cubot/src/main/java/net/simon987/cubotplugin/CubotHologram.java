@@ -71,8 +71,7 @@ public class CubotHologram extends CpuHardware {
                 int b = getCpu().getRegisterSet().getRegister("B").getValue();
                 int c = getCpu().getRegisterSet().getRegister("C").getValue();
 
-                cubot.setHologramMode(Cubot.HologramMode.COLOR);
-                cubot.setHologram((c | (b << 16)) & 0x00FFFFFF); //B:C, ignore first byte
+                cubot.setHologramColor((c | (b << 16))); //B:C
             }
         }
 

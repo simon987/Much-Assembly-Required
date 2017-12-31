@@ -180,8 +180,6 @@ public class SocketServer extends WebSocketServer {
                     try {
                         ControllableUnit unit = user.getUser().getControlledUnit();
 
-                        System.out.println("Sent " + unit.getConsoleMessagesBuffer().size() + " messages to " + user.getUser().getUsername());
-
                         //Send keyboard updated buffer
                         ArrayList<Integer> kbBuffer = unit.getKeyboardBuffer();
                         JSONArray keys = new JSONArray();
