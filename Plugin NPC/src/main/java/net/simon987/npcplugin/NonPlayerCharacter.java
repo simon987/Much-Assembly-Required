@@ -6,13 +6,14 @@ import net.simon987.server.game.Action;
 import net.simon987.server.game.Direction;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Updatable;
+import net.simon987.server.game.Attackable;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.logging.LogManager;
 
 import java.util.ArrayList;
 
-public abstract class NonPlayerCharacter extends GameObject implements Updatable {
+public abstract class NonPlayerCharacter extends GameObject implements Updatable, Attackable {
 
     private static final int MAP_INFO = 0x0040;
 
@@ -20,8 +21,11 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
     public static final int LIFETIME = GameServer.INSTANCE.getConfig().getInt("npc_lifetime");
 
+    // Set these just in case they aren't overridden in the subclass
+    public static final int HP_MAX_DEFAULT = 100;
+    public static final int HP_REGEN_RATE_DEFAULT = 5;
+
     //Unused
-    int hp;
     int energy;
     int maxEnergy;
 
@@ -48,6 +52,21 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
      */
     private int age = 0;
 
+    /**
+     * Current health of the npc
+     */
+    private int hp = HP_MAX_DEFAULT;
+
+    /**
+     * Health regeneration rate of the npc
+     */
+    private int hpRegenerationRate = HP_REGEN_RATE_DEFAULT;
+
+    /**
+     * Maximum health of the npc
+     */
+    private int maxHp = HP_MAX_DEFAULT;
+
     @Override
     public char getMapInfo() {
         return MAP_INFO;
@@ -66,6 +85,9 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
             selfDestroyNextTick = true;
         }
+
+        //Heal the NPC
+        heal(hpRegenerationRate);
     }
 
     /**
@@ -155,6 +177,52 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
             }
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void setHealRate(int hp) {
+        hpRegenerationRate = hp;
+    }
+
+    @Override
+    public int getHp() {
+        return hp;
+    }
+
+    @Override
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    @Override
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    @Override
+    public void setMaxHp(int hp) {
+        this.maxHp = hp;
+        this.hp = hp;
+    }
+
+    @Override
+    public void heal(int amount) {
+        hp += amount;
+
+        //Can't heal above max
+        if (hp > maxHp) {
+            hp = maxHp;
+        }
+    }
+
+    @Override
+    public void damage(int amount) {
+        hp -= amount;
+
+        //YOU ARE DEAD
+        if (hp <= 0) {
+            setDead(true);
         }
     }
 
