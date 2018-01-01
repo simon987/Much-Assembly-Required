@@ -13,7 +13,7 @@ Chat: [Slack](https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMj
 
 # Deploying the server 
 
-Note: You can find the frontend [here](https://github.com/simon987/Much-Assembly-Required)
+Note: You can find the frontend [here](https://github.com/simon987/Much-Assembly-Required-Frontend)
 
 
 ## Linux (Ubuntu 16.04)
