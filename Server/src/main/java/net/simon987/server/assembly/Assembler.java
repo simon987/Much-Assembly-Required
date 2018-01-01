@@ -132,7 +132,7 @@ public class Assembler {
 
         //System.out.println(line);
 
-        if (line.substring(0, 2).toUpperCase().equals("DW")) {
+        if (line.length() >= 2 && line.substring(0, 2).toUpperCase().equals("DW")) {
 
             try {
 
