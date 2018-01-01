@@ -112,8 +112,6 @@ public class CPU implements JSONSerialisable {
 
     public void reset() {
         status.clear();
-        registerSet.getRegister("SP").setValue(config.getInt("stack_bottom"));
-        registerSet.getRegister("BP").setValue(config.getInt("stack_bottom"));
         ip = codeSegmentOffset;
     }
 
@@ -167,6 +165,8 @@ public class CPU implements JSONSerialisable {
         memory.set(EXECUTION_COST_ADDR, elapsed);
         memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
         memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
+
+        System.out.println(this);//todo remove
 
         return elapsed;
     }
