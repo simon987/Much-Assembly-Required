@@ -97,6 +97,8 @@ public class CPU implements JSONSerialisable {
         instructionSet.add(new JncInstruction(this));
         instructionSet.add(new JnoInstruction(this));
         instructionSet.add(new JoInstruction(this));
+        instructionSet.add(new PushfInstruction(this));
+        instructionSet.add(new PopfInstruction(this));
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
