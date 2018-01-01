@@ -90,7 +90,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                 LogManager.LOGGER.severe("FIXME: moveTo:NonPlayerCharacter, Direction is null");
             }
 
-            if (incrementLocation()) {
+            if (incrementLocation(1)) {
                 lastAction = Action.WALKING;
                 return true;
             }
@@ -113,7 +113,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                     getWorld().getX(), getWorld().getY() - 1) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(8, 0, 0)) {
                     setDirection(Direction.NORTH);
-                    incrementLocation();
+                    incrementLocation(1);
                 }
                 return true;
             } else {
@@ -125,7 +125,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                     getWorld().getX() + 1, getWorld().getY()) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(15, 7, 0)) {
                     setDirection(Direction.EAST);
-                    incrementLocation();
+                    incrementLocation(1);
                 }
                 return true;
             } else {
@@ -136,7 +136,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                     getWorld().getX(), getWorld().getY() + 1) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(8, 15, 0)) {
                     setDirection(Direction.SOUTH);
-                    incrementLocation();
+                    incrementLocation(1);
                 }
                 return true;
             } else {
@@ -147,7 +147,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                     getWorld().getX() - 1, getWorld().getY()) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(0, 7, 0)) {
                     setDirection(Direction.WEST);
-                    incrementLocation();
+                    incrementLocation(1);
                 }
                 return true;
             } else {

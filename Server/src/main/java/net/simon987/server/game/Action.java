@@ -6,6 +6,7 @@ public enum Action {
     WALKING,
     WITHDRAWING,
     DEPOSITING,
-    LISTENING
+    LISTENING,
+    JUMPING
 
 }

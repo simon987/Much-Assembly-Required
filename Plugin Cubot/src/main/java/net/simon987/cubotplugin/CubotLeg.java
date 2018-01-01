@@ -16,6 +16,7 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
 
     private static final int LEGS_SET_DIR = 1;
     private static final int LEGS_SET_DIR_AND_WALK = 2;
+    private static final int LEGS_JUMP = 3;
 
     /**
      * Hardware ID (Should be unique)
@@ -66,6 +67,12 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
                 }
 
                 cubot.setCurrentAction(Action.WALKING);
+            }
+        } else if (a == LEGS_JUMP) {
+            // jump up to 3 spaces, each space costs 200
+            if (b < 4 && cubot.getMaxEnergy() >= b * 200) {
+                cubot.setJumpDistance(b);
+                cubot.setCurrentAction(Action.JUMPING);
             }
         }
     }
