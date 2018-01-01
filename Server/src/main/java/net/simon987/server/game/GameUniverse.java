@@ -248,7 +248,7 @@ public class GameUniverse implements JSONSerialisable {
     public String getGuestUsername() {
         int i = 1;
 
-        while (i < 1000) { //todo get Max guest user cap from config
+        while (i < 10000) { //todo get Max guest user cap from config
             if (getUser("guest" + String.valueOf(i)) != null) {
                 i++;
                 continue;

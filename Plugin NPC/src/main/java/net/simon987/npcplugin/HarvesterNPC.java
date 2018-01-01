@@ -8,8 +8,8 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
     public static final int ID = 10;
 
-    public static final int MAX_HEALTH = 100;
-    public static final int HEAL_RATE = 5;
+    public static final int MAX_HEALTH = GameServer.INSTANCE.getConfig().getInt("harvester_hp_max");
+    public static final int HEAL_RATE = GameServer.INSTANCE.getConfig().getInt("harvester_regen");
 
 
     public HarvesterNPC() {

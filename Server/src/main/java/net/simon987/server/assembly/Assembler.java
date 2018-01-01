@@ -23,7 +23,7 @@ public class Assembler {
     private InstructionSet instructionSet;
 
     private RegisterSet registerSet;
-    
+
     private static final int MEM_SIZE   = 0x10000;  // Size in words
 
     public Assembler(InstructionSet instructionSet, RegisterSet registerSet, ServerConfiguration config) {
@@ -208,11 +208,11 @@ public class Assembler {
         try {
 
             int factor = Integer.decode(valueTokens[0]);
-            
+
             if (factor > MEM_SIZE) {
                 throw new InvalidOperandException("Factor '"+factor+"' exceeds total memory size", currentLine);
             }
-            
+
             String value = valueTokens[1].substring(4, valueTokens[1].lastIndexOf(')'));
 
             //Handle label
@@ -359,9 +359,12 @@ public class Assembler {
                 if (currentOffset >= MEM_SIZE) {
                     throw new OffsetOverflowException(currentOffset, MEM_SIZE, currentLine);
                 }
-            } catch (AssemblyException e) {
+            } catch (FatalAssemblyException e) {
+                //Don't bother parsing the rest of the code, since it will not be assembled anyway
+                break;
+            } catch (AssemblyException e1) {
                 //Ignore error on pass 2
-                //System.out.println(e);
+
             }
         }
 
@@ -389,11 +392,11 @@ public class Assembler {
                 //Encode instruction
                 byte[] bytes = parseInstruction(line, currentLine, result.labels, instructionSet);
                 currentOffset += bytes.length / 2;
-                
+
                 if (currentOffset >= MEM_SIZE) {
                     throw new OffsetOverflowException(currentOffset, MEM_SIZE, currentLine);
                 }
-                
+
                 out.write(bytes);
 
             } catch (EmptyLineException | PseudoInstructionException e) {
@@ -410,7 +413,26 @@ public class Assembler {
             }
         }
 
-        result.bytes = out.toByteArray();
+        //If the code contains OffsetOverFlowException(s), don't bother writing the assembled bytes to memory
+        boolean writeToMemory = true;
+        for (Exception e : result.exceptions) {
+            if (e instanceof OffsetOverflowException) {
+                writeToMemory = false;
+            }
+        }
+
+        if (writeToMemory) {
+            result.bytes = out.toByteArray();
+        } else {
+            result.bytes = new byte[0];
+            LogManager.LOGGER.fine("Skipping writing assembled bytes to memory. (OffsetOverflowException)");
+        }
+
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         LogManager.LOGGER.info("Assembled " + result.bytes.length + " bytes (" + result.exceptions.size() + " errors)");
         for (AssemblyException e : result.exceptions) {

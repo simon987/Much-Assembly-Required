@@ -2,11 +2,7 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Util;
-import net.simon987.server.game.Action;
-import net.simon987.server.game.Direction;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.Updatable;
-import net.simon987.server.game.Attackable;
+import net.simon987.server.game.*;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.logging.LogManager;
@@ -23,7 +19,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
     // Set these just in case they aren't overridden in the subclass
     public static final int HP_MAX_DEFAULT = 100;
-    public static final int HP_REGEN_RATE_DEFAULT = 5;
+    public static final int HP_REGEN_RATE_DEFAULT = 0;
 
     //Unused
     int energy;

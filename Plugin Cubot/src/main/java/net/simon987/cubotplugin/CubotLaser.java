@@ -4,9 +4,9 @@ import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.Action;
+import net.simon987.server.game.Attackable;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.InventoryHolder;
-import net.simon987.server.game.Attackable;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -27,7 +27,7 @@ public class CubotLaser extends CpuHardware {
     private static final int LASER_DEPOSIT = 2;
     private static final int LASER_ATTACK = 3;
 
-    private static final int LASER_DAMAGE = 20;
+    private static final int LASER_DAMAGE = 25;
 
     public CubotLaser(Cubot cubot) {
         this.cubot = cubot;
@@ -71,8 +71,8 @@ public class CubotLaser extends CpuHardware {
         } else if (a == LASER_DEPOSIT) {
             // TODO
         } else if (a == LASER_ATTACK) {
-           
-            if (cubot.spendEnergy(20)) {
+
+            if (cubot.spendEnergy(70)) {
                 
                 //Get object directly in front of the Cubot
                 Point frontTile = cubot.getFrontTile();
