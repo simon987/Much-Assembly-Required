@@ -8,12 +8,14 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable {
+public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable, Attackable {
 
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
 
     public static int TYPE_ID = 2;
+    public static final int MAX_HEALTH = 100;
+    public static final int HEAL_RATE = 5;
 
     private int hologram = 0;
     private String hologramString = "";
@@ -26,6 +28,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
      */
     private int hp;
     private int heldItem;
+    private int healRate;
+    private int maxHp;
 
     private Action currentAction = Action.IDLE;
     private Action lastAction = Action.IDLE;
@@ -278,4 +282,46 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     public void setHologramColor(int hologramColor) {
         this.hologramColor = hologramColor;
     }
+
+	@Override
+	public void setHealRate(int hp) {
+		healRate = hp;
+	}
+
+	@Override
+	public int getHp() {
+		return hp;
+	}
+
+	@Override
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	@Override
+	public int getMaxHp() {
+		return maxHp;
+	}
+
+	@Override
+	public void setMaxHp(int hp) {
+		maxHp = hp;
+	}
+
+	@Override
+	public void heal(int amount) {
+        hp += amount;
+        if(hp > maxHp) {
+            hp = maxHp;
+        }
+	}
+
+	@Override
+	public void damage(int amount) {
+        hp -= amount;
+        if(hp <= 0) {
+            hp = 0;
+            // TODO: handle death here somehow.
+        }
+	}
 }
