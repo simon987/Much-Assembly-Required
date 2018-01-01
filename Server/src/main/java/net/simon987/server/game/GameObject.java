@@ -68,6 +68,7 @@ public abstract class GameObject implements JSONSerialisable {
             newY = y;
         }
 
+
         //Check if out of World bounds / collision
         if (newX < 0) {
             //Move object to adjacent World (left)

@@ -13,6 +13,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
 
+    public static int TYPE_ID = 2;
+
     private int hologram = 0;
     private String hologramString = "";
     private HologramMode hologramMode = HologramMode.CLEARED;
@@ -250,10 +252,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     }
 
     @Override
-    public void sendMessage(char[] message) {
+    public boolean sendMessage(char[] message) {
 
         if (consoleMessagesBuffer.size() < CONSOLE_BUFFER_MAX_SIZE) {
             consoleMessagesBuffer.add(message);
+            return true;
+        } else {
+            return false;
         }
     }
 

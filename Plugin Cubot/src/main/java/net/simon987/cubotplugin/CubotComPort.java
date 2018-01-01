@@ -82,12 +82,14 @@ public class CubotComPort extends CpuHardware {
                         System.arraycopy(getCpu().getMemory().getWords(), x, message, 0, MESSAGE_LENGTH);
 
                         //Send it to the Programmable object
-                        ((Programmable) objects.get(0)).sendMessage(message);
-
-                        System.out.println("Sent message to " + ((Cubot) objects.get(0)).getParent().getUsername());
+                        getCpu().getRegisterSet().getRegister("B").setValue(
+                                ((Programmable) objects.get(0)).sendMessage(message) ? 1 : 0);
+                        return;
                     }
                 }
             }
+
+            getCpu().getRegisterSet().getRegister("B").setValue(0); //Failed
 
         } else if (a == COMPORT_SELF_OUT) {
 
@@ -104,9 +106,12 @@ public class CubotComPort extends CpuHardware {
                     //Get MESSAGE_LENGTH-word message pointed by X
                     char[] message = new char[MESSAGE_LENGTH];
                     System.arraycopy(getCpu().getMemory().getWords(), x, message, 0, MESSAGE_LENGTH);
-                    cubot.sendMessage(message);
+                    getCpu().getRegisterSet().getRegister("B").setValue(cubot.sendMessage(message) ? 1 : 0);
+                    return;
                 }
             }
+
+            getCpu().getRegisterSet().getRegister("B").setValue(0); //Failed
         }
 
 

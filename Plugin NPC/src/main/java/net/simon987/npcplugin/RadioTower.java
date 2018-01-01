@@ -41,10 +41,13 @@ public class RadioTower extends GameObject implements Programmable, Updatable {
     }
 
     @Override
-    public void sendMessage(char[] message) {
+    public boolean sendMessage(char[] message) {
 
         if (message.length < MAX_MESSAGES) {
             messages.add(message);
+            return true;
+        } else {
+            return false;
         }
     }
 
