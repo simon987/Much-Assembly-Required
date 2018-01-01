@@ -34,7 +34,6 @@ public class CubotInventory extends CpuHardware {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
         if (a == INV_POLL) {
-
             getCpu().getRegisterSet().getRegister("B").setValue(cubot.getHeldItem());
 
         } else if (a == INV_CLEAR) {
@@ -42,8 +41,8 @@ public class CubotInventory extends CpuHardware {
                 int energy = GameServer.INSTANCE.getConfig().getInt("biomassEnergyValue");
                 cubot.storeEnergy(energy);
                 cubot.setHeldItem(0);
-            }
-            else if (cubot.spendEnergy(100)) {
+
+            } else if (cubot.spendEnergy(100)) {
                 cubot.setHeldItem(0);
             }
         }
