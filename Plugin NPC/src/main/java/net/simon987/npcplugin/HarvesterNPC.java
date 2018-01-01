@@ -8,10 +8,16 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
     public static final int ID = 10;
 
+    public static final int MAX_HEALTH = 100;
+    public static final int HEAL_RATE = 5;
+
 
     public HarvesterNPC() {
         setTask(new HarvestTask());
-        hp = 10;
+
+        setHp(MAX_HEALTH);
+        setMaxHp(MAX_HEALTH);
+        setHealRate(HEAL_RATE);
     }
 
     @Override
@@ -44,7 +50,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
         json.put("x", getX());
         json.put("y", getY());
         json.put("direction", getDirection().ordinal());
-        json.put("hp", hp);
+        json.put("hp", getHp());
         json.put("energy", energy);
         json.put("action", getAction().ordinal());
         json.put("t", ID);
@@ -58,7 +64,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
         npc.setObjectId((long) json.get("i"));
         npc.setX((int) (long) json.get("x"));
         npc.setY((int) (long) json.get("y"));
-        npc.hp = (int) (long) json.get("hp");
+        npc.setHp((int) (long) json.get("hp"));
         npc.setDirection(Direction.getDirection((int) (long) json.get("direction")));
         npc.energy = (int) (long) json.get("energy");
         npc.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
