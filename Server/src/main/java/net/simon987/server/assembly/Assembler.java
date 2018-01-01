@@ -23,6 +23,8 @@ public class Assembler {
     private InstructionSet instructionSet;
 
     private RegisterSet registerSet;
+    
+    private static final int MEM_SIZE   = 0x10000;  // Size in words
 
     public Assembler(InstructionSet instructionSet, RegisterSet registerSet, ServerConfiguration config) {
         this.instructionSet = instructionSet;
@@ -206,6 +208,11 @@ public class Assembler {
         try {
 
             int factor = Integer.decode(valueTokens[0]);
+            
+            if (factor > MEM_SIZE) {
+                throw new InvalidOperandException("Factor '"+factor+"' exceeds total memory size", currentLine);
+            }
+            
             String value = valueTokens[1].substring(4, valueTokens[1].lastIndexOf(')'));
 
             //Handle label
@@ -341,14 +348,17 @@ public class Assembler {
         }
 
         //Pass 2: Save label names and location
-        char currentOffset = 0;
+        int currentOffset = 0;
         for (currentLine = 0; currentLine < lines.length; currentLine++) {
             try {
-                checkForLabel(lines[currentLine], result, currentOffset);
+                checkForLabel(lines[currentLine], result, (char)currentOffset);
 
                 //Increment offset
                 currentOffset += parseInstruction(lines[currentLine], currentLine, instructionSet).length / 2;
 
+                if (currentOffset >= MEM_SIZE) {
+                    throw new OffsetOverflowException(currentOffset, MEM_SIZE, currentLine);
+                }
             } catch (AssemblyException e) {
                 //Ignore error on pass 2
                 //System.out.println(e);
@@ -379,10 +389,19 @@ public class Assembler {
                 //Encode instruction
                 byte[] bytes = parseInstruction(line, currentLine, result.labels, instructionSet);
                 currentOffset += bytes.length / 2;
+                
+                if (currentOffset >= MEM_SIZE) {
+                    throw new OffsetOverflowException(currentOffset, MEM_SIZE, currentLine);
+                }
+                
                 out.write(bytes);
 
             } catch (EmptyLineException | PseudoInstructionException e) {
                 //Ignore empty lines and pseudo-instructions
+            } catch (FatalAssemblyException asmE) {
+                // Save error, but abort assembly at this line
+                result.exceptions.add(asmE);
+                break;
             } catch (AssemblyException asmE) {
                 //Save errors on pass3
                 result.exceptions.add(asmE);
