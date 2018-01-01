@@ -39,7 +39,8 @@ public class CubotInventory extends CpuHardware {
 
         } else if (a == INV_CLEAR) {
             if (cubot.getHeldItem() == 0x0001) {
-                cubot.storeEnergy(4000);
+                int energy = GameServer.INSTANCE.getConfig().getInt("biomassEnergyValue");
+                cubot.storeEnergy(energy);
                 cubot.setHeldItem(0);
             }
             else if (cubot.spendEnergy(100)) {
