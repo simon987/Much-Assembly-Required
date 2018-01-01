@@ -31,7 +31,7 @@ public class CmpInstruction extends Instruction {
 
         status.setSignFlag(Util.checkSign16(result));
         status.setZeroFlag((char) result == 0);
-        status.setOverflowFlag(Util.checkOverFlowAdd16(a, b));
+        status.setOverflowFlag(Util.checkOverFlowSub16(a, b));
         status.setCarryFlag(Util.checkCarry16(result));
 
         return status;

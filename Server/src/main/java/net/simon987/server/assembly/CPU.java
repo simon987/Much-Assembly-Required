@@ -166,8 +166,6 @@ public class CPU implements JSONSerialisable {
         memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
         memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
 
-        System.out.println(this);//todo remove
-
         return elapsed;
     }
 
