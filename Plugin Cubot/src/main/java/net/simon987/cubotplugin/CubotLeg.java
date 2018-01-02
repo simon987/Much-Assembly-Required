@@ -69,7 +69,7 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
                 cubot.setCurrentAction(Action.WALKING);
             }
         } else if (a == LEGS_JUMP) {
-            // jump up to 3 spaces, each space costs 200
+            // jump up to 3 spaces, each space costs 300
             if (b < 4 && cubot.getMaxEnergy() >= b * 300) {
                 cubot.setJumpDistance(b);
                 cubot.setCurrentAction(Action.JUMPING);

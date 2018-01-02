@@ -69,7 +69,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
                 currentAction = Action.IDLE;
             }
         } else if (currentAction == Action.JUMPING) {
-            if (spendEnergy(jumpDistance * 200)) {
+            if (spendEnergy(jumpDistance * 300)) {
                 if (!incrementLocation(jumpDistance)) {
                     //Couldn't jump
                     currentAction = Action.IDLE;
