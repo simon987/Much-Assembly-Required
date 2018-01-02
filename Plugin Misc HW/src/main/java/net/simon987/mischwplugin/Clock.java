@@ -1,10 +1,10 @@
 package net.simon987.mischwplugin;
 
+import com.mongodb.BasicDBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
-import org.json.simple.JSONObject;
 
 public class Clock extends CpuHardware {
 
@@ -28,15 +28,18 @@ public class Clock extends CpuHardware {
         return HWID;
     }
 
-    public static Clock deserialize(JSONObject hwJSON) {
+    public static Clock deserialize() {
         return new Clock();
     }
 
-    @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
-        json.put("hwid", (int) HWID);
 
-        return json;
+    @Override
+    public BasicDBObject mongoSerialise() {
+
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("hwid", (int) HWID);
+
+        return dbObject;
     }
 }

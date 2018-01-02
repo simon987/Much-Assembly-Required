@@ -1,18 +1,20 @@
 package net.simon987.server.game;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
 import net.simon987.server.game.pathfinding.Pathfinder;
-import net.simon987.server.io.JSONSerialisable;
-import org.json.simple.JSONArray;
+import net.simon987.server.io.MongoSerialisable;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class World implements JSONSerialisable {
+public class World implements MongoSerialisable {
 
     /**
      * Size of the side of a world
@@ -111,24 +113,26 @@ public class World implements JSONSerialisable {
     }
 
     @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
+    public BasicDBObject mongoSerialise() {
 
-        JSONArray objects = new JSONArray();
+        BasicDBObject dbObject = new BasicDBObject();
+
+        BasicDBList objects = new BasicDBList();
         ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
         for (GameObject obj : gameObjects_) {
-            objects.add(obj.serialise());
+            objects.add(obj.mongoSerialise());
         }
-        json.put("o", objects);
 
-        json.put("t", tileMap.serialise());
+        dbObject.put("objects", objects);
+        dbObject.put("terrain", tileMap.mongoSerialise());
 
-        json.put("x", x);
-        json.put("y", y);
+        dbObject.put("x", x);
+        dbObject.put("y", y);
 
-        json.put("u", updatable);
+        dbObject.put("updatable", updatable);
 
-        return json;
+
+        return dbObject;
     }
 
     @Override
@@ -150,21 +154,45 @@ public class World implements JSONSerialisable {
 
     public static World deserialize(JSONObject json) {
         World world = new World();
-        world.x = (int) (long) json.get("x");
-        world.y = (int) (long) json.get("y");
-        world.updatable = (int) (long) json.get("u");
+//    world.x = (int) (long) json.get("x");
+//    world.y = (int) (long) json.get("y");
+//    world.updatable = (int) (long) json.get("u");
+//
+//    world.tileMap = TileMap.deserialize((JSONObject) json.get("t"));
+//
+//
+//    for (JSONObject objJson : (ArrayList<JSONObject>) json.get("o")) {
+//
+//        GameObject object = GameObject.deserialize(objJson);
+//
+//        object.setWorld(world);
+//        world.gameObjects.add(object);
+//    }
 
-        world.tileMap = TileMap.deserialize((JSONObject) json.get("t"));
+        return world;
+    }
 
-        for (JSONObject objJson : (ArrayList<JSONObject>) json.get("o")) {
+    public static World deserialize(DBObject dbObject) {
 
-            GameObject object = GameObject.deserialize(objJson);
+        World world = new World();
+        world.x = (int) dbObject.get("x");
+        world.y = (int) dbObject.get("y");
+        world.updatable = (int) dbObject.get("updatable");
+
+        world.tileMap = TileMap.deserialize((BasicDBObject) dbObject.get("terrain"));
+
+        BasicDBList objects = (BasicDBList) dbObject.get("objects");
+
+        for (Object obj : objects) {
+
+            GameObject object = GameObject.deserialize((DBObject) obj);
 
             object.setWorld(world);
             world.gameObjects.add(object);
         }
 
         return world;
+
     }
 
     /**

@@ -1,18 +1,19 @@
 package net.simon987.server.user;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.UserCreationEvent;
 import net.simon987.server.game.ControllableUnit;
-import net.simon987.server.io.JSONSerialisable;
-import org.json.simple.JSONObject;
+import net.simon987.server.io.MongoSerialisable;
 
 /**
  * Represents a User (or player) of the game
  */
-public class User implements JSONSerialisable {
+public class User implements MongoSerialisable {
 
     private String username;
 
@@ -39,33 +40,31 @@ public class User implements JSONSerialisable {
     }
 
     @Override
-    public JSONObject serialise() {
+    public BasicDBObject mongoSerialise() {
 
-        JSONObject json = new JSONObject();
+        BasicDBObject dbObject = new BasicDBObject();
 
-        json.put("username", username);
-        json.put("code", userCode);
-        json.put("controlledUnit", controlledUnit.getObjectId());
-        json.put("cpu", cpu.serialise());
+        dbObject.put("username", username);
+        dbObject.put("code", userCode);
+        dbObject.put("controlledUnit", controlledUnit.getObjectId());
+        dbObject.put("cpu", cpu.mongoSerialise());
 
-        return json;
-
+        return dbObject;
 
     }
 
-    public static User deserialize(JSONObject userJson) throws CancelledException {
+    public static User deserialize(DBObject obj) throws CancelledException {
 
-        User user = new User((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) userJson.get("controlledUnit")));
-        user.username = (String) userJson.get("username");
-        user.userCode = (String) userJson.get("code");
+        User user = new User((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("controlledUnit")));
+        user.username = (String) obj.get("username");
+        user.userCode = (String) obj.get("code");
 
         user.getControlledUnit().setParent(user);
 
-        user.cpu = CPU.deserialize((JSONObject) userJson.get("cpu"), user);
+        user.cpu = CPU.deserialize((DBObject) obj.get("cpu"), user);
 
         return user;
     }
-
     //----
 
     public String getUserCode() {

@@ -1,5 +1,7 @@
 package net.simon987.biomassplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.InventoryHolder;
 import org.json.simple.JSONObject;
@@ -40,6 +42,20 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
         return json;
     }
 
+    @Override
+    public BasicDBObject mongoSerialise() {
+
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("t", ID);
+        dbObject.put("i", getObjectId());
+        dbObject.put("x", getX());
+        dbObject.put("y", getY());
+        dbObject.put("b", biomassCount);
+
+        return dbObject;
+
+    }
 
     public int getBiomassCount() {
         return biomassCount;
@@ -57,15 +73,15 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
 //        this.style = style;
 //    }
 
-    public static BiomassBlob deserialize(JSONObject json) {
+    public static BiomassBlob deserialize(DBObject obj) {
 
         BiomassBlob biomassBlob = new BiomassBlob();
 
-        biomassBlob.setObjectId((long) json.get("i"));
-        biomassBlob.setX((int) (long) json.get("x"));
-        biomassBlob.setY((int) (long) json.get("y"));
-        //   biomassBlob.style = (int) (long) json.get("style");
-        biomassBlob.biomassCount = (int) (long) json.get("b");
+        biomassBlob.setObjectId((long) obj.get("i"));
+        biomassBlob.setX((int) obj.get("x"));
+        biomassBlob.setY((int) obj.get("y"));
+        //   biomassBlob.style = (int) json.get("style");
+        biomassBlob.biomassCount = (int) obj.get("b");
 
         return biomassBlob;
     }

@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.security.KeyFactory;
@@ -59,6 +60,7 @@ public class SocketServer extends WebSocketServer {
         }
 
         setConnectionLostTimeout(120);
+        setReuseAddr(true); //To avoid BindException
 
         database = new SocketServerDatabase(config);
 
@@ -145,10 +147,19 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onError(WebSocket conn, Exception ex) {
 
-        LogManager.LOGGER.severe("an error occurred on connection " + conn + ": " + ex);
-        userManager.remove(userManager.getUser(conn));
+        if (ex instanceof BindException) {
 
-        ex.printStackTrace();
+            LogManager.LOGGER.severe("Address already in use");
+            System.exit(-1);
+
+        } else {
+            LogManager.LOGGER.severe("an error occurred on connection " + conn + ": " + ex);
+            userManager.remove(userManager.getUser(conn));
+
+            ex.printStackTrace();
+        }
+
+
     }
 
     @Override

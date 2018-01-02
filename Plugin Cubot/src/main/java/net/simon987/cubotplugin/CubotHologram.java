@@ -1,9 +1,10 @@
 package net.simon987.cubotplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
-import org.json.simple.JSONObject;
 
 public class CubotHologram extends CpuHardware {
 
@@ -82,16 +83,19 @@ public class CubotHologram extends CpuHardware {
         return HWID;
     }
 
-    public static CubotHologram deserialize(JSONObject hwJSON) {
-        return new CubotHologram((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) hwJSON.get("cubot")));
+    public static CubotHologram deserialize(DBObject obj) {
+        return new CubotHologram((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 
     @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
-        json.put("hwid", (int) HWID);
-        json.put("cubot", cubot.getObjectId());
+    public BasicDBObject mongoSerialise() {
 
-        return json;
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("hwid", (int) HWID);
+        dbObject.put("cubot", cubot.getObjectId());
+
+        return dbObject;
     }
+
 }
