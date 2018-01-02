@@ -61,4 +61,7 @@ public class CubotRepair extends CpuHardware {
 		return HWID;
 	}
 
+    public static CubotRepair deserialize(JSONObject json) {
+        return new CubotRepair((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) json.get("cubot")));
+    }
 }
