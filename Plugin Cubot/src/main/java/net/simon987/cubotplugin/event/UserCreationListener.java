@@ -9,6 +9,7 @@ import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 
 import java.awt.*;
+import java.util.Random;
 
 public class UserCreationListener implements GameEventListener {
     @Override
@@ -25,9 +26,11 @@ public class UserCreationListener implements GameEventListener {
 
         Cubot cubot = new Cubot();
 
-        cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(
-                GameServer.INSTANCE.getConfig().getInt("new_user_worldX"),
-                GameServer.INSTANCE.getConfig().getInt("new_user_worldY"), true));
+        Random random = new Random();
+        int spawnX = GameServer.INSTANCE.getConfig().getInt("new_user_worldX") + random.nextInt(5);
+        int spawnY = GameServer.INSTANCE.getConfig().getInt("new_user_worldY") + random.nextInt(5);
+
+        cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true));
         cubot.getWorld().getGameObjects().add(cubot);
         cubot.getWorld().incUpdatable();
 
