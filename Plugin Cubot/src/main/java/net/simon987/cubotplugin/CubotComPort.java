@@ -18,10 +18,11 @@ public class CubotComPort extends CpuHardware {
 
     private Cubot cubot;
 
-    private static final int COMPORT_SELF_CLEAR = 0;
+    private static final int COMPORT_BUFFER_CLEAR = 0;
     private static final int COMPORT_POLL = 1;
     private static final int COMPORT_FRONT_PORT_OUT = 2;
     private static final int COMPORT_SELF_OUT = 3;
+    private static final int COMPORT_CONSOLE_CLEAR = 4;
 
     public CubotComPort(Cubot cubot) {
         this.cubot = cubot;
@@ -34,9 +35,12 @@ public class CubotComPort extends CpuHardware {
 
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
-        if (a == COMPORT_SELF_CLEAR) {
+        if (a == COMPORT_BUFFER_CLEAR) {
 
             cubot.getConsoleMessagesBuffer().clear();
+            
+        } else if (a == COMPORT_CONSOLE_CLEAR) {
+            
             cubot.setConsoleMode(Cubot.ConsoleMode.CLEAR);
 
         } else if (a == COMPORT_POLL) {
