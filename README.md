@@ -33,8 +33,38 @@ cd target
 java -jar server-1.2a.jar
 ```
 
-## Windows
-Coming eventually...
+## Windows (tested on 10)
+
+Installation instructions:
+1. Download the JDK from [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+Install the JDK and update your PATH and JAVA_HOME enviroment variables.
+2. Download Maven from [here](https://maven.apache.org/).
+Install Maven (following the README) and update your PATH enviroment variable.
+3. Download Mongo DB Community from [here](https://www.mongodb.com/download-center#community).
+Install Mongo DB following the instructions [here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/).
+Update your PATH enviroment variable.
+
+Building instructions:
+```batch
+:: Builds the server
+cd Much-Assembly-Required
+mvn package
+```
+
+Running instructions:
+1. In one Command Prompt window, run Mongo DB:
+```batch
+:: Runs Mongo DB
+mongod
+```
+2. In a second Command Prompt window, run the MAR server:
+```batch
+:: Runs the MAR server
+cd Much-Assembly-Required\target
+java -jar server-1.2a.jar
+```
+
+
 
 ## Docker
 ### Requirements  
