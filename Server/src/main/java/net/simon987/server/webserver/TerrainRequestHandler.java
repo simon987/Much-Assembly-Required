@@ -12,12 +12,12 @@ public class TerrainRequestHandler implements MessageHandler {
     public void handle(OnlineUser user, JSONObject json) {
         if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y")) {
 
-            LogManager.LOGGER.fine("Terrain request from " + user.getUser().getUsername());
+//            LogManager.LOGGER.fine("Terrain request from " + user.getUser().getUsername());
             World world;
             try {
                 world = GameServer.INSTANCE.getGameUniverse().getWorld(
                         Long.valueOf((long) json.get("x")).intValue(),
-                        Long.valueOf((long) json.get("y")).intValue());
+                        Long.valueOf((long) json.get("y")).intValue(), false);
             } catch (NullPointerException e) {
                 LogManager.LOGGER.severe("FIXME: handle TerrainRequestHandler");
                 return;
@@ -38,11 +38,17 @@ public class TerrainRequestHandler implements MessageHandler {
                 }
 
                 response.put("t", "terrain");
+                response.put("ok", true);
                 response.put("terrain", terrain);
 
                 user.getWebSocket().send(response.toJSONString());
             } else {
-                LogManager.LOGGER.severe("FIXME handle:TerrainRequestHandler");
+                //Uncharted World
+                JSONObject response = new JSONObject();
+                response.put("t", "terrain");
+                response.put("ok", false);
+
+                user.getWebSocket().send(response.toJSONString());
             }
         }
     }

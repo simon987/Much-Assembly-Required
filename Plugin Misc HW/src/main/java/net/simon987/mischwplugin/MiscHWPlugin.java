@@ -1,12 +1,12 @@
 package net.simon987.mischwplugin;
 
+import com.mongodb.DBObject;
 import net.simon987.mischwplugin.event.CpuInitialisationListener;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.json.simple.JSONObject;
 
 public class MiscHWPlugin extends ServerPlugin implements CpuHardwareDeserializer {
 
@@ -19,14 +19,14 @@ public class MiscHWPlugin extends ServerPlugin implements CpuHardwareDeserialize
     }
 
     @Override
-    public CpuHardware deserializeHardware(JSONObject hwJson) {
-        int hwid = (int) (long) hwJson.get("hwid");
+    public CpuHardware deserializeHardware(DBObject hwJson) {
+        int hwid = (int) hwJson.get("hwid");
 
         switch (hwid) {
             case RandomNumberGenerator.HWID:
-                return RandomNumberGenerator.deserialize(hwJson);
+                return RandomNumberGenerator.deserialize();
             case Clock.HWID:
-                return Clock.deserialize(hwJson);
+                return Clock.deserialize();
         }
 
         return null;

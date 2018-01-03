@@ -15,7 +15,7 @@ public class ObjectsRequestHandler implements MessageHandler {
     @Override
     public void handle(OnlineUser user, JSONObject json) {
         if (json.get("t").equals("object")) {
-            LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
+            // LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
 
             int x, y;
             try {
@@ -26,7 +26,7 @@ public class ObjectsRequestHandler implements MessageHandler {
                 return;
             }
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y);
+            World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y, false);
 
             if (world != null) {
                 ArrayList<GameObject> gameObjects = world.getGameObjects();

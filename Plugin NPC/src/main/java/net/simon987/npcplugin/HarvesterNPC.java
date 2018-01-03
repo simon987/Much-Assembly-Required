@@ -1,5 +1,7 @@
 package net.simon987.npcplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.Direction;
 import org.json.simple.JSONObject;
@@ -58,16 +60,32 @@ public class HarvesterNPC extends NonPlayerCharacter {
         return json;
     }
 
-    public static HarvesterNPC deserialize(JSONObject json) {
+    @Override
+    public BasicDBObject mongoSerialise() {
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("i", getObjectId());
+        dbObject.put("x", getX());
+        dbObject.put("y", getY());
+        dbObject.put("direction", getDirection().ordinal());
+        dbObject.put("hp", getHp());
+        //  dbObject.put("energy", energy);
+        dbObject.put("action", getAction().ordinal());
+        dbObject.put("t", ID);
+
+        return dbObject;
+    }
+
+    public static HarvesterNPC deserialize(DBObject obj) {
 
         HarvesterNPC npc = new HarvesterNPC();
-        npc.setObjectId((long) json.get("i"));
-        npc.setX((int) (long) json.get("x"));
-        npc.setY((int) (long) json.get("y"));
-        npc.setHp((int) (long) json.get("hp"));
-        npc.setDirection(Direction.getDirection((int) (long) json.get("direction")));
-        npc.energy = (int) (long) json.get("energy");
-        npc.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
+        npc.setObjectId((long) obj.get("i"));
+        npc.setX((int) obj.get("x"));
+        npc.setY((int) obj.get("y"));
+        npc.setHp((int) obj.get("hp"));
+        npc.setDirection(Direction.getDirection((int) obj.get("direction")));
+        // npc.energy = (int) obj.get("energy");
+        // npc.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
 
         return npc;
 

@@ -1,7 +1,11 @@
 package net.simon987.server.game;
 
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.MongoSerialisable;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -17,7 +21,7 @@ import java.util.zip.InflaterOutputStream;
 /**
  * A 2D map of Tile objects of size width*height
  */
-public class TileMap implements JSONSerialisable {
+public class TileMap implements JSONSerialisable, MongoSerialisable {
 
     public static final int PLAIN_TILE = 0;
     public static final int WALL_TILE = 1;
@@ -50,6 +54,13 @@ public class TileMap implements JSONSerialisable {
         this.height = height;
 
         tiles = new int[width][height];
+    }
+
+    public TileMap(int[][] tiles) {
+        this.width = World.WORLD_SIZE;
+        this.height = World.WORLD_SIZE;
+
+        this.tiles = tiles;
     }
 
     /**
@@ -128,10 +139,36 @@ public class TileMap implements JSONSerialisable {
         return json;
     }
 
+    @Override
+    public BasicDBObject mongoSerialise() {
+
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("tiles", tiles);
+
+        return dbObject;
+
+    }
+
+    public static TileMap deserialize(DBObject object) {
+
+        BasicDBList terrain = (BasicDBList) object.get("tiles");
+
+        int[][] tiles = new int[World.WORLD_SIZE][World.WORLD_SIZE];
+
+        for (int x = 0; x < World.WORLD_SIZE; x++) {
+            for (int y = 0; y < World.WORLD_SIZE; y++) {
+                tiles[x][y] = (int) ((BasicDBList) terrain.get(x)).get(y);
+            }
+        }
+
+        return new TileMap(tiles);
+
+    }
+
     public static TileMap deserialize(JSONObject object) {
 
         TileMap tileMap = new TileMap(World.WORLD_SIZE, World.WORLD_SIZE);
-
 
         byte[] compressedBytes = Base64.getDecoder().decode((String) object.get("z"));
 

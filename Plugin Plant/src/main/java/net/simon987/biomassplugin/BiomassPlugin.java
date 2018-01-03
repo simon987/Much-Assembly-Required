@@ -1,5 +1,6 @@
 package net.simon987.biomassplugin;
 
+import com.mongodb.DBObject;
 import net.simon987.biomassplugin.event.WorldCreationListener;
 import net.simon987.biomassplugin.event.WorldUpdateListener;
 import net.simon987.server.ServerConfiguration;
@@ -7,7 +8,6 @@ import net.simon987.server.game.GameObject;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.json.simple.JSONObject;
 
 public class BiomassPlugin extends ServerPlugin implements GameObjectDeserializer {
 
@@ -21,9 +21,9 @@ public class BiomassPlugin extends ServerPlugin implements GameObjectDeserialize
     }
 
     @Override
-    public GameObject deserializeObject(JSONObject object) {
+    public GameObject deserializeObject(DBObject object) {
 
-        int objType = (int) (long) object.get("t");
+        int objType = (int) object.get("t");
 
         if (objType == BiomassBlob.ID) {
 
