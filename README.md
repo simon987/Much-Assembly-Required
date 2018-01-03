@@ -33,7 +33,7 @@ cd target
 java -jar server-1.2a.jar
 ```
 
-## Windows (tested on 10)
+## Windows (tested on Windows 10)
 
 Installation instructions:
 1. Download the JDK from [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
@@ -63,7 +63,7 @@ mongod
 cd Much-Assembly-Required\target
 java -jar server-1.2a.jar
 ```
-
+3. Run the frontend, following the instructions that you can find [here](https://github.com/simon987/Much-Assembly-Required-Frontend).
 
 
 ## Docker
