@@ -1,5 +1,6 @@
 package net.simon987.cubotplugin;
 
+import com.mongodb.DBObject;
 import net.simon987.cubotplugin.event.CpuInitialisationListener;
 import net.simon987.cubotplugin.event.UserCreationListener;
 import net.simon987.server.ServerConfiguration;
@@ -9,7 +10,6 @@ import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.json.simple.JSONObject;
 
 public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer, CpuHardwareDeserializer {
 
@@ -23,9 +23,9 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
     }
 
     @Override
-    public GameObject deserializeObject(JSONObject object) {
+    public GameObject deserializeObject(DBObject object) {
 
-        int objType = (int) (long) object.get("t");
+        int objType = (int) object.get("t");
 
         if (objType == Cubot.ID) {
 
@@ -36,30 +36,30 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
     }
 
     @Override
-    public CpuHardware deserializeHardware(JSONObject hwJson) {
-        int hwid = (int) (long) hwJson.get("hwid");
+    public CpuHardware deserializeHardware(DBObject obj) {
+        int hwid = (int) obj.get("hwid");
 
         switch (hwid) {
             case CubotLeg.HWID:
-                return CubotLeg.deserialize(hwJson);
+                return CubotLeg.deserialize(obj);
             case CubotLaser.HWID:
-                return CubotLaser.deserialize(hwJson);
+                return CubotLaser.deserialize(obj);
             case CubotLidar.HWID:
-                return CubotLidar.deserialize(hwJson);
+                return CubotLidar.deserialize(obj);
             case CubotDrill.HWID:
-                return CubotDrill.deserialize(hwJson);
+                return CubotDrill.deserialize(obj);
             case CubotInventory.HWID:
-                return CubotInventory.deserialize(hwJson);
+                return CubotInventory.deserialize(obj);
             case CubotKeyboard.HWID:
-                return CubotKeyboard.deserialize(hwJson);
+                return CubotKeyboard.deserialize(obj);
             case CubotHologram.HWID:
-                return CubotHologram.deserialize(hwJson);
+                return CubotHologram.deserialize(obj);
             case CubotBattery.HWID:
-                return CubotBattery.deserialize(hwJson);
+                return CubotBattery.deserialize(obj);
             case CubotFloppyDrive.HWID:
-                return CubotFloppyDrive.deserialize(hwJson);
+                return CubotFloppyDrive.deserialize(obj);
             case CubotComPort.HWID:
-                return CubotComPort.deserialize(hwJson);
+                return CubotComPort.deserialize(obj);
         }
 
         return null;

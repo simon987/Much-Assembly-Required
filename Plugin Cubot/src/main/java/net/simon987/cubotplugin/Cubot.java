@@ -1,5 +1,7 @@
 package net.simon987.cubotplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.*;
@@ -114,16 +116,41 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return json;
     }
 
-    public static Cubot deserialize(JSONObject json) {
+    @Override
+    public BasicDBObject mongoSerialise() {
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("i", getObjectId());
+        dbObject.put("t", ID);
+        dbObject.put("x", getX());
+        dbObject.put("y", getY());
+        dbObject.put("direction", getDirection().ordinal());
+        dbObject.put("heldItem", heldItem);
+        dbObject.put("hp", hp);
+        dbObject.put("action", lastAction.ordinal());
+        dbObject.put("holo", hologram);
+        dbObject.put("holoStr", hologramString);
+        dbObject.put("holoMode", lastHologramMode.ordinal());
+        dbObject.put("holoC", hologramColor);
+        dbObject.put("energy", energy);
+
+        if (parent != null) {
+            dbObject.put("parent", parent.getUsername()); //Only used client-side for now
+        }
+
+        return dbObject;
+    }
+
+    public static Cubot deserialize(DBObject obj) {
 
         Cubot cubot = new Cubot();
-        cubot.setObjectId((long) json.get("i"));
-        cubot.setX((int) (long) json.get("x"));
-        cubot.setY((int) (long) json.get("y"));
-        cubot.hp = (int) (long) json.get("hp");
-        cubot.setDirection(Direction.getDirection((int) (long) json.get("direction")));
-        cubot.heldItem = (int) (long) json.get("heldItem");
-        cubot.energy = (int) (long) json.get("energy");
+        cubot.setObjectId((long) obj.get("i"));
+        cubot.setX((int) obj.get("x"));
+        cubot.setY((int) obj.get("y"));
+        cubot.hp = (int) obj.get("hp");
+        cubot.setDirection(Direction.getDirection((int) obj.get("direction")));
+        cubot.heldItem = (int) obj.get("heldItem");
+        cubot.energy = (int) obj.get("energy");
         cubot.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
 
         return cubot;

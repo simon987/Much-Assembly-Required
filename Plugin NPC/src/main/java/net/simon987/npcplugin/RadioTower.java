@@ -1,5 +1,7 @@
 package net.simon987.npcplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Programmable;
 import net.simon987.server.game.Updatable;
@@ -65,12 +67,24 @@ public class RadioTower extends GameObject implements Programmable, Updatable {
 
     }
 
-    public static RadioTower deserialize(JSONObject json) {
+    @Override
+    public BasicDBObject mongoSerialise() {
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("i", getObjectId());
+        dbObject.put("x", getX());
+        dbObject.put("y", getY());
+        dbObject.put("t", ID);
+
+        return dbObject;
+    }
+
+    public static RadioTower deserialize(DBObject obj) {
 
         RadioTower tower = new RadioTower();
-        tower.setObjectId((long) json.get("i"));
-        tower.setX((int) (long) json.get("x"));
-        tower.setY((int) (long) json.get("y"));
+        tower.setObjectId((long) obj.get("i"));
+        tower.setX((int) obj.get("x"));
+        tower.setY((int) obj.get("y"));
 
         NpcPlugin.getRadioTowers().add(tower);
 
