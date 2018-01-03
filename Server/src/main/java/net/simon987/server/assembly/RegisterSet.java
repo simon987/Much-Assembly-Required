@@ -1,7 +1,10 @@
 package net.simon987.server.assembly;
 
 
-import net.simon987.server.io.JSONSerialisable;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import net.simon987.server.io.MongoSerialisable;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,7 +15,7 @@ import java.util.HashMap;
 /**
  * A set of registers for a CPU
  */
-public class RegisterSet implements Target, JSONSerialisable {
+public class RegisterSet implements Target, MongoSerialisable {
 
     /**
      * List of registers
@@ -142,8 +145,8 @@ public class RegisterSet implements Target, JSONSerialisable {
 
 
     @Override
-    public JSONObject serialise() {
-        JSONArray registers = new JSONArray();
+    public BasicDBObject mongoSerialise() {
+        BasicDBList registers = new BasicDBList();
         for (Integer index : this.registers.keySet()) {
             JSONObject register = new JSONObject();
 
@@ -154,10 +157,28 @@ public class RegisterSet implements Target, JSONSerialisable {
             registers.add(register);
         }
 
-        JSONObject json = new JSONObject();
-        json.put("registers", registers);
+        BasicDBObject obj = new BasicDBObject();
+        obj.put("registers", registers);
 
-        return json;
+        return obj;
+    }
+
+    public static RegisterSet deserialize(DBObject obj) {
+
+        RegisterSet registerSet = new RegisterSet();
+
+        BasicDBList registers = (BasicDBList) obj.get("registers");
+
+        for (Object sRegister : registers) {
+
+            Register register = new Register((String) ((DBObject) sRegister).get("name"));
+            register.setValue((int) ((DBObject) sRegister).get("value"));
+
+            registerSet.registers.put((int) ((DBObject) sRegister).get("index"), register);
+
+        }
+
+        return registerSet;
     }
 
     public static RegisterSet deserialize(JSONObject json) {

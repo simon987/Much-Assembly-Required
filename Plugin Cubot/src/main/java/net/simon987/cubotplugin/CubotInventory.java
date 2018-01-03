@@ -1,9 +1,10 @@
 package net.simon987.cubotplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
-import org.json.simple.JSONObject;
 
 public class CubotInventory extends CpuHardware {
 
@@ -49,17 +50,19 @@ public class CubotInventory extends CpuHardware {
 
     }
 
+
     @Override
-    public JSONObject serialise() {
+    public BasicDBObject mongoSerialise() {
 
-        JSONObject json = new JSONObject();
-        json.put("hwid", (int) HWID);
-        json.put("cubot", cubot.getObjectId());
+        BasicDBObject dbObject = new BasicDBObject();
 
-        return json;
+        dbObject.put("hwid", (int) HWID);
+        dbObject.put("cubot", cubot.getObjectId());
+
+        return dbObject;
     }
 
-    public static CubotInventory deserialize(JSONObject hwJSON) {
-        return new CubotInventory((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) hwJSON.get("cubot")));
+    public static CubotInventory deserialize(DBObject obj) {
+        return new CubotInventory((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

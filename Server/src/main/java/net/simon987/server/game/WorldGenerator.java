@@ -5,7 +5,6 @@ import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldGenerationEvent;
-import net.simon987.server.logging.LogManager;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -93,7 +92,6 @@ public class WorldGenerator {
      * Create a randomly generated World
      */
     public World generateWorld(int locX, int locY) throws CancelledException {
-        LogManager.LOGGER.info("Generating random world");
         Random random = new Random();
 
         World world = generateEmptyWorld(locX, locY);

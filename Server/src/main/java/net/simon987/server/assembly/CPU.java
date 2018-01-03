@@ -1,18 +1,18 @@
 package net.simon987.server.assembly;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.assembly.instruction.*;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.MongoSerialisable;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,7 +20,7 @@ import java.util.HashMap;
  * a Memory object and execute them. A CPU object holds registers objects &
  * a Memory object.
  */
-public class CPU implements JSONSerialisable {
+public class CPU implements MongoSerialisable {
 
     /**
      *
@@ -346,47 +346,47 @@ public class CPU implements JSONSerialisable {
     }
 
     @Override
-    public JSONObject serialise() {
+    public BasicDBObject mongoSerialise() {
+        BasicDBObject dbObject = new BasicDBObject();
 
-        JSONObject json = new JSONObject();
+        dbObject.put("memory", memory.mongoSerialise());
 
-        json.put("memory", memory.serialise());
+        dbObject.put("registerSet", registerSet.mongoSerialise());
+        dbObject.put("codeSegmentOffset", codeSegmentOffset);
 
-        json.put("registerSet", registerSet.serialise());
-        json.put("codeSegmentOffset", codeSegmentOffset);
-
-        JSONArray hardwareList = new JSONArray();
+        BasicDBList hardwareList = new BasicDBList();
 
         for (Integer address : attachedHardware.keySet()) {
 
             CpuHardware hardware = attachedHardware.get(address);
 
-            JSONObject serialisedHw = hardware.serialise();
+            BasicDBObject serialisedHw = hardware.mongoSerialise();
             serialisedHw.put("address", address);
             hardwareList.add(serialisedHw);
         }
 
-        json.put("hardware", hardwareList);
+        dbObject.put("hardware", hardwareList);
 
-        return json;
+        return dbObject;
+
     }
 
-    public static CPU deserialize(JSONObject json, User user) throws CancelledException {
+    public static CPU deserialize(DBObject obj, User user) throws CancelledException {
 
         CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), user);
 
-        cpu.codeSegmentOffset = (int) (long) json.get("codeSegmentOffset");
+        cpu.codeSegmentOffset = (int) obj.get("codeSegmentOffset");
 
-        JSONArray hardwareList = (JSONArray) json.get("hardware");
+        BasicDBList hardwareList = (BasicDBList) obj.get("hardware");
 
-        for (JSONObject serialisedHw : (ArrayList<JSONObject>) hardwareList) {
-            CpuHardware hw = CpuHardware.deserialize(serialisedHw);
-            hw.setCpu(cpu);
-            cpu.attachHardware(hw, (int) (long) serialisedHw.get("address"));
+        for (Object serialisedHw : hardwareList) {
+            CpuHardware hardware = CpuHardware.deserialize((DBObject) serialisedHw);
+            hardware.setCpu(cpu);
+            cpu.attachHardware(hardware, (int) ((BasicDBObject) serialisedHw).get("address"));
         }
 
-        cpu.memory = Memory.deserialize((JSONObject) json.get("memory"));
-        cpu.registerSet = RegisterSet.deserialize((JSONObject) json.get("registerSet"));
+        cpu.memory = Memory.deserialize((DBObject) obj.get("memory"));
+        cpu.registerSet = RegisterSet.deserialize((DBObject) obj.get("registerSet"));
 
         return cpu;
 

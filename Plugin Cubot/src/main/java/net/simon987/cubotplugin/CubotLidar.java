@@ -1,5 +1,7 @@
 package net.simon987.cubotplugin;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Memory;
@@ -141,7 +143,18 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
         return json;
     }
 
-    public static CubotLidar deserialize(JSONObject hwJSON) {
-        return new CubotLidar((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) hwJSON.get("cubot")));
+    @Override
+    public BasicDBObject mongoSerialise() {
+
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("hwid", (int) HWID);
+        dbObject.put("cubot", cubot.getObjectId());
+
+        return dbObject;
+    }
+
+    public static CubotLidar deserialize(DBObject obj) {
+        return new CubotLidar((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

@@ -1,8 +1,8 @@
 package net.simon987.mischwplugin;
 
+import com.mongodb.BasicDBObject;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
-import org.json.simple.JSONObject;
 
 import java.util.Random;
 
@@ -31,14 +31,16 @@ public class RandomNumberGenerator extends CpuHardware {
     }
 
     @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
-        json.put("hwid", (int) HWID);
+    public BasicDBObject mongoSerialise() {
 
-        return json;
+        BasicDBObject dbObject = new BasicDBObject();
+
+        dbObject.put("hwid", (int) HWID);
+
+        return dbObject;
     }
 
-    public static RandomNumberGenerator deserialize(JSONObject hwJSON) {
+    public static RandomNumberGenerator deserialize() {
         return new RandomNumberGenerator();
     }
 }

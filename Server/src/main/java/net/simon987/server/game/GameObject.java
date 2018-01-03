@@ -1,8 +1,10 @@
 package net.simon987.server.game;
 
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.MongoSerialisable;
 import net.simon987.server.plugin.ServerPlugin;
 import org.json.simple.JSONObject;
 
@@ -12,7 +14,7 @@ import java.awt.*;
  * An INSTANCE of an object (e.g. a Tree, a character ...) inside the
  * game universe
  */
-public abstract class GameObject implements JSONSerialisable {
+public abstract class GameObject implements JSONSerialisable, MongoSerialisable {
 
     private boolean dead;
     /**
@@ -76,9 +78,9 @@ public abstract class GameObject implements JSONSerialisable {
             if (world.getX() == 0) {
                 //Warp around
                 leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(
-                        GameServer.INSTANCE.getGameUniverse().getMaxWidth(), world.getY());
+                        GameServer.INSTANCE.getGameUniverse().getMaxWidth(), world.getY(), true);
             } else {
-                leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() - 1, world.getY());
+                leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() - 1, world.getY(), true);
             }
 
             if (leftWorld != null) {
@@ -95,9 +97,9 @@ public abstract class GameObject implements JSONSerialisable {
             World rightWorld;
             if (world.getX() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
                 //Warp around
-                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(0, world.getY());
+                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(0, world.getY(), true);
             } else {
-                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() + 1, world.getY());
+                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() + 1, world.getY(), true);
             }
 
             if (rightWorld != null) {
@@ -115,9 +117,9 @@ public abstract class GameObject implements JSONSerialisable {
             if (world.getY() == 0) {
                 //Warp around
                 upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(),
-                        GameServer.INSTANCE.getGameUniverse().getMaxWidth());
+                        GameServer.INSTANCE.getGameUniverse().getMaxWidth(), true);
             } else {
-                upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() - 1);
+                upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() - 1, true);
             }
 
             if (upWorld != null) {
@@ -134,9 +136,9 @@ public abstract class GameObject implements JSONSerialisable {
             World downWorld;
             if (world.getY() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
                 //Warp around
-                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), 0);
+                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), 0, true);
             } else {
-                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() + 1);
+                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() + 1, true);
             }
 
 
@@ -224,12 +226,12 @@ public abstract class GameObject implements JSONSerialisable {
         return new JSONObject();
     }
 
-    public static GameObject deserialize(JSONObject objJson) {
-
+    public static GameObject deserialize(DBObject obj) {
+//
         for (ServerPlugin plugin : GameServer.INSTANCE.getPluginManager().getPlugins()) {
 
             if (plugin instanceof GameObjectDeserializer) {
-                GameObject object = ((GameObjectDeserializer) plugin).deserializeObject(objJson);
+                GameObject object = ((GameObjectDeserializer) plugin).deserializeObject(obj);
 
                 if (object != null) {
                     return object;

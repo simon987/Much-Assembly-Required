@@ -1,8 +1,10 @@
 package net.simon987.server.assembly;
 
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.MongoSerialisable;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
@@ -20,7 +22,7 @@ import java.util.zip.InflaterOutputStream;
 /**
  * Represents the available memory for a CPU in the game universe
  */
-public class Memory implements Target, JSONSerialisable {
+public class Memory implements Target, MongoSerialisable {
 
 
     /**
@@ -105,25 +107,54 @@ public class Memory implements Target, JSONSerialisable {
     }
 
     @Override
-    public JSONObject serialise() {
+    public BasicDBObject mongoSerialise() {
 
-        JSONObject json = new JSONObject();
+        BasicDBObject dbObject = new BasicDBObject();
 
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION, true);
+            Deflater compressor = new Deflater(Deflater.BEST_SPEED, true);
             DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(stream, compressor);
             deflaterOutputStream.write(getBytes());
             deflaterOutputStream.close();
             byte[] compressedBytes = stream.toByteArray();
 
-            json.put("zipBytes", new String(Base64.getEncoder().encode(compressedBytes)));
+            dbObject.put("zipBytes", new String(Base64.getEncoder().encode(compressedBytes)));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return json;
+        return dbObject;
+    }
+
+    public static Memory deserialize(DBObject obj) {
+
+        Memory memory = new Memory(0);
+
+        String zipBytesStr = (String) obj.get("zipBytes");
+
+        if (zipBytesStr != null) {
+            byte[] compressedBytes = Base64.getDecoder().decode((String) obj.get("zipBytes"));
+
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Inflater decompressor = new Inflater(true);
+                InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
+                inflaterOutputStream.write(compressedBytes);
+                inflaterOutputStream.close();
+
+                memory.setBytes(baos.toByteArray());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            LogManager.LOGGER.severe("Memory was manually deleted");
+            memory = new Memory(GameServer.INSTANCE.getConfig().getInt("memory_size"));
+        }
+
+        return memory;
     }
 
     public static Memory deserialize(JSONObject json) {

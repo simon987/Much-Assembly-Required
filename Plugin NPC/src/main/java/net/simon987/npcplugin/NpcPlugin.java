@@ -1,5 +1,6 @@
 package net.simon987.npcplugin;
 
+import com.mongodb.DBObject;
 import net.simon987.npcplugin.event.CpuInitialisationListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
 import net.simon987.server.ServerConfiguration;
@@ -9,7 +10,6 @@ import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
@@ -32,28 +32,28 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
     }
 
     @Override
-    public GameObject deserializeObject(JSONObject json) {
+    public GameObject deserializeObject(DBObject obj) {
 
-        int objType = (int) (long) json.get("t");
+        int objType = (int) obj.get("t");
 
         if (objType == HarvesterNPC.ID) {
-            return HarvesterNPC.deserialize(json);
+            return HarvesterNPC.deserialize(obj);
         } else if (objType == Factory.ID) {
-            return Factory.deserialise(json);
+            return Factory.deserialise(obj);
         } else if (objType == RadioTower.ID) {
-            return RadioTower.deserialize(json);
+            return RadioTower.deserialize(obj);
         }
 
         return null;
     }
 
     @Override
-    public CpuHardware deserializeHardware(JSONObject hwJson) {
-        int hwid = (int) (long) hwJson.get("hwid");
+    public CpuHardware deserializeHardware(DBObject obj) {
+        int hwid = (int) obj.get("hwid");
 
         switch (hwid) {
             case RadioReceiverHardware.HWID:
-                return RadioReceiverHardware.deserialize(hwJson);
+                return RadioReceiverHardware.deserialize(obj);
         }
 
         return null;

@@ -6,20 +6,12 @@ import net.simon987.server.assembly.Assembler;
 import net.simon987.server.assembly.AssemblyResult;
 import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
-import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class GameUniverse implements JSONSerialisable {
+public class GameUniverse {
 
     private ArrayList<World> worlds;
     private ArrayList<User> users;
@@ -27,7 +19,7 @@ public class GameUniverse implements JSONSerialisable {
 
     private long time;
 
-    private int nextObjectId = 0;
+    private long nextObjectId = 0;
 
     private int maxWidth = 0xFFFF;
 
@@ -44,7 +36,7 @@ public class GameUniverse implements JSONSerialisable {
         return time;
     }
 
-    public World getWorld(int x, int y) {
+    public World getWorld(int x, int y, boolean createNew) {
 
         for (World world : worlds) {
             if (world.getX() == x && world.getY() == y) {
@@ -53,14 +45,16 @@ public class GameUniverse implements JSONSerialisable {
         }
 
         if (x >= 0 && x <= maxWidth && y >= 0 && y <= maxWidth) {
-            //World does not exist
-            LogManager.LOGGER.severe("Trying to read a World that does not exist!");
+            if (createNew) {
+                //World does not exist
+                World world = createWorld(x, y);
+                worlds.add(world);
 
-            World world = createWorld(x, y);
+                return world;
+            } else {
+                return null;
+            }
 
-            worlds.add(world);
-
-            return world;
         } else {
             return null;
         }
@@ -145,7 +139,7 @@ public class GameUniverse implements JSONSerialisable {
      * @param id id of the game object
      * @return GameObject, null if not found
      */
-    public GameObject getObject(int id) {
+    public GameObject getObject(long id) {
 
         //
         for (World world : worlds) {
@@ -156,6 +150,7 @@ public class GameUniverse implements JSONSerialisable {
             }
         }
 
+        LogManager.LOGGER.severe("Couldn't find object: " + id);
         return null;
     }
 
@@ -170,75 +165,6 @@ public class GameUniverse implements JSONSerialisable {
 
     public ArrayList<User> getUsers() {
         return users;
-    }
-
-    @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
-
-        JSONArray worlds = new JSONArray();
-
-        ArrayList<World> worlds_ = new ArrayList<>(this.worlds);
-        for (World world : worlds_) {
-            worlds.add(world.serialise());
-        }
-
-        JSONArray users = new JSONArray();
-        ArrayList<User> users_ = new ArrayList<User>(this.users);
-        for (User user : users_) {
-            if (!user.isGuest()) {
-                users.add(user.serialise());
-            }
-
-        }
-
-
-        json.put("users", users);
-        json.put("worlds", worlds);
-        json.put("time", time);
-        json.put("nextObjectId", nextObjectId);
-
-        return json;
-    }
-
-    /**
-     * Load game universe from JSON save file
-     *
-     * @param file JSON save file
-     */
-    public void load(File file) {
-
-        JSONParser parser = new JSONParser();
-
-        if (file.isFile()) {
-            try {
-
-                FileReader reader = new FileReader(file);
-                JSONObject universeJson = (JSONObject) parser.parse(reader);
-
-                time = (long) universeJson.get("time");
-                nextObjectId = (int) (long) universeJson.get("nextObjectId");
-
-                for (JSONObject worldJson : (ArrayList<JSONObject>) universeJson.get("worlds")) {
-                    worlds.add(World.deserialize(worldJson));
-                }
-
-                for (JSONObject userJson : (ArrayList<JSONObject>) universeJson.get("users")) {
-                    users.add(User.deserialize(userJson));
-                }
-
-                LogManager.LOGGER.info("Loaded " + worlds.size() + " worlds from file");
-
-                reader.close();
-
-            } catch (IOException | ParseException | CancelledException e) {
-                e.printStackTrace();
-            }
-        } else {
-            LogManager.LOGGER.severe("Couldn't load save file save.json, creating empty game universe.");
-        }
-
-
     }
 
     public long getNextObjectId() {
@@ -263,10 +189,17 @@ public class GameUniverse implements JSONSerialisable {
 
     public void removeUser(User user) {
         users.remove(user);
-
     }
 
     public int getMaxWidth() {
         return maxWidth;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public void setNextObjectId(long nextObjectId) {
+        this.nextObjectId = nextObjectId;
     }
 }
