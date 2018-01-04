@@ -41,15 +41,17 @@ public class HarvesterNPC extends NonPlayerCharacter {
             //Self-destroy when age limit is reached
             if (getAge() >= NonPlayerCharacter.LIFETIME) {
                 setDead(true);
-                getFactory().getNpcs().remove(this);
             }
         }
     }
 
     @Override
     public void onDeadCallback() {
+
+        getFactory().getNpcs().remove(this);
+
         GameServer.INSTANCE.getEventDispatcher().dispatch(
-            new ObjectDeathEvent((Object)this, ID));
+                new ObjectDeathEvent(this, ID));
     }
 
     @Override
