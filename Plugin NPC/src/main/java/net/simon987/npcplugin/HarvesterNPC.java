@@ -5,10 +5,8 @@ import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.ObjectDeathEvent;
 import net.simon987.server.game.Direction;
-import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
-import java.lang.util.Random;
 
 public class HarvesterNPC extends NonPlayerCharacter {
 
