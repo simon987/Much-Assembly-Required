@@ -42,7 +42,7 @@ public class CubotComPort extends CpuHardware {
         } else if (a == COMPORT_CONSOLE_CLEAR) {
             
             cubot.setConsoleMode(Cubot.ConsoleMode.CLEAR);
-            
+
         } else if (a == COMPORT_POLL) {
 
             if (cubot.spendEnergy(4)) {
