@@ -3,8 +3,10 @@ package net.simon987.npcplugin;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
+import net.simon987.server.event.ObjectDeathEvent;
 import net.simon987.server.game.Direction;
 import org.json.simple.JSONObject;
+
 
 public class HarvesterNPC extends NonPlayerCharacter {
 
@@ -39,9 +41,17 @@ public class HarvesterNPC extends NonPlayerCharacter {
             //Self-destroy when age limit is reached
             if (getAge() >= NonPlayerCharacter.LIFETIME) {
                 setDead(true);
-                getFactory().getNpcs().remove(this);
             }
         }
+    }
+
+    @Override
+    public void onDeadCallback() {
+
+        getFactory().getNpcs().remove(this);
+
+        GameServer.INSTANCE.getEventDispatcher().dispatch(
+                new ObjectDeathEvent(this, ID));
     }
 
     @Override

@@ -104,6 +104,7 @@ public class World implements MongoSerialisable {
         for (GameObject object : gameObjects_) {
             //Clean up dead objects
             if (object.isDead()) {
+                object.onDeadCallback();
                 gameObjects.remove(object);
                 //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
             } else if (object instanceof Updatable) {
