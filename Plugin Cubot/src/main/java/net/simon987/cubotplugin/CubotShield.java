@@ -26,6 +26,9 @@ public class CubotShield extends CpuHardware {
 	public BasicDBObject mongoSerialise() {
         BasicDBObject dbObject = new BasicDBObject();
         
+        dbObject.put("hwid", HWID);
+        dbObject.put("cubot", cubot.getObjectId());
+        
         return dbObject;
 	}
 
