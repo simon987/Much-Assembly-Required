@@ -54,9 +54,12 @@ public class Factory extends GameObject implements Updatable {
             for (Object id : tmpNpcArray) {
 
                 NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) id);
-                npc.setFactory(this);
 
-                npcs.add(npc);
+                if (npc != null) {
+                    npc.setFactory(this);
+                    npcs.add(npc);
+                }
+
             }
 
         } else {
