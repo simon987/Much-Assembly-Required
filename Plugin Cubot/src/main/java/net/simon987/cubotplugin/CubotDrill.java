@@ -18,8 +18,7 @@ public class CubotDrill extends CpuHardware {
     public static final int DEFAULT_ADDRESS = 5;
 
     private static final int DRILL_POLL = 1;
-    private static final int DRILL_GATHER_SLOW = 2;
-    private static final int DRILL_GATHER_FAST = 3;
+    private static final int DRILL_GATHER = 2; // simplified gather
 
     private Cubot cubot;
 
@@ -40,7 +39,7 @@ public class CubotDrill extends CpuHardware {
 
             getCpu().getRegisterSet().getRegister("B").setValue(0);
 
-        } else if (a == DRILL_GATHER_SLOW || a == DRILL_GATHER_FAST) {
+        } else if (a == DRILL_GATHER) {
 
             if (cubot.spendEnergy(1400)) {
                 if (cubot.getCurrentAction() == Action.IDLE) {
