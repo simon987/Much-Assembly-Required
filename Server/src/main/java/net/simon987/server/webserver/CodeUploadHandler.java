@@ -31,7 +31,7 @@ public class CodeUploadHandler implements MessageHandler {
                 char[] assembledCode = ar.getWords();
 
                 user.getUser().getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
-                user.getUser().getCpu().setCodeSegmentOffset(ar.getCodeSegmentOffset());
+                user.getUser().getCpu().setCodeSectionOffset(ar.getCodeSectionOffset());
 
                 //Clear keyboard buffer
                 if (user.getUser().getControlledUnit() != null &&

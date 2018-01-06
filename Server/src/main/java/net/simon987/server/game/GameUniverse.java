@@ -110,7 +110,7 @@ public class GameUniverse {
                     char[] assembledCode = ar.getWords();
 
                     user.getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
-                    user.getCpu().setCodeSegmentOffset(ar.getCodeSegmentOffset());
+                    user.getCpu().setCodeSectionOffset(ar.getCodeSectionOffset());
 
 
                 } else {

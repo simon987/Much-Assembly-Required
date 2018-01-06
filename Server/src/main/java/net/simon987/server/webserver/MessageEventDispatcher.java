@@ -2,6 +2,7 @@ package net.simon987.server.webserver;
 
 
 import net.simon987.server.logging.LogManager;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -28,9 +29,13 @@ public class MessageEventDispatcher {
         try {
             JSONObject json = (JSONObject) parser.parse(message);
 
-            if (json.containsKey("t")) {
+            if (json.containsKey("t") && user.getWebSocket().isOpen()) {
                 for (MessageHandler handler : handlers) {
-                    handler.handle(user, json);
+                    try {
+                        handler.handle(user, json);
+                    } catch (WebsocketNotConnectedException e) {
+                        LogManager.LOGGER.fine("Catched WebsocketNotConnectedException");
+                    }
                 }
             } else {
                 LogManager.LOGGER.severe("Malformed JSON sent by " + user.getUser().getUsername());

@@ -24,7 +24,7 @@ public class Assembler {
 
     private RegisterSet registerSet;
 
-    private static final int MEM_SIZE   = 0x10000;  // Size in words
+    private static final int MEM_SIZE = 0x10000;  // Size in words todo load from config
 
     public Assembler(InstructionSet instructionSet, RegisterSet registerSet, ServerConfiguration config) {
         this.instructionSet = instructionSet;
@@ -256,25 +256,25 @@ public class Assembler {
     }
 
     /**
-     * Check for and handle segment declarations (.text & .data)
+     * Check for and handle section declarations (.text & .data)
      *
      * @param line Current line
      */
-    private static void checkForSegmentDeclaration(String line, AssemblyResult result,
+    private static void checkForSectionDeclaration(String line, AssemblyResult result,
                                                    int currentLine, int currentOffset) throws AssemblyException {
 
         String[] tokens = line.split("\\s+");
 
         if (tokens[0].toUpperCase().equals(".TEXT")) {
 
-            result.defineSegment(Segment.TEXT, currentLine, currentOffset);
+            result.defineSecton(Section.TEXT, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
 
         } else if (tokens[0].toUpperCase().equals(".DATA")) {
 
             LogManager.LOGGER.fine("DEBUG: .data @" + currentLine);
 
-            result.defineSegment(Segment.DATA, currentLine, currentOffset);
+            result.defineSecton(Section.DATA, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
         }
     }
@@ -385,7 +385,7 @@ public class Assembler {
                 }
 
                 //Check for pseudo instructions
-                checkForSegmentDeclaration(line, result, currentLine, currentOffset);
+                checkForSectionDeclaration(line, result, currentLine, currentOffset);
                 checkForEQUInstruction(line, result.labels, currentLine);
                 checkForORGInstruction(line, result, currentLine);
 

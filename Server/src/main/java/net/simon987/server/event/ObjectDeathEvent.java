@@ -7,12 +7,14 @@ public class ObjectDeathEvent extends GameEvent {
     /**
      * The GameObject type ID of object that init this event
      */
-    private int sourceObjectId;
+    private long sourceObjectId;
 
     public ObjectDeathEvent(Object source, int sourceObjectId) {
         setSource(source);
         this.sourceObjectId = sourceObjectId;
     }
 
-    public int getSourceObjectId() { return sourceObjectId; }
+    public long getSourceObjectId() {
+        return sourceObjectId;
+    }
 }
