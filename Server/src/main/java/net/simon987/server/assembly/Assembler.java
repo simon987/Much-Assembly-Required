@@ -307,7 +307,7 @@ public class Assembler {
         String[] tokens = line.split("\\s+");
 
 
-        if (line.toUpperCase().contains(" EQU ")) {
+        if (line.toUpperCase().matches(".*\\bEQU\\b.*")) {
             if (tokens[1].toUpperCase().equals("EQU") && tokens.length == 3) {
                 try {
                     //Save value as a label
