@@ -37,37 +37,40 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
 
     @Override
     public void handleInterrupt(Status status) {
-        int a = getCpu().getRegisterSet().getRegister("A").getValue();
-        int b = getCpu().getRegisterSet().getRegister("B").getValue();
 
-        if (a == LEGS_SET_DIR) {
+        if (cubot.getCurrentAction() == Action.IDLE) {
+            int a = getCpu().getRegisterSet().getRegister("A").getValue();
+            int b = getCpu().getRegisterSet().getRegister("B").getValue();
 
-
-            Direction dir = Direction.getDirection(b);
-
-            if (dir != null) {
-                if (cubot.spendEnergy(20)) {
-                    cubot.setDirection(Direction.getDirection(b));
-                    status.setErrorFlag(false);
-                }
-            } else {
-                status.setErrorFlag(true);
-            }
+            if (a == LEGS_SET_DIR) {
 
 
-        } else if (a == LEGS_SET_DIR_AND_WALK) {
-
-            if (cubot.getMaxEnergy() >= 100) {
                 Direction dir = Direction.getDirection(b);
 
                 if (dir != null) {
-                    cubot.setDirection(Direction.getDirection(b));
-                    status.setErrorFlag(false);
+                    if (cubot.spendEnergy(20)) {
+                        cubot.setDirection(Direction.getDirection(b));
+                        status.setErrorFlag(false);
+                    }
                 } else {
                     status.setErrorFlag(true);
                 }
 
-                cubot.setCurrentAction(Action.WALKING);
+
+            } else if (a == LEGS_SET_DIR_AND_WALK) {
+
+                if (cubot.getMaxEnergy() >= 100) {
+                    Direction dir = Direction.getDirection(b);
+
+                    if (dir != null) {
+                        cubot.setDirection(Direction.getDirection(b));
+                        status.setErrorFlag(false);
+                    } else {
+                        status.setErrorFlag(true);
+                    }
+
+                    cubot.setCurrentAction(Action.WALKING);
+                }
             }
         }
     }
