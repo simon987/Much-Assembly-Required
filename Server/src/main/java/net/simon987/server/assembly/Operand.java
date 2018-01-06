@@ -224,11 +224,30 @@ public class Operand {
             }
 
             //label is invalid
-
             data = Integer.decode(expr);
             value += registerSet.size() * 2; //refers to memory with disp
             return true;
         } catch (NumberFormatException e) {
+
+            //Integer.decode failed, try binary
+            if (expr.startsWith("+0b")) {
+                try {
+                    data = Integer.parseInt(expr.substring(3), 2);
+                    value += registerSet.size() * 2; //refers to memory with disp
+                    return true;
+                } catch (NumberFormatException e2) {
+                    return false;
+                }
+            } else if (expr.startsWith("-0b")) {
+                try {
+                    data = -Integer.parseInt(expr.substring(3), 2);
+                    value += registerSet.size() * 2; //refers to memory with disp
+                    return true;
+                } catch (NumberFormatException e2) {
+                    return false;
+                }
+            }
+
             return false;
         }
     }

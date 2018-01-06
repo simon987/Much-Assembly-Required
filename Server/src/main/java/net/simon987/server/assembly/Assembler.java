@@ -175,7 +175,18 @@ public class Assembler {
                                 out.writeChar(0);
 
                             } else {
-                                throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
+
+                                //Integer.decode failed, try binary
+                                if (value.startsWith("0b")) {
+                                    try {
+                                        out.writeChar(Integer.parseInt(value.substring(2), 2));
+                                    } catch (NumberFormatException e2) {
+                                        throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
+                                    }
+                                } else {
+                                    throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
+
+                                }
                             }
                         }
                     }

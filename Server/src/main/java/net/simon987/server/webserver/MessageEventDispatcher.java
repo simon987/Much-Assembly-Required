@@ -35,6 +35,9 @@ public class MessageEventDispatcher {
                         handler.handle(user, json);
                     } catch (WebsocketNotConnectedException e) {
                         LogManager.LOGGER.fine("Catched WebsocketNotConnectedException");
+                    } catch (Exception e1) {
+                        LogManager.LOGGER.severe(e1.getMessage());
+                        e1.printStackTrace();
                     }
                 }
             } else {
