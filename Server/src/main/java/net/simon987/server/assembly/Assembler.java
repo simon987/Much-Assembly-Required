@@ -54,7 +54,7 @@ public class Assembler {
      */
     private static String removeLabel(String line) {
 
-        return line.replaceAll("\\b\\w*\\b:", "");
+        return line.replaceAll("^\\s*\\b\\w*\\b:", "");
 
     }
 
@@ -97,7 +97,7 @@ public class Assembler {
         line = removeComment(line);
 
         //Check for labels
-        Pattern pattern = Pattern.compile("\\b\\w*\\b:");
+        Pattern pattern = Pattern.compile("^\\s*\\b\\w*\\b:");
         Matcher matcher = pattern.matcher(line);
 
         if (matcher.find()) {
