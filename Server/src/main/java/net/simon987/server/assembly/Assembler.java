@@ -101,7 +101,7 @@ public class Assembler {
         Matcher matcher = pattern.matcher(line);
 
         if (matcher.find()) {
-            String label = matcher.group(0).substring(0, matcher.group(0).length() - 1);
+            String label = matcher.group(0).substring(0, matcher.group(0).length() - 1).trim();
 
             LogManager.LOGGER.fine("DEBUG: Label " + label + " @ " + (result.origin + currentOffset));
             result.labels.put(label, (char) (result.origin + currentOffset));
