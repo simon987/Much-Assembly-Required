@@ -265,8 +265,11 @@ public class GameServer implements Runnable {
             serverObj.put("nextObjectId", gameUniverse.getNextObjectId());
             server.insert(serverObj);
 
+            mongo.close();
+
             LogManager.LOGGER.info("Done!");
-        } catch (UnknownHostException e) {
+        } catch (Exception e) {
+            LogManager.LOGGER.severe("Problem happened during save function");
             e.printStackTrace();
         }
     }
