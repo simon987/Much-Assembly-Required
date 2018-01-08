@@ -11,7 +11,7 @@ public class FatalAssemblyException extends AssemblyException {
     private static final String message = "A fatal assembly error has occurred";
 
     /**
-     * Create a new Duplicate Segment Exception
+     * Create a new Duplicate Section Exception
      */
     public FatalAssemblyException(String msg, int line) {
         super(msg, line);

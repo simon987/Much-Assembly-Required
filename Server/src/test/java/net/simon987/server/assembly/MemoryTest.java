@@ -3,15 +3,13 @@ package net.simon987.server.assembly;
 import net.simon987.server.ServerConfiguration;
 import org.junit.Test;
 
-import java.io.File;
-
 import static org.junit.Assert.*;
 
 
 public class MemoryTest {
     @Test
     public void getSet() {
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         int memorySize = config.getInt("memory_size");
         Memory memory = new Memory(memorySize);
 
@@ -31,7 +29,7 @@ public class MemoryTest {
     @Test
     public void write() {
 
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         int memorySize = config.getInt("memory_size");
         Memory memory = new Memory(memorySize);
 

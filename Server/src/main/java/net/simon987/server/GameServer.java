@@ -224,55 +224,59 @@ public class GameServer implements Runnable {
     private void save() {
 
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorlds().size() + " | U:" + gameUniverse.getUsers().size());
+        try{
+	        DB db = mongo.getDB("mar");
 
-        DB db = mongo.getDB("mar");
+	        int unloaded_worlds = 0;
 
-        int unloaded_worlds = 0;
+	        DBCollection worlds = db.getCollection("world");
+	        DBCollection users = db.getCollection("user");
+	        DBCollection server = db.getCollection("server");
 
-        DBCollection worlds = db.getCollection("world");
-        DBCollection users = db.getCollection("user");
-        DBCollection server = db.getCollection("server");
+	        List<DBObject> worldDocuments = new ArrayList<>();
+	        int perBatch = 35;
+	        int insertedWorlds = 0;
+	        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
+	        ArrayList<World> worlds_ = new ArrayList<>(universe.getWorlds());
+	        for (World w : worlds_) {
+	            LogManager.LOGGER.fine("Saving world "+w.getId()+" to mongodb");
+	            insertedWorlds++;
+	            worlds.save(w.mongoSerialise());
+	                
+	         	// If the world should unload, it is removed from the Universe after having been saved. 
+	        	if (w.shouldUnload()){
+	        		unloaded_worlds++;
+				 	LogManager.LOGGER.fine("Unloading world "+w.getId()+" from universe");
+	        		universe.removeWorld(w); 
+	        	}
+	        }
 
-        List<DBObject> worldDocuments = new ArrayList<>();
-        int perBatch = 35;
-        int insertedWorlds = 0;
-        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
-        ArrayList<World> worlds_ = new ArrayList<>(universe.getWorlds());
-        for (World w : worlds_) {
-            LogManager.LOGGER.fine("Saving world "+w.getId()+" to mongodb");
-            insertedWorlds++;
-            worlds.save(w.mongoSerialise());
-                
-         	// If the world should unload, it is removed from the Universe after having been saved. 
-        	if (w.shouldUnload()){
-        		unloaded_worlds++;
-			 	LogManager.LOGGER.fine("Unloading world "+w.getId()+" from universe");
-        		universe.removeWorld(w); 
-        	}
+	        List<DBObject> userDocuments = new ArrayList<>();
+	        int insertedUsers = 0;
+	        ArrayList<User> users_ = new ArrayList<>(GameServer.INSTANCE.getGameUniverse().getUsers());
+	        for (User u : users_) {
+
+	            insertedUsers++;
+
+
+	            if (!u.isGuest()) {
+	            	users.save(u.mongoSerialise());
+	            }
+
+	        }
+
+	        BasicDBObject serverObj = new BasicDBObject();
+	        serverObj.put("_id","serverinfo"); // a constant id ensures only one entry is kept and updated, instead of a new entry created every save.
+	        serverObj.put("time", gameUniverse.getTime());
+	        serverObj.put("nextObjectId", gameUniverse.getNextObjectId());
+			server.save(serverObj);
+
+			LogManager.LOGGER.info(""+insertedWorlds+" worlds saved, "+unloaded_worlds+" unloaded");
+	        LogManager.LOGGER.info("Done!");
+        } catch (Exception e) {
+            LogManager.LOGGER.severe("Problem happened during save function");
+            e.printStackTrace();
         }
-
-        List<DBObject> userDocuments = new ArrayList<>();
-        int insertedUsers = 0;
-        ArrayList<User> users_ = new ArrayList<>(GameServer.INSTANCE.getGameUniverse().getUsers());
-        for (User u : users_) {
-
-            insertedUsers++;
-
-
-            if (!u.isGuest()) {
-            	users.save(u.mongoSerialise());
-            }
-
-        }
-
-        BasicDBObject serverObj = new BasicDBObject();
-        serverObj.put("_id","serverinfo"); // a constant id ensures only one entry is kept and updated, instead of a new entry created every save.
-        serverObj.put("time", gameUniverse.getTime());
-        serverObj.put("nextObjectId", gameUniverse.getNextObjectId());
-		server.save(serverObj);
-
-		LogManager.LOGGER.info(""+insertedWorlds+" worlds saved, "+unloaded_worlds+" unloaded");
-        LogManager.LOGGER.info("Done!");
     }
 
     public ServerConfiguration getConfig() {

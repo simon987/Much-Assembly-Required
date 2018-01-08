@@ -7,8 +7,6 @@ import net.simon987.server.assembly.RegisterSet;
 import net.simon987.server.assembly.Status;
 import org.junit.Test;
 
-import java.io.File;
-
 import static org.junit.Assert.*;
 
 
@@ -20,7 +18,7 @@ public class AddInstructionTest {
      */
     @Test
     public void addTargetTarget() {
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         int memorySize = config.getInt("memory_size");
 
         //Memory
@@ -131,7 +129,7 @@ public class AddInstructionTest {
      */
     @Test
     public void addTargetImm() {
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         int memorySize = config.getInt("memory_size");
 
         //Memory
