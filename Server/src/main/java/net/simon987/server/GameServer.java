@@ -14,6 +14,7 @@ import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
 import net.simon987.server.webserver.SocketServer;
+import net.simon987.server.crypto.CryptoProvider;
 
 import java.io.File;
 import java.net.UnknownHostException;
@@ -36,6 +37,8 @@ public class GameServer implements Runnable {
 
     private DayNightCycle dayNightCycle;
 
+    private CryptoProvider cryptoProvider;
+
     public GameServer() {
 
         this.config = new ServerConfiguration("config.properties");
@@ -45,6 +48,7 @@ public class GameServer implements Runnable {
 
         maxExecutionTime = config.getInt("user_timeout");
 
+        cryptoProvider = new CryptoProvider();
 
         dayNightCycle = new DayNightCycle();
 
@@ -77,6 +81,10 @@ public class GameServer implements Runnable {
 
     public GameEventDispatcher getEventDispatcher() {
         return eventDispatcher;
+    }
+
+    public CryptoProvider getCryptoProvider(){
+        return cryptoProvider;
     }
 
     @Override
