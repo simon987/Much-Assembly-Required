@@ -1,4 +1,8 @@
-public class InvalidCharsetException extends Exception {
+package net.simon987.server.crypto;
+
+
+public class InvalidCharsetException extends CryptoException {
+
     public InvalidCharsetException () {
 
     }
@@ -14,3 +18,5 @@ public class InvalidCharsetException extends Exception {
     public InvalidCharsetException (String message, Throwable cause) {
         super (message, cause);
     }
+
+}
