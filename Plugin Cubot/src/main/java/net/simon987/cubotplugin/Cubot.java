@@ -44,6 +44,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     private int energy;
     private int maxEnergy;
 
+    private int jumpDistance;
+
     private static final float SOLAR_PANEL_MULTIPLIER = 1;
     private static final int CONSOLE_BUFFER_MAX_SIZE = 40;
 
@@ -63,8 +65,17 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
-                if (!incrementLocation()) {
+                if (!incrementLocation(1)) {
                     //Couldn't walk
+                    currentAction = Action.IDLE;
+                }
+            } else {
+                currentAction = Action.IDLE;
+            }
+        } else if (currentAction == Action.JUMPING) {
+            if (spendEnergy(jumpDistance * 300)) {
+                if (!incrementLocation(jumpDistance)) {
+                    //Couldn't jump
                     currentAction = Action.IDLE;
                 }
             } else {
@@ -163,6 +174,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     public int getHeldItem() {
         return heldItem;
+    }
+
+    public void setJumpDistance(int jumpDistance) {
+        this.jumpDistance = jumpDistance;
     }
 
     @Override

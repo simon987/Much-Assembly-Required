@@ -49,24 +49,24 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
      * Increment the location of the game object by 1 tile
      * Collision checks happen here
      */
-    public boolean incrementLocation() {
+    public boolean incrementLocation(int distance) {
 
         int newX = 0, newY = 0;
 
         if (direction == Direction.NORTH) {
             newX = x;
-            newY = (y - 1);
+            newY = (y - distance);
 
         } else if (direction == Direction.EAST) {
-            newX = (x + 1);
+            newX = (x + distance);
             newY = y;
 
         } else if (direction == Direction.SOUTH) {
             newX = x;
-            newY = (y + 1);
+            newY = (y + distance);
 
         } else if (direction == Direction.WEST) {
-            newX = (x - 1);
+            newX = (x - distance);
             newY = y;
         }
 
@@ -84,13 +84,17 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             }
 
             if (leftWorld != null) {
-                world.getGameObjects().remove(this);
-                world.decUpdatable();
-                leftWorld.getGameObjects().add(this);
-                leftWorld.incUpdatable();
-                setWorld(leftWorld);
+                if(!leftWorld.isTileBlocked(World.WORLD_SIZE+newX, newY)) {
+                    world.getGameObjects().remove(this);
+                    world.decUpdatable();
+                    leftWorld.getGameObjects().add(this);
+                    leftWorld.incUpdatable();
+                    setWorld(leftWorld);
 
-                x = World.WORLD_SIZE - 1;
+                    x = World.WORLD_SIZE + newX;
+                } else if (distance > 1) {
+                    return incrementLocation(distance-1);
+                }
             }
         } else if (newX >= World.WORLD_SIZE) {
             //Move object to adjacent World (right)
@@ -103,13 +107,17 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             }
 
             if (rightWorld != null) {
-                world.getGameObjects().remove(this);
-                world.decUpdatable();
-                rightWorld.getGameObjects().add(this);
-                rightWorld.incUpdatable();
-                setWorld(rightWorld);
+                if(!rightWorld.isTileBlocked(newX-World.WORLD_SIZE, y)) {
+                    world.getGameObjects().remove(this);
+                    world.decUpdatable();
+                    rightWorld.getGameObjects().add(this);
+                    rightWorld.incUpdatable();
+                    setWorld(rightWorld);
 
-                x = 0;
+                    x = newX - World.WORLD_SIZE;
+                } else if (distance > 1) {
+                    return incrementLocation(distance-1);
+                }
             }
         } else if (newY < 0) {
             //Move object to adjacent World (up)
@@ -123,13 +131,17 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             }
 
             if (upWorld != null) {
-                world.getGameObjects().remove(this);
-                world.decUpdatable();
-                upWorld.getGameObjects().add(this);
-                upWorld.incUpdatable();
-                setWorld(upWorld);
+                if (!upWorld.isTileBlocked(x, World.WORLD_SIZE+newY)) {
+                    world.getGameObjects().remove(this);
+                    world.decUpdatable();
+                    upWorld.getGameObjects().add(this);
+                    upWorld.incUpdatable();
+                    setWorld(upWorld);
 
-                y = World.WORLD_SIZE - 1;
+                    y = World.WORLD_SIZE + newY;
+                } else if (distance > 1) {
+                    return incrementLocation(distance-1);
+                }
             }
         } else if (newY >= World.WORLD_SIZE) {
             //Move object to adjacent World (down)
@@ -143,13 +155,17 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
 
 
             if (downWorld != null) {
-                world.getGameObjects().remove(this);
-                world.decUpdatable();
-                downWorld.getGameObjects().add(this);
-                downWorld.incUpdatable();
-                setWorld(downWorld);
+                if (!downWorld.isTileBlocked(x,newY-World.WORLD_SIZE)) {
+                    world.getGameObjects().remove(this);
+                    world.decUpdatable();
+                    downWorld.getGameObjects().add(this);
+                    downWorld.incUpdatable();
+                    setWorld(downWorld);
 
-                y = 0;
+                    y = newY - World.WORLD_SIZE;
+                } else if (distance > 1) {
+                    return incrementLocation(distance-1);
+                }
             }
         }
         //Check collision
@@ -157,7 +173,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             //Tile is passable
             x = newX;
             y = newY;
-        } else {
+        } else if (distance > 1) {
+            return incrementLocation(distance-1);
+        }else {
             return false;
         }
 
