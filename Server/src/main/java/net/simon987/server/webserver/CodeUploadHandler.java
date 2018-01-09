@@ -40,6 +40,8 @@ public class CodeUploadHandler implements MessageHandler {
                         user.getUser().getControlledUnit().getKeyboardBuffer().clear();
                     }
 
+                    //Clear registers
+                    user.getUser().getCpu().getRegisterSet().clear();
 
                     JSONObject response = new JSONObject();
                     response.put("t", "codeResponse");
