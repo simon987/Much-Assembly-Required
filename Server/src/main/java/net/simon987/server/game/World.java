@@ -6,9 +6,11 @@ import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
+import net.simon987.server.game.GameUniverse;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.MongoSerialisable;
 import org.json.simple.JSONObject;
+import net.simon987.server.logging.LogManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -57,7 +59,28 @@ public class World implements MongoSerialisable {
     public boolean isTileBlocked(int x, int y) {
 
         return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y) == TileMap.WALL_TILE;
+    }
 
+    /**
+     * Computes the world's unique id from its coordinates.
+     * 
+     * @param x     the x coordinate of the world
+     * @param y     the y coordinate of the world
+     *
+     * @return long
+     */
+    public static String idFromCoordinates(int x, int y){
+        return "w-"+"0x"+Integer.toHexString(x)+"-"+"0x"+Integer.toHexString(y);
+        //return ((long)x)*(((long)maxWidth)+1)+((long)y);
+    }
+
+    /**
+     * Returns the world's unique id, computed with idFromCoordinates.
+     * 
+     * @return long
+     */
+    public String getId(){
+        return World.idFromCoordinates(x,y);
     }
 
     public int getX() {
@@ -124,6 +147,9 @@ public class World implements MongoSerialisable {
             objects.add(obj.mongoSerialise());
         }
 
+
+        dbObject.put("_id", getId());
+
         dbObject.put("objects", objects);
         dbObject.put("terrain", tileMap.mongoSerialise());
 
@@ -131,7 +157,7 @@ public class World implements MongoSerialisable {
         dbObject.put("y", y);
 
         dbObject.put("updatable", updatable);
-
+        dbObject.put("shouldUpdate",shouldUpdate());
 
         return dbObject;
     }
@@ -330,4 +356,73 @@ public class World implements MongoSerialisable {
     public boolean shouldUpdate() {
         return updatable > 0;
     }
+
+
+    private GameUniverse universe = null;
+
+    public void setUniverse(GameUniverse universe){
+        this.universe = universe;
+    }
+
+    public ArrayList<World> getNeighbouringLoadedWorlds(){
+        ArrayList<World> neighbouringWorlds = new ArrayList<>();
+
+        if (universe == null){
+            return neighbouringWorlds;
+        }
+
+        for (int dx=-1; dx<=+1; dx+=2){
+            World nw = universe.getLoadedWorld(x+dx,y);
+            if (nw != null){
+                neighbouringWorlds.add(nw);   
+            }
+        }
+        for (int dy=-1; dy<=+1; dy+=2){
+            World nw = universe.getLoadedWorld(x,y+dy);
+            if (nw != null){
+                neighbouringWorlds.add(nw);   
+            }
+        }
+
+        return neighbouringWorlds;
+    }
+
+    public ArrayList<World> getNeighbouringExistingWorlds(){
+        ArrayList<World> neighbouringWorlds = new ArrayList<>();
+
+        if (universe == null){
+            return neighbouringWorlds;
+        }
+
+        for (int dx=-1; dx<=+1; dx+=2){
+            World nw = universe.getWorld(x+dx,y,false);
+            if (nw != null){
+                neighbouringWorlds.add(nw);   
+            }
+        }
+        for (int dy=-1; dy<=+1; dy+=2){
+            World nw = universe.getWorld(x,y+dy,false);
+            if (nw != null){
+                neighbouringWorlds.add(nw);   
+            }
+        }
+
+        return neighbouringWorlds;
+    }
+
+
+    public boolean canUnload(){
+        return updatable==0;
+    }
+
+    public boolean shouldUnload(){
+        boolean res = canUnload();
+
+        for (World nw : getNeighbouringLoadedWorlds() ){
+            res &= nw.canUnload();
+        }
+
+        return res;
+    }
+
 }

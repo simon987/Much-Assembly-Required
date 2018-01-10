@@ -44,6 +44,7 @@ public class User implements MongoSerialisable {
 
         BasicDBObject dbObject = new BasicDBObject();
 
+        dbObject.put("_id", username); // a constant id ensures only one entry per user is kept and updated, instead of a new entry created every save for every user.
         dbObject.put("username", username);
         dbObject.put("code", userCode);
         dbObject.put("controlledUnit", controlledUnit.getObjectId());
