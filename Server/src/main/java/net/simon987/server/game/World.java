@@ -3,18 +3,19 @@ package net.simon987.server.game;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.sun.istack.internal.Nullable;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
-import net.simon987.server.game.GameUniverse;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.MongoSerialisable;
 import org.json.simple.JSONObject;
-import net.simon987.server.logging.LogManager;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements MongoSerialisable {
 
@@ -32,7 +33,7 @@ public class World implements MongoSerialisable {
 
     private TileMap tileMap;
 
-    private ArrayList<GameObject> gameObjects = new ArrayList<>(16);
+    private ConcurrentHashMap<Long, GameObject> gameObjects = new ConcurrentHashMap<>(8);
 
     /**
      * If this number is greater than 0, the World will be updated.
@@ -91,25 +92,48 @@ public class World implements MongoSerialisable {
         return y;
     }
 
-    /**
-     * Get all the game objects that are instances of the specified class
-     */
-    public ArrayList getGameObjects(Class<? extends GameObject> clazz) {
+    public ArrayList<GameObject> findObjects(Class clazz) {
 
-        ArrayList<GameObject> objects = new ArrayList<>(gameObjects.size());
+        ArrayList<GameObject> matchingObjects = new ArrayList<>(2);
 
-        for (GameObject object : gameObjects) {
-            if (object.getClass().equals(clazz)) {
-                objects.add(object);
+        for (GameObject obj : gameObjects.values()) {
+
+            if (obj.getClass().equals(clazz)) {
+                matchingObjects.add(obj);
             }
         }
 
-        return objects;
+        return matchingObjects;
     }
 
-    public ArrayList<GameObject> getGameObjects() {
-        return gameObjects;
+
+    public ArrayList<GameObject> findObjects(int mapInfo) {
+
+        ArrayList<GameObject> matchingObjects = new ArrayList<>(2);
+
+        for (GameObject obj : gameObjects.values()) {
+            if ((obj.getMapInfo() & mapInfo) == mapInfo) {
+                matchingObjects.add(obj);
+            }
+        }
+
+        return matchingObjects;
     }
+
+    public void addObject(GameObject object) {
+        gameObjects.put(object.getObjectId(), object);
+    }
+
+    public void removeObject(GameObject object) {
+        gameObjects.remove(object.getObjectId());
+    }
+
+    @Nullable
+    public GameObject findObject(long objectId) {
+        return gameObjects.get(objectId);
+    }
+
+
 
     /**
      * Update this World and its GameObjects
@@ -122,13 +146,11 @@ public class World implements MongoSerialisable {
         GameEvent event = new WorldUpdateEvent(this);
         GameServer.INSTANCE.getEventDispatcher().dispatch(event); //Ignore cancellation
 
-        ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
-
-        for (GameObject object : gameObjects_) {
+        for (GameObject object : gameObjects.values()) {
             //Clean up dead objects
             if (object.isDead()) {
                 object.onDeadCallback();
-                gameObjects.remove(object);
+                removeObject(object);
                 //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
             } else if (object instanceof Updatable) {
                 ((Updatable) object).update();
@@ -142,8 +164,7 @@ public class World implements MongoSerialisable {
         BasicDBObject dbObject = new BasicDBObject();
 
         BasicDBList objects = new BasicDBList();
-        ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
-        for (GameObject obj : gameObjects_) {
+        for (GameObject obj : gameObjects.values()) {
             objects.add(obj.mongoSerialise());
         }
 
@@ -215,7 +236,7 @@ public class World implements MongoSerialisable {
             GameObject object = GameObject.deserialize((DBObject) obj);
 
             object.setWorld(world);
-            world.gameObjects.add(object);
+            world.addObject(object);
         }
 
         return world;
@@ -254,7 +275,7 @@ public class World implements MongoSerialisable {
         }
 
         //Objects
-        for (GameObject obj : this.gameObjects) {
+        for (GameObject obj : gameObjects.values()) {
             mapInfo[obj.getX()][obj.getY()] |= obj.getMapInfo();
 
         }
@@ -308,17 +329,16 @@ public class World implements MongoSerialisable {
      */
     public ArrayList<GameObject> getGameObjectsBlockingAt(int x, int y) {
 
-        ArrayList<GameObject> gameObjects = new ArrayList<>(2);
-
-        for (GameObject obj : this.gameObjects) {
+        ArrayList<GameObject> objectsLooking = new ArrayList<>(2);
+        for (GameObject obj : gameObjects.values()) {
 
             if (obj.isAt(x, y)) {
-                gameObjects.add(obj);
+                objectsLooking.add(obj);
             }
 
         }
 
-        return gameObjects;
+        return objectsLooking;
     }
 
     /**
@@ -332,17 +352,15 @@ public class World implements MongoSerialisable {
      * @return the list of game objects at a location
      */
     public ArrayList<GameObject> getGameObjectsAt(int x, int y) {
-        ArrayList<GameObject> gameObjects = new ArrayList<>(2);
+        ArrayList<GameObject> objectsAt = new ArrayList<>(2);
+        for (GameObject obj : gameObjects.values()) {
 
-        for (GameObject obj : this.gameObjects) {
-
-            if (obj.getX() == x && obj.getY() == y) {
-                gameObjects.add(obj);
+            if (obj.isAt(x, y)) {
+                objectsAt.add(obj);
             }
 
         }
-
-        return gameObjects;
+        return objectsAt;
     }
 
     public void incUpdatable() {
@@ -425,4 +443,7 @@ public class World implements MongoSerialisable {
         return res;
     }
 
+    public Collection<GameObject> getGameObjects() {
+        return gameObjects.values();
+    }
 }

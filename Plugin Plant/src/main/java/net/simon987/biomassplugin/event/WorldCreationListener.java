@@ -25,7 +25,9 @@ public class WorldCreationListener implements GameEventListener {
         ArrayList<BiomassBlob> biomassBlobs = WorldUtils.generateBlobs(((WorldGenerationEvent) event).getWorld(),
                 minCount, maxCount, yield);
 
-        ((WorldGenerationEvent) event).getWorld().getGameObjects().addAll(biomassBlobs);
+        for (BiomassBlob blob : biomassBlobs) {
+            ((WorldGenerationEvent) event).getWorld().addObject(blob);
+        }
 
     }
 }

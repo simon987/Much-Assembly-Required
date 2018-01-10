@@ -10,16 +10,15 @@ import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 
-import java.net.UnknownHostException;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameUniverse {
 
     //private ArrayList<World> worlds;
-    private Hashtable<String,World> worlds;
-    private ArrayList<User> users;
+    private ConcurrentHashMap<String, World> worlds;
+    //username:user
+    private ConcurrentHashMap<String, User> users;
     private WorldGenerator worldGenerator;
 
     private MongoClient mongo = null;
@@ -33,9 +32,8 @@ public class GameUniverse {
 
     public GameUniverse(ServerConfiguration config) {
 
-        //worlds = new ArrayList<>(32);
-        worlds = new Hashtable<String,World>(32);
-        users = new ArrayList<>(16);
+        worlds = new ConcurrentHashMap<>(256);
+        users = new ConcurrentHashMap<>(16);
 
         worldGenerator = new WorldGenerator(config);
     }
@@ -160,7 +158,7 @@ public class GameUniverse {
         }
     }
 
-    public World createWorld(int x, int y) {
+    private World createWorld(int x, int y) {
         World world = null;
         try {
             world = worldGenerator.generateWorld(x, y);
@@ -171,12 +169,7 @@ public class GameUniverse {
     }
 
     public User getUser(String username) {
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-        return null;
+        return users.get(username);
     }
 
     public User getOrCreateUser(String username, boolean makeControlledUnit) {
@@ -213,7 +206,7 @@ public class GameUniverse {
 
                 user.setUsername(username);
 
-                users.add(user);
+                addUser(user);
 
                 return user;
 
@@ -235,12 +228,11 @@ public class GameUniverse {
      */
     public GameObject getObject(long id) {
 
-        //
         for (World world : getWorlds()) {
-            for (GameObject object : world.getGameObjects()) {
-                if (object.getObjectId() == id) {
-                    return object;
-                }
+            GameObject obj = world.findObject(id);
+
+            if (obj != null) {
+                return obj;
             }
         }
 
@@ -253,12 +245,20 @@ public class GameUniverse {
         time++;
     }
 
-    public ArrayList<World> getWorlds() {
-        return new ArrayList<World>(worlds.values());
+    public Collection<World> getWorlds() {
+        return worlds.values();
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
+    public int getWorldCount() {
+        return worlds.size();
+    }
+
+    public Collection<User> getUsers() {
+        return users.values();
+    }
+
+    public int getUserCount() {
+        return users.size();
     }
 
     public long getNextObjectId() {
@@ -281,8 +281,12 @@ public class GameUniverse {
 
     }
 
+    public void addUser(User user) {
+        users.put(user.getUsername(), user);
+    }
+
     public void removeUser(User user) {
-        users.remove(user);
+        users.remove(user.getUsername());
     }
 
     public int getMaxWidth() {

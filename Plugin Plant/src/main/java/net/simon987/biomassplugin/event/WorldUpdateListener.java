@@ -17,11 +17,11 @@ public class WorldUpdateListener implements GameEventListener {
 
     private HashMap<World, Long> worldWaitMap = new HashMap<>(200);
 
-    private int minBlobCount;
-    private int maxBlobCount;
-    private int blobYield;
-    private int waitTime;
-    private int blobThreshold;
+    private static int minBlobCount;
+    private static int maxBlobCount;
+    private static int blobYield;
+    private static int waitTime;
+    private static int blobThreshold;
 
     public WorldUpdateListener(ServerConfiguration config) {
 
@@ -45,7 +45,7 @@ public class WorldUpdateListener implements GameEventListener {
         World world = ((WorldUpdateEvent) event).getWorld();
 
         //If there is less than the respawn threshold,
-        if (world.getGameObjects(BiomassBlob.class).size() < blobThreshold) {
+        if (world.findObjects(BiomassBlob.class).size() < blobThreshold) {
 
             //Set a timer for respawn_time ticks
             if (!worldWaitMap.containsKey(world) || worldWaitMap.get(world) == 0L) {
@@ -59,7 +59,9 @@ public class WorldUpdateListener implements GameEventListener {
                     //If the timer was set less than respawn_time ticks ago, respawn the blobs
                     ArrayList<BiomassBlob> newBlobs = WorldUtils.generateBlobs(world, minBlobCount,
                             maxBlobCount, blobYield);
-                    world.getGameObjects().addAll(newBlobs);
+                    for (BiomassBlob blob : newBlobs) {
+                        world.addObject(blob);
+                    }
 
                     //Set the 'waitUntil' time to 0 to indicate that we are not waiting
                     worldWaitMap.replace(world, 0L);

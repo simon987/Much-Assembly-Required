@@ -7,8 +7,6 @@ import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-
 public class ObjectsRequestHandler implements MessageHandler {
 
 
@@ -29,13 +27,12 @@ public class ObjectsRequestHandler implements MessageHandler {
             World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y, false);
 
             if (world != null) {
-                ArrayList<GameObject> gameObjects = world.getGameObjects();
 
                 JSONObject response = new JSONObject();
                 JSONArray objects = new JSONArray();
 
 
-                for (GameObject object : gameObjects) {
+                for (GameObject object : world.getGameObjects()) {
                     objects.add(object.serialise());
                 }
 

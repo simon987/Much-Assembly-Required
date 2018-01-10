@@ -9,7 +9,6 @@ import net.simon987.server.event.TickEvent;
 import net.simon987.server.game.DayNightCycle;
 import net.simon987.server.game.GameUniverse;
 import net.simon987.server.game.World;
-import net.simon987.server.io.FileUtils;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
@@ -17,8 +16,6 @@ import net.simon987.server.webserver.SocketServer;
 
 import java.io.File;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameServer implements Runnable {
 
@@ -131,8 +128,7 @@ public class GameServer implements Runnable {
 
 
         //Process user code
-        ArrayList<User> users_ = new ArrayList<>(gameUniverse.getUsers());
-        for (User user : users_) {
+        for (User user : gameUniverse.getUsers()) {
 
             if (user.getCpu() != null) {
                 try {
@@ -152,10 +148,8 @@ public class GameServer implements Runnable {
         }
 
         //Process each worlds
-        //Avoid concurrent modification
-        ArrayList<World> worlds = new ArrayList<>(gameUniverse.getWorlds());
         int updatedWorlds = 0;
-        for (World world : worlds) {
+        for (World world : gameUniverse.getWorlds()) {
             if (world.shouldUpdate()) {
                 world.update();
                 updatedWorlds++;
@@ -167,14 +161,9 @@ public class GameServer implements Runnable {
             save();
         }
 
-        // Clean up history files
-        if (gameUniverse.getTime() % config.getInt("clean_interval") == 0) {
-            FileUtils.cleanHistory(config.getInt("history_size"));
-        }
-
         socketServer.tick();
 
-        LogManager.LOGGER.info("Processed " + gameUniverse.getWorlds().size() + " worlds (" + updatedWorlds +
+        LogManager.LOGGER.info("Processed " + gameUniverse.getWorldCount() + " worlds (" + updatedWorlds +
                 ") updated");
     }
 
@@ -203,7 +192,7 @@ public class GameServer implements Runnable {
         cursor = users.find();
         while (cursor.hasNext()) {
             try {
-                universe.getUsers().add(User.deserialize(cursor.next()));
+                universe.addUser(User.deserialize(cursor.next()));
             } catch (CancelledException e) {
                 e.printStackTrace();
             }
@@ -217,13 +206,13 @@ public class GameServer implements Runnable {
             gameUniverse.setNextObjectId((long) serverObj.get("nextObjectId"));
         }
 
-        LogManager.LOGGER.info("Done loading! W:" + GameServer.INSTANCE.getGameUniverse().getWorlds().size() +
-                " | U:" + GameServer.INSTANCE.getGameUniverse().getUsers().size());
+        LogManager.LOGGER.info("Done loading! W:" + GameServer.INSTANCE.getGameUniverse().getWorldCount() +
+                " | U:" + GameServer.INSTANCE.getGameUniverse().getUserCount());
     }
 
     private void save() {
 
-        LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorlds().size() + " | U:" + gameUniverse.getUsers().size());
+        LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
         try{
 	        DB db = mongo.getDB("mar");
 
@@ -233,31 +222,22 @@ public class GameServer implements Runnable {
 	        DBCollection users = db.getCollection("user");
 	        DBCollection server = db.getCollection("server");
 
-	        List<DBObject> worldDocuments = new ArrayList<>();
-	        int perBatch = 35;
 	        int insertedWorlds = 0;
 	        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
-	        ArrayList<World> worlds_ = new ArrayList<>(universe.getWorlds());
-	        for (World w : worlds_) {
-	            LogManager.LOGGER.fine("Saving world "+w.getId()+" to mongodb");
-	            insertedWorlds++;
+            for (World w : universe.getWorlds()) {
+//	            LogManager.LOGGER.fine("Saving world "+w.getId()+" to mongodb");
+                insertedWorlds++;
 	            worlds.save(w.mongoSerialise());
 	                
 	         	// If the world should unload, it is removed from the Universe after having been saved. 
 	        	if (w.shouldUnload()){
 	        		unloaded_worlds++;
-				 	LogManager.LOGGER.fine("Unloading world "+w.getId()+" from universe");
-	        		universe.removeWorld(w); 
+//				 	LogManager.LOGGER.fine("Unloading world "+w.getId()+" from universe");
+                    universe.removeWorld(w);
 	        	}
 	        }
 
-	        List<DBObject> userDocuments = new ArrayList<>();
-	        int insertedUsers = 0;
-	        ArrayList<User> users_ = new ArrayList<>(GameServer.INSTANCE.getGameUniverse().getUsers());
-	        for (User u : users_) {
-
-	            insertedUsers++;
-
+            for (User u : GameServer.INSTANCE.getGameUniverse().getUsers()) {
 
 	            if (!u.isGuest()) {
 	            	users.save(u.mongoSerialise());
