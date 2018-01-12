@@ -3,7 +3,6 @@ package net.simon987.server.game;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.sun.istack.internal.Nullable;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
@@ -128,7 +127,6 @@ public class World implements MongoSerialisable {
         gameObjects.remove(object.getObjectId());
     }
 
-    @Nullable
     public GameObject findObject(long objectId) {
         return gameObjects.get(objectId);
     }
