@@ -6,6 +6,7 @@ import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Programmable;
 import net.simon987.server.game.Updatable;
 import net.simon987.server.logging.LogManager;
+import net.simon987.server.crypto.CryptoProvider;
 
 import java.util.Arrays;
 
@@ -19,31 +20,42 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
      */
     private char[] password;
 
+    private RandomString random_string_generator;
+
     /**
      * Whether or not the vault door is opened
      */
-    private boolean opened;
+    private boolean open = false;
 
-    private int openedTimer;
 
     /**
      * Number of ticks to remain the door open
      */
-    private static final int OPEN_TIME = 4; //todo load from config
+    private int OPEN_TIME = GameServer.INSTANCE.getConfig().getInt("vault_door_open_time");
+
+    private int openedTimer = 0;
+    private int cypher_id;
+
+    public VaultDoor(int cypher_id){
+        this.cypher_id = cypher_id;
+        this.random_string_generator = new RandomStringGenerator(PASSWORD_LENGTH);
+
+        password = GameServer.INSTANCE.getConfig().getRandomPassword();
+    }
 
 
     @Override
     public void update() {
-
-        if (openedTimer <= 0) {
-
-            //Door was opened for OPEN_TIME, close it and regen password
-            password = getRandomPassword();
-            opened = false;
-
-            LogManager.LOGGER.fine("Closed Vault door ID: " + getObjectId());
-        } else {
-            openedTimer--;
+        if (open){
+            if (openedTimer <= 0) {
+                //Door was open for OPEN_TIME, close it and regen password
+                password = GameServer.INSTANCE.getConfig().getRandomPassword();
+                open = false;
+                openedTimer = 0;
+                LogManager.LOGGER.fine("Closed Vault door ID: " + getObjectId());
+            } else {
+                openedTimer--;
+            }
         }
 
     }
@@ -51,44 +63,42 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     @Override
     public boolean sendMessage(char[] message) {
 
-        System.out.println("VAULT: sendMessage" + new String(message));//todo rmv
-
-        if (!opened) {
-
-            if (Arrays.equals(message, password)) {
-                opened = true;
-                openedTimer = OPEN_TIME;
-
-                LogManager.LOGGER.fine("Opened Vault door ID: " + getObjectId());
+        if (Arrays.equals(message, password)) {
+            if (!open) {
+                openVault();
+            } else {
+                keepVaultOpen();
             }
-
             return true;
         } else {
-            //Can't receive messages when opened
             return false;
         }
     }
+
+    private void openVault(){
+        open = true;
+        openedTimer = OPEN_TIME;
+        LogManager.LOGGER.fine("Opened Vault door ID: " + getObjectId());
+    }
+
+    private void keepVaultOpen(){
+        open = true;
+        openedTimer = OPEN_TIME;
+    }  
 
     @Override
     public boolean enter(GameObject object) {
 
-        LogManager.LOGGER.fine("VAULT enter " + opened);
+        LogManager.LOGGER.fine("VAULT enter " + open);
 
-        if (opened) {
-
+        if (open) {
             //TODO: Enter in the vault
-
-
             return true;
         } else {
             return false;
         }
-
     }
 
-    private static char[] getRandomPassword() {
-        return "12345678".toCharArray();//todo actual random password
-    }
 
     @Override
     public char getMapInfo() {
@@ -99,4 +109,5 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     public BasicDBObject mongoSerialise() {
         return null;
     }
+
 }
