@@ -1,4 +1,4 @@
-package net.simon987.vaultplugin;
+package net.simon987.npcplugin;
 
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.logging.LogManager;

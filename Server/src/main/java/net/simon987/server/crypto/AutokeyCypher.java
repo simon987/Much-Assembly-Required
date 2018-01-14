@@ -10,22 +10,24 @@ public class AutokeyCypher extends ShiftSubstitutionCypher {
         super();
     }
 
-    @override
-    protected char encryptionShiftAt(int position, char[] plaintext, char[] key, char[] partial_cyphertext){
-        if (i<key.length){
-            return key[i];
-        } else {
-            return plaintext[i-key.length];
-        }
+    @Override
+    protected char encryptionShiftAt(int position, char[] plaintext, char[] key, char[] partialCypherText) {
+//        if (i < key.length){
+//            return key[i];
+//        } else {
+//            return plaintext[i - key.length];
+//        }
+        return 0;
     }
 
-    @override
-    protected char decryptionShiftAt(int position, char[] cyphertext, char[] key, char[] partial_plaintext){
-        if (i<key.length){
-            return key[i];
-        } else {
-            return partial_plaintext[i-key.length];
-        }
+    @Override
+    protected char decryptionShiftAt(int position, char[] cypherText, char[] key, char[] partialPlainText) {
+//        if (i < key.length){
+//            return key[i];
+//        } else {
+//            return partialPlainText[i - key.length];
+//        }
+        return 0;
     }
 	
 }

@@ -35,8 +35,12 @@ public class RandomStringGenerator {
     private final char[] buf;
 
     public RandomStringGenerator(int length, Random random, String charset) {
-        if (length < 1) throw new IllegalArgumentException();
-        if (charset.length() < 2) throw new IllegalArgumentException();
+
+        if (length < 1) {
+            throw new IllegalArgumentException();
+        } else if (charset.length() < 2) {
+            throw new IllegalArgumentException();
+        }
         this.random = Objects.requireNonNull(random);
         this.charset = charset.toCharArray();
         this.buf = new char[length];
@@ -46,14 +50,14 @@ public class RandomStringGenerator {
      * Create an alphanumeric string generator.
      */
     public RandomStringGenerator(int length, Random random) {
-        this(length, random, alphanum);
+        this(length, random, ALPHANUMERIC_CHARSET);
     }
 
     /**
      * Create an alphanumeric string generator using the given charset.
      */
     public RandomStringGenerator(int length, String charset) {
-        this(length, new SecureRandom(), ALPHANUMERIC_CHARSET);
+        this(length, new SecureRandom(), charset);
     }
 
 
@@ -61,7 +65,7 @@ public class RandomStringGenerator {
      * Create an alphanumeric strings from a secure generator.
      */
     public RandomStringGenerator(int length) {
-        this(length, new SecureRandom(),ALPHANUMERIC_CHARSET);
+        this(length, new SecureRandom(), ALPHANUMERIC_CHARSET);
     }
 
     /**

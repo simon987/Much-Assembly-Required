@@ -1,12 +1,13 @@
-package net.simon987.vaultplugin;
+package net.simon987.npcplugin;
 
 import com.mongodb.BasicDBObject;
+import net.simon987.server.GameServer;
+import net.simon987.server.crypto.RandomStringGenerator;
 import net.simon987.server.game.Enterable;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Programmable;
 import net.simon987.server.game.Updatable;
 import net.simon987.server.logging.LogManager;
-import net.simon987.server.crypto.CryptoProvider;
 
 import java.util.Arrays;
 
@@ -20,7 +21,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
      */
     private char[] password;
 
-    private RandomString random_string_generator;
+    private RandomStringGenerator randomStringGenerator;
 
     /**
      * Whether or not the vault door is opened
@@ -34,13 +35,12 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     private int OPEN_TIME = GameServer.INSTANCE.getConfig().getInt("vault_door_open_time");
 
     private int openedTimer = 0;
-    private int cypher_id;
+    private int cypherId;
 
-    public VaultDoor(int cypher_id){
-        this.cypher_id = cypher_id;
-        this.random_string_generator = new RandomStringGenerator(PASSWORD_LENGTH);
+    public VaultDoor(int cypherId) {
+        this.cypherId = cypherId;
+        this.randomStringGenerator = new RandomStringGenerator();
 
-        password = GameServer.INSTANCE.getConfig().getRandomPassword();
     }
 
 
@@ -49,7 +49,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         if (open){
             if (openedTimer <= 0) {
                 //Door was open for OPEN_TIME, close it and regen password
-                password = GameServer.INSTANCE.getConfig().getRandomPassword();
+                //password = GameServer.INSTANCE.getConfig().getRandomPassword();
                 open = false;
                 openedTimer = 0;
                 LogManager.LOGGER.fine("Closed Vault door ID: " + getObjectId());

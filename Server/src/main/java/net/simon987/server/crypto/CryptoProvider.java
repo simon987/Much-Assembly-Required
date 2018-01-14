@@ -7,14 +7,14 @@ public class CryptoProvider{
 	public static final int VIGENERE_CYPHER = 0x0002;
 	public static final int AUTOKEY_CYPHER = 0x0003;
 
-    public static final int PASSWORD_LENGTH = 8; // Same as CubotComPort.MESSAGE_LENGTH
+	public static final int PASSWORD_LENGTH = 8; //Same as CubotComPort.MESSAGE_LENGTH
 
-    private charset;
-	private password_generator;
+	private String charset;
+	private RandomStringGenerator passwordGenerator;
 
 	public CryptoProvider(String charset){
 		this.charset = charset;
-		this.password_generator = new RandomStringGenerator(PASSWORD_LENGTH,charset);
+		this.passwordGenerator = new RandomStringGenerator(PASSWORD_LENGTH, charset);
 	}
 
 	public CryptoProvider(){
@@ -34,10 +34,6 @@ public class CryptoProvider{
 			default:
 				return null;
 		}
-	}
-
-	public static String getRandomPassword(){
-		return this.password_generator.nextString().toCharArray();
 	}
 
 }

@@ -2,9 +2,9 @@ package net.simon987.server.crypto;
 
 interface Cypher {
 
-	public char[] encrypt(char[] plaintext, char[] key);
+	public char[] encrypt(char[] plainText, char[] key) throws CryptoException;
 
-	public char[] decrypt(char[] cyphertext, char[] key);
+	public char[] decrypt(char[] cypherText, char[] key) throws CryptoException;
 
 	public String textCharset();
 	
