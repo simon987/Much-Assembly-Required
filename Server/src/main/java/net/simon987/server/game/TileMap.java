@@ -15,8 +15,6 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterOutputStream;
 
 /**
  * A 2D map of Tile objects of size width*height
@@ -56,9 +54,9 @@ public class TileMap implements JSONSerialisable, MongoSerialisable {
         tiles = new int[width][height];
     }
 
-    public TileMap(int[][] tiles) {
-        this.width = World.WORLD_SIZE;
-        this.height = World.WORLD_SIZE;
+    public TileMap(int[][] tiles, int size) {
+        this.width = size;
+        this.height = size;
 
         this.tiles = tiles;
     }
@@ -115,8 +113,8 @@ public class TileMap implements JSONSerialisable, MongoSerialisable {
 
         byte[] terrain = new byte[width * width];
 
-        for (int x = 0; x < World.WORLD_SIZE; x++) {
-            for (int y = 0; y < World.WORLD_SIZE; y++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 terrain[x * width + y] = (byte) tiles[x][y];
             }
         }
@@ -150,51 +148,20 @@ public class TileMap implements JSONSerialisable, MongoSerialisable {
 
     }
 
-    public static TileMap deserialize(DBObject object) {
+    public static TileMap deserialize(DBObject object, int size) {
 
         BasicDBList terrain = (BasicDBList) object.get("tiles");
 
-        int[][] tiles = new int[World.WORLD_SIZE][World.WORLD_SIZE];
+        int[][] tiles = new int[size][size];
 
-        for (int x = 0; x < World.WORLD_SIZE; x++) {
-            for (int y = 0; y < World.WORLD_SIZE; y++) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
                 tiles[x][y] = (int) ((BasicDBList) terrain.get(x)).get(y);
             }
         }
 
-        return new TileMap(tiles);
+        return new TileMap(tiles, size);
 
-    }
-
-    public static TileMap deserialize(JSONObject object) {
-
-        TileMap tileMap = new TileMap(World.WORLD_SIZE, World.WORLD_SIZE);
-
-        byte[] compressedBytes = Base64.getDecoder().decode((String) object.get("z"));
-
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Inflater decompressor = new Inflater(true);
-            InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
-            inflaterOutputStream.write(compressedBytes);
-            inflaterOutputStream.close();
-
-            byte[] terrain = baos.toByteArray();
-
-            for (int x = 0; x < World.WORLD_SIZE; x++) {
-                for (int y = 0; y < World.WORLD_SIZE; y++) {
-                    tileMap.tiles[x][y] = terrain[x * World.WORLD_SIZE + y];
-                }
-            }
-
-            return tileMap;
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public Point getRandomPlainTile() {
@@ -210,8 +177,8 @@ public class TileMap implements JSONSerialisable, MongoSerialisable {
                 return null;
             }
 
-            int rx = random.nextInt(World.WORLD_SIZE);
-            int ry = random.nextInt(World.WORLD_SIZE);
+            int rx = random.nextInt(width);
+            int ry = random.nextInt(height);
 
             if (tiles[rx][ry] == TileMap.PLAIN_TILE) {
                 return new Point(rx, ry);

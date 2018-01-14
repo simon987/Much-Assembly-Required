@@ -17,7 +17,7 @@ public class TerrainRequestHandler implements MessageHandler {
             try {
                 world = GameServer.INSTANCE.getGameUniverse().getWorld(
                         Long.valueOf((long) json.get("x")).intValue(),
-                        Long.valueOf((long) json.get("y")).intValue(), false);
+                        Long.valueOf((long) json.get("y")).intValue(), true);
             } catch (NullPointerException e) {
                 LogManager.LOGGER.severe("FIXME: handle TerrainRequestHandler");
                 return;
@@ -31,8 +31,8 @@ public class TerrainRequestHandler implements MessageHandler {
                 JSONArray terrain = new JSONArray();
 
                 int[][] tiles = world.getTileMap().getTiles();
-                for (int x = 0; x < World.WORLD_SIZE; x++) {
-                    for (int y = 0; y < World.WORLD_SIZE; y++) {
+                for (int x = 0; x < world.getWorldSize(); x++) {
+                    for (int y = 0; y < world.getWorldSize(); y++) {
                         terrain.add(tiles[y][x]);
                     }
                 }
@@ -40,6 +40,7 @@ public class TerrainRequestHandler implements MessageHandler {
                 response.put("t", "terrain");
                 response.put("ok", true);
                 response.put("terrain", terrain);
+                response.put("size", world.getWorldSize());
 
                 user.getWebSocket().send(response.toJSONString());
             } else {

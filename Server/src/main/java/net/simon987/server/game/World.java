@@ -8,7 +8,6 @@ import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.MongoSerialisable;
-import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,9 +16,9 @@ import java.util.Random;
 public class World implements MongoSerialisable {
 
     /**
-     * Size of the side of a world
+     * Size of the side of this world
      */
-    public static final int WORLD_SIZE = 16;
+    private int worldSize;
 
     private static final char INFO_BLOCKED = 0x8000;
     private static final char INFO_IRON = 0x0200;
@@ -41,10 +40,12 @@ public class World implements MongoSerialisable {
         this.x = x;
         this.y = y;
         this.tileMap = tileMap;
+
+        this.worldSize = tileMap.getWidth();
     }
 
-    private World() {
-
+    private World(int worldSize) {
+        this.worldSize = worldSize;
     }
 
     public TileMap getTileMap() {
@@ -129,6 +130,7 @@ public class World implements MongoSerialisable {
 
         dbObject.put("x", x);
         dbObject.put("y", y);
+        dbObject.put("size", worldSize);
 
         dbObject.put("updatable", updatable);
 
@@ -142,8 +144,8 @@ public class World implements MongoSerialisable {
         String str = "World (" + x + ", " + y + ")\n";
         int[][] tileMap = this.tileMap.getTiles();
 
-        for (int x = 0; x < WORLD_SIZE; x++) {
-            for (int y = 0; y < WORLD_SIZE; y++) {
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
                 str += tileMap[x][y] + " ";
             }
             str += "\n";
@@ -153,34 +155,14 @@ public class World implements MongoSerialisable {
 
     }
 
-    public static World deserialize(JSONObject json) {
-        World world = new World();
-//    world.x = (int) (long) json.get("x");
-//    world.y = (int) (long) json.get("y");
-//    world.updatable = (int) (long) json.get("u");
-//
-//    world.tileMap = TileMap.deserialize((JSONObject) json.get("t"));
-//
-//
-//    for (JSONObject objJson : (ArrayList<JSONObject>) json.get("o")) {
-//
-//        GameObject object = GameObject.deserialize(objJson);
-//
-//        object.setWorld(world);
-//        world.gameObjects.add(object);
-//    }
-
-        return world;
-    }
-
     public static World deserialize(DBObject dbObject) {
 
-        World world = new World();
+        World world = new World((int) dbObject.get("size"));
         world.x = (int) dbObject.get("x");
         world.y = (int) dbObject.get("y");
         world.updatable = (int) dbObject.get("updatable");
 
-        world.tileMap = TileMap.deserialize((BasicDBObject) dbObject.get("terrain"));
+        world.tileMap = TileMap.deserialize((BasicDBObject) dbObject.get("terrain"), world.getWorldSize());
 
         BasicDBList objects = (BasicDBList) dbObject.get("objects");
 
@@ -204,24 +186,23 @@ public class World implements MongoSerialisable {
      */
     public char[][] getMapInfo() {
 
-        char[][] mapInfo = new char[World.WORLD_SIZE][World.WORLD_SIZE];
+        char[][] mapInfo = new char[worldSize][worldSize];
         int[][] tiles = tileMap.getTiles();
 
         //Tile
-        for (int y = 0; y < World.WORLD_SIZE; y++) {
-            for (int x = 0; x < World.WORLD_SIZE; x++) {
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
 
                 if (tiles[x][y] == TileMap.PLAIN_TILE) {
-
                     mapInfo[x][y] = 0;
+
                 } else if (tiles[x][y] == TileMap.WALL_TILE) {
-
                     mapInfo[x][y] = INFO_BLOCKED;
+
                 } else if (tiles[x][y] == TileMap.COPPER_TILE) {
-
                     mapInfo[x][y] = INFO_COPPER;
-                } else if (tiles[x][y] == TileMap.IRON_TILE) {
 
+                } else if (tiles[x][y] == TileMap.IRON_TILE) {
                     mapInfo[x][y] = INFO_IRON;
                 }
             }
@@ -259,8 +240,8 @@ public class World implements MongoSerialisable {
                 return null;
             }
 
-            int rx = random.nextInt(World.WORLD_SIZE);
-            int ry = random.nextInt(World.WORLD_SIZE);
+            int rx = random.nextInt(worldSize);
+            int ry = random.nextInt(worldSize);
 
             if (!isTileBlocked(rx, ry)) {
 
@@ -329,5 +310,9 @@ public class World implements MongoSerialisable {
 
     public boolean shouldUpdate() {
         return updatable > 0;
+    }
+
+    public int getWorldSize() {
+        return worldSize;
     }
 }

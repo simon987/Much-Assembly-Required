@@ -35,6 +35,8 @@ public class WorldGenerator {
     private int minCopperCount;
     private int maxCopperCount;
 
+    private static final int DEFAULT_WORLD_SIZE = 24;
+
     /**
      * Map of center points
      */
@@ -85,7 +87,7 @@ public class WorldGenerator {
      */
     private static World generateEmptyWorld(int locX, int locY) {
 
-        return new World(locX, locY, new TileMap(World.WORLD_SIZE, World.WORLD_SIZE));
+        return new World(locX, locY, new TileMap(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE));
     }
 
     /**
@@ -104,12 +106,12 @@ public class WorldGenerator {
         for (int i = centerPointCount; i >= 0; i--) {
 
             int tile = random.nextInt(wallPlainRatio) == 0 ? 1 : 0;
-            centerPointsMap.put(new Point(random.nextInt(World.WORLD_SIZE), random.nextInt(World.WORLD_SIZE)), tile);
+            centerPointsMap.put(new Point(random.nextInt(DEFAULT_WORLD_SIZE), random.nextInt(DEFAULT_WORLD_SIZE)), tile);
         }
 
         //Fill unset tiles
-        for (int y = 0; y < World.WORLD_SIZE; y++) {
-            for (int x = 0; x < World.WORLD_SIZE; x++) {
+        for (int y = 0; y < DEFAULT_WORLD_SIZE; y++) {
+            for (int x = 0; x < DEFAULT_WORLD_SIZE; x++) {
                 int tile = getClosestCenterPointTile(x, y);
                 /*
                  * There is 1-tile thick wall around the World, with 4-tile wide entrances
@@ -134,7 +136,7 @@ public class WorldGenerator {
                  *  1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1
                  */
 
-                if (x == 0 || x == World.WORLD_SIZE - 1) {
+                if (x == 0 || x == DEFAULT_WORLD_SIZE - 1) {
                     //Vertical (West & East) walls
                     if (y < 6 || y > 9) {
                         tile = 1;
@@ -142,7 +144,7 @@ public class WorldGenerator {
                         tile = 0;
                     }
                 }
-                if (y == 0 || y == World.WORLD_SIZE - 1) {
+                if (y == 0 || y == DEFAULT_WORLD_SIZE - 1) {
                     // Horizontal (North & South) walls
                     if (x < 6 || x > 9) {
                         tile = 1;
@@ -150,8 +152,8 @@ public class WorldGenerator {
                         tile = 0;
                     }
                 }
-                if (((x == 1 || x == World.WORLD_SIZE - 2) && y > 0 && y < World.WORLD_SIZE - 1) ||
-                        ((y == 1 || y == World.WORLD_SIZE - 2) && x > 0 && x < World.WORLD_SIZE - 1)) {
+                if (((x == 1 || x == DEFAULT_WORLD_SIZE - 2) && y > 0 && y < DEFAULT_WORLD_SIZE - 1) ||
+                        ((y == 1 || y == DEFAULT_WORLD_SIZE - 2) && x > 0 && x < DEFAULT_WORLD_SIZE - 1)) {
                     //Inner border
                     tile = 0;
                 }

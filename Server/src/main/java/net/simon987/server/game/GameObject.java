@@ -90,9 +90,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
                 leftWorld.incUpdatable();
                 setWorld(leftWorld);
 
-                x = World.WORLD_SIZE - 1;
+                x = leftWorld.getWorldSize() - 1;
             }
-        } else if (newX >= World.WORLD_SIZE) {
+        } else if (newX >= world.getWorldSize()) {
             //Move object to adjacent World (right)
             World rightWorld;
             if (world.getX() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
@@ -129,9 +129,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
                 upWorld.incUpdatable();
                 setWorld(upWorld);
 
-                y = World.WORLD_SIZE - 1;
+                y = upWorld.getWorldSize() - 1;
             }
-        } else if (newY >= World.WORLD_SIZE) {
+        } else if (newY >= world.getWorldSize()) {
             //Move object to adjacent World (down)
             World downWorld;
             if (world.getY() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {

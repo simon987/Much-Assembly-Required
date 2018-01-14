@@ -47,10 +47,10 @@ public class Pathfinder {
         SortedArrayList open = new SortedArrayList();
 
         //Initialize node map
-        Node[][] nodes = new Node[World.WORLD_SIZE][World.WORLD_SIZE];
+        Node[][] nodes = new Node[world.getWorldSize()][world.getWorldSize()];
 
-        for (int x = 0; x < World.WORLD_SIZE; x++) {
-            for (int y = 0; y < World.WORLD_SIZE; y++) {
+        for (int x = 0; x < world.getWorldSize(); x++) {
+            for (int y = 0; y < world.getWorldSize(); y++) {
 
                 nodes[x][y] = new Node(x, y);
 
@@ -66,9 +66,7 @@ public class Pathfinder {
         open.add(start);
 
 
-        int counter = 0;
         while (open.size() > 0) {
-            counter++;
             Node current = open.first();
 
             if (Util.manhattanDist(current.x, current.y, gX, gY) <= range) {
@@ -138,7 +136,7 @@ public class Pathfinder {
         }
 
         //Check if the right neighbor is within the World boundaries and isn't blocked
-        if (node.x != (World.WORLD_SIZE - 1) && !world.isTileBlocked(node.x + 1, node.y)) {
+        if (node.x != (world.getWorldSize() - 1) && !world.isTileBlocked(node.x + 1, node.y)) {
             neighbors.add(nodes[node.x + 1][node.y]);
         }
 
@@ -148,7 +146,7 @@ public class Pathfinder {
         }
 
         //Check if the bottom neighbor is within the World boundaries and isn't blocked
-        if (node.y != (World.WORLD_SIZE - 1) && !world.isTileBlocked(node.x, node.y + 1)) {
+        if (node.y != (world.getWorldSize() - 1) && !world.isTileBlocked(node.x, node.y + 1)) {
             neighbors.add(nodes[node.x][node.y + 1]);
         }
 

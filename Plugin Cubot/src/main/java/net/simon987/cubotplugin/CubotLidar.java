@@ -6,7 +6,6 @@ import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Status;
-import net.simon987.server.game.World;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.JSONSerialisable;
@@ -115,8 +114,8 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                     char[][] mapInfo = cubot.getWorld().getMapInfo();
 
                     int i = MEMORY_MAP_START;
-                    for (int y = 0; y < World.WORLD_SIZE; y++) {
-                        for (int x = 0; x < World.WORLD_SIZE; x++) {
+                    for (int y = 0; y < cubot.getWorld().getWorldSize(); y++) {
+                        for (int x = 0; x < cubot.getWorld().getWorldSize(); x++) {
                             getCpu().getMemory().set(i++, mapInfo[x][y]);
                         }
                     }

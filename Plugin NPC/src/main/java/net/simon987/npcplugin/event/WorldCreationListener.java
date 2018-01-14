@@ -66,7 +66,7 @@ public class WorldCreationListener implements GameEventListener {
             //Also spawn a radio tower in the same World
             Point p = world.getRandomPassableTile();
             if (p != null) {
-                while (p.x == 0 || p.x == World.WORLD_SIZE - 1 || p.y == World.WORLD_SIZE - 1 || p.y == 0) {
+                while (p.x == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 || p.y == 0) {
                     p = world.getRandomPassableTile();
 
                     if (p == null) {

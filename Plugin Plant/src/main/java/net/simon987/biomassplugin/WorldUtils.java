@@ -23,8 +23,8 @@ public class WorldUtils {
         //set the desired amount of blobs to the plain tile count
         int[][] tiles = world.getTileMap().getTiles();
         int plainCount = 0;
-        for (int y = 0; y < World.WORLD_SIZE; y++) {
-            for (int x = 0; x < World.WORLD_SIZE; x++) {
+        for (int y = 0; y < world.getWorldSize(); y++) {
+            for (int x = 0; x < world.getWorldSize(); x++) {
 
                 if (tiles[x][y] == 0) {
                     plainCount++;
@@ -44,7 +44,7 @@ public class WorldUtils {
 
                 //Don't block worlds
                 int counter = 0;
-                while (p.x == 0 || p.y == 0 || p.x == World.WORLD_SIZE - 1 || p.y == World.WORLD_SIZE - 1 ||
+                while (p.x == 0 || p.y == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 ||
                         world.getGameObjectsAt(p.x, p.y).size() != 0) {
                     p = world.getTileMap().getRandomPlainTile();
                     counter++;
