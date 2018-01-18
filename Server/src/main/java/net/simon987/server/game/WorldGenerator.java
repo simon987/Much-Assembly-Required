@@ -35,7 +35,7 @@ public class WorldGenerator {
     private int minCopperCount;
     private int maxCopperCount;
 
-    private static final int DEFAULT_WORLD_SIZE = 24;
+    private static final int DEFAULT_WORLD_SIZE = 16;
 
     /**
      * Map of center points

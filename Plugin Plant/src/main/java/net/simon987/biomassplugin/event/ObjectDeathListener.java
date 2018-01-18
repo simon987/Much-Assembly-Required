@@ -36,8 +36,8 @@ public class ObjectDeathListener implements GameEventListener {
 
 
             //Don't spawn biomass on World border
-            if (dyingHarvesterNPC.getX() != 0 && dyingHarvesterNPC.getX() != World.WORLD_SIZE - 1 &&
-                    dyingHarvesterNPC.getY() != 0 && dyingHarvesterNPC.getY() != World.WORLD_SIZE - 1) {
+            if (dyingHarvesterNPC.getX() != 0 && dyingHarvesterNPC.getX() != dyingHarvesterNPC.getWorld().getWorldSize() - 1 &&
+                    dyingHarvesterNPC.getY() != 0 && dyingHarvesterNPC.getY() != dyingHarvesterNPC.getWorld().getWorldSize() - 1) {
                 //Create a new biomass
                 BiomassBlob newBiomassBlob = createBiomassBlobAt(
                         dyingHarvesterNPC.getX(), dyingHarvesterNPC.getY(), dyingHarvesterNPC.getWorld());
