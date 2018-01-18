@@ -9,6 +9,7 @@ import net.simon987.server.plugin.ServerPlugin;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * An INSTANCE of an object (e.g. a Tree, a character ...) inside the
@@ -43,125 +44,65 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
     private World world;
 
 
-    //--------
-
     /**
      * Increment the location of the game object by 1 tile
      * Collision checks happen here
      */
     public boolean incrementLocation() {
 
-        int newX = 0, newY = 0;
+        int newX = getX() + direction.dX;
+        int newY = getY() + direction.dY;
 
-        if (direction == Direction.NORTH) {
-            newX = x;
-            newY = (y - 1);
+        if (newX < 0 || newY < 0 || newX >= world.getWorldSize() || newY >= world.getWorldSize()) {
+            //Next tile is out of world bounds, move to next world
+            World nextWorld = GameServer.INSTANCE.getGameUniverse().getWorld(
+                    world.getX() + direction.dX, world.getY() + direction.dY, true);
 
-        } else if (direction == Direction.EAST) {
-            newX = (x + 1);
-            newY = y;
+            //Move object to next World
+            world.removeObject(this);
+            world.decUpdatable();
+            nextWorld.addObject(this);
+            nextWorld.incUpdatable();
+            setWorld(nextWorld);
 
-        } else if (direction == Direction.SOUTH) {
-            newX = x;
-            newY = (y + 1);
-
-        } else if (direction == Direction.WEST) {
-            newX = (x - 1);
-            newY = y;
-        }
-
-
-        //Check if out of World bounds / collision
-        if (newX < 0) {
-            //Move object to adjacent World (left)
-            World leftWorld;
-            if (world.getX() == 0) {
-                //Warp around
-                leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(
-                        GameServer.INSTANCE.getGameUniverse().getMaxWidth(), world.getY(), true);
-            } else {
-                leftWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() - 1, world.getY(), true);
+            //Set position on next World according to direction
+            switch (direction) {
+                case NORTH:
+                    setY(nextWorld.getWorldSize() - 1);
+                    break;
+                case EAST:
+                    setX(0);
+                    break;
+                case SOUTH:
+                    setY(0);
+                    break;
+                case WEST:
+                    setX(nextWorld.getWorldSize() - 1);
+                    break;
             }
 
-            if (leftWorld != null) {
-                world.removeObject(this);
-                world.decUpdatable();
-                leftWorld.addObject(this);
-                leftWorld.incUpdatable();
-                setWorld(leftWorld);
+            return true;
 
-                x = leftWorld.getWorldSize() - 1;
-            }
-        } else if (newX >= world.getWorldSize()) {
-            //Move object to adjacent World (right)
-            World rightWorld;
-            if (world.getX() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
-                //Warp around
-                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(0, world.getY(), true);
-            } else {
-                rightWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX() + 1, world.getY(), true);
-            }
-
-            if (rightWorld != null) {
-                world.removeObject(this);
-                world.decUpdatable();
-                rightWorld.addObject(this);
-                rightWorld.incUpdatable();
-                setWorld(rightWorld);
-
-                x = 0;
-            }
-        } else if (newY < 0) {
-            //Move object to adjacent World (up)
-            World upWorld;
-            if (world.getY() == 0) {
-                //Warp around
-                upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(),
-                        GameServer.INSTANCE.getGameUniverse().getMaxWidth(), true);
-            } else {
-                upWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() - 1, true);
-            }
-
-            if (upWorld != null) {
-                world.removeObject(this);
-                world.decUpdatable();
-                upWorld.addObject(this);
-                upWorld.incUpdatable();
-                setWorld(upWorld);
-
-                y = upWorld.getWorldSize() - 1;
-            }
-        } else if (newY >= world.getWorldSize()) {
-            //Move object to adjacent World (down)
-            World downWorld;
-            if (world.getY() == GameServer.INSTANCE.getGameUniverse().getMaxWidth()) {
-                //Warp around
-                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), 0, true);
-            } else {
-                downWorld = GameServer.INSTANCE.getGameUniverse().getWorld(world.getX(), world.getY() + 1, true);
-            }
-
-
-            if (downWorld != null) {
-                world.removeObject(this);
-                world.decUpdatable();
-                downWorld.addObject(this);
-                downWorld.incUpdatable();
-                setWorld(downWorld);
-
-                y = 0;
-            }
-        }
-        //Check collision
-        else if (!world.isTileBlocked(newX, newY)) {
-            //Tile is passable
-            x = newX;
-            y = newY;
         } else {
-            return false;
-        }
 
-        return true;
+            ArrayList<GameObject> frontObjects = world.getGameObjectsAt(newX, newY);
+
+            //Check for enterable objects
+            if (frontObjects.size() > 0 && frontObjects.get(0) instanceof Enterable) {
+                return (((Enterable) frontObjects.get(0)).enter(this));
+            }
+
+            //Check collision
+            if (!world.isTileBlocked(newX, newY)) { //Check for collision
+                //Tile is passable
+                x = newX;
+                y = newY;
+                return true;
+            } else {
+                return false;
+            }
+
+        }
 
     }
 

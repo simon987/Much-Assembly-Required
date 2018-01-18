@@ -8,19 +8,27 @@ public enum Direction {
     /**
      * North, up
      */
-    NORTH,
+    NORTH(0, -1),
     /**
      * East, right
      */
-    EAST,
+    EAST(1, 0),
     /**
      * South, bottom
      */
-    SOUTH,
+    SOUTH(0, 1),
     /**
      * West, left
      */
-    WEST;
+    WEST(-1, 0);
+
+    public final int dX;
+    public final int dY;
+
+    Direction(int dX, int dY) {
+        this.dX = dX;
+        this.dY = dY;
+    }
 
     public static Direction getDirection(int x) {
         switch (x) {
@@ -78,6 +86,5 @@ public enum Direction {
         } else {
             return null;
         }
-
     }
 }
