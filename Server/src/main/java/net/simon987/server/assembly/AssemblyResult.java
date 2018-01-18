@@ -27,7 +27,7 @@ public class AssemblyResult {
      * List of exceptions encountered during the assembly attempt,
      * they will be displayed in the editor
      */
-    ArrayList<AssemblyException> exceptions = new ArrayList<>(50);
+    public ArrayList<AssemblyException> exceptions = new ArrayList<>(50);
     /**
      * Offset of the code segment
      */

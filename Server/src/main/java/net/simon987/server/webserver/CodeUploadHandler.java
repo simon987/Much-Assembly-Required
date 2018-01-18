@@ -46,6 +46,7 @@ public class CodeUploadHandler implements MessageHandler {
                     JSONObject response = new JSONObject();
                     response.put("t", "codeResponse");
                     response.put("bytes", ar.bytes.length);
+                    response.put("exceptions", ar.exceptions.size());
 
                     user.getWebSocket().send(response.toJSONString());
                 }
