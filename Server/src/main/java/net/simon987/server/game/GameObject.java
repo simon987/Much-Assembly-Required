@@ -122,6 +122,62 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
 
     }
 
+    /**
+     * Get the first directly adjacent tile (starting east, going clockwise)
+     */
+    public Point getAdjacentTile() {
+
+        if (!getWorld().isTileBlocked(getX() + 1, getY())) {
+            return new Point(getX() + 1, getY());
+
+        } else if (!getWorld().isTileBlocked(getX(), getY() + 1)) {
+            return new Point(getX(), getY() + 1);
+
+        } else if (!getWorld().isTileBlocked(getX() - 1, getY())) {
+            return new Point(getX() - 1, getY());
+
+        } else if (!getWorld().isTileBlocked(getX(), getY() - 1)) {
+            return new Point(getX(), getY() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    public int getAdjacentTileCount(boolean diagonals) {
+
+        int count = 0;
+
+        if (!getWorld().isTileBlocked(getX() + 1, getY())) {
+            count++;
+        }
+        if (!getWorld().isTileBlocked(getX(), getY() + 1)) {
+            count++;
+        }
+        if (!getWorld().isTileBlocked(getX() - 1, getY())) {
+            count++;
+        }
+        if (!getWorld().isTileBlocked(getX(), getY() - 1)) {
+            count++;
+        }
+
+        if (diagonals) {
+            if (!getWorld().isTileBlocked(getX() + 1, getY() + 1)) {
+                count++;
+            }
+            if (!getWorld().isTileBlocked(getX() - 1, getY() + 1)) {
+                count++;
+            }
+            if (!getWorld().isTileBlocked(getX() + 1, getY() - 1)) {
+                count++;
+            }
+            if (!getWorld().isTileBlocked(getX() - 1, getY() - 1)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public long getObjectId() {
         return objectId;
     }

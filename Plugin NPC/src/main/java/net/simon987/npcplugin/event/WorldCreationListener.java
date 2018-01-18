@@ -3,6 +3,7 @@ package net.simon987.npcplugin.event;
 import net.simon987.npcplugin.Factory;
 import net.simon987.npcplugin.NpcPlugin;
 import net.simon987.npcplugin.RadioTower;
+import net.simon987.npcplugin.VaultDoor;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
@@ -92,6 +93,45 @@ public class WorldCreationListener implements GameEventListener {
                     LogManager.LOGGER.info("Spawned RadioTower at (" + world.getX() + ", " + world.getY() +
                             ") (" + p.x + ", " + p.y + ")");
                 }
+            }
+
+            //Also spawn a Vault in the same World
+            p = world.getRandomPassableTile();
+            if (p != null) {
+
+                VaultDoor vaultDoor = new VaultDoor(0); //todo cypherId ?
+
+                vaultDoor.setWorld(world);
+                vaultDoor.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                vaultDoor.setX(p.x);
+                vaultDoor.setY(p.y);
+
+                int counter = 300;
+                while (p.x == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 || p.y == 0
+                        || vaultDoor.getAdjacentTileCount(true) < 8) {
+                    p = world.getRandomPassableTile();
+
+                    if (p == null) {
+                        //World is full
+                        return;
+                    }
+
+                    vaultDoor.setX(p.x);
+                    vaultDoor.setY(p.y);
+
+                    counter--;
+
+                    if (counter <= 0) {
+                        //Reached maximum amount of retries
+                        return;
+                    }
+                }
+
+                world.addObject(vaultDoor);
+                world.incUpdatable(); //In case the Factory & Radio Tower couldn't be spawned.
+
+                LogManager.LOGGER.info("Spawned Vault Door at (" + world.getX() + ", " + world.getY() +
+                        ") (" + p.x + ", " + p.y + ")");
             }
         }
     }

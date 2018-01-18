@@ -7,7 +7,6 @@ import net.simon987.server.game.Programmable;
 import net.simon987.server.game.Updatable;
 import org.json.simple.JSONObject;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class RadioTower extends GameObject implements Programmable, Updatable {
@@ -96,25 +95,4 @@ public class RadioTower extends GameObject implements Programmable, Updatable {
         return lastMessages;
     }
 
-    /**
-     * Get the first directly adjacent tile (starting east, going clockwise)
-     */
-    public Point getAdjacentTile() {
-
-        if (!getWorld().isTileBlocked(getX() + 1, getY())) {
-            return new Point(getX() + 1, getY());
-
-        } else if (!getWorld().isTileBlocked(getX(), getY() + 1)) {
-            return new Point(getX(), getY() + 1);
-
-        } else if (!getWorld().isTileBlocked(getX() - 1, getY())) {
-            return new Point(getX() - 1, getY());
-
-        } else if (!getWorld().isTileBlocked(getX(), getY() - 1)) {
-            return new Point(getX(), getY() - 1);
-        } else {
-            return null;
-        }
-
-    }
 }

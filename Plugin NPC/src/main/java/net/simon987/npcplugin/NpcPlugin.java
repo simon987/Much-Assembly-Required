@@ -42,6 +42,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
             return Factory.deserialise(obj);
         } else if (objType == RadioTower.ID) {
             return RadioTower.deserialize(obj);
+        } else if (objType == VaultDoor.ID) {
+            return VaultDoor.deserialize(obj);
         }
 
         return null;
