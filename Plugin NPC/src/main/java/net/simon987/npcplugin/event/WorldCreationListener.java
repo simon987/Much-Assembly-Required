@@ -53,7 +53,7 @@ public class WorldCreationListener implements GameEventListener {
                             continue;
                         }
 
-                        world.getGameObjects().add(factory);
+                        world.addObject(factory);
                         world.incUpdatable();
 
                         LogManager.LOGGER.info("Spawned Factory at (" + world.getX() + ", " + world.getY() +
@@ -84,7 +84,7 @@ public class WorldCreationListener implements GameEventListener {
 
                 if (radioTower.getAdjacentTile() != null) {
                     //Radio Tower has adjacent tiles
-                    world.getGameObjects().add(radioTower);
+                    world.addObject(radioTower);
                     world.incUpdatable(); //In case the Factory couldn't be spawned.
 
                     NpcPlugin.getRadioTowers().add(radioTower);

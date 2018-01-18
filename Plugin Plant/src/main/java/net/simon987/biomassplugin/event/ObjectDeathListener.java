@@ -29,18 +29,23 @@ public class ObjectDeathListener implements GameEventListener {
 
     @Override
     public void handle(GameEvent event) {
-        // a HarvesterNPC ObjectDeathEvent is received
         // TODO: setup enum with all GameObject type IDs
         if (((ObjectDeathEvent) event).getSourceObjectId() == 10) {
+            //An HarvesterNPC ObjectDeathEvent is received
             GameObject dyingHarvesterNPC = (GameObject)event.getSource();
 
-            // create a new biomass
-            BiomassBlob newBiomassBlob = createBiomassBlobAt(
-                    dyingHarvesterNPC.getX(), dyingHarvesterNPC.getY(), dyingHarvesterNPC.getWorld());
-            // add it to the world game objects
-            dyingHarvesterNPC.getWorld().getGameObjects().add(newBiomassBlob);
-            LogManager.LOGGER.fine("Spawned biomass at (" + newBiomassBlob.getX() +
-                    ", " + newBiomassBlob.getY() + ")");
+
+            //Don't spawn biomass on World border
+            if (dyingHarvesterNPC.getX() != 0 && dyingHarvesterNPC.getX() != World.WORLD_SIZE - 1 &&
+                    dyingHarvesterNPC.getY() != 0 && dyingHarvesterNPC.getY() != World.WORLD_SIZE - 1) {
+                //Create a new biomass
+                BiomassBlob newBiomassBlob = createBiomassBlobAt(
+                        dyingHarvesterNPC.getX(), dyingHarvesterNPC.getY(), dyingHarvesterNPC.getWorld());
+                //Add it to the world game objects
+                dyingHarvesterNPC.getWorld().addObject(newBiomassBlob);
+                LogManager.LOGGER.fine("Spawned biomass at (" + newBiomassBlob.getX() +
+                        ", " + newBiomassBlob.getY() + ")");
+            }
         }
     }
 

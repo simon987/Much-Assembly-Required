@@ -33,14 +33,9 @@ public class HarvestTask extends NPCTask {
 
         if (pause == 0) {
             //Get biomass
-            ArrayList<GameObject> biomass = new ArrayList<>(10);
-
-            for (GameObject object : npc.getWorld().getGameObjects()) {
-                //Plant MAP_INFO
-                if ((object.getMapInfo() & 0x4000) == 0x4000) {
-                    biomass.add(object);
-                }
-            }
+            /* todo replace by some sort of .collect call with object
+            id (See https://github.com/simon987/Much-Assembly-Required/pull/66)*/
+            ArrayList<GameObject> biomass = npc.getWorld().findObjects(0x4000);
 
             //Get closest one
             int minDist = Integer.MAX_VALUE;

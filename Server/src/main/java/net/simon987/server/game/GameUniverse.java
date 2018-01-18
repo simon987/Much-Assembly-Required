@@ -1,5 +1,6 @@
 package net.simon987.server.game;
 
+import com.mongodb.*;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.Assembler;
@@ -9,13 +10,19 @@ import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameUniverse {
 
-    private ArrayList<World> worlds;
-    private ArrayList<User> users;
+    //private ArrayList<World> worlds;
+    private ConcurrentHashMap<String, World> worlds;
+    //username:user
+    private ConcurrentHashMap<String, User> users;
     private WorldGenerator worldGenerator;
+
+    private MongoClient mongo = null;
+
 
     private long time;
 
@@ -25,64 +32,144 @@ public class GameUniverse {
 
     public GameUniverse(ServerConfiguration config) {
 
-        worlds = new ArrayList<>(32);
-        users = new ArrayList<>(16);
+        worlds = new ConcurrentHashMap<>(256);
+        users = new ConcurrentHashMap<>(16);
 
         worldGenerator = new WorldGenerator(config);
+    }
 
+    public void setMongo(MongoClient mongo){
+        this.mongo = mongo;
     }
 
     public long getTime() {
         return time;
     }
 
-    public World getWorld(int x, int y, boolean createNew) {
+    /**
+     * Attempts loading a world from mongoDB by coordinates
+     *
+     * @param x     the x coordinate of the world
+     * @param y     the y coordinate of the world
+     *
+     * @return World, null if not found
+     */
+    private World loadWorld(int x, int y){
+        
+        DB db = mongo.getDB("mar");
+        DBCollection worlds = db.getCollection("world");
 
-        for (World world : worlds) {
-            if (world.getX() == x && world.getY() == y) {
-                return world;
-            }
+        BasicDBObject whereQuery = new BasicDBObject();
+        whereQuery.put("_id", World.idFromCoordinates(x,y));
+        DBCursor cursor = worlds.find(whereQuery);
+        if (cursor.hasNext()) {
+            World w = World.deserialize(cursor.next());
+            return w;
         }
-
-        if (x >= 0 && x <= maxWidth && y >= 0 && y <= maxWidth) {
-            if (createNew) {
-                //World does not exist
-                World world = createWorld(x, y);
-                worlds.add(world);
-
-                return world;
-            } else {
-                return null;
-            }
-
-        } else {
+        else{
             return null;
         }
     }
 
-    public World createWorld(int x, int y) {
+    /**
+     * Get a world by coordinates, attempts to load from mongoDB if not found.
+     * 
+     * @param x             the x coordinate of the world
+     * @param y             the y coordinate of the world
+     * @param createNew     if true, a new world is created when a world with given coordinates is not found
+     *
+     * @return World, null if not found and not created. 
+     */
+    public World getWorld(int x, int y, boolean createNew) {
 
+        // Wrapping coordinates around cyclically
+        x %= maxWidth+1;
+        y %= maxWidth+1;
+
+        // Looks for a previously loaded world
+        World world = getLoadedWorld(x,y);
+        if (world != null){
+            return world;
+        }
+
+        // Tries loading the world from the database
+        world = loadWorld(x,y);
+        if (world != null){
+            addWorld(world);
+            LogManager.LOGGER.fine("Loaded world "+(World.idFromCoordinates(x,y))+" from mongodb.");
+            return world;
+        }
+
+        // World does not exist
+        if (createNew) {
+            // Creates a new world
+            world = createWorld(x, y);
+            addWorld(world);
+            LogManager.LOGGER.fine("Created new world "+(World.idFromCoordinates(x,y))+".");
+            return world;
+        } else {
+            return null;
+        }
+    }    
+
+    public World getLoadedWorld(int x, int y) {
+        // Wrapping coordinates around cyclically
+        x %= maxWidth+1;
+        y %= maxWidth+1;
+
+        return worlds.get(World.idFromCoordinates(x,y));
+    }    
+
+    /**
+     * Adds a new or freshly loaded world to the universe (if not already present).
+     * 
+     * @param world     the world to be added
+     */
+    public void addWorld(World world){
+        World w = worlds.get(world.getId());
+        if (w == null){
+            world.setUniverse(this);
+            worlds.put(world.getId(),world);
+        }
+    }
+
+    /**
+     * Removes the world with given coordinates from the universe.
+     * 
+     * @param x     the x coordinate of the world to be removed
+     * @param y     the y coordinate of the world to be removed
+     */
+    public void removeWorld(int x, int y){
+        World w = worlds.remove(World.idFromCoordinates(x,y));
+        if (w != null){
+            w.setUniverse(null);
+        }
+    }
+
+    /**
+     * Removes the given world from the universe.
+     * 
+     * @param world     the world to be removed.
+     */
+    public void removeWorld(World world){
+        World w = worlds.remove(world.getId());
+        if (w != null){
+            w.setUniverse(null);
+        }
+    }
+
+    private World createWorld(int x, int y) {
         World world = null;
         try {
             world = worldGenerator.generateWorld(x, y);
-
-
         } catch (CancelledException e) {
             e.printStackTrace();
         }
-
         return world;
     }
 
     public User getUser(String username) {
-
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
-        }
-
-        return null;
+        return users.get(username);
     }
 
     public User getOrCreateUser(String username, boolean makeControlledUnit) {
@@ -110,7 +197,7 @@ public class GameUniverse {
                     char[] assembledCode = ar.getWords();
 
                     user.getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
-                    user.getCpu().setCodeSegmentOffset(ar.getCodeSegmentOffset());
+                    user.getCpu().setCodeSectionOffset(ar.getCodeSectionOffset());
 
 
                 } else {
@@ -119,7 +206,7 @@ public class GameUniverse {
 
                 user.setUsername(username);
 
-                users.add(user);
+                addUser(user);
 
                 return user;
 
@@ -141,12 +228,11 @@ public class GameUniverse {
      */
     public GameObject getObject(long id) {
 
-        //
-        for (World world : worlds) {
-            for (GameObject object : world.getGameObjects()) {
-                if (object.getObjectId() == id) {
-                    return object;
-                }
+        for (World world : getWorlds()) {
+            GameObject obj = world.findObject(id);
+
+            if (obj != null) {
+                return obj;
             }
         }
 
@@ -159,12 +245,20 @@ public class GameUniverse {
         time++;
     }
 
-    public ArrayList<World> getWorlds() {
-        return worlds;
+    public Collection<World> getWorlds() {
+        return worlds.values();
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
+    public int getWorldCount() {
+        return worlds.size();
+    }
+
+    public Collection<User> getUsers() {
+        return users.values();
+    }
+
+    public int getUserCount() {
+        return users.size();
     }
 
     public long getNextObjectId() {
@@ -187,8 +281,12 @@ public class GameUniverse {
 
     }
 
+    public void addUser(User user) {
+        users.put(user.getUsername(), user);
+    }
+
     public void removeUser(User user) {
-        users.remove(user);
+        users.remove(user.getUsername());
     }
 
     public int getMaxWidth() {

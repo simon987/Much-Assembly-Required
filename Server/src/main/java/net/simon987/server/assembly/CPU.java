@@ -43,10 +43,10 @@ public class CPU implements MongoSerialisable {
     private RegisterSet registerSet;
 
     /**
-     * Offset of the code segment. The code starts to get
+     * Offset of the code section. The code starts to get
      * executed at this address each tick. Defaults to org_offset@config.properties
      */
-    private int codeSegmentOffset;
+    private int codeSectionOffset;
 
     /**
      * Instruction pointer, always points to the next instruction
@@ -73,7 +73,7 @@ public class CPU implements MongoSerialisable {
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
         attachedHardware = new HashMap<>();
-        codeSegmentOffset = config.getInt("org_offset");
+        codeSectionOffset = config.getInt("org_offset");
 
         instructionSet.add(new JmpInstruction(this));
         instructionSet.add(new JnzInstruction(this));
@@ -112,7 +112,7 @@ public class CPU implements MongoSerialisable {
 
     public void reset() {
         status.clear();
-        ip = codeSegmentOffset;
+        ip = codeSectionOffset;
     }
 
     public int execute(int timeout) {
@@ -352,7 +352,7 @@ public class CPU implements MongoSerialisable {
         dbObject.put("memory", memory.mongoSerialise());
 
         dbObject.put("registerSet", registerSet.mongoSerialise());
-        dbObject.put("codeSegmentOffset", codeSegmentOffset);
+        dbObject.put("codeSegmentOffset", codeSectionOffset);
 
         BasicDBList hardwareList = new BasicDBList();
 
@@ -375,7 +375,7 @@ public class CPU implements MongoSerialisable {
 
         CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), user);
 
-        cpu.codeSegmentOffset = (int) obj.get("codeSegmentOffset");
+        cpu.codeSectionOffset = (int) obj.get("codeSegmentOffset");
 
         BasicDBList hardwareList = (BasicDBList) obj.get("hardware");
 
@@ -416,8 +416,8 @@ public class CPU implements MongoSerialisable {
         this.ip = ip;
     }
 
-    public void setCodeSegmentOffset(int codeSegmentOffset) {
-        this.codeSegmentOffset = codeSegmentOffset;
+    public void setCodeSectionOffset(int codeSectionOffset) {
+        this.codeSectionOffset = codeSectionOffset;
     }
 
     public void attachHardware(CpuHardware hardware, int address) {

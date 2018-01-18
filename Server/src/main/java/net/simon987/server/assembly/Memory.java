@@ -6,7 +6,6 @@ import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.io.MongoSerialisable;
 import net.simon987.server.logging.LogManager;
-import org.json.simple.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -153,36 +152,6 @@ public class Memory implements Target, MongoSerialisable {
             LogManager.LOGGER.severe("Memory was manually deleted");
             memory = new Memory(GameServer.INSTANCE.getConfig().getInt("memory_size"));
         }
-
-        return memory;
-    }
-
-    public static Memory deserialize(JSONObject json) {
-
-        Memory memory = new Memory(0);
-
-        String zipBytesStr = (String) json.get("zipBytes");
-
-        if (zipBytesStr != null) {
-            byte[] compressedBytes = Base64.getDecoder().decode((String) json.get("zipBytes"));
-
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Inflater decompressor = new Inflater(true);
-                InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
-                inflaterOutputStream.write(compressedBytes);
-                inflaterOutputStream.close();
-
-                memory.setBytes(baos.toByteArray());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            LogManager.LOGGER.severe("Memory was manually deleted");
-            memory = new Memory(GameServer.INSTANCE.getConfig().getInt("memory_size"));
-        }
-
 
         return memory;
     }

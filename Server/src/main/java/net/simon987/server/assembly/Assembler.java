@@ -24,7 +24,7 @@ public class Assembler {
 
     private RegisterSet registerSet;
 
-    private static final int MEM_SIZE   = 0x10000;  // Size in words
+    private static final int MEM_SIZE = 0x10000;  // Size in words todo load from config
 
     public Assembler(InstructionSet instructionSet, RegisterSet registerSet, ServerConfiguration config) {
         this.instructionSet = instructionSet;
@@ -54,7 +54,7 @@ public class Assembler {
      */
     private static String removeLabel(String line) {
 
-        return line.replaceAll("\\b\\w*\\b:", "");
+        return line.replaceAll("^\\s*\\b\\w*\\b:", "");
 
     }
 
@@ -97,11 +97,11 @@ public class Assembler {
         line = removeComment(line);
 
         //Check for labels
-        Pattern pattern = Pattern.compile("\\b\\w*\\b:");
+        Pattern pattern = Pattern.compile("^\\s*\\b\\w*\\b:");
         Matcher matcher = pattern.matcher(line);
 
         if (matcher.find()) {
-            String label = matcher.group(0).substring(0, matcher.group(0).length() - 1);
+            String label = matcher.group(0).substring(0, matcher.group(0).length() - 1).trim();
 
             LogManager.LOGGER.fine("DEBUG: Label " + label + " @ " + (result.origin + currentOffset));
             result.labels.put(label, (char) (result.origin + currentOffset));
@@ -175,7 +175,18 @@ public class Assembler {
                                 out.writeChar(0);
 
                             } else {
-                                throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
+
+                                //Integer.decode failed, try binary
+                                if (value.startsWith("0b")) {
+                                    try {
+                                        out.writeChar(Integer.parseInt(value.substring(2), 2));
+                                    } catch (NumberFormatException e2) {
+                                        throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
+                                    }
+                                } else {
+                                    throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
+
+                                }
                             }
                         }
                     }
@@ -256,25 +267,25 @@ public class Assembler {
     }
 
     /**
-     * Check for and handle segment declarations (.text & .data)
+     * Check for and handle section declarations (.text & .data)
      *
      * @param line Current line
      */
-    private static void checkForSegmentDeclaration(String line, AssemblyResult result,
+    private static void checkForSectionDeclaration(String line, AssemblyResult result,
                                                    int currentLine, int currentOffset) throws AssemblyException {
 
         String[] tokens = line.split("\\s+");
 
         if (tokens[0].toUpperCase().equals(".TEXT")) {
 
-            result.defineSegment(Segment.TEXT, currentLine, currentOffset);
+            result.defineSecton(Section.TEXT, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
 
         } else if (tokens[0].toUpperCase().equals(".DATA")) {
 
             LogManager.LOGGER.fine("DEBUG: .data @" + currentLine);
 
-            result.defineSegment(Segment.DATA, currentLine, currentOffset);
+            result.defineSecton(Section.DATA, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
         }
     }
@@ -296,7 +307,7 @@ public class Assembler {
         String[] tokens = line.split("\\s+");
 
 
-        if (line.toUpperCase().contains(" EQU ")) {
+        if (line.toUpperCase().matches(".*\\bEQU\\b.*")) {
             if (tokens[1].toUpperCase().equals("EQU") && tokens.length == 3) {
                 try {
                     //Save value as a label
@@ -385,7 +396,7 @@ public class Assembler {
                 }
 
                 //Check for pseudo instructions
-                checkForSegmentDeclaration(line, result, currentLine, currentOffset);
+                checkForSectionDeclaration(line, result, currentLine, currentOffset);
                 checkForEQUInstruction(line, result.labels, currentLine);
                 checkForORGInstruction(line, result, currentLine);
 

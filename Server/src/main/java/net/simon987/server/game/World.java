@@ -11,7 +11,9 @@ import net.simon987.server.io.MongoSerialisable;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class World implements MongoSerialisable {
 
@@ -29,7 +31,7 @@ public class World implements MongoSerialisable {
 
     private TileMap tileMap;
 
-    private ArrayList<GameObject> gameObjects = new ArrayList<>(16);
+    private ConcurrentHashMap<Long, GameObject> gameObjects = new ConcurrentHashMap<>(8);
 
     /**
      * If this number is greater than 0, the World will be updated.
@@ -58,7 +60,28 @@ public class World implements MongoSerialisable {
     public boolean isTileBlocked(int x, int y) {
 
         return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y) == TileMap.WALL_TILE;
+    }
 
+    /**
+     * Computes the world's unique id from its coordinates.
+     *
+     * @param x     the x coordinate of the world
+     * @param y     the y coordinate of the world
+     *
+     * @return long
+     */
+    public static String idFromCoordinates(int x, int y){
+        return "w-"+"0x"+Integer.toHexString(x)+"-"+"0x"+Integer.toHexString(y);
+        //return ((long)x)*(((long)maxWidth)+1)+((long)y);
+    }
+
+    /**
+     * Returns the world's unique id, computed with idFromCoordinates.
+     *
+     * @return long
+     */
+    public String getId(){
+        return World.idFromCoordinates(x,y);
     }
 
     public int getX() {
@@ -69,25 +92,47 @@ public class World implements MongoSerialisable {
         return y;
     }
 
-    /**
-     * Get all the game objects that are instances of the specified class
-     */
-    public ArrayList getGameObjects(Class<? extends GameObject> clazz) {
+    public ArrayList<GameObject> findObjects(Class clazz) {
 
-        ArrayList<GameObject> objects = new ArrayList<>(gameObjects.size());
+        ArrayList<GameObject> matchingObjects = new ArrayList<>(2);
 
-        for (GameObject object : gameObjects) {
-            if (object.getClass().equals(clazz)) {
-                objects.add(object);
+        for (GameObject obj : gameObjects.values()) {
+
+            if (obj.getClass().equals(clazz)) {
+                matchingObjects.add(obj);
             }
         }
 
-        return objects;
+        return matchingObjects;
     }
 
-    public ArrayList<GameObject> getGameObjects() {
-        return gameObjects;
+
+    public ArrayList<GameObject> findObjects(int mapInfo) {
+
+        ArrayList<GameObject> matchingObjects = new ArrayList<>(2);
+
+        for (GameObject obj : gameObjects.values()) {
+            if ((obj.getMapInfo() & mapInfo) == mapInfo) {
+                matchingObjects.add(obj);
+            }
+        }
+
+        return matchingObjects;
     }
+
+    public void addObject(GameObject object) {
+        gameObjects.put(object.getObjectId(), object);
+    }
+
+    public void removeObject(GameObject object) {
+        gameObjects.remove(object.getObjectId());
+    }
+
+    public GameObject findObject(long objectId) {
+        return gameObjects.get(objectId);
+    }
+
+
 
     /**
      * Update this World and its GameObjects
@@ -100,13 +145,11 @@ public class World implements MongoSerialisable {
         GameEvent event = new WorldUpdateEvent(this);
         GameServer.INSTANCE.getEventDispatcher().dispatch(event); //Ignore cancellation
 
-        ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
-
-        for (GameObject object : gameObjects_) {
+        for (GameObject object : gameObjects.values()) {
             //Clean up dead objects
             if (object.isDead()) {
                 object.onDeadCallback();
-                gameObjects.remove(object);
+                removeObject(object);
                 //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
             } else if (object instanceof Updatable) {
                 ((Updatable) object).update();
@@ -120,10 +163,12 @@ public class World implements MongoSerialisable {
         BasicDBObject dbObject = new BasicDBObject();
 
         BasicDBList objects = new BasicDBList();
-        ArrayList<GameObject> gameObjects_ = new ArrayList<>(gameObjects);
-        for (GameObject obj : gameObjects_) {
+        for (GameObject obj : gameObjects.values()) {
             objects.add(obj.mongoSerialise());
         }
+
+
+        dbObject.put("_id", getId());
 
         dbObject.put("objects", objects);
         dbObject.put("terrain", tileMap.mongoSerialise());
@@ -133,7 +178,7 @@ public class World implements MongoSerialisable {
         dbObject.put("size", worldSize);
 
         dbObject.put("updatable", updatable);
-
+        dbObject.put("shouldUpdate",shouldUpdate());
 
         return dbObject;
     }
@@ -171,7 +216,7 @@ public class World implements MongoSerialisable {
             GameObject object = GameObject.deserialize((DBObject) obj);
 
             object.setWorld(world);
-            world.gameObjects.add(object);
+            world.addObject(object);
         }
 
         return world;
@@ -209,7 +254,7 @@ public class World implements MongoSerialisable {
         }
 
         //Objects
-        for (GameObject obj : this.gameObjects) {
+        for (GameObject obj : gameObjects.values()) {
             mapInfo[obj.getX()][obj.getY()] |= obj.getMapInfo();
 
         }
@@ -263,17 +308,16 @@ public class World implements MongoSerialisable {
      */
     public ArrayList<GameObject> getGameObjectsBlockingAt(int x, int y) {
 
-        ArrayList<GameObject> gameObjects = new ArrayList<>(2);
-
-        for (GameObject obj : this.gameObjects) {
+        ArrayList<GameObject> objectsLooking = new ArrayList<>(2);
+        for (GameObject obj : gameObjects.values()) {
 
             if (obj.isAt(x, y)) {
-                gameObjects.add(obj);
+                objectsLooking.add(obj);
             }
 
         }
 
-        return gameObjects;
+        return objectsLooking;
     }
 
     /**
@@ -287,17 +331,15 @@ public class World implements MongoSerialisable {
      * @return the list of game objects at a location
      */
     public ArrayList<GameObject> getGameObjectsAt(int x, int y) {
-        ArrayList<GameObject> gameObjects = new ArrayList<>(2);
+        ArrayList<GameObject> objectsAt = new ArrayList<>(2);
+        for (GameObject obj : gameObjects.values()) {
 
-        for (GameObject obj : this.gameObjects) {
-
-            if (obj.getX() == x && obj.getY() == y) {
-                gameObjects.add(obj);
+            if (obj.isAt(x, y)) {
+                objectsAt.add(obj);
             }
 
         }
-
-        return gameObjects;
+        return objectsAt;
     }
 
     public void incUpdatable() {
@@ -314,5 +356,77 @@ public class World implements MongoSerialisable {
 
     public int getWorldSize() {
         return worldSize;
+    }
+
+
+    private GameUniverse universe = null;
+
+    public void setUniverse(GameUniverse universe){
+        this.universe = universe;
+    }
+
+    public ArrayList<World> getNeighbouringLoadedWorlds(){
+        ArrayList<World> neighbouringWorlds = new ArrayList<>();
+
+        if (universe == null){
+            return neighbouringWorlds;
+        }
+
+        for (int dx=-1; dx<=+1; dx+=2){
+            World nw = universe.getLoadedWorld(x+dx,y);
+            if (nw != null){
+                neighbouringWorlds.add(nw);
+            }
+        }
+        for (int dy=-1; dy<=+1; dy+=2){
+            World nw = universe.getLoadedWorld(x,y+dy);
+            if (nw != null){
+                neighbouringWorlds.add(nw);
+            }
+        }
+
+        return neighbouringWorlds;
+    }
+
+    public ArrayList<World> getNeighbouringExistingWorlds(){
+        ArrayList<World> neighbouringWorlds = new ArrayList<>();
+
+        if (universe == null){
+            return neighbouringWorlds;
+        }
+
+        for (int dx=-1; dx<=+1; dx+=2){
+            World nw = universe.getWorld(x+dx,y,false);
+            if (nw != null){
+                neighbouringWorlds.add(nw);
+            }
+        }
+        for (int dy=-1; dy<=+1; dy+=2){
+            World nw = universe.getWorld(x,y+dy,false);
+            if (nw != null){
+                neighbouringWorlds.add(nw);
+            }
+        }
+
+        return neighbouringWorlds;
+    }
+
+
+    public boolean canUnload(){
+        return updatable==0;
+    }
+
+    public boolean shouldUnload(){
+        boolean res = canUnload();
+
+        for (World nw : getNeighbouringLoadedWorlds() ){
+            res &= nw.canUnload();
+        }
+
+        return res;
+    }
+
+    public Collection<GameObject> getGameObjects() {
+        return gameObjects.values();
     }
 }

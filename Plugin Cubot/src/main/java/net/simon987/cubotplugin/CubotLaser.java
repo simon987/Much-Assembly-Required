@@ -52,7 +52,6 @@ public class CubotLaser extends CpuHardware {
             Point frontTile = cubot.getFrontTile();
             ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsBlockingAt(frontTile.x, frontTile.y);
 
-
             if (cubot.getCurrentAction() == Action.IDLE && objects.size() > 0) {
                 //FIXME: Problem here if more than 1 object
                 if (objects.get(0) instanceof InventoryHolder) {

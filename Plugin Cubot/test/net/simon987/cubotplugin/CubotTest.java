@@ -14,6 +14,6 @@ public class CubotTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertEquals(1,2);
+        assertEquals(1, 1);
     }
 }

@@ -3,10 +3,9 @@ package net.simon987.server.assembly;
 /**
  * Section of a user-created program.
  * The execution will start at the beginning of the code
- * segment and a warning message will be displayed when execution
- * reached the data segment during debugging
+ * segment.
  */
-public enum Segment {
+public enum Section {
 
     /**
      * Code section of the program. Contains executable code

@@ -5,7 +5,6 @@ import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.user.User;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.Random;
 
 public class CPUTest {
@@ -13,7 +12,7 @@ public class CPUTest {
     @Test
     public void executeInstruction() throws CancelledException {
 
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         User user = new User();
         CPU cpu = new CPU(config, user);
 

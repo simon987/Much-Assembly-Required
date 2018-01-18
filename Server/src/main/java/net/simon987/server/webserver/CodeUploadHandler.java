@@ -21,30 +21,35 @@ public class CodeUploadHandler implements MessageHandler {
                 //TODO Should we wait at the end of the tick to modify the CPU ?
                 user.getUser().setUserCode((String) json.get("code"));
 
-                AssemblyResult ar = new Assembler(user.getUser().getCpu().getInstructionSet(),
-                        user.getUser().getCpu().getRegisterSet(),
-                        GameServer.INSTANCE.getConfig()).parse(user.getUser().getUserCode());
+                if (user.getUser().getUserCode() != null) {
+                    AssemblyResult ar = new Assembler(user.getUser().getCpu().getInstructionSet(),
+                            user.getUser().getCpu().getRegisterSet(),
+                            GameServer.INSTANCE.getConfig()).parse(user.getUser().getUserCode());
 
-                user.getUser().getCpu().getMemory().clear();
+                    user.getUser().getCpu().getMemory().clear();
 
-                //Write assembled code to mem
-                char[] assembledCode = ar.getWords();
+                    //Write assembled code to mem
+                    char[] assembledCode = ar.getWords();
 
-                user.getUser().getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
-                user.getUser().getCpu().setCodeSegmentOffset(ar.getCodeSegmentOffset());
+                    user.getUser().getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
+                    user.getUser().getCpu().setCodeSectionOffset(ar.getCodeSectionOffset());
 
-                //Clear keyboard buffer
-                if (user.getUser().getControlledUnit() != null &&
-                        user.getUser().getControlledUnit().getKeyboardBuffer() != null) {
-                    user.getUser().getControlledUnit().getKeyboardBuffer().clear();
+                    //Clear keyboard buffer
+                    if (user.getUser().getControlledUnit() != null &&
+                            user.getUser().getControlledUnit().getKeyboardBuffer() != null) {
+                        user.getUser().getControlledUnit().getKeyboardBuffer().clear();
+                    }
+
+                    //Clear registers
+                    user.getUser().getCpu().getRegisterSet().clear();
+
+                    JSONObject response = new JSONObject();
+                    response.put("t", "codeResponse");
+                    response.put("bytes", ar.bytes.length);
+                    response.put("exceptions", ar.exceptions.size());
+
+                    user.getWebSocket().send(response.toJSONString());
                 }
-
-
-                JSONObject response = new JSONObject();
-                response.put("t", "codeResponse");
-                response.put("bytes", ar.bytes.length);
-
-                user.getWebSocket().send(response.toJSONString());
             }
 
 

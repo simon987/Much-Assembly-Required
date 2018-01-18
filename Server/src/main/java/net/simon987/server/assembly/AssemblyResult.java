@@ -2,7 +2,7 @@ package net.simon987.server.assembly;
 
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.AssemblyException;
-import net.simon987.server.assembly.exception.DuplicateSegmentException;
+import net.simon987.server.assembly.exception.DuplicateSectionException;
 import net.simon987.server.logging.LogManager;
 
 import java.nio.ByteBuffer;
@@ -27,15 +27,15 @@ public class AssemblyResult {
      * List of exceptions encountered during the assembly attempt,
      * they will be displayed in the editor
      */
-    ArrayList<AssemblyException> exceptions = new ArrayList<>(50);
+    public ArrayList<AssemblyException> exceptions = new ArrayList<>(50);
     /**
      * Offset of the code segment
      */
-    private int codeSegmentOffset;
+    private int codeSectionOffset;
     /**
      * Line of the code segment definition
      */
-    private int codeSegmentLine;
+    private int codeSectionLine;
 
     /**
      * The encoded user code (will be incomplete or invalid if the
@@ -45,60 +45,60 @@ public class AssemblyResult {
     /**
      * Offset of the data segment
      */
-    private int dataSegmentOffset;
+    private int dataSectionOffset;
     /**
      * Line of the data segment definition
      */
-    private int dataSegmentLine;
+    private int dataSectionLine;
     /**
      * Whether or not the code segment is set
      */
-    private boolean codeSegmentSet = false;
+    private boolean codeSectionSet = false;
     /**
      * Whether or not the data segment is set
      */
-    private boolean dataSegmentSet = false;
+    private boolean dataSectionSet = false;
 
     AssemblyResult(ServerConfiguration config) {
         origin = config.getInt("org_offset");
     }
 
     /**
-     * Define a segment.
+     * Define a section.
      *
-     * @param segment       Segment to define
-     * @param currentOffset Current offset, in bytes of the segment
-     * @param currentLine   Line number of the segment declaration
-     * @throws DuplicateSegmentException when a segment is defined twice
+     * @param section       Section to define
+     * @param currentOffset Current offset, in bytes of the section
+     * @param currentLine   Line number of the section declaration
+     * @throws DuplicateSectionException when a section is defined twice
      */
-    void defineSegment(Segment segment, int currentLine, int currentOffset) throws DuplicateSegmentException {
+    void defineSecton(Section section, int currentLine, int currentOffset) throws DuplicateSectionException {
 
-        if (segment == Segment.TEXT) {
-            //Code segment
+        if (section == Section.TEXT) {
+            //Code section
 
-            if (!codeSegmentSet) {
-                codeSegmentOffset = origin + currentOffset;
-                codeSegmentLine = currentLine;
+            if (!codeSectionSet) {
+                codeSectionOffset = origin + currentOffset;
+                codeSectionLine = currentLine;
 
-                LogManager.LOGGER.fine("DEBUG: .text offset @" + codeSegmentOffset);
+                LogManager.LOGGER.fine("DEBUG: .text offset @" + codeSectionOffset);
 
 
-                codeSegmentSet = true;
+                codeSectionSet = true;
             } else {
-                throw new DuplicateSegmentException(currentLine);
+                throw new DuplicateSectionException(currentLine);
             }
 
         } else {
-            //Data segment
-            if (!dataSegmentSet) {
-                dataSegmentOffset = origin + currentOffset;
-                dataSegmentLine = currentLine;
+            //Data section
+            if (!dataSectionSet) {
+                dataSectionOffset = origin + currentOffset;
+                dataSectionLine = currentLine;
 
-                LogManager.LOGGER.fine("DEBUG: .data offset @" + dataSegmentOffset);
+                LogManager.LOGGER.fine("DEBUG: .data offset @" + dataSectionOffset);
 
-                dataSegmentSet = true;
+                dataSectionSet = true;
             } else {
-                throw new DuplicateSegmentException(currentLine);
+                throw new DuplicateSectionException(currentLine);
             }
 
         }
@@ -113,9 +113,9 @@ public class AssemblyResult {
         return assembledCode;
     }
 
-    public int getCodeSegmentOffset() {
-        if (codeSegmentSet) {
-            return codeSegmentOffset;
+    public int getCodeSectionOffset() {
+        if (codeSectionSet) {
+            return codeSectionOffset;
         } else {
             return origin;
         }

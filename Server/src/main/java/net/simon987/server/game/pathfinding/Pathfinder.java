@@ -8,7 +8,7 @@ import java.util.Collections;
 
 /**
  * Class to compute paths in the game universe. It supports
- * paths between within the same World.
+ * paths within the same World.
  */
 public class Pathfinder {
 

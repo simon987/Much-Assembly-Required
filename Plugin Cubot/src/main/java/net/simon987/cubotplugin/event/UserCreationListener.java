@@ -20,35 +20,35 @@ public class UserCreationListener implements GameEventListener {
     @Override
     public void handle(GameEvent event) {
 
-        User user = (User) event.getSource();
-
-        LogManager.LOGGER.fine("(Plugin) Handled User creation event (Cubot Plugin)");
-
-        Cubot cubot = new Cubot();
-
         Random random = new Random();
-        int spawnX = GameServer.INSTANCE.getConfig().getInt("new_user_worldX") + random.nextInt(5);
-        int spawnY = GameServer.INSTANCE.getConfig().getInt("new_user_worldY") + random.nextInt(5);
 
-        cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true));
-        cubot.getWorld().getGameObjects().add(cubot);
-        cubot.getWorld().incUpdatable();
-
+        User user = (User) event.getSource();
+        Cubot cubot = new Cubot();
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
 
-        cubot.setHeldItem(GameServer.INSTANCE.getConfig().getInt("new_user_item"));
+        Point point = null;
+        while (point == null || cubot.getWorld() == null) {
+            int spawnX = GameServer.INSTANCE.getConfig().getInt("new_user_worldX") + random.nextInt(5);
+            int spawnY = GameServer.INSTANCE.getConfig().getInt("new_user_worldY") + random.nextInt(5);
+            cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true));
 
+            point = cubot.getWorld().getRandomPassableTile();
+        }
+
+        cubot.setX(point.x);
+        cubot.setY(point.y);
+        cubot.getWorld().addObject(cubot);
+        cubot.getWorld().incUpdatable();
+
+        cubot.setHeldItem(GameServer.INSTANCE.getConfig().getInt("new_user_item"));
         cubot.setEnergy(GameServer.INSTANCE.getConfig().getInt("battery_max_energy"));
         cubot.setMaxEnergy(GameServer.INSTANCE.getConfig().getInt("battery_max_energy"));
 
         cubot.setParent(user);
-
-        Point point = cubot.getWorld().getRandomPassableTile();
-
-        cubot.setX(point.x);
-        cubot.setY(point.y);
-
         user.setControlledUnit(cubot);
+
+        LogManager.LOGGER.fine("(Plugin) Handled User creation event (Cubot Plugin)");
+
 
     }
 }

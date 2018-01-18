@@ -84,9 +84,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             }
 
             if (leftWorld != null) {
-                world.getGameObjects().remove(this);
+                world.removeObject(this);
                 world.decUpdatable();
-                leftWorld.getGameObjects().add(this);
+                leftWorld.addObject(this);
                 leftWorld.incUpdatable();
                 setWorld(leftWorld);
 
@@ -103,9 +103,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             }
 
             if (rightWorld != null) {
-                world.getGameObjects().remove(this);
+                world.removeObject(this);
                 world.decUpdatable();
-                rightWorld.getGameObjects().add(this);
+                rightWorld.addObject(this);
                 rightWorld.incUpdatable();
                 setWorld(rightWorld);
 
@@ -123,9 +123,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
             }
 
             if (upWorld != null) {
-                world.getGameObjects().remove(this);
+                world.removeObject(this);
                 world.decUpdatable();
-                upWorld.getGameObjects().add(this);
+                upWorld.addObject(this);
                 upWorld.incUpdatable();
                 setWorld(upWorld);
 
@@ -143,9 +143,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
 
 
             if (downWorld != null) {
-                world.getGameObjects().remove(this);
+                world.removeObject(this);
                 world.decUpdatable();
-                downWorld.getGameObjects().add(this);
+                downWorld.addObject(this);
                 downWorld.incUpdatable();
                 setWorld(downWorld);
 

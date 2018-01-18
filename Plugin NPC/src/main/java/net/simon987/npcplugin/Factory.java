@@ -74,7 +74,7 @@ public class Factory extends GameObject implements Updatable {
                         npc.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
                         npc.setX(p.x);
                         npc.setY(p.y);
-                        getWorld().getGameObjects().add(npc);
+                        getWorld().addObject(npc);
                         getWorld().incUpdatable();
                         npc.setFactory(this);
 

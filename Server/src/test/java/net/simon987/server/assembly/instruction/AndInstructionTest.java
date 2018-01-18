@@ -5,8 +5,6 @@ import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Status;
 import org.junit.Test;
 
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 
 
@@ -14,7 +12,7 @@ public class AndInstructionTest {
     @Test
     public void executeTargetTarget() {
 
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         int memorySize = config.getInt("memory_size");
 
         //Memory
@@ -56,7 +54,7 @@ public class AndInstructionTest {
     @Test
     public void executeTargetImm() {
 
-        ServerConfiguration config = new ServerConfiguration(new File("config.properties"));
+        ServerConfiguration config = new ServerConfiguration("config.properties");
         int memorySize = config.getInt("memory_size");
 
         //Memory
