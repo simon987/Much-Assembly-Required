@@ -13,7 +13,7 @@ public class PushfInstruction extends Instruction {
     /**
      * Opcode of the instruction
      */
-    public static final int OPCODE = 43;
+    public static final int OPCODE = 45;
 
     private CPU cpu;
 
