@@ -99,6 +99,8 @@ public class CPU implements MongoSerialisable {
         instructionSet.add(new JoInstruction(this));
         instructionSet.add(new PushfInstruction(this));
         instructionSet.add(new PopfInstruction(this));
+        instructionSet.add(new JnaInstruction(this));
+        instructionSet.add(new JaInstruction(this));
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
