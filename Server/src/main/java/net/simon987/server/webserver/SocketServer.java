@@ -71,6 +71,7 @@ public class SocketServer extends WebSocketServer {
         messageEventDispatcher.addHandler(new CodeRequestHandler());
         messageEventDispatcher.addHandler(new KeypressHandler());
         messageEventDispatcher.addHandler(new FloppyHandler());
+        messageEventDispatcher.addHandler(new DebugHandler());
 
     }
 
@@ -107,7 +108,10 @@ public class SocketServer extends WebSocketServer {
                     if (username != null) {
                         User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(username, true);
 
-                        LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
+                        onlineUser.setModerator(database.isModerator(username));
+
+                        LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername() +
+                                " moderator: " + onlineUser.isModerator());
 
                         onlineUser.setUser(user);
                         onlineUser.setAuthenticated(true);

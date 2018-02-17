@@ -12,6 +12,8 @@ public class OnlineUser {
 
     private boolean guest;
 
+    private boolean moderator;
+
     /**
      * Associated game user (if authenticated)
      */
@@ -49,5 +51,13 @@ public class OnlineUser {
 
     public boolean isGuest() {
         return guest;
+    }
+
+    public boolean isModerator() {
+        return moderator;
+    }
+
+    public void setModerator(boolean moderator) {
+        this.moderator = moderator;
     }
 }

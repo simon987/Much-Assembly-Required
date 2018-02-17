@@ -45,6 +45,33 @@ class SocketServerDatabase extends DatabaseManager {
         return null;
     }
 
+    boolean isModerator(String username) {
+
+        Connection connection = null;
+        try {
+            connection = getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT moderator FROM mar_user WHERE username=?");
+            p.setString(1, username);
+
+            ResultSet rs = p.executeQuery();
+
+            return rs.next() && rs.getBoolean("moderator");
+
+        } catch (SQLException e) {
+            LogManager.LOGGER.severe("MySQL Error " + e.getErrorCode() + ": " + e.getMessage());
+
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
     byte[] getFloppy(String username) {
 
         Connection connection = null;
