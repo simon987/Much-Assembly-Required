@@ -6,7 +6,6 @@ import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Updatable;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -111,14 +110,6 @@ public class Factory extends GameObject implements Updatable {
         json.put("x", getX());
         json.put("y", getY());
         json.put("t", ID);
-
-        JSONArray tmpNpcArray = new JSONArray();
-
-        for (NonPlayerCharacter npc : npcs) {
-            tmpNpcArray.add(npc.getObjectId());
-        }
-
-        json.put("n", tmpNpcArray);
 
         return json;
     }
