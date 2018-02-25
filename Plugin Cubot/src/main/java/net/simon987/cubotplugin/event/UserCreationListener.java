@@ -30,7 +30,8 @@ public class UserCreationListener implements GameEventListener {
         while (point == null || cubot.getWorld() == null) {
             int spawnX = GameServer.INSTANCE.getConfig().getInt("new_user_worldX") + random.nextInt(5);
             int spawnY = GameServer.INSTANCE.getConfig().getInt("new_user_worldY") + random.nextInt(5);
-            cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true));
+            String dimension = GameServer.INSTANCE.getConfig().getString("new_user_dimension");
+            cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true, dimension));
 
             point = cubot.getWorld().getRandomPassableTile();
         }

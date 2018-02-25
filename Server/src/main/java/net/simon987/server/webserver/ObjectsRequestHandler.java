@@ -16,15 +16,17 @@ public class ObjectsRequestHandler implements MessageHandler {
             // LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
 
             int x, y;
+            String dimension;
             try {
                 x = Long.valueOf((long) json.get("x")).intValue();
                 y = Long.valueOf((long) json.get("y")).intValue();
+                dimension = (String) json.get("dimension");
             } catch (Exception e) {
                 LogManager.LOGGER.severe("(WS) Malformed Objects request from " + user.getUser().getUsername());
                 return;
             }
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y, false);
+            World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y, false, dimension);
 
             if (world != null) {
 

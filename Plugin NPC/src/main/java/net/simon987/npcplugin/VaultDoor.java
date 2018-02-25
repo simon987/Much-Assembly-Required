@@ -44,6 +44,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         this.cypherId = cypherId;
         this.randomStringGenerator = new RandomStringGenerator();
 
+        this.password = "12345678".toCharArray();
     }
 
 
@@ -66,6 +67,9 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     @Override
     public boolean sendMessage(char[] message) {
 
+        System.out.println("message: " + new String(message));
+        System.out.println("password: " + new String(password));
+
         if (Arrays.equals(message, password)) {
             if (!open) {
                 openVault();
@@ -78,16 +82,16 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         }
     }
 
-    private void openVault(){
+    private void openVault() {
         open = true;
         openedTimer = OPEN_TIME;
         LogManager.LOGGER.fine("Opened Vault door ID: " + getObjectId());
     }
 
-    private void keepVaultOpen(){
+    private void keepVaultOpen() {
         open = true;
         openedTimer = OPEN_TIME;
-    }  
+    }
 
     @Override
     public boolean enter(GameObject object) {
@@ -96,6 +100,8 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
 
         if (open) {
             //TODO: Enter in the vault
+
+
             return true;
         } else {
             return false;
@@ -116,6 +122,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         dbObject.put("x", getX());
         dbObject.put("y", getY());
         dbObject.put("t", ID);
+        dbObject.put("pw", new String(password));
 
         return dbObject;
     }
@@ -129,6 +136,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         json.put("x", getX());
         json.put("y", getY());
         json.put("t", ID);
+        //Don't send the password to the client!
 
         return json;
     }
@@ -139,6 +147,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         vaultDoor.setObjectId((long) obj.get("i"));
         vaultDoor.setX((int) obj.get("x"));
         vaultDoor.setY((int) obj.get("y"));
+        // vaultDoor.password = (char[]) obj.get("pw");
 
         return vaultDoor;
     }

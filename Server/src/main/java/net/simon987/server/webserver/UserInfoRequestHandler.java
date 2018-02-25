@@ -19,11 +19,13 @@ public class UserInfoRequestHandler implements MessageHandler {
             if (user.isGuest()) {
                 json.put("worldX", GameServer.INSTANCE.getConfig().getInt("new_user_worldX"));
                 json.put("worldY", GameServer.INSTANCE.getConfig().getInt("new_user_worldY"));
+                json.put("dimension", GameServer.INSTANCE.getConfig().getString("new_user_dimension"));
 
             } else {
                 GameObject object = (GameObject) user.getUser().getControlledUnit();
                 json.put("worldX", object.getWorld().getX());
                 json.put("worldY", object.getWorld().getY());
+                json.put("dimension", object.getWorld().getDimension());
 
             }
 

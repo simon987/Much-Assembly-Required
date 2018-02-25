@@ -31,6 +31,8 @@ public class World implements MongoSerialisable {
 
     private TileMap tileMap;
 
+    private static String dimension = "w-";
+
     private ConcurrentHashMap<Long, GameObject> gameObjects = new ConcurrentHashMap<>(8);
 
     /**
@@ -48,6 +50,10 @@ public class World implements MongoSerialisable {
 
     private World(int worldSize) {
         this.worldSize = worldSize;
+    }
+
+    public String getDimension() {
+        return dimension;
     }
 
     public TileMap getTileMap() {
@@ -70,9 +76,8 @@ public class World implements MongoSerialisable {
      *
      * @return long
      */
-    public static String idFromCoordinates(int x, int y){
-        return "w-"+"0x"+Integer.toHexString(x)+"-"+"0x"+Integer.toHexString(y);
-        //return ((long)x)*(((long)maxWidth)+1)+((long)y);
+    public static String idFromCoordinates(int x, int y, String dimension) {
+        return dimension + "0x" + Integer.toHexString(x) + "-" + "0x" + Integer.toHexString(y);
     }
 
     /**
@@ -81,7 +86,7 @@ public class World implements MongoSerialisable {
      * @return long
      */
     public String getId(){
-        return World.idFromCoordinates(x,y);
+        return World.idFromCoordinates(x, y, dimension);
     }
 
     public int getX() {
@@ -365,7 +370,7 @@ public class World implements MongoSerialisable {
         this.universe = universe;
     }
 
-    public ArrayList<World> getNeighbouringLoadedWorlds(){
+    private ArrayList<World> getNeighbouringLoadedWorlds() {
         ArrayList<World> neighbouringWorlds = new ArrayList<>();
 
         if (universe == null){
@@ -373,13 +378,13 @@ public class World implements MongoSerialisable {
         }
 
         for (int dx=-1; dx<=+1; dx+=2){
-            World nw = universe.getLoadedWorld(x+dx,y);
+            World nw = universe.getLoadedWorld(x + dx, y, dimension);
             if (nw != null){
                 neighbouringWorlds.add(nw);
             }
         }
         for (int dy=-1; dy<=+1; dy+=2){
-            World nw = universe.getLoadedWorld(x,y+dy);
+            World nw = universe.getLoadedWorld(x, y + dy, dimension);
             if (nw != null){
                 neighbouringWorlds.add(nw);
             }
@@ -388,28 +393,29 @@ public class World implements MongoSerialisable {
         return neighbouringWorlds;
     }
 
-    public ArrayList<World> getNeighbouringExistingWorlds(){
-        ArrayList<World> neighbouringWorlds = new ArrayList<>();
-
-        if (universe == null){
-            return neighbouringWorlds;
-        }
-
-        for (int dx=-1; dx<=+1; dx+=2){
-            World nw = universe.getWorld(x+dx,y,false);
-            if (nw != null){
-                neighbouringWorlds.add(nw);
-            }
-        }
-        for (int dy=-1; dy<=+1; dy+=2){
-            World nw = universe.getWorld(x,y+dy,false);
-            if (nw != null){
-                neighbouringWorlds.add(nw);
-            }
-        }
-
-        return neighbouringWorlds;
-    }
+    //Unused
+//    public ArrayList<World> getNeighbouringExistingWorlds(){
+//        ArrayList<World> neighbouringWorlds = new ArrayList<>();
+//
+//        if (universe == null){
+//            return neighbouringWorlds;
+//        }
+//
+//        for (int dx=-1; dx<=+1; dx+=2){
+//            World nw = universe.getWorld(x+dx,y,false);
+//            if (nw != null){
+//                neighbouringWorlds.add(nw);
+//            }
+//        }
+//        for (int dy=-1; dy<=+1; dy+=2){
+//            World nw = universe.getWorld(x,y+dy,false);
+//            if (nw != null){
+//                neighbouringWorlds.add(nw);
+//            }
+//        }
+//
+//        return neighbouringWorlds;
+//    }
 
 
     public boolean canUnload(){

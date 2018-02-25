@@ -10,14 +10,16 @@ public class TerrainRequestHandler implements MessageHandler {
 
     @Override
     public void handle(OnlineUser user, JSONObject json) {
-        if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y")) {
+        if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y") &&
+                json.containsKey("dimension")) {
 
 //            LogManager.LOGGER.fine("Terrain request from " + user.getUser().getUsername());
             World world;
             try {
                 world = GameServer.INSTANCE.getGameUniverse().getWorld(
                         Long.valueOf((long) json.get("x")).intValue(),
-                        Long.valueOf((long) json.get("y")).intValue(), true);
+                        Long.valueOf((long) json.get("y")).intValue(), false,
+                        (String) json.get("dimension"));
             } catch (NullPointerException e) {
                 LogManager.LOGGER.severe("FIXME: handle TerrainRequestHandler");
                 return;

@@ -38,14 +38,16 @@ public class DebugHandler implements MessageHandler {
                                 (int) (long) json.get("y"),
                                 (int) (long) json.get("newTile"),
                                 (int) (long) json.get("worldX"),
-                                (int) (long) json.get("worldY")));
+                                (int) (long) json.get("worldY"),
+                                (String) json.get("dimension")));
 
                         break;
 
                     case "createWorld":
                         response.put("message", createWorld(
                                 (int) (long) json.get("worldX"),
-                                (int) (long) json.get("worldY")));
+                                (int) (long) json.get("worldY"),
+                                (String) json.get("dimension")));
                         break;
 
 
@@ -54,7 +56,8 @@ public class DebugHandler implements MessageHandler {
                                 (int) (long) json.get("x"),
                                 (int) (long) json.get("y"),
                                 (int) (long) json.get("worldX"),
-                                (int) (long) json.get("worldY")));
+                                (int) (long) json.get("worldY"),
+                                (String) json.get("dimension")));
                         break;
 
                     case "objInfo":
@@ -62,7 +65,8 @@ public class DebugHandler implements MessageHandler {
                                 (int) (long) json.get("x"),
                                 (int) (long) json.get("y"),
                                 (int) (long) json.get("worldX"),
-                                (int) (long) json.get("worldY")));
+                                (int) (long) json.get("worldY"),
+                                (String) json.get("dimension")));
 
                         break;
 
@@ -81,7 +85,8 @@ public class DebugHandler implements MessageHandler {
                         response.put("message", spawnObj(
                                 (int) (long) json.get("worldX"),
                                 (int) (long) json.get("worldY"),
-                                (String) json.get("data")));
+                                (String) json.get("data"),
+                                (String) json.get("dimension")));
                         break;
 
                     default:
@@ -99,9 +104,9 @@ public class DebugHandler implements MessageHandler {
     /**
      * Create a world at coordinates
      */
-    private String createWorld(int worldX, int worldY) {
+    private String createWorld(int worldX, int worldY, String dimension) {
 
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, true);
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, true, dimension);
 
         if (world != null) {
 
@@ -116,8 +121,8 @@ public class DebugHandler implements MessageHandler {
     /**
      * Change the tile at coordinate
      */
-    private String setTileAt(int x, int y, int newTile, int worldX, int worldY) {
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false);
+    private String setTileAt(int x, int y, int newTile, int worldX, int worldY, String dimension) {
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false, dimension);
 
         if (world != null) {
 
@@ -129,9 +134,9 @@ public class DebugHandler implements MessageHandler {
         }
     }
 
-    private String spawnObj(int worldX, int worldY, String data) {
+    private String spawnObj(int worldX, int worldY, String data, String dimension) {
 
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false);
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false, dimension);
 
         try {
             DBObject dbObj = (DBObject) JSON.parse(data);
@@ -155,9 +160,9 @@ public class DebugHandler implements MessageHandler {
 
     }
 
-    private String killAll(int x, int y, int worldX, int worldY) {
+    private String killAll(int x, int y, int worldX, int worldY, String dimension) {
 
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false);
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false, dimension);
 
         try {
 
@@ -175,9 +180,9 @@ public class DebugHandler implements MessageHandler {
         }
     }
 
-    private String objInfo(int x, int y, int worldX, int worldY) {
+    private String objInfo(int x, int y, int worldX, int worldY, String dimension) {
 
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false);
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false, dimension);
         try {
 
             Collection<GameObject> objs = world.getGameObjects();

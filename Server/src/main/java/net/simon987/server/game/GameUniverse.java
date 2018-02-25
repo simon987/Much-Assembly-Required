@@ -54,17 +54,16 @@ public class GameUniverse {
      *
      * @return World, null if not found
      */
-    private World loadWorld(int x, int y){
+    private World loadWorld(int x, int y, String dimension) {
         
         DB db = mongo.getDB("mar");
         DBCollection worlds = db.getCollection("world");
 
         BasicDBObject whereQuery = new BasicDBObject();
-        whereQuery.put("_id", World.idFromCoordinates(x,y));
+        whereQuery.put("_id", World.idFromCoordinates(x, y, dimension));
         DBCursor cursor = worlds.find(whereQuery);
         if (cursor.hasNext()) {
-            World w = World.deserialize(cursor.next());
-            return w;
+            return World.deserialize(cursor.next());
         }
         else{
             return null;
@@ -80,23 +79,23 @@ public class GameUniverse {
      *
      * @return World, null if not found and not created. 
      */
-    public World getWorld(int x, int y, boolean createNew) {
+    public World getWorld(int x, int y, boolean createNew, String dimension) {
 
         // Wrapping coordinates around cyclically
         x %= maxWidth+1;
         y %= maxWidth+1;
 
         // Looks for a previously loaded world
-        World world = getLoadedWorld(x,y);
+        World world = getLoadedWorld(x, y, dimension);
         if (world != null){
             return world;
         }
 
         // Tries loading the world from the database
-        world = loadWorld(x,y);
+        world = loadWorld(x, y, dimension);
         if (world != null){
             addWorld(world);
-            LogManager.LOGGER.fine("Loaded world "+(World.idFromCoordinates(x,y))+" from mongodb.");
+            LogManager.LOGGER.fine("Loaded world " + (World.idFromCoordinates(x, y, dimension)) + " from mongodb.");
             return world;
         }
 
@@ -105,19 +104,19 @@ public class GameUniverse {
             // Creates a new world
             world = createWorld(x, y);
             addWorld(world);
-            LogManager.LOGGER.fine("Created new world "+(World.idFromCoordinates(x,y))+".");
+            LogManager.LOGGER.fine("Created new world " + (World.idFromCoordinates(x, y, dimension)) + ".");
             return world;
         } else {
             return null;
         }
-    }    
+    }
 
-    public World getLoadedWorld(int x, int y) {
+    World getLoadedWorld(int x, int y, String dimension) {
         // Wrapping coordinates around cyclically
         x %= maxWidth+1;
         y %= maxWidth+1;
 
-        return worlds.get(World.idFromCoordinates(x,y));
+        return worlds.get(World.idFromCoordinates(x, y, dimension));
     }    
 
     /**
@@ -139,8 +138,8 @@ public class GameUniverse {
      * @param x     the x coordinate of the world to be removed
      * @param y     the y coordinate of the world to be removed
      */
-    public void removeWorld(int x, int y){
-        World w = worlds.remove(World.idFromCoordinates(x,y));
+    public void removeWorld(int x, int y, String dimension) {
+        World w = worlds.remove(World.idFromCoordinates(x, y, dimension));
         if (w != null){
             w.setUniverse(null);
         }
