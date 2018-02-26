@@ -87,7 +87,7 @@ public class WorldGenerator {
      */
     private static World generateEmptyWorld(int locX, int locY) {
 
-        return new World(locX, locY, new TileMap(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE));
+        return new World(locX, locY, new TileMap(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE), "w-");
     }
 
     /**

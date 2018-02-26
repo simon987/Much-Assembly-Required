@@ -31,7 +31,7 @@ public class World implements MongoSerialisable {
 
     private TileMap tileMap;
 
-    private static String dimension = "w-";
+    private String dimension;
 
     private ConcurrentHashMap<Long, GameObject> gameObjects = new ConcurrentHashMap<>(8);
 
@@ -40,10 +40,11 @@ public class World implements MongoSerialisable {
      */
     private int updatable = 0;
 
-    public World(int x, int y, TileMap tileMap) {
+    public World(int x, int y, TileMap tileMap, String dimension) {
         this.x = x;
         this.y = y;
         this.tileMap = tileMap;
+        this.dimension = dimension;
 
         this.worldSize = tileMap.getWidth();
     }
@@ -174,6 +175,7 @@ public class World implements MongoSerialisable {
 
 
         dbObject.put("_id", getId());
+        dbObject.put("dimension", getDimension());
 
         dbObject.put("objects", objects);
         dbObject.put("terrain", tileMap.mongoSerialise());
@@ -210,6 +212,7 @@ public class World implements MongoSerialisable {
         World world = new World((int) dbObject.get("size"));
         world.x = (int) dbObject.get("x");
         world.y = (int) dbObject.get("y");
+        world.dimension = (String) dbObject.get("dimension");
         world.updatable = (int) dbObject.get("updatable");
 
         world.tileMap = TileMap.deserialize((BasicDBObject) dbObject.get("terrain"), world.getWorldSize());

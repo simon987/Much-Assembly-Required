@@ -4,10 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.crypto.RandomStringGenerator;
-import net.simon987.server.game.Enterable;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.Programmable;
-import net.simon987.server.game.Updatable;
+import net.simon987.server.game.*;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
@@ -31,6 +28,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
      */
     private boolean open = false;
 
+    private World homeWorld;
 
     /**
      * Number of ticks to remain the door open
@@ -40,11 +38,25 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     private int openedTimer = 0;
     private int cypherId;
 
-    public VaultDoor(int cypherId) {
+    public VaultDoor(int cypherId, long objectId) {
         this.cypherId = cypherId;
         this.randomStringGenerator = new RandomStringGenerator();
+        setObjectId(objectId);
 
         this.password = "12345678".toCharArray();
+
+
+        //Get or generate vault world
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(0x7FFF, 0x7FFF,
+                false, "v" + getObjectId() + "-");
+
+        if (world != null) {
+            homeWorld = world;
+        } else {
+
+            VaultDimension vaultDimension = new VaultDimension(getObjectId());
+        }
+
     }
 
 
@@ -143,11 +155,10 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
 
     public static VaultDoor deserialize(DBObject obj) {
 
-        VaultDoor vaultDoor = new VaultDoor(0); //cypherId ?
-        vaultDoor.setObjectId((long) obj.get("i"));
+        VaultDoor vaultDoor = new VaultDoor(0, (long) obj.get("i")); //cypherId ?
         vaultDoor.setX((int) obj.get("x"));
         vaultDoor.setY((int) obj.get("y"));
-        // vaultDoor.password = (char[]) obj.get("pw");
+        vaultDoor.password = ((String) obj.get("pw")).toCharArray();
 
         return vaultDoor;
     }

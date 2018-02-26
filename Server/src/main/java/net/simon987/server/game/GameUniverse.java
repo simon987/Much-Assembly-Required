@@ -82,8 +82,8 @@ public class GameUniverse {
     public World getWorld(int x, int y, boolean createNew, String dimension) {
 
         // Wrapping coordinates around cyclically
-        x %= maxWidth+1;
-        y %= maxWidth+1;
+        x %= maxWidth;
+        y %= maxWidth;
 
         // Looks for a previously loaded world
         World world = getLoadedWorld(x, y, dimension);
@@ -113,8 +113,8 @@ public class GameUniverse {
 
     World getLoadedWorld(int x, int y, String dimension) {
         // Wrapping coordinates around cyclically
-        x %= maxWidth+1;
-        y %= maxWidth+1;
+        x %= maxWidth;
+        y %= maxWidth;
 
         return worlds.get(World.idFromCoordinates(x, y, dimension));
     }    

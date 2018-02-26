@@ -99,10 +99,9 @@ public class WorldCreationListener implements GameEventListener {
             p = world.getRandomPassableTile();
             if (p != null) {
 
-                VaultDoor vaultDoor = new VaultDoor(0); //todo cypherId ?
+                VaultDoor vaultDoor = new VaultDoor(0, GameServer.INSTANCE.getGameUniverse().getNextObjectId()); //todo cypherId ?
 
                 vaultDoor.setWorld(world);
-                vaultDoor.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
                 vaultDoor.setX(p.x);
                 vaultDoor.setY(p.y);
 
