@@ -2,6 +2,7 @@ package net.simon987.npcplugin;
 
 import com.mongodb.DBObject;
 import net.simon987.npcplugin.event.CpuInitialisationListener;
+import net.simon987.npcplugin.event.VaultWorldUpdateListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
@@ -25,6 +26,7 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
 
         listeners.add(new WorldCreationListener());
         listeners.add(new CpuInitialisationListener());
+        listeners.add(new VaultWorldUpdateListener(configuration));
 
         radioTowers = new ArrayList<>(32);
 
@@ -44,6 +46,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
             return RadioTower.deserialize(obj);
         } else if (objType == VaultDoor.ID) {
             return VaultDoor.deserialize(obj);
+        } else if (objType == Obstacle.ID) {
+            return Obstacle.deserialize(obj);
         }
 
         return null;

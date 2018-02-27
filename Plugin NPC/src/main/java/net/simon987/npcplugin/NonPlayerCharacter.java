@@ -245,4 +245,5 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
     public int getAge() {
         return age;
     }
+
 }

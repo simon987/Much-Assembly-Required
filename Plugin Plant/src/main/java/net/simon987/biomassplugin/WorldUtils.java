@@ -1,6 +1,7 @@
 package net.simon987.biomassplugin;
 
 import net.simon987.server.GameServer;
+import net.simon987.server.game.TileMap;
 import net.simon987.server.game.World;
 import net.simon987.server.logging.LogManager;
 
@@ -26,7 +27,7 @@ public class WorldUtils {
         for (int y = 0; y < world.getWorldSize(); y++) {
             for (int x = 0; x < world.getWorldSize(); x++) {
 
-                if (tiles[x][y] == 0) {
+                if (tiles[x][y] == TileMap.PLAIN_TILE) {
                     plainCount++;
                 }
             }
@@ -39,14 +40,14 @@ public class WorldUtils {
         outerLoop:
         for (int i = 0; i < blobCount; i++) {
 
-            Point p = world.getTileMap().getRandomPlainTile();
+            Point p = world.getTileMap().getRandomTile(TileMap.PLAIN_TILE);
             if (p != null) {
 
                 //Don't block worlds
                 int counter = 0;
                 while (p.x == 0 || p.y == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 ||
                         world.getGameObjectsAt(p.x, p.y).size() != 0) {
-                    p = world.getTileMap().getRandomPlainTile();
+                    p = world.getTileMap().getRandomTile(TileMap.PLAIN_TILE);
                     counter++;
 
                     if (counter > 25) {

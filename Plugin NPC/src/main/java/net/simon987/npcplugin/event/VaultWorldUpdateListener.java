@@ -1,7 +1,7 @@
-package net.simon987.biomassplugin.event;
+package net.simon987.npcplugin.event;
 
-import net.simon987.biomassplugin.BiomassBlob;
-import net.simon987.biomassplugin.WorldUtils;
+import net.simon987.npcplugin.ElectricBox;
+import net.simon987.npcplugin.VaultWorldUtils;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEvent;
@@ -12,25 +12,21 @@ import net.simon987.server.game.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-public class WorldUpdateListener implements GameEventListener {
+public class VaultWorldUpdateListener implements GameEventListener {
 
     private HashMap<World, Long> worldWaitMap = new HashMap<>(200);
 
-    private static int minBlobCount;
-    private static int maxBlobCount;
-    private static int blobYield;
+    private static int minElectricBoxCount;
+    private static int maxElectricBoxCount;
     private static int waitTime;
-    private static int blobThreshold;
+    private static int electricBoxThreshold;
 
-    public WorldUpdateListener(ServerConfiguration config) {
+    public VaultWorldUpdateListener(ServerConfiguration config) {
 
-        minBlobCount = config.getInt("minBiomassRespawnCount");
-        maxBlobCount = config.getInt("maxBiomassRespawnCount");
-        waitTime = config.getInt("biomassRespawnTime");
-        blobThreshold = config.getInt("biomassRespawnThreshold");
-        blobYield = config.getInt("biomass_yield");
-
+        minElectricBoxCount = config.getInt("min_electric_box_respawn_count");
+        maxElectricBoxCount = config.getInt("max_electric_box_respawn_count");
+        waitTime = config.getInt("electric_box_respawnTime");
+        electricBoxThreshold = config.getInt("min_electric_box_count");
     }
 
     @Override
@@ -38,15 +34,14 @@ public class WorldUpdateListener implements GameEventListener {
         return WorldUpdateEvent.class;
     }
 
-
     @Override
     public void handle(GameEvent event) {
 
         World world = ((WorldUpdateEvent) event).getWorld();
 
-        if (world.getDimension().startsWith("w")) {
+        if (world.getDimension().startsWith("v")) {
             //If there is less than the respawn threshold,
-            if (world.findObjects(BiomassBlob.class).size() < blobThreshold) {
+            if (world.findObjects(ElectricBox.class).size() < electricBoxThreshold) {
 
                 //Set a timer for respawn_time ticks
                 if (!worldWaitMap.containsKey(world) || worldWaitMap.get(world) == 0L) {
@@ -58,11 +53,10 @@ public class WorldUpdateListener implements GameEventListener {
                     if (GameServer.INSTANCE.getGameUniverse().getTime() >= waitUntil) {
 
                         //If the timer was set less than respawn_time ticks ago, respawn the blobs
-                        ArrayList<BiomassBlob> newBlobs = WorldUtils.generateBlobs(world, minBlobCount,
-                                maxBlobCount, blobYield);
-                        for (BiomassBlob blob : newBlobs) {
+                        ArrayList<ElectricBox> newBlobs = VaultWorldUtils.generateElectricBoxes(world, minElectricBoxCount,
+                                maxElectricBoxCount);
+                        for (ElectricBox blob : newBlobs) {
                             world.addObject(blob);
-                            world.incUpdatable();
                         }
 
                         //Set the 'waitUntil' time to 0 to indicate that we are not waiting
@@ -71,5 +65,6 @@ public class WorldUpdateListener implements GameEventListener {
                 }
             }
         }
+
     }
 }

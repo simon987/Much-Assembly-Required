@@ -5,6 +5,7 @@ import com.mongodb.util.JSON;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.ControllableUnit;
 import net.simon987.server.game.GameObject;
+import net.simon987.server.game.Updatable;
 import net.simon987.server.game.World;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
@@ -86,6 +87,15 @@ public class DebugHandler implements MessageHandler {
                                 (int) (long) json.get("worldX"),
                                 (int) (long) json.get("worldY"),
                                 (String) json.get("data"),
+                                (String) json.get("dimension")));
+                        break;
+                    case "tpObj":
+                        response.put("message", moveObj(
+                                (long) json.get("objectId"),
+                                (int) (long) json.get("x"),
+                                (int) (long) json.get("y"),
+                                (int) (long) json.get("worldX"),
+                                (int) (long) json.get("worldY"),
                                 (String) json.get("dimension")));
                         break;
 
@@ -213,10 +223,46 @@ public class DebugHandler implements MessageHandler {
             object.setX(x);
             object.setY(y);
 
-            return "Sucess";
+            return "Success";
         } else {
             return "Object not found: " + objectId;
         }
+    }
+
+    private String moveObj(long objectId, int x, int y, int worldX, int worldY, String dimension) {
+
+        GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(objectId);
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(worldX, worldY, false, dimension);
+
+        if (object != null) {
+
+            if (world != null) {
+
+                if (object instanceof Updatable) {
+                    object.getWorld().decUpdatable();
+                }
+
+                object.getWorld().removeObject(object);
+                object.setWorld(world);
+                world.addObject(object);
+
+                if (object instanceof Updatable) {
+                    world.incUpdatable();
+                }
+
+                object.setX(x);
+                object.setY(y);
+
+                return "Success";
+
+            } else {
+                return "World not found: " + World.idFromCoordinates(worldX, worldY, dimension);
+            }
+        } else {
+            return "Object not found: " + objectId;
+        }
+
+
     }
 
     private String userInfo(String username) {
@@ -242,5 +288,6 @@ public class DebugHandler implements MessageHandler {
             return "User not found";
         }
     }
+
 
 }

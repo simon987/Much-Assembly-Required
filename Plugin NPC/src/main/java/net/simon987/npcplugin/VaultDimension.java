@@ -72,18 +72,18 @@ public class VaultDimension {
 
                 for (int j = 0; j < attachedWorlds; j++) {
 
-                    int rDirIndex = random.nextInt(4);
+                    int randDirIndex = random.nextInt(4);
 
                     //Try 4 directions (wrap around 0..3)
                     for (int attemptCount = 0; attemptCount < 4; attemptCount++) {
-                        Direction rDir = Direction.getDirection(rDirIndex);
+                        Direction randomDirection = Direction.getDirection(randDirIndex);
 
                         //Don't attach a world at the same spot twice
-                        if (!worldExists(world.coordinatesOf(rDir), worldLayers)) {
-                            WorldBluePrint attachedWorld = world.attachWorld(rDir);
+                        if (!worldExists(world.coordinatesOf(randomDirection), worldLayers)) {
+                            WorldBluePrint attachedWorld = world.attachWorld(randomDirection);
                             worldLayers.get(i).add(attachedWorld);
                         }
-                        rDirIndex = (rDirIndex + 1) % 4;
+                        randDirIndex = (randDirIndex + 1) % 4;
                     }
                 }
             }
@@ -117,11 +117,17 @@ public class VaultDimension {
         return worldLayers.values().stream().flatMap(Collection::stream).anyMatch(bp -> bp.coords.equals(coords));
     }
 
+    /**
+     * Helper class to plan the layout of a vault dimension
+     */
     private class WorldBluePrint {
 
-        public ArrayList<Direction> openings = new ArrayList<>(4);
+        ArrayList<Direction> openings = new ArrayList<>(4);
 
-        public Point coords = new Point();
+        /**
+         * Coordinates of the world
+         */
+        Point coords = new Point();
 
         /**
          * Update the blueprint's openings to allow traveling to the newly attached world
@@ -129,7 +135,7 @@ public class VaultDimension {
          * @param direction direction of the world to attach (relative to this one)
          * @return The blueprint of the attached world
          */
-        public WorldBluePrint attachWorld(Direction direction) {
+        WorldBluePrint attachWorld(Direction direction) {
 
             WorldBluePrint attachedWorld = new WorldBluePrint();
 

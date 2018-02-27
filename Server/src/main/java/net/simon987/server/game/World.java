@@ -66,7 +66,10 @@ public class World implements MongoSerialisable {
      */
     public boolean isTileBlocked(int x, int y) {
 
-        return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y) == TileMap.WALL_TILE;
+        int tile = tileMap.getTileAt(x, y);
+
+        return getGameObjectsBlockingAt(x, y).size() > 0 || tile == TileMap.WALL_TILE ||
+                tile == TileMap.VAULT_WALL;
     }
 
     /**
@@ -154,9 +157,10 @@ public class World implements MongoSerialisable {
         for (GameObject object : gameObjects.values()) {
             //Clean up dead objects
             if (object.isDead()) {
-                object.onDeadCallback();
-                removeObject(object);
-                //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
+                if (!object.onDeadCallback()) {
+                    removeObject(object);
+                }
+
             } else if (object instanceof Updatable) {
                 ((Updatable) object).update();
             }
@@ -249,7 +253,7 @@ public class World implements MongoSerialisable {
                 if (tiles[x][y] == TileMap.PLAIN_TILE) {
                     mapInfo[x][y] = 0;
 
-                } else if (tiles[x][y] == TileMap.WALL_TILE) {
+                } else if (tiles[x][y] == TileMap.WALL_TILE || tiles[x][y] == TileMap.VAULT_WALL) {
                     mapInfo[x][y] = INFO_BLOCKED;
 
                 } else if (tiles[x][y] == TileMap.COPPER_TILE) {

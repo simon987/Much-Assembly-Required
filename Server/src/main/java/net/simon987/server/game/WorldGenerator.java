@@ -169,7 +169,7 @@ public class WorldGenerator {
 
         for (int i = 0; i < ironCount; i++) {
 
-            Point p = world.getTileMap().getRandomPlainTile();
+            Point p = world.getTileMap().getRandomTile(TileMap.PLAIN_TILE);
 
             if (p != null) {
                 world.getTileMap().getTiles()[p.x][p.y] = TileMap.IRON_TILE;
@@ -177,7 +177,7 @@ public class WorldGenerator {
         }
         for (int i = 0; i < copperCount; i++) {
 
-            Point p = world.getTileMap().getRandomPlainTile();
+            Point p = world.getTileMap().getRandomTile(TileMap.PLAIN_TILE);
 
             if (p != null) {
                 world.getTileMap().getTiles()[p.x][p.y] = TileMap.COPPER_TILE;

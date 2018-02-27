@@ -46,7 +46,9 @@ public class HarvesterNPC extends NonPlayerCharacter {
     }
 
     @Override
-    public void onDeadCallback() {
+    public boolean onDeadCallback() {
+
+        getWorld().decUpdatable();
 
         if (getFactory() != null && getFactory().getNpcs() != null) {
             getFactory().getNpcs().remove(this);
@@ -54,6 +56,8 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
         GameServer.INSTANCE.getEventDispatcher().dispatch(
                 new ObjectDeathEvent(this, ID));
+
+        return false;
     }
 
     @Override
