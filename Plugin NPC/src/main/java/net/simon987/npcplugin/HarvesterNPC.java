@@ -48,6 +48,8 @@ public class HarvesterNPC extends NonPlayerCharacter {
     @Override
     public void onDeadCallback() {
 
+        getWorld().decUpdatable();
+
         if (getFactory() != null && getFactory().getNpcs() != null) {
             getFactory().getNpcs().remove(this);
         }
