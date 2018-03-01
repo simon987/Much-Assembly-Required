@@ -55,6 +55,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         } else {
 
             VaultDimension vaultDimension = new VaultDimension(getObjectId());
+            homeWorld = vaultDimension.getHomeWorld();
         }
 
     }
@@ -111,7 +112,13 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         LogManager.LOGGER.fine("VAULT enter " + open);
 
         if (open) {
-            //TODO: Enter in the vault
+
+            object.getWorld().decUpdatable();
+            object.getWorld().removeObject(object);
+
+            homeWorld.incUpdatable();
+            homeWorld.addObject(object);
+            object.setWorld(homeWorld);
 
 
             return true;

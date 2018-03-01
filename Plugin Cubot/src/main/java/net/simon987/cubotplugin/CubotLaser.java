@@ -72,18 +72,22 @@ public class CubotLaser extends CpuHardware {
             // TODO
         } else if (a == LASER_ATTACK) {
 
-            if (cubot.spendEnergy(70)) {
-                
-                //Get object directly in front of the Cubot
-                Point frontTile = cubot.getFrontTile();
-                ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
+            if (cubot.getCurrentAction() == Action.IDLE) {
+                if (cubot.spendEnergy(70)) {
 
-                if (objects.size() > 0 && objects.get(0) instanceof Attackable) {
-                    ((Attackable) objects.get(0)).damage(LASER_DAMAGE);
+                    //Get object directly in front of the Cubot
+                    Point frontTile = cubot.getFrontTile();
+                    ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
+
+                    //todo: Add option in config to allow PvP
+                    if (objects.size() > 0 && objects.get(0) instanceof Attackable && !(objects.get(0) instanceof Cubot)) {
+                        ((Attackable) objects.get(0)).damage(LASER_DAMAGE);
+                    }
+
                 }
 
+                cubot.setCurrentAction(Action.ATTACKING);
             }
-
         }
 
     }

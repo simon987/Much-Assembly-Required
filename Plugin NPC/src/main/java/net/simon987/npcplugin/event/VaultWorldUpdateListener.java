@@ -53,10 +53,11 @@ public class VaultWorldUpdateListener implements GameEventListener {
                     if (GameServer.INSTANCE.getGameUniverse().getTime() >= waitUntil) {
 
                         //If the timer was set less than respawn_time ticks ago, respawn the blobs
-                        ArrayList<ElectricBox> newBlobs = VaultWorldUtils.generateElectricBoxes(world, minElectricBoxCount,
+                        ArrayList<ElectricBox> newBoxes = VaultWorldUtils.generateElectricBoxes(world, minElectricBoxCount,
                                 maxElectricBoxCount);
-                        for (ElectricBox blob : newBlobs) {
+                        for (ElectricBox blob : newBoxes) {
                             world.addObject(blob);
+                            world.incUpdatable();
                         }
 
                         //Set the 'waitUntil' time to 0 to indicate that we are not waiting

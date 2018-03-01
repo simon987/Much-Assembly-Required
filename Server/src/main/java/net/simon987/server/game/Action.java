@@ -6,6 +6,8 @@ public enum Action {
     WALKING,
     WITHDRAWING,
     DEPOSITING,
-    LISTENING
+    LISTENING,
+    _PLACEHOLDER_,
+    ATTACKING,
 
 }

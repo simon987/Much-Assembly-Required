@@ -240,15 +240,13 @@ public class DebugHandler implements MessageHandler {
 
                 if (object instanceof Updatable) {
                     object.getWorld().decUpdatable();
+                    world.incUpdatable();
+
                 }
 
                 object.getWorld().removeObject(object);
-                object.setWorld(world);
                 world.addObject(object);
-
-                if (object instanceof Updatable) {
-                    world.incUpdatable();
-                }
+                object.setWorld(world);
 
                 object.setX(x);
                 object.setY(y);

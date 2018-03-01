@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 public class Obstacle extends GameObject implements Attackable {
 
     public static final int ID = 6;
+    public static final int MAP_INFO = 0x0400;
 
     /**
      * Style of the obstacle. Will tell the client which sprite to display
@@ -77,7 +78,7 @@ public class Obstacle extends GameObject implements Attackable {
 
     @Override
     public char getMapInfo() {
-        return 0x0400;
+        return MAP_INFO;
     }
 
     public int getStyle() {
@@ -96,6 +97,7 @@ public class Obstacle extends GameObject implements Attackable {
         dbObject.put("x", getX());
         dbObject.put("y", getY());
         dbObject.put("t", ID);
+        dbObject.put("hp", hp);
         dbObject.put("style", style);
 
         return dbObject;
@@ -117,7 +119,6 @@ public class Obstacle extends GameObject implements Attackable {
 
     public static Obstacle deserialize(DBObject obj) {
 
-        //Doesn't matter if we don't store maxHP, since obstacles can't be healed
         Obstacle obstacle = new Obstacle((int) obj.get("hp"));
         obstacle.setObjectId((long) obj.get("i"));
         obstacle.setX((int) obj.get("x"));
