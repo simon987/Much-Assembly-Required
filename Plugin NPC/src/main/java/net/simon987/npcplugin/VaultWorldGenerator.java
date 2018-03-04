@@ -230,7 +230,7 @@ public class VaultWorldGenerator {
             for (int y = 0; y < worldSize; y++) {
 
                 if (map.getTileAt(x, y) != floorTile && map.getTileAt(x, y) != wallTile) {
-                    map.setTileAt(-1, x, y);
+                    map.setTileAt(TileMap.VOID, x, y);
                 }
             }
         }

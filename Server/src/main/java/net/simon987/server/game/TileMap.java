@@ -21,6 +21,7 @@ import java.util.zip.DeflaterOutputStream;
  */
 public class TileMap implements JSONSerialisable, MongoSerialisable {
 
+    public static final int VOID = -1;
     public static final int PLAIN_TILE = 0;
     public static final int WALL_TILE = 1;
     public static final int IRON_TILE = 2;
@@ -186,6 +187,5 @@ public class TileMap implements JSONSerialisable, MongoSerialisable {
                 return new Point(rx, ry);
             }
         }
-
     }
 }

@@ -2,7 +2,10 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.Direction;
+import net.simon987.server.game.Location;
+import net.simon987.server.game.TileMap;
 import net.simon987.server.game.World;
+import net.simon987.server.logging.LogManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,9 +22,12 @@ public class VaultDimension {
 
     private World homeWorld;
 
-    public VaultDimension(long vaultDoorId) {
+    private int homeX;
+    private int homeY;
 
-        name = "v" + vaultDoorId + "-";
+    public VaultDimension(VaultDoor vaultDoor) {
+
+        name = "v" + vaultDoor.getObjectId() + "-";
 
         /*
          * Creates a group of vault worlds and pieces them together with openings.
@@ -35,6 +41,7 @@ public class VaultDimension {
          * 2. For each world in the current layer, attach a random number of new worlds
          * 3. Repeat the same step for the newly added layer
          * 4. Choose a random world from the last layer and create the vault box there (objective)
+         * 5. Create an exit portal in the home world
          *
          * This process is actually done in 2 passes, in the first pass, worlds are defined
          * as a set of coordinates + a list of opening directions, then they are actually generated
@@ -125,6 +132,31 @@ public class VaultDimension {
         //4. Choose a random world from the last layer and create the vault box there (objective)
         World objectiveWorld = lastLayerWorlds.get(random.nextInt(lastLayerWorlds.size()));
 
+
+        //5. Create an exit portal in the home World
+        Point homePortalPt = homeWorld.getRandomTileWithAdjacent(8, TileMap.VAULT_FLOOR);
+        if (homePortalPt != null) {
+
+            Point exitCoords = vaultDoor.getAdjacentTile();
+            Location exitLocation = new Location(vaultDoor.getWorld().getX(), vaultDoor.getWorld().getY(), vaultDoor
+                    .getWorld().getDimension(), exitCoords.x, exitCoords.y);
+
+            Portal homePortal = new Portal();
+            homePortal.setDst(exitLocation);
+            homePortal.setX(homePortalPt.x);
+            homePortal.setY(homePortalPt.y);
+            homePortal.setWorld(homeWorld);
+            homeWorld.addObject(homePortal);
+
+            Point entryCoords = homePortal.getAdjacentTile();
+            homeX = entryCoords.x;
+            homeY = entryCoords.y;
+
+        } else {
+            LogManager.LOGGER.severe("FIXME: Couldn't create home exit portal for world " + homeWorld.getId());
+        }
+
+        LogManager.LOGGER.severe("DONE");
     }
 
     private boolean worldExists(Point coords, HashMap<Integer, ArrayList<WorldBluePrint>> worldLayers) {
@@ -137,6 +169,13 @@ public class VaultDimension {
         return homeWorld;
     }
 
+    public int getHomeX() {
+        return homeX;
+    }
+
+    public int getHomeY() {
+        return homeY;
+    }
     /**
      * Helper class to plan the layout of a vault dimension
      */

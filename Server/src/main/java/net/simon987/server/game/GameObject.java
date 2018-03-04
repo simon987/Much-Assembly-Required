@@ -259,4 +259,8 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
     public boolean onDeadCallback() {
         return false;
     }
+
+    public void initialize() {
+
+    }
 }

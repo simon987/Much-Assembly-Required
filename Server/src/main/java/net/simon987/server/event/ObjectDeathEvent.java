@@ -5,7 +5,7 @@ package net.simon987.server.event;
  */
 public class ObjectDeathEvent extends GameEvent {
     /**
-     * The GameObject type ID of object that init this event
+     * The GameObject type ID of object that initialize this event
      */
     private long sourceObjectId;
 

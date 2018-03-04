@@ -69,7 +69,7 @@ public class World implements MongoSerialisable {
         int tile = tileMap.getTileAt(x, y);
 
         return getGameObjectsBlockingAt(x, y).size() > 0 || tile == TileMap.WALL_TILE ||
-                tile == TileMap.VAULT_WALL;
+                tile == TileMap.VAULT_WALL || tile == TileMap.VOID;
     }
 
     /**
@@ -229,6 +229,8 @@ public class World implements MongoSerialisable {
 
             object.setWorld(world);
             world.addObject(object);
+
+            object.initialize();
         }
 
         return world;
@@ -439,7 +441,80 @@ public class World implements MongoSerialisable {
         return res;
     }
 
+    public Point getAdjacentTile(int x, int y) {
+
+        if (!isTileBlocked(x + 1, y)) {
+            return new Point(x + 1, y);
+
+        } else if (!isTileBlocked(x, y + 1)) {
+            return new Point(x, getY() + 1);
+
+        } else if (!isTileBlocked(x - 1, y)) {
+            return new Point(x - 1, getY());
+
+        } else if (!isTileBlocked(x, y - 1)) {
+            return new Point(x, y - 1);
+        } else {
+            return null;
+        }
+    }
+
     public Collection<GameObject> getGameObjects() {
         return gameObjects.values();
+    }
+
+
+    /**
+     * Get a random tile with N adjacent non-blocked tile
+     *
+     * @param n Number of adjacent tiles of type X
+     * @return null if no tile is found
+     */
+    public Point getRandomTileWithAdjacent(int n, int tile) {
+        int counter = 0;
+        while (true) {
+            counter++;
+
+            //Prevent infinite loop
+            if (counter >= 2500) {
+                return null;
+            }
+
+            Point rTile = getTileMap().getRandomTile(tile);
+
+            if (rTile != null) {
+                int adjacentTiles = 0;
+
+                if (!isTileBlocked(rTile.x, rTile.y - 1)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x + 1, rTile.y)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x, rTile.y + 1)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x - 1, rTile.y)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x + 1, rTile.y + 1)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x - 1, rTile.y + 1)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x + 1, rTile.y - 1)) {
+                    adjacentTiles++;
+                }
+                if (!isTileBlocked(rTile.x - 1, rTile.y - 1)) {
+                    adjacentTiles++;
+                }
+
+                if (adjacentTiles >= n) {
+                    return rTile;
+                }
+            }
+        }
+
     }
 }

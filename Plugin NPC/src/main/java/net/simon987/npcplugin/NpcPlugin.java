@@ -50,6 +50,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
             return Obstacle.deserialize(obj);
         } else if (objType == ElectricBox.ID) {
             return ElectricBox.deserialize(obj);
+        } else if (objType == Portal.ID) {
+            return Portal.deserialize(obj);
         }
 
         return null;

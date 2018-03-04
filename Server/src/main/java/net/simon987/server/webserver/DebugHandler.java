@@ -156,6 +156,9 @@ public class DebugHandler implements MessageHandler {
 
             if (object != null) {
                 world.addObject(object);
+                object.setWorld(world);
+
+                object.initialize();
 
                 return "Created object " + object.getObjectId();
 

@@ -28,7 +28,10 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
      */
     private boolean open = false;
 
+    private int homeX;
+    private int homeY;
     private World homeWorld;
+
 
     /**
      * Number of ticks to remain the door open
@@ -38,26 +41,12 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     private int openedTimer = 0;
     private int cypherId;
 
-    public VaultDoor(int cypherId, long objectId) {
+    public VaultDoor(int cypherId) {
         this.cypherId = cypherId;
+
         this.randomStringGenerator = new RandomStringGenerator();
-        setObjectId(objectId);
 
         this.password = "12345678".toCharArray();
-
-
-        //Get or generate vault world
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(0x7FFF, 0x7FFF,
-                false, "v" + getObjectId() + "-");
-
-        if (world != null) {
-            homeWorld = world;
-        } else {
-
-            VaultDimension vaultDimension = new VaultDimension(getObjectId());
-            homeWorld = vaultDimension.getHomeWorld();
-        }
-
     }
 
 
@@ -119,7 +108,8 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
             homeWorld.incUpdatable();
             homeWorld.addObject(object);
             object.setWorld(homeWorld);
-
+            object.setX(homeX);
+            object.setY(homeY);
 
             return true;
         } else {
@@ -140,6 +130,8 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
         dbObject.put("y", getY());
+        dbObject.put("homeX", getHomeX());
+        dbObject.put("homeY", getHomeY());
         dbObject.put("t", ID);
         dbObject.put("pw", new String(password));
 
@@ -162,12 +154,48 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
 
     public static VaultDoor deserialize(DBObject obj) {
 
-        VaultDoor vaultDoor = new VaultDoor(0, (long) obj.get("i")); //cypherId ?
+        VaultDoor vaultDoor = new VaultDoor(0); //cypherId ?
         vaultDoor.setX((int) obj.get("x"));
         vaultDoor.setY((int) obj.get("y"));
+
+
+        if (obj.containsField("homeX") && obj.containsField("homeY")) {
+            vaultDoor.setHomeX((int) obj.get("homeX"));
+            vaultDoor.setHomeY((int) obj.get("homeY"));
+        }
+
         vaultDoor.password = ((String) obj.get("pw")).toCharArray();
 
         return vaultDoor;
     }
 
+    @Override
+    public void initialize() {
+        //Get or generate vault world
+        homeWorld = GameServer.INSTANCE.getGameUniverse().getWorld(0x7FFF, 0x7FFF,
+                false, "v" + getObjectId() + "-");
+
+        if (homeWorld == null) {
+            VaultDimension vaultDimension = new VaultDimension(this);
+            homeWorld = vaultDimension.getHomeWorld();
+            homeX = vaultDimension.getHomeX();
+            homeY = vaultDimension.getHomeY();
+        }
+    }
+
+    public int getHomeX() {
+        return homeX;
+    }
+
+    public void setHomeX(int homeX) {
+        this.homeX = homeX;
+    }
+
+    public int getHomeY() {
+        return homeY;
+    }
+
+    public void setHomeY(int homeY) {
+        this.homeY = homeY;
+    }
 }
