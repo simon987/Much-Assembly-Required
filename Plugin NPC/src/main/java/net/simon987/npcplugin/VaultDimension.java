@@ -118,28 +118,44 @@ public class VaultDimension {
                     vWorld.incUpdatable();
                 }
 
-                if (key == layerCount - 1) {
+                if (key == layerCount) {
                     lastLayerWorlds.add(vWorld);
                 }
 
                 if (key == 0) {
                     this.homeWorld = vWorld;
-                    //TODO: generate exit door here and save the coords
                 }
             }
         }
 
+        Point exitCoords = vaultDoor.getAdjacentTile();
+        Location exitLocation = new Location(vaultDoor.getWorld().getX(), vaultDoor.getWorld().getY(), vaultDoor
+                .getWorld().getDimension(), exitCoords.x, exitCoords.y);
+
+
         //4. Choose a random world from the last layer and create the vault box there (objective)
         World objectiveWorld = lastLayerWorlds.get(random.nextInt(lastLayerWorlds.size()));
 
+        Point exitPortalPt = objectiveWorld.getRandomTileWithAdjacent(8, TileMap.VAULT_FLOOR);
+
+        if (exitPortalPt != null) {
+
+            Portal exitPortal = new Portal();
+            exitPortal.setDst(exitLocation);
+            exitPortal.setX(exitPortalPt.x);
+            exitPortal.setY(exitPortalPt.y);
+            exitPortal.setWorld(objectiveWorld);
+            objectiveWorld.addObject(exitPortal);
+
+            LogManager.LOGGER.severe("Objective: " + objectiveWorld.getId());
+
+        } else {
+            LogManager.LOGGER.severe("FIXME: Couldn't create exit portal for world " + homeWorld.getId());
+        }
 
         //5. Create an exit portal in the home World
         Point homePortalPt = homeWorld.getRandomTileWithAdjacent(8, TileMap.VAULT_FLOOR);
         if (homePortalPt != null) {
-
-            Point exitCoords = vaultDoor.getAdjacentTile();
-            Location exitLocation = new Location(vaultDoor.getWorld().getX(), vaultDoor.getWorld().getY(), vaultDoor
-                    .getWorld().getDimension(), exitCoords.x, exitCoords.y);
 
             Portal homePortal = new Portal();
             homePortal.setDst(exitLocation);
@@ -156,7 +172,7 @@ public class VaultDimension {
             LogManager.LOGGER.severe("FIXME: Couldn't create home exit portal for world " + homeWorld.getId());
         }
 
-        LogManager.LOGGER.severe("DONE");
+
     }
 
     private boolean worldExists(Point coords, HashMap<Integer, ArrayList<WorldBluePrint>> worldLayers) {

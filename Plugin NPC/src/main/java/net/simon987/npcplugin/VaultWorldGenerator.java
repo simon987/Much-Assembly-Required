@@ -159,8 +159,6 @@ public class VaultWorldGenerator {
             }
         }
 
-        LogManager.LOGGER.severe(world.toString());
-
         //Connect rooms together, from bottom to top
         roomCenters.sort(new RoomCenterComparator());
         boolean xFirst = true; //Start the tunnel horizontally
