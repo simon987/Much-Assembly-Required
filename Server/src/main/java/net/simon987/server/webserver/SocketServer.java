@@ -179,7 +179,7 @@ public class SocketServer extends WebSocketServer {
         JSONObject json = new JSONObject();
         json.put("t", "tick");
 
-        LogManager.LOGGER.info("Notified " + userManager.getOnlineUsers().size() + " users");
+//        LogManager.LOGGER.info("Notified " + userManager.getOnlineUsers().size() + " users");
 
         ArrayList<OnlineUser> onlineUsers = new ArrayList<>(userManager.getOnlineUsers()); //Avoid ConcurrentModificationException
         for (OnlineUser user : onlineUsers) {

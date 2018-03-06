@@ -13,6 +13,8 @@ public interface ControllableUnit {
 
     void setParent(User user);
 
+    User getParent();
+
     ArrayList<Integer> getKeyboardBuffer();
 
     Memory getFloppyData();

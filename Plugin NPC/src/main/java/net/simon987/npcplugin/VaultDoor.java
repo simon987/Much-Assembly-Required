@@ -157,6 +157,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         VaultDoor vaultDoor = new VaultDoor(0); //cypherId ?
         vaultDoor.setX((int) obj.get("x"));
         vaultDoor.setY((int) obj.get("y"));
+        vaultDoor.setObjectId((long) obj.get("i"));
 
 
         if (obj.containsField("homeX") && obj.containsField("homeY")) {

@@ -4,6 +4,7 @@ import com.mongodb.DBObject;
 import net.simon987.npcplugin.event.CpuInitialisationListener;
 import net.simon987.npcplugin.event.VaultWorldUpdateListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
+import net.simon987.npcplugin.io.StatsDatabaseManager;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.game.GameObject;
@@ -21,6 +22,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
      */
     private static ArrayList<RadioTower> radioTowers;
 
+    private static StatsDatabaseManager statsDbManager;
+
     @Override
     public void init(ServerConfiguration configuration) {
 
@@ -29,6 +32,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
         listeners.add(new VaultWorldUpdateListener(configuration));
 
         radioTowers = new ArrayList<>(32);
+
+        statsDbManager = new StatsDatabaseManager(configuration);
 
         LogManager.LOGGER.info("Initialised NPC plugin");
     }
@@ -52,6 +57,8 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
             return ElectricBox.deserialize(obj);
         } else if (objType == Portal.ID) {
             return Portal.deserialize(obj);
+        } else if (objType == VaultExitPortal.ID) {
+            return VaultExitPortal.deserialize(obj);
         }
 
         return null;
@@ -71,5 +78,9 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
 
     public static ArrayList<RadioTower> getRadioTowers() {
         return radioTowers;
+    }
+
+    public static StatsDatabaseManager getStatsDbManager() {
+        return statsDbManager;
     }
 }

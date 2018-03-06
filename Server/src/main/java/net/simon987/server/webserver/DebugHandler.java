@@ -167,7 +167,11 @@ public class DebugHandler implements MessageHandler {
             }
 
         } catch (Exception e) {
-            return Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n");
+
+            String message = e.getMessage();
+            message += "\n " + Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n");
+
+            return message;
         }
 
 
@@ -213,7 +217,10 @@ public class DebugHandler implements MessageHandler {
 
         } catch (Exception e) {
 
-            return Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n");
+            String message = e.getMessage();
+            message += "\n " + Arrays.toString(e.getStackTrace()).replaceAll(", ", "\n");
+
+            return message;
         }
     }
 

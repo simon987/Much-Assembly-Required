@@ -140,7 +140,7 @@ public class VaultDimension {
 
         if (exitPortalPt != null) {
 
-            Portal exitPortal = new Portal();
+            VaultExitPortal exitPortal = new VaultExitPortal();
             exitPortal.setDst(exitLocation);
             exitPortal.setX(exitPortalPt.x);
             exitPortal.setY(exitPortalPt.y);
