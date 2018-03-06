@@ -27,6 +27,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
      * Hit points
      */
     private int hp;
+    private int shield;
+    private int maxShield;
     private int heldItem;
 
     private Action currentAction = Action.IDLE;
@@ -102,6 +104,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         json.put("direction", getDirection().ordinal());
         json.put("heldItem", heldItem);
         json.put("hp", hp);
+        json.put("shield", shield);
         json.put("action", lastAction.ordinal());
         json.put("holo", hologram);
         json.put("holoStr", hologramString);
@@ -127,6 +130,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         dbObject.put("direction", getDirection().ordinal());
         dbObject.put("heldItem", heldItem);
         dbObject.put("hp", hp);
+        dbObject.put("shield", shield);
         dbObject.put("action", lastAction.ordinal());
         dbObject.put("holo", hologram);
         dbObject.put("holoStr", hologramString);
@@ -148,6 +152,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         cubot.setX((int) obj.get("x"));
         cubot.setY((int) obj.get("y"));
         cubot.hp = (int) obj.get("hp");
+        cubot.shield = (int) obj.get("shield");
+        cubot.maxShield = GameServer.INSTANCE.getConfig().getInt("max_shield");
         cubot.setDirection(Direction.getDirection((int) obj.get("direction")));
         cubot.heldItem = (int) obj.get("heldItem");
         cubot.energy = (int) obj.get("energy");
@@ -238,6 +244,42 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     public int getMaxEnergy() {
         return maxEnergy;
+    }
+
+    // shield methods are modeled after energy methods
+    public int getShield() {
+        return shield;
+    }
+
+    public void setShield(int shield) {
+        this.shield = shield;
+    }
+
+    public boolean chargeShield(int qty) {
+        qty = Math.min(qty, maxShield - shield);
+        int cost = GameServer.INSTANCE.getConfig().getInt("shield_energy_cost");
+        int energySpent = qty * cost;
+        if(spendEnergy(energySpent)) {
+            shield += qty;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Damages shield by qty.
+     * 
+     * Return damage that broke through the shield.
+     */
+    public int damageShield(int qty) {
+        int after = shield - qty;
+        if(after < 0) {
+            shield = 0;
+            return -after;
+        }
+        shield = after;
+        return 0;
     }
 
     @Override
