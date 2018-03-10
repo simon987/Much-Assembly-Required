@@ -9,9 +9,9 @@ import java.net.InetSocketAddress;
 public class Main {
     public static void main(String[] args) {
 
-
-        LogManager.initialize();
         ServerConfiguration config = new ServerConfiguration("config.properties");
+        LogManager.initialize(config);
+
         //Load
         GameServer.INSTANCE.load();
 

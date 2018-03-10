@@ -159,6 +159,7 @@ public class World implements MongoSerialisable {
             if (object.isDead()) {
                 if (!object.onDeadCallback()) {
                     removeObject(object);
+                    //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
                 }
 
             } else if (object instanceof Updatable) {

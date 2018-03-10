@@ -1,5 +1,7 @@
 package net.simon987.server.logging;
 
+import net.simon987.server.ServerConfiguration;
+
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -16,7 +18,7 @@ public class LogManager {
     /**
      * Initialises the logger
      */
-    public static void initialize() {
+    public static void initialize(ServerConfiguration config) {
         LOGGER.setUseParentHandlers(false);
 
         /*
@@ -45,14 +47,17 @@ public class LogManager {
         handler.setLevel(Level.ALL);
 
         try {
-            Handler fileHandler = new FileHandler("mar.log");
+            Handler fileHandler = new FileHandler("mar-%g.log", config.getInt("log_limit"),
+                    config.getInt("log_count"));
             fileHandler.setLevel(Level.ALL);
             fileHandler.setFormatter(new GenericFormatter());
+
 
             LOGGER.addHandler(handler);
             LOGGER.addHandler(errHandler);
             LOGGER.addHandler(fileHandler);
             LOGGER.setLevel(Level.ALL);
+
 
         } catch (IOException e) {
             e.printStackTrace();
