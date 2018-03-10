@@ -257,6 +257,9 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
 
     /**
      * Called before this GameObject is removed from the world - defaults to doing nothing
+     * @return true if cancelled
      */
-    public void onDeadCallback() { }
+    public boolean onDeadCallback() {
+        return false;
+    }
 }

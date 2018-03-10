@@ -7,10 +7,10 @@ import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 
 public class CubotShield extends CpuHardware {
-    static final char HWID = 0x000E;
+    static final char HWID = 0x000F;
 
     private static final int SHIELD_CHARGE = 1;
-    private static final int SHIELD_QUERY = 2;
+    private static final int SHIELD_POLL = 2;
     private Cubot cubot;
 
     public CubotShield(Cubot cubot) {
@@ -39,7 +39,7 @@ public class CubotShield extends CpuHardware {
         if(a == SHIELD_CHARGE) {
             int b = getCpu().getRegisterSet().getRegister("B").getValue();
             cubot.chargeShield(b);
-        } else if(a == SHIELD_QUERY) {
+        } else if (a == SHIELD_POLL) {
             int shield = cubot.getShield();
             getCpu().getRegisterSet().getRegister("B").setValue(shield);
         }

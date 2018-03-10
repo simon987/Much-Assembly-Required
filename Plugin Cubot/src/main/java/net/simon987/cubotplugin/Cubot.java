@@ -10,12 +10,10 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable {
+public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable, Attackable {
 
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
-
-    public static int TYPE_ID = 2;
 
     private int hologram = 0;
     private String hologramString = "";
@@ -33,6 +31,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     private Action currentAction = Action.IDLE;
     private Action lastAction = Action.IDLE;
+
+    private char currentStatus;
+    private char lastStatus;
 
     private ArrayList<Integer> keyboardBuffer = new ArrayList<>();
 
@@ -92,6 +93,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
         lastConsoleMessagesBuffer = new ArrayList<>(consoleMessagesBuffer);
         consoleMessagesBuffer.clear();
+
+        //And the status..
+        lastStatus = currentStatus;
+        currentStatus = 0;
     }
 
     @Override
@@ -152,8 +157,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         cubot.setX((int) obj.get("x"));
         cubot.setY((int) obj.get("y"));
         cubot.hp = (int) obj.get("hp");
-        cubot.shield = (int) obj.get("shield");
-        cubot.maxShield = GameServer.INSTANCE.getConfig().getInt("max_shield");
+//        cubot.shield = (int) obj.get("shield");
+//        cubot.maxShield = GameServer.INSTANCE.getConfig().getInt("max_shield");
         cubot.setDirection(Direction.getDirection((int) obj.get("direction")));
         cubot.heldItem = (int) obj.get("heldItem");
         cubot.energy = (int) obj.get("energy");
@@ -246,7 +251,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return maxEnergy;
     }
 
-    // shield methods are modeled after energy methods
     public int getShield() {
         return shield;
     }
@@ -346,5 +350,59 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     public void setHologramColor(int hologramColor) {
         this.hologramColor = hologramColor;
+    }
+
+    public void addStatus(CubotStatus status) {
+
+        currentStatus |= status.val;
+    }
+
+    public void removeStatus(CubotStatus status) {
+
+        currentStatus &= (~status.val);
+    }
+
+    public char getStatus() {
+        return lastStatus;
+    }
+
+    @Override
+    public void setHealRate(int hp) {
+
+    }
+
+    @Override
+    public int getHp() {
+        return 0;
+    }
+
+    @Override
+    public void setHp(int hp) {
+
+    }
+
+    @Override
+    public int getMaxHp() {
+        return 0;
+    }
+
+    @Override
+    public void setMaxHp(int hp) {
+
+    }
+
+    @Override
+    public void heal(int amount) {
+
+    }
+
+    @Override
+    public void damage(int amount) {
+
+    }
+
+    @Override
+    public boolean onDeadCallback() {
+        return true; //always cancelled
     }
 }
