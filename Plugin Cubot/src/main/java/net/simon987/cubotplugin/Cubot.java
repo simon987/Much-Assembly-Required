@@ -3,8 +3,10 @@ package net.simon987.cubotplugin;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
+import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.*;
+import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.json.simple.JSONObject;
 
@@ -25,6 +27,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
      * Hit points
      */
     private int hp;
+    private int maxHp;
     private int shield;
     private int maxShield;
     private int heldItem;
@@ -157,12 +160,15 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         cubot.setX((int) obj.get("x"));
         cubot.setY((int) obj.get("y"));
         cubot.hp = (int) obj.get("hp");
-//        cubot.shield = (int) obj.get("shield");
-//        cubot.maxShield = GameServer.INSTANCE.getConfig().getInt("max_shield");
+        cubot.shield = (int) obj.get("shield");
         cubot.setDirection(Direction.getDirection((int) obj.get("direction")));
         cubot.heldItem = (int) obj.get("heldItem");
         cubot.energy = (int) obj.get("energy");
-        cubot.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
+
+        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        cubot.maxEnergy = config.getInt("battery_max_energy");
+        cubot.maxHp = config.getInt("cubot_max_hp");
+        cubot.maxShield = config.getInt("cubot_max_shield");
 
         return cubot;
 
@@ -368,41 +374,51 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     @Override
     public void setHealRate(int hp) {
-
+        //no op
     }
 
     @Override
     public int getHp() {
-        return 0;
+        return hp;
     }
 
     @Override
     public void setHp(int hp) {
-
+        this.hp = hp;
     }
 
     @Override
     public int getMaxHp() {
-        return 0;
+        return maxHp;
     }
 
     @Override
     public void setMaxHp(int hp) {
-
+        this.maxHp = hp;
     }
 
     @Override
     public void heal(int amount) {
+        hp += amount;
 
+        //Can't heal above max
+        if (hp > maxHp) {
+            hp = maxHp;
+        }
     }
 
     @Override
     public void damage(int amount) {
+        hp -= amount;
 
+        if (hp <= 0) {
+            setDead(true);
+        }
     }
 
     @Override
     public boolean onDeadCallback() {
+        LogManager.LOGGER.severe("Cubot death");
         return true; //always cancelled
     }
 }

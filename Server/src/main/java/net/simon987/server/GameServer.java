@@ -3,17 +3,18 @@ package net.simon987.server;
 
 import com.mongodb.*;
 import net.simon987.server.assembly.exception.CancelledException;
+import net.simon987.server.crypto.CryptoProvider;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
 import net.simon987.server.event.TickEvent;
 import net.simon987.server.game.DayNightCycle;
 import net.simon987.server.game.GameUniverse;
 import net.simon987.server.game.World;
+import net.simon987.server.game.debug.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
 import net.simon987.server.webserver.SocketServer;
-import net.simon987.server.crypto.CryptoProvider;
 
 import java.io.File;
 import java.net.UnknownHostException;
@@ -78,6 +79,17 @@ public class GameServer implements Runnable {
 
         eventDispatcher = new GameEventDispatcher(pluginManager);
         eventDispatcher.getListeners().add(dayNightCycle);
+
+        //Debug command Listeners
+        eventDispatcher.getListeners().add(new ComPortMsgCommandListener());
+        eventDispatcher.getListeners().add(new CreateWorldCommandListener());
+        eventDispatcher.getListeners().add(new KillAllCommandListener());
+        eventDispatcher.getListeners().add(new MoveObjCommandListener());
+        eventDispatcher.getListeners().add(new ObjInfoCommandListener());
+        eventDispatcher.getListeners().add(new SetTileAtCommandListener());
+        eventDispatcher.getListeners().add(new SpawnObjCommandListener());
+        eventDispatcher.getListeners().add(new TpObjectCommandListener());
+        eventDispatcher.getListeners().add(new UserInfoCommandListener());
 
     }
 
