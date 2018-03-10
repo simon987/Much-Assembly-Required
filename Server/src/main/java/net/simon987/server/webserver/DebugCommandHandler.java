@@ -13,9 +13,8 @@ public class DebugCommandHandler implements MessageHandler {
 
         if (json.get("t").equals("debug") && user.isModerator()) {
 
-
             DebugCommandEvent e = new DebugCommandEvent(json, user);
-            GameServer.INSTANCE.getEventDispatcher().dispatch(e);
+            GameServer.INSTANCE.getEventDispatcher().dispatch(e); //Ignore cancellation
         }
     }
 }

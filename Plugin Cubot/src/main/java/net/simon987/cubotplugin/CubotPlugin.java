@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import com.mongodb.DBObject;
+import net.simon987.cubotplugin.event.ChargeShieldCommandListener;
 import net.simon987.cubotplugin.event.CpuInitialisationListener;
 import net.simon987.cubotplugin.event.UserCreationListener;
 import net.simon987.server.ServerConfiguration;
@@ -18,6 +19,7 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
     public void init(ServerConfiguration config) {
         listeners.add(new CpuInitialisationListener());
         listeners.add(new UserCreationListener());
+        listeners.add(new ChargeShieldCommandListener());
 
         LogManager.LOGGER.info("Initialised Cubot plugin");
     }

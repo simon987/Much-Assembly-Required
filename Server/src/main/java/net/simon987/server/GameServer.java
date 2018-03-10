@@ -90,6 +90,8 @@ public class GameServer implements Runnable {
         eventDispatcher.getListeners().add(new SpawnObjCommandListener());
         eventDispatcher.getListeners().add(new TpObjectCommandListener());
         eventDispatcher.getListeners().add(new UserInfoCommandListener());
+        eventDispatcher.getListeners().add(new HealObjCommandListener());
+        eventDispatcher.getListeners().add(new DamageObjCommandListener());
 
     }
 
@@ -184,7 +186,7 @@ public class GameServer implements Runnable {
         socketServer.tick();
 
         LogManager.LOGGER.info("Processed " + gameUniverse.getWorldCount() + " worlds (" + updatedWorlds +
-                ") updated");
+                " updated)");
     }
 
 

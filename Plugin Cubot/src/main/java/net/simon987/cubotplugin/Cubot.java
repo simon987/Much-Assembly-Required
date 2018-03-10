@@ -265,12 +265,12 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         this.shield = shield;
     }
 
-    public boolean chargeShield(int qty) {
-        qty = Math.min(qty, maxShield - shield);
-        int cost = GameServer.INSTANCE.getConfig().getInt("shield_energy_cost");
-        int energySpent = qty * cost;
+    public boolean chargeShield(int amount) {
+        amount = Math.min(amount, maxShield - shield);
+
+        int energySpent = amount * CubotShield.COST;
         if(spendEnergy(energySpent)) {
-            shield += qty;
+            shield += amount;
             return true;
         } else {
             return false;
@@ -278,12 +278,12 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     }
 
     /**
-     * Damages shield by qty.
+     * Damages shield by amount.
      * 
      * Return damage that broke through the shield.
      */
-    public int damageShield(int qty) {
-        int after = shield - qty;
+    public int damageShield(int amount) {
+        int after = shield - amount;
         if(after < 0) {
             shield = 0;
             return -after;
@@ -409,7 +409,11 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     @Override
     public void damage(int amount) {
-        hp -= amount;
+
+        //Damage shield first
+        int hullDamage = damageShield(amount);
+
+        hp -= hullDamage;
 
         if (hp <= 0) {
             setDead(true);

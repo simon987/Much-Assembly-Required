@@ -16,6 +16,8 @@ public class CubotShield extends CpuHardware {
     private static final int SHIELD_POLL = 2;
     private Cubot cubot;
 
+    public static final int COST = GameServer.INSTANCE.getConfig().getInt("shield_energy_cost");
+
     public CubotShield(Cubot cubot) {
         this.cubot = cubot;
     }
