@@ -100,6 +100,7 @@ public class WorldCreationListener implements GameEventListener {
             if (p != null) {
 
                 VaultDoor vaultDoor = new VaultDoor(0); //todo cypherId ?
+                vaultDoor.setWorld(world);
 
                 int counter = 700;
                 while (p.x == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 || p.y == 0

@@ -458,7 +458,11 @@ public class CPU implements MongoSerialisable {
         String str = "------------------------\n";
         str += registerSet.toString();
         str += status.toString();
-        str += "------------------------\n";
+        str += "HW: ";
+        for (CpuHardware hw : attachedHardware.values()) {
+            str += hw + ", ";
+        }
+        str += "\n------------------------\n";
 
         return str;
     }

@@ -2,6 +2,7 @@ package net.simon987.cubotplugin.event;
 
 import net.simon987.cubotplugin.Cubot;
 import net.simon987.server.GameServer;
+import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.UserCreationEvent;
@@ -25,12 +26,13 @@ public class UserCreationListener implements GameEventListener {
         User user = (User) event.getSource();
         Cubot cubot = new Cubot();
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
-
+        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        
         Point point = null;
         while (point == null || cubot.getWorld() == null) {
-            int spawnX = GameServer.INSTANCE.getConfig().getInt("new_user_worldX") + random.nextInt(5);
-            int spawnY = GameServer.INSTANCE.getConfig().getInt("new_user_worldY") + random.nextInt(5);
-            String dimension = GameServer.INSTANCE.getConfig().getString("new_user_dimension");
+            int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);
+            int spawnY = config.getInt("new_user_worldY") + random.nextInt(5);
+            String dimension = config.getString("new_user_dimension");
             cubot.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true, dimension));
 
             point = cubot.getWorld().getRandomPassableTile();
@@ -41,9 +43,11 @@ public class UserCreationListener implements GameEventListener {
         cubot.getWorld().addObject(cubot);
         cubot.getWorld().incUpdatable();
 
-        cubot.setHeldItem(GameServer.INSTANCE.getConfig().getInt("new_user_item"));
-        cubot.setEnergy(GameServer.INSTANCE.getConfig().getInt("battery_max_energy"));
-        cubot.setMaxEnergy(GameServer.INSTANCE.getConfig().getInt("battery_max_energy"));
+        cubot.setHeldItem(config.getInt("new_user_item"));
+        cubot.setEnergy(config.getInt("battery_max_energy"));
+        cubot.setMaxEnergy(config.getInt("battery_max_energy"));
+
+        cubot.setHp(config.getInt("cubot_max_hp"));
 
         cubot.setParent(user);
         user.setControlledUnit(cubot);

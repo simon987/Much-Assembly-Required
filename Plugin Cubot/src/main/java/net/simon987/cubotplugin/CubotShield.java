@@ -7,6 +7,9 @@ import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 
 public class CubotShield extends CpuHardware {
+
+    public static final char DEFAULT_ADDRESS = 0x000F;
+
     static final char HWID = 0x000F;
 
     private static final int SHIELD_CHARGE = 1;
@@ -25,8 +28,8 @@ public class CubotShield extends CpuHardware {
 	@Override
 	public BasicDBObject mongoSerialise() {
         BasicDBObject dbObject = new BasicDBObject();
-        
-        dbObject.put("hwid", HWID);
+
+        dbObject.put("hwid", (int) HWID);
         dbObject.put("cubot", cubot.getObjectId());
         
         return dbObject;

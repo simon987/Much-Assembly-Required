@@ -40,6 +40,10 @@ public class CpuInitialisationListener implements GameEventListener {
         floppyHw.setCpu(cpu);
         CubotComPort comPortHw = new CubotComPort((Cubot) user.getControlledUnit());
         comPortHw.setCpu(cpu);
+        CubotCore coreHw = new CubotCore((Cubot) user.getControlledUnit());
+        coreHw.setCpu(cpu);
+        CubotShield shieldHw = new CubotShield((Cubot) user.getControlledUnit());
+        shieldHw.setCpu(cpu);
 
         cpu.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
         cpu.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
@@ -52,5 +56,7 @@ public class CpuInitialisationListener implements GameEventListener {
         cpu.attachHardware(batteryHw, CubotBattery.DEFAULT_ADDRESS);
         cpu.attachHardware(floppyHw, CubotFloppyDrive.DEFAULT_ADDRESS);
         cpu.attachHardware(comPortHw, CubotComPort.DEFAULT_ADDRESS);
+        cpu.attachHardware(coreHw, CubotCore.DEFAULT_ADDRESS);
+        cpu.attachHardware(shieldHw, CubotShield.DEFAULT_ADDRESS);
     }
 }

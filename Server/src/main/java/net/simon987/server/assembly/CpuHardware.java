@@ -42,4 +42,8 @@ public abstract class CpuHardware implements MongoSerialisable {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return String.format("<%04X>", (int) getId());
+    }
 }

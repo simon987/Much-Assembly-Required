@@ -62,6 +62,8 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
                 return CubotComPort.deserialize(obj);
             case CubotShield.HWID:
                 return CubotShield.deserialize(obj);
+            case CubotCore.HWID:
+                return CubotCore.deserialize(obj);
         }
 
         return null;
