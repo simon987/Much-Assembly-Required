@@ -92,6 +92,7 @@ public class GameServer implements Runnable {
         eventDispatcher.getListeners().add(new UserInfoCommandListener());
         eventDispatcher.getListeners().add(new HealObjCommandListener());
         eventDispatcher.getListeners().add(new DamageObjCommandListener());
+        eventDispatcher.getListeners().add(new SetEnergyCommandListener());
 
     }
 

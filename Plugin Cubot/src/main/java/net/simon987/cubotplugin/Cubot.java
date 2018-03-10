@@ -10,9 +10,11 @@ import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.json.simple.JSONObject;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
-public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable, Attackable {
+public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable, Attackable, Rechargeable {
 
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
@@ -233,20 +235,19 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         this.energy = energy;
     }
 
-    public boolean spendEnergy(int spent) {
+    public boolean spendEnergy(int amount) {
 
-        if (energy - spent < 0) {
+        if (energy - amount < 0) {
             return false;
         } else {
-            energy -= spent;
+            energy -= amount;
             return true;
         }
     }
 
-    public void storeEnergy(int qty) {
+    public void storeEnergy(int amount) {
 
-        energy = Math.min(energy + qty, maxEnergy);
-
+        energy = Math.min(energy + amount, maxEnergy);
     }
 
     public void setMaxEnergy(int maxEnergy) {
@@ -420,9 +421,46 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         }
     }
 
+    public void reset() {
+        setDead(false);
+        setHp(maxHp);
+        setShield(0);
+        setHeldItem(0);
+        setEnergy(maxEnergy);
+        clearKeyboardBuffer();
+        consoleMessagesBuffer.clear();
+        lastConsoleMessagesBuffer.clear();
+        hologramColor = 0;
+        currentStatus = 0;
+        lastStatus = 0;
+        addStatus(CubotStatus.FACTORY_NEW);
+    }
+
     @Override
     public boolean onDeadCallback() {
-        LogManager.LOGGER.severe("Cubot death");
-        return true; //always cancelled
+        LogManager.LOGGER.info(getParent().getUsername() + "'s Cubot died");
+
+        reset();
+
+        //Teleport to spawn point
+        this.getWorld().removeObject(this);
+        this.getWorld().decUpdatable();
+
+        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        Random random = new Random();
+
+        int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);
+        int spawnY = config.getInt("new_user_worldY") + random.nextInt(5);
+        String dimension = config.getString("new_user_dimension");
+        this.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true, dimension));
+
+        Point point = this.getWorld().getRandomPassableTile();
+        this.setX(point.x);
+        this.setY(point.y);
+
+        this.getWorld().addObject(this);
+        this.getWorld().incUpdatable();
+
+        return true;
     }
 }

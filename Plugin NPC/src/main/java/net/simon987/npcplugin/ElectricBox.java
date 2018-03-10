@@ -3,21 +3,27 @@ package net.simon987.npcplugin;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
+import net.simon987.server.assembly.Util;
 import net.simon987.server.game.Attackable;
 import net.simon987.server.game.GameObject;
+import net.simon987.server.game.Rechargeable;
 import net.simon987.server.game.Updatable;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
+
+import java.util.ArrayList;
 
 public class ElectricBox extends GameObject implements Updatable, Attackable {
 
     public static final int ID = 7;
 
     private static final int maxHp = GameServer.INSTANCE.getConfig().getInt("electric_box_hp");
-    private static final int damage = GameServer.INSTANCE.getConfig().getInt("electric_box_damage");
+    private static final int damageDealt = GameServer.INSTANCE.getConfig().getInt("electric_box_damage");
     private static final int energyGiven = GameServer.INSTANCE.getConfig().getInt("electric_box_energy_given");
 
     private int hp;
+
+    private ArrayList<Attackable> nearObjects = new ArrayList<>();
 
     public ElectricBox() {
 
@@ -71,8 +77,30 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
         return Obstacle.MAP_INFO;
     }
 
+    private void updateNearObjects() {
+
+        nearObjects.clear();
+
+        for (GameObject object : getWorld().getGameObjects()) {
+            if (object != this && object instanceof Attackable && Util.manhattanDist(object.getX(), object.getY(),
+                    getX(), getY()) <= 1) {
+                nearObjects.add((Attackable) object);
+            }
+        }
+    }
+
     @Override
     public void update() {
+
+        updateNearObjects();
+
+        for (Attackable obj : nearObjects) {
+            obj.damage(damageDealt);
+
+            if (obj instanceof Rechargeable) {
+                ((Rechargeable) obj).storeEnergy(energyGiven);
+            }
+        }
 
     }
 

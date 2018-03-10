@@ -7,7 +7,8 @@ public enum CubotStatus {
 
     DEFAULT(0),
     RADIATED(1),
-    DAMAGED(2);
+    DAMAGED(2),
+    FACTORY_NEW(3);
 
     public char val;
 

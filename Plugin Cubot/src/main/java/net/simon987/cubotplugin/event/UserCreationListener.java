@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin.event;
 
 import net.simon987.cubotplugin.Cubot;
+import net.simon987.cubotplugin.CubotStatus;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEvent;
@@ -25,6 +26,7 @@ public class UserCreationListener implements GameEventListener {
 
         User user = (User) event.getSource();
         Cubot cubot = new Cubot();
+        cubot.addStatus(CubotStatus.FACTORY_NEW);
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
         ServerConfiguration config = GameServer.INSTANCE.getConfig();
         
