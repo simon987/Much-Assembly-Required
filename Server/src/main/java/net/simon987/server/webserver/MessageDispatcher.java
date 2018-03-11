@@ -9,18 +9,17 @@ import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 
-public class MessageEventDispatcher {
+public class MessageDispatcher {
 
     private ArrayList<MessageHandler> handlers = new ArrayList<>(10);
 
-    public MessageEventDispatcher() {
+    public MessageDispatcher() {
 
     }
 
     public void addHandler(MessageHandler handler) {
 
         handlers.add(handler);
-
     }
 
     public void dispatch(OnlineUser user, String message) {

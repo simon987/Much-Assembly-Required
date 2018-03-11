@@ -42,7 +42,7 @@ public class SocketServer extends WebSocketServer {
 
     private SocketServerDatabase database;
 
-    private MessageEventDispatcher messageEventDispatcher = new MessageEventDispatcher();
+    private MessageDispatcher messageDispatcher = new MessageDispatcher();
 
     public SocketServer(InetSocketAddress address, ServerConfiguration config) {
         super(address);
@@ -64,14 +64,14 @@ public class SocketServer extends WebSocketServer {
 
         database = new SocketServerDatabase(config);
 
-        messageEventDispatcher.addHandler(new UserInfoRequestHandler());
-        messageEventDispatcher.addHandler(new TerrainRequestHandler());
-        messageEventDispatcher.addHandler(new ObjectsRequestHandler());
-        messageEventDispatcher.addHandler(new CodeUploadHandler());
-        messageEventDispatcher.addHandler(new CodeRequestHandler());
-        messageEventDispatcher.addHandler(new KeypressHandler());
-        messageEventDispatcher.addHandler(new FloppyHandler());
-        messageEventDispatcher.addHandler(new DebugCommandHandler());
+        messageDispatcher.addHandler(new UserInfoRequestHandler());
+        messageDispatcher.addHandler(new TerrainRequestHandler());
+        messageDispatcher.addHandler(new ObjectsRequestHandler());
+        messageDispatcher.addHandler(new CodeUploadHandler());
+        messageDispatcher.addHandler(new CodeRequestHandler());
+        messageDispatcher.addHandler(new KeypressHandler());
+        messageDispatcher.addHandler(new FloppyHandler());
+        messageDispatcher.addHandler(new DebugCommandHandler());
 
     }
 
@@ -95,7 +95,7 @@ public class SocketServer extends WebSocketServer {
 
             if (onlineUser.isAuthenticated()) {
 
-                messageEventDispatcher.dispatch(onlineUser, message);
+                messageDispatcher.dispatch(onlineUser, message);
 
             } else {
                 LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + conn.getRemoteSocketAddress());
