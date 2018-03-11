@@ -29,7 +29,7 @@ public class UserCreationListener implements GameEventListener {
         cubot.addStatus(CubotStatus.FACTORY_NEW);
         cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
         ServerConfiguration config = GameServer.INSTANCE.getConfig();
-        
+
         Point point = null;
         while (point == null || cubot.getWorld() == null) {
             int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);
@@ -50,6 +50,8 @@ public class UserCreationListener implements GameEventListener {
         cubot.setMaxEnergy(config.getInt("battery_max_energy"));
 
         cubot.setHp(config.getInt("cubot_max_hp"));
+        cubot.setMaxHp(config.getInt("cubot_max_hp"));
+        cubot.setMaxShield(config.getInt("cubot_max_hp"));
 
         cubot.setParent(user);
         user.setControlledUnit(cubot);

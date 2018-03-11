@@ -123,6 +123,7 @@ public class WorldCreationListener implements GameEventListener {
                     }
                 }
 
+                vaultDoor.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
                 world.addObject(vaultDoor);
                 world.incUpdatable(); //In case the Factory & Radio Tower couldn't be spawned.
                 vaultDoor.setWorld(world);

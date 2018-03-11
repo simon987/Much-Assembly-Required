@@ -463,4 +463,12 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
         return true;
     }
+
+    public int getMaxShield() {
+        return maxShield;
+    }
+
+    public void setMaxShield(int maxShield) {
+        this.maxShield = maxShield;
+    }
 }
