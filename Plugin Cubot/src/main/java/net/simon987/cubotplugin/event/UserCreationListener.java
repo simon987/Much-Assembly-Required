@@ -51,7 +51,7 @@ public class UserCreationListener implements GameEventListener {
 
         cubot.setHp(config.getInt("cubot_max_hp"));
         cubot.setMaxHp(config.getInt("cubot_max_hp"));
-        cubot.setMaxShield(config.getInt("cubot_max_hp"));
+        cubot.setMaxShield(config.getInt("cubot_max_shield"));
 
         cubot.setParent(user);
         user.setControlledUnit(cubot);
