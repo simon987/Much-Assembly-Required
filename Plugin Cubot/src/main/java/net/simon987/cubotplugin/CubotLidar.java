@@ -114,7 +114,8 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 if (cubot.spendEnergy(10)) {
                     char[][] mapInfo = cubot.getWorld().getMapInfo();
 
-                    int i = MEMORY_MAP_START;
+                    //Write map data to the location specified by register X
+                    int i = getCpu().getRegisterSet().getRegister("X").getValue();
                     for (int y = 0; y < cubot.getWorld().getWorldSize(); y++) {
                         for (int x = 0; x < cubot.getWorld().getWorldSize(); x++) {
                             getCpu().getMemory().set(i++, mapInfo[x][y]);
