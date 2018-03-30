@@ -29,6 +29,7 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
     private static final int LIDAR_GET_PATH = 2;
     private static final int LIDAR_GET_MAP = 3;
     private static final int LIDAR_GET_WORLD_POS = 4;
+    private static final int LIDAR_GET_WORLD_SIZE = 5;
 
     private static final int MEMORY_MAP_START = 0x0100;
     private static final int MEMORY_PATH_START = 0x0000;
@@ -113,7 +114,8 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 if (cubot.spendEnergy(10)) {
                     char[][] mapInfo = cubot.getWorld().getMapInfo();
 
-                    int i = MEMORY_MAP_START;
+                    //Write map data to the location specified by register X
+                    int i = getCpu().getRegisterSet().getRegister("X").getValue();
                     for (int y = 0; y < cubot.getWorld().getWorldSize(); y++) {
                         for (int x = 0; x < cubot.getWorld().getWorldSize(); x++) {
                             getCpu().getMemory().set(i++, mapInfo[x][y]);
@@ -122,6 +124,12 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 }
 
                 break;
+
+            case LIDAR_GET_WORLD_SIZE:
+                getCpu().getRegisterSet().getRegister("X").setValue(cubot.getWorld().getWorldSize());
+                getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getWorld().getWorldSize());
+                break;
+
             case LIDAR_GET_WORLD_POS:
                 getCpu().getRegisterSet().getRegister("X").setValue(cubot.getWorld().getX());
                 getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getWorld().getY());
