@@ -13,6 +13,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
@@ -85,6 +86,32 @@ public class Memory implements Target, MongoSerialisable {
         }
 
         words[address] = (char) value;
+    }
+
+    /**
+     * Configurably corrupt memory
+     * 
+     * @param blockSize Block size (in words) in which to randomly flip one bit
+     */
+     public void corrupt(int blockSize) {
+         Random rand = new Random();
+
+         // Increment offset by blockSize
+         for (int offset = 0; offset < words.length; offset += blockSize) {
+
+             // Calculate address to corrupt by adding a random value between 0 to (blocksize-1) to offset
+             int address = rand.nextInt(blockSize) + offset;
+
+             // Checking here avoids having a protected area at the end of the address space
+             if(address < words.length) {
+
+                 // Calculate bitmask by left-shifting 1 by a random value between 0 and 15
+                 int bitmask = 1 << rand.nextInt(16);
+
+                 // Flip the bit with XOR	
+                 words[address] ^= bitmask;
+             }
+         }
     }
 
     /**
