@@ -31,7 +31,6 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
     private static final int LIDAR_GET_WORLD_POS = 4;
     private static final int LIDAR_GET_WORLD_SIZE = 5;
 
-    private static final int MEMORY_MAP_START = 0x0100;
     private static final int MEMORY_PATH_START = 0x0000;
 
     public CubotLidar(Cubot cubot) {
