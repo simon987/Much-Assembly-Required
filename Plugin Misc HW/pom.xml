@@ -7,18 +7,18 @@
 	<parent>
 		<groupId>net.simon987.server</groupId>
 		<artifactId>server_root</artifactId>
-		<version>1.2a</version>
+        <version>1.4a</version>
     </parent>
 	
     <groupId>net.simon987.pluginmischw</groupId>
     <artifactId>plugin-misc-hw</artifactId>
-    <version>1.2a</version>
+    <version>1.4a</version>
 
     <dependencies>
         <dependency>
             <groupId>net.simon987.server</groupId>
             <artifactId>server</artifactId>
-            <version>1.2a</version>
+            <version>1.4a</version>
         </dependency>
 
         <dependency>
