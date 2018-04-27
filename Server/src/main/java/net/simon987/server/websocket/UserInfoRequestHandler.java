@@ -1,15 +1,17 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 public class UserInfoRequestHandler implements MessageHandler {
 
 
     @Override
-    public void handle(OnlineUser user, JSONObject message) {
+    public void handle(OnlineUser user, JSONObject message) throws IOException {
 
         if (message.get("t").equals("userInfo")) {
 
@@ -31,8 +33,7 @@ public class UserInfoRequestHandler implements MessageHandler {
 
             json.put("t", "userInfo");
             json.put("maxWidth", GameServer.INSTANCE.getGameUniverse().getMaxWidth());
-            user.getWebSocket().send(json.toJSONString());
-
+            user.getWebSocket().getRemote().sendString(json.toJSONString());
 
         }
     }

@@ -1,6 +1,7 @@
 package net.simon987.server.user;
 
 import com.mongodb.*;
+import net.simon987.server.GameServer;
 import net.simon987.server.assembly.exception.CancelledException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -34,16 +35,37 @@ public class UserManager {
         return userList;
     }
 
-    public void registerUser(User user, String password) {
+    public void registerUser(String username, String password) throws RegistrationException {
 
-        DBObject dbUser = user.mongoSerialise();
+        if (username.length() < 5 || username.length() > 20) {
+            throw new RegistrationException("Username must be 5-20 characters");
+        }
+        if (password.length() < 8 || password.length() > 96) {
+            throw new RegistrationException("Password must be 8-96 characters");
+        }
 
-        String salt = BCrypt.gensalt(12);
-        String hashedPassword = BCrypt.hashpw(password, salt);
+        //Check if exists
+        DBObject where = new BasicDBObject();
+        where.put("_id", username);
 
-        dbUser.put("password", hashedPassword);
+        if (userCollection.findOne(where) != null) {
+            throw new RegistrationException("Username is already in use");
+        }
 
-        userCollection.save(dbUser);
+        try {
+            User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(username, true);
+            user.setUsername(username);
+
+            String salt = BCrypt.gensalt();
+            String hashedPassword = BCrypt.hashpw(password, salt);
+            user.setPassword(hashedPassword);
+
+            DBObject dbUser = user.mongoSerialise();
+
+            userCollection.save(dbUser);
+        } catch (Exception e) {
+            throw new RegistrationException("An exception occurred while trying to create user: " + e.getMessage());
+        }
     }
 
     public boolean validateUser(String username, String password) {
@@ -52,7 +74,6 @@ public class UserManager {
         where.put("_id", username);
 
         DBObject user = userCollection.findOne(where);
-
         return user != null && BCrypt.checkpw(password, (String) user.get("password"));
     }
 }

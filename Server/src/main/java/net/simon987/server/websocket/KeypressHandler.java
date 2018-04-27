@@ -1,4 +1,4 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import org.json.simple.JSONObject;
 

@@ -160,7 +160,7 @@ public class CPU implements MongoSerialisable {
         }
         int elapsed = (int) (System.currentTimeMillis() - startTime);
 
-        LogManager.LOGGER.fine(counter + " instruction in " + elapsed + "ms : " + (double) counter / (elapsed / 1000) / 1000000 + "MHz");
+//        LogManager.LOGGER.fine(counter + " instruction in " + elapsed + "ms : " + (double) counter / (elapsed / 1000) / 1000000 + "MHz");
 
 
         //Write execution cost and instruction count to memory
@@ -172,7 +172,6 @@ public class CPU implements MongoSerialisable {
     }
 
     public void executeInstruction(Instruction instruction, int source, int destination) {
-
 
         //Execute the instruction
         if (source == 0) {

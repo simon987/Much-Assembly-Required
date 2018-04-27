@@ -1,4 +1,4 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Assembler;
@@ -6,10 +6,12 @@ import net.simon987.server.assembly.AssemblyResult;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 public class CodeUploadHandler implements MessageHandler {
 
     @Override
-    public void handle(OnlineUser user, JSONObject json) {
+    public void handle(OnlineUser user, JSONObject json) throws IOException {
         if (json.get("t").equals("uploadCode")) {
 
             LogManager.LOGGER.fine("(WS) Code upload from " + user.getUser().getUsername());
@@ -48,11 +50,9 @@ public class CodeUploadHandler implements MessageHandler {
                     response.put("bytes", ar.bytes.length);
                     response.put("exceptions", ar.exceptions.size());
 
-                    user.getWebSocket().send(response.toJSONString());
+                    user.getWebSocket().getRemote().sendString(response.toJSONString());
                 }
             }
-
-
         }
     }
 }

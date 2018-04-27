@@ -1,4 +1,4 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.GameObject;
@@ -7,11 +7,13 @@ import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 public class ObjectsRequestHandler implements MessageHandler {
 
 
     @Override
-    public void handle(OnlineUser user, JSONObject json) {
+    public void handle(OnlineUser user, JSONObject json) throws IOException {
         if (json.get("t").equals("object")) {
             // LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
 
@@ -43,7 +45,7 @@ public class ObjectsRequestHandler implements MessageHandler {
 
 
                 if (user.getWebSocket().isOpen()) {
-                    user.getWebSocket().send(response.toJSONString());
+                    user.getWebSocket().getRemote().sendString(response.toJSONString());
                 }
             }
         }

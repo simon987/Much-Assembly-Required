@@ -18,6 +18,7 @@ public class User implements MongoSerialisable {
     private String username;
 
     private String userCode;
+    private String password;
 
     private CPU cpu;
 
@@ -49,6 +50,7 @@ public class User implements MongoSerialisable {
         dbObject.put("code", userCode);
         dbObject.put("controlledUnit", controlledUnit.getObjectId());
         dbObject.put("cpu", cpu.mongoSerialise());
+        dbObject.put("password", password);
 
         return dbObject;
 
@@ -59,6 +61,7 @@ public class User implements MongoSerialisable {
         User user = new User((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("controlledUnit")));
         user.username = (String) obj.get("username");
         user.userCode = (String) obj.get("code");
+        user.password = (String) obj.get("password");
 
         user.getControlledUnit().setParent(user);
 
@@ -106,5 +109,9 @@ public class User implements MongoSerialisable {
 
     public void setGuest(boolean guest) {
         this.guest = guest;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

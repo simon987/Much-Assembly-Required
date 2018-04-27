@@ -1,12 +1,12 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 
 import net.simon987.server.logging.LogManager;
-import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MessageDispatcher {
@@ -32,11 +32,8 @@ public class MessageDispatcher {
                 for (MessageHandler handler : handlers) {
                     try {
                         handler.handle(user, json);
-                    } catch (WebsocketNotConnectedException e) {
-                        LogManager.LOGGER.fine("Catched WebsocketNotConnectedException");
-                    } catch (Exception e1) {
-                        LogManager.LOGGER.severe(e1.getMessage());
-                        e1.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             } else {

@@ -1,4 +1,4 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.io.DatabaseManager;

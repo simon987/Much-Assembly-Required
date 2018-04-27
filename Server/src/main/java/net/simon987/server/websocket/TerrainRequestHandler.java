@@ -1,4 +1,4 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.World;
@@ -6,10 +6,12 @@ import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 public class TerrainRequestHandler implements MessageHandler {
 
     @Override
-    public void handle(OnlineUser user, JSONObject json) {
+    public void handle(OnlineUser user, JSONObject json) throws IOException {
         if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y") &&
                 json.containsKey("dimension")) {
 
@@ -44,14 +46,14 @@ public class TerrainRequestHandler implements MessageHandler {
                 response.put("terrain", terrain);
                 response.put("size", world.getWorldSize());
 
-                user.getWebSocket().send(response.toJSONString());
+                user.getWebSocket().getRemote().sendString(response.toJSONString());
             } else {
                 //Uncharted World
                 JSONObject response = new JSONObject();
                 response.put("t", "terrain");
                 response.put("ok", false);
 
-                user.getWebSocket().send(response.toJSONString());
+                user.getWebSocket().getRemote().sendString((response.toJSONString()));
             }
         }
     }

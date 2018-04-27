@@ -9,47 +9,103 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-header"><h5>Account - login & register</h5></div>
+        <div class="card-header"><h5>Account</h5></div>
         <div class="card-body">
-            <h5 class="card-title">Login</h5>
-            <form>
-                <div class="row">
 
-                    <div class="col form-group">
-                        <input title="Username" placeholder="Username" name="username" class="form-control">
+            #if($session.attribute("username"))
+            ## ALREADY LOGGED IN
+                <p>Logged in as <strong>$session.attribute("username")</strong></p>
+
+                <hr>
+
+                <h5 class="card-title">Change password</h5>
+                <form method="post" action="/change_password">
+                    <div class="row">
+
+                        <div class="col form-group">
+                            <input title="Current password" type="password" placeholder="Current password"
+                                   name="password" class="form-control">
+                        </div>
                     </div>
 
-                    <div class="col form-group">
-                        <input title="Password" type="password" placeholder="Password" name="password"
-                               class="form-control">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <input title="New password" type="password" placeholder="New password"
+                                       name="new_password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <input title="Repeat new password" type="password" placeholder="Repeat new password"
+                                       name="new_password" class="form-control">
+                            </div>
+                        </div>
                     </div>
+
+                    <button type="submit" class="btn btn-outline-primary text-mono">Register</button>
+                </form>
+
+                <hr>
+
+                <h5 class="card-title">Debug information</h5>
+                <div class="card card-block bg-light text-dark text-mono" style="padding: 1em">
+                    <h5>CPU</h5>
+                    <pre>$user.getCpu()</pre>
+
+                    <h5>Code</h5>
+                    <pre>$user.getUserCode()</pre>
+
+                    <h5>Controlled unit</h5>
+                    <p>id: $user.getControlledUnit().getObjectId()</p>
+                    <p>energy: $user.getControlledUnit().getEnergy()</p>
+                    <p>x: $user.getControlledUnit().getX()</p>
+                    <p>y: $user.getControlledUnit().getY()</p>
+                    <p>console mode: $user.getControlledUnit().getConsoleMode()</p>
+                    <p>kbBuffer size: $user.getControlledUnit().getKeyboardBuffer().size()</p>
+                    <h5>World</h5>
+                    <pre>$user.getControlledUnit().getWorld()</pre>
                 </div>
+            #else
+            ## NOT LOGGED IN
+                <h5 class="card-title">Login</h5>
+                <form method="post" action="/login">
+                    <div class="row">
 
+                        <div class="col form-group">
+                            <input title="Username" placeholder="Username" name="username" class="form-control">
+                        </div>
 
-                <button type="submit" class="btn btn-primary text-mono">Login</button>
-
-            </form>
-
-            <hr>
-
-            <h5 class="card-title">Register</h5>
-            <form>
-                <div class="row">
-
-                    <div class="col form-group">
-                        <input title="Username" placeholder="Username" name="username" class="form-control">
+                        <div class="col form-group">
+                            <input title="Password" type="password" placeholder="Password" name="password"
+                                   class="form-control">
+                        </div>
                     </div>
 
-                    <div class="col form-group">
-                        <input title="Password" type="password" placeholder="Password" name="password"
-                               class="form-control">
+
+                    <button type="submit" class="btn btn-primary text-mono">Login</button>
+
+                </form>
+
+                <hr>
+
+                <h5 class="card-title">Register</h5>
+                <form method="post" action="/register">
+                    <div class="row">
+
+                        <div class="col form-group">
+                            <input title="Username" placeholder="Username" name="username" class="form-control">
+                        </div>
+
+                        <div class="col form-group">
+                            <input title="Password" type="password" placeholder="Password" name="password"
+                                   class="form-control">
+                        </div>
                     </div>
-                </div>
 
-
-                <button type="submit" class="btn btn-outline-primary text-mono">Register</button>
-
-            </form>
+                    <button type="submit" class="btn btn-outline-primary text-mono">Register</button>
+                </form>
+            #end
         </div>
     </div>
 </div>

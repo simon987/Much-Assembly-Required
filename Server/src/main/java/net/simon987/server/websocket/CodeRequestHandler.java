@@ -1,11 +1,13 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
+
 public class CodeRequestHandler implements MessageHandler {
     @Override
-    public void handle(OnlineUser user, JSONObject json) {
+    public void handle(OnlineUser user, JSONObject json) throws IOException {
 
         if (json.get("t").equals("codeRequest")) {
 
@@ -18,7 +20,7 @@ public class CodeRequestHandler implements MessageHandler {
                 response.put("t", "code");
                 response.put("code", "; Create a free account to control your own Cubot with assembly language!"); //todo load from config
 
-                user.getWebSocket().send(response.toJSONString());
+                user.getWebSocket().getRemote().sendString(response.toJSONString());
 
             } else {
 
@@ -27,7 +29,7 @@ public class CodeRequestHandler implements MessageHandler {
                 response.put("t", "code");
                 response.put("code", user.getUser().getUserCode());
 
-                user.getWebSocket().send(response.toJSONString());
+                user.getWebSocket().getRemote().sendString(response.toJSONString());
             }
 
 

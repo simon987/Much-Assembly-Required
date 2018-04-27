@@ -1,4 +1,4 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.logging.LogManager;
@@ -21,7 +21,7 @@ public class FloppyHandler implements MessageHandler {
 
             if (user.getUser().getControlledUnit().getFloppyData() != null) {
                 byte[] bytes = user.getUser().getControlledUnit().getFloppyData().getBytes();
-                user.getWebSocket().send(bytes);
+                LogManager.LOGGER.severe("TODO FloppyHandler.handle()");
             }
 
 

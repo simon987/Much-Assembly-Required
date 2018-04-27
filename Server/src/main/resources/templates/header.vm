@@ -29,3 +29,12 @@
         </ul>
     </div>
 </nav>
+
+<div class="container">
+    #foreach($msg in $session.attribute("messages"))
+        <div class="alert $msg.getType()"><a href="#" class="close" data-dismiss="alert"
+                                             aria-label="close">&times;</a>$msg.getMessage()</div>
+    #end
+    $session.removeAttribute("messages")
+</div>
+

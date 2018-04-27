@@ -14,7 +14,8 @@ import net.simon987.server.game.debug.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
-import net.simon987.server.webserver.SocketServer;
+import net.simon987.server.user.UserManager;
+import net.simon987.server.websocket.SocketServer;
 
 import java.io.File;
 import java.net.UnknownHostException;
@@ -39,12 +40,16 @@ public class GameServer implements Runnable {
 
 	private MongoClient mongo = null;
 
+    private UserManager userManager;
+
     public GameServer() {
 
         this.config = new ServerConfiguration("config.properties");
 
         try{
 	        mongo = new MongoClient("localhost", 27017);
+            userManager = new UserManager(mongo);
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -127,7 +132,7 @@ public class GameServer implements Runnable {
             uTime = System.currentTimeMillis() - startTime;
             waitTime = config.getInt("tick_length") - uTime;
 
-            LogManager.LOGGER.info("Wait time : " + waitTime + "ms | Update time: " + uTime + "ms | " + (int) (((double) uTime / waitTime) * 100) + "% load");
+//            LogManager.LOGGER.info("Wait time : " + waitTime + "ms | Update time: " + uTime + "ms | " + (int) (((double) uTime / waitTime) * 100) + "% load");
 
             try {
                 if (waitTime >= 0) {
@@ -184,13 +189,11 @@ public class GameServer implements Runnable {
             save();
         }
 
-        socketServer.tick();
+//        socketServer.tick();
 
-        LogManager.LOGGER.info("Processed " + gameUniverse.getWorldCount() + " worlds (" + updatedWorlds +
-                " updated)");
+//        LogManager.LOGGER.info("Processed " + gameUniverse.getWorldCount() + " worlds (" + updatedWorlds +
+//                " updated)");
     }
-
-
 
     void load() {
 
@@ -248,14 +251,12 @@ public class GameServer implements Runnable {
 	        int insertedWorlds = 0;
 	        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
             for (World w : universe.getWorlds()) {
-//	            LogManager.LOGGER.fine("Saving world "+w.getId()+" to mongodb");
                 insertedWorlds++;
 	            worlds.save(w.mongoSerialise());
 
-	         	// If the world should unload, it is removed from the Universe after having been saved.
+                //If the world should unload, it is removed from the Universe after having been saved.
 	        	if (w.shouldUnload()){
 	        		unloaded_worlds++;
-//				 	LogManager.LOGGER.fine("Unloading world "+w.getId()+" from universe");
                     universe.removeWorld(w);
 	        	}
 	        }
@@ -265,17 +266,15 @@ public class GameServer implements Runnable {
 	            if (!u.isGuest()) {
 	            	users.save(u.mongoSerialise());
 	            }
-
 	        }
 
 	        BasicDBObject serverObj = new BasicDBObject();
-	        serverObj.put("_id","serverinfo"); // a constant id ensures only one entry is kept and updated, instead of a new entry created every save.
+            serverObj.put("_id", "serverinfo"); //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
 	        serverObj.put("time", gameUniverse.getTime());
 	        serverObj.put("nextObjectId", gameUniverse.getNextObjectId());
 			server.save(serverObj);
 
-			LogManager.LOGGER.info(""+insertedWorlds+" worlds saved, "+unloaded_worlds+" unloaded");
-	        LogManager.LOGGER.info("Done!");
+            LogManager.LOGGER.info("" + insertedWorlds + " worlds saved, " + unloaded_worlds + " unloaded");
         } catch (Exception e) {
             LogManager.LOGGER.severe("Problem happened during save function");
             e.printStackTrace();
@@ -296,5 +295,9 @@ public class GameServer implements Runnable {
 
     public DayNightCycle getDayNightCycle() {
         return dayNightCycle;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
     }
 }

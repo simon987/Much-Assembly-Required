@@ -1,14 +1,14 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
 import net.simon987.server.user.User;
-import org.java_websocket.WebSocket;
+import org.eclipse.jetty.websocket.api.Session;
 
 public class OnlineUser {
 
 
     private boolean authenticated = false;
 
-    private WebSocket webSocket;
+    private Session webSocket;
 
     private boolean guest;
 
@@ -19,12 +19,12 @@ public class OnlineUser {
      */
     private User user;
 
-    public OnlineUser(WebSocket webSocket) {
+    public OnlineUser(Session webSocket) {
         this.webSocket = webSocket;
 
     }
 
-    public WebSocket getWebSocket() {
+    public Session getWebSocket() {
         return webSocket;
     }
 

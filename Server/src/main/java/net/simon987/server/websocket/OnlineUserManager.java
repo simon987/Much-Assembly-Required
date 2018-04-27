@@ -1,6 +1,6 @@
-package net.simon987.server.webserver;
+package net.simon987.server.websocket;
 
-import org.java_websocket.WebSocket;
+import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ public class OnlineUserManager {
     private ArrayList<OnlineUser> onlineUsers = new ArrayList<>(10);
 
 
-    public OnlineUser getUser(WebSocket socket) {
+    public OnlineUser getUser(Session socket) {
 
         ArrayList<OnlineUser> _onlineUsers = new ArrayList<>(onlineUsers);
 
