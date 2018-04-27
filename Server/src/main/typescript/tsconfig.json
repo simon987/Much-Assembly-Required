@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outFile": "../resources/static/js/mar.js",
+    "removeComments": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+    "phaser.d.ts",
+    "phaser.plugin.isometric.d.ts",
+    "MarGame.ts",
+    "mar.ts",
+    "GameClient.ts",
+    "GameObject.ts",
+    "World.ts",
+    "Console.ts"
+  ]
+}

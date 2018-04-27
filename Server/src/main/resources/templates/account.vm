@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    #set ($title = "Login")
+    #set ($cur_page = "account")
+    #parse("head.vm")
+<body>
+
+    #parse("header.vm")
+
+<div class="container">
+    <div class="card">
+        <div class="card-header"><h5>Account - login & register</h5></div>
+        <div class="card-body">
+            <h5 class="card-title">Login</h5>
+            <form>
+                <div class="row">
+
+                    <div class="col form-group">
+                        <input title="Username" placeholder="Username" name="username" class="form-control">
+                    </div>
+
+                    <div class="col form-group">
+                        <input title="Password" type="password" placeholder="Password" name="password"
+                               class="form-control">
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary text-mono">Login</button>
+
+            </form>
+
+            <hr>
+
+            <h5 class="card-title">Register</h5>
+            <form>
+                <div class="row">
+
+                    <div class="col form-group">
+                        <input title="Username" placeholder="Username" name="username" class="form-control">
+                    </div>
+
+                    <div class="col form-group">
+                        <input title="Password" type="password" placeholder="Password" name="password"
+                               class="form-control">
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-outline-primary text-mono">Register</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+    #parse("footer.vm")
+
+</body>
+<script src="js/popper.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</html>

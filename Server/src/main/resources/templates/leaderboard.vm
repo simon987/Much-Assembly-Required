@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    #set ($title = "Leaderboard")
+    #set ($cur_page = "leaderboarc")
+    #parse("head.vm")
+<body>
+
+    #parse("header.vm")
+
+<div class="container">
+    <div class="card">
+        <div class="card-header"><h5>Leaderboard</h5></div>
+        <div class="card-body">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Player</th>
+                    <th>Completed vaults</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Test1</td>
+                    <td>Test2</td>
+                </tr>
+                <tr>
+                    <td>Test1</td>
+                    <td>Test2</td>
+                </tr>
+                <tr>
+                    <td>Test1</td>
+                    <td>Test2</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    #parse("footer.vm")
+
+</body>
+<script src="js/popper.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</html>

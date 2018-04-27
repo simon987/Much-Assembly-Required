@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+    #set ($title = "Official game server")  ## TODO get from config
+    #set ($cur_page = "play")
+    #parse("head.vm")
+<body>
+
+    #parse("header.vm")
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a id="tab-world" class="nav-link active regular-screen" href="#" onclick="tabWorldClick()"><i
+                            class="mi">public</i> World</a>
+                    <a id="tab-world-sm" class="nav-link active small-screen" href="#" onclick="tabWorldClick()"><i
+                            class="mi">public</i></a>
+                </li>
+                <li class="nav-item">
+                    <a id="tab-editor" class="nav-link regular-screen" href="#" onclick="tabEditorClick()"><i
+                            class="mi">code</i> Editor</a>
+                    <a id="tab-editor-sm" class="nav-link small-screen" href="#" onclick="tabEditorClick()"><i
+                            class="mi">code</i></a>
+                </li>
+                <li class="nav-item">
+                    <a id="tab-console" class="nav-link regular-screen" href="#" onclick="tabConsoleClick()"><i
+                            class="mi">computer</i> Console</a>
+                    <a id="tab-console-sm" class="nav-link small-screen" href="#" onclick="tabConsoleClick()"><i
+                            class="mi">computer</i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link regular-screen" target="_blank"
+                       href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i>
+                        Documentation</a>
+                    <a class="nav-link small-screen" target="_blank"
+                       href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link regular-screen" target="_blank"
+                       href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg"><i
+                            class="mi">chat</i> Slack</a>
+                    <a class="nav-link small-screen" target="_blank"
+                       href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg"><i
+                            class="mi">chat</i></a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+
+        ## GAME / WORLD
+            <div id="world-tab">
+                <div id="game" tabindex="0"></div>
+            </div>
+
+        ## EDITOR
+            <div id="editor-tab" style="display: none">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <select title="Select Theme" class="form-control" id="editorTheme"></select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-shadow btn-success text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                            Upload
+                        </button>
+                        <button class="btn btn-shadow btn-success text-mono small-screen" href="#"><i class="mi">file_upload</i>
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-shadow btn-danger text-mono regular-screen" href="#"><i
+                                class="mi">replay</i> Reload
+                        </button>
+                        <button class="btn btn-shadow btn-danger text-mono small-screen" href="#"><i
+                                class="mi">replay</i></button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                            Floppy
+                        </button>
+                        <button class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_upload</i>
+                        </button>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_download</i>
+                            Floppy
+                        </button>
+                        <button class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_download</i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="editor"></div>
+                <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+                <script src="js/editor.js"></script>
+            </div>
+
+        ## CONSOLE
+            <div id="console-tab" style="display: none">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="dropdown">
+                            <button id="widthDial" class="btn btn-secondary btn-shadow dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true">Line width
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item">16</a>
+                                <a href="#" class="dropdown-item">24</a>
+                                <a href="#" class="dropdown-item">40</a>
+                                <a href="#" class="dropdown-item">56</a>
+                                <a href="#" class="dropdown-item">64</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="colorButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">
+                            Color
+                        </button>
+                        <button onclick="$('#colorButton').click()"
+                                class="btn btn-outline-info text-mono btn-shadow small-screen"><i class="mi">invert_colors_off</i>
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="scrollButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">
+                            Scroll
+                        </button>
+                        <button onclick="$('#scrollButton').click()"
+                                class="btn btn-outline-info text-mono btn-shadow small-screen"><i
+                                class="mi">swap_vert</i></button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="resetButton" class="btn btn-danger text-mono btn-shadow regular-screen">Reset
+                        </button>
+                        <button onclick="$('#resetButton').click()"
+                                class="btn btn-danger text-mono btn-shadow small-screen"><i class="mi">replay</i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="console-wrapper" class="noisy">
+                    <div id="consoleText" class="piece output noclick ctr-selection ctr-text">test123</div>
+                    <div class="piece scanlines noclick"></div>
+                    <div class="piece glow noclick"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    #parse("footer.vm")
+
+<script src="js/phaser.js"></script>
+<script src="js/phaser-plugin-isometric.js"></script>
+<script src="js/mar.js"></script>
+</body>
+</html>
