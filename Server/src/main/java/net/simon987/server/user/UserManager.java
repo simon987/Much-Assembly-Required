@@ -21,6 +21,11 @@ public class UserManager {
         userCollection = db.getCollection("user");
     }
 
+    /**
+     * Get and deserialise all users from mongo
+     *
+     * @return list of de-serialized users
+     */
     public ArrayList<User> getUsers() {
 
         ArrayList<User> userList = new ArrayList<>();
@@ -37,6 +42,12 @@ public class UserManager {
         return userList;
     }
 
+    /**
+     * Register an user and initialises its controlled unit
+     * @param username username
+     * @param password plain password
+     * @throws RegistrationException is username/password length is invalid
+     */
     public void registerUser(String username, String password) throws RegistrationException {
 
         if (username.length() < 5 || username.length() > 20) {
@@ -70,6 +81,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * Validate a username/password combo
+     * @param username username
+     * @param password plain password
+     * @return true if combo is valid
+     */
     public boolean validateUser(String username, String password) {
 
         DBObject where = new BasicDBObject();
@@ -79,6 +96,12 @@ public class UserManager {
         return user != null && BCrypt.checkpw(password, (String) user.get("password"));
     }
 
+    /**
+     * Change the password of an user and immediately save it
+     * @param username Username
+     * @param newPassword New plain password
+     * @throws RegistrationException When password length is invalid
+     */
     public void changePassword(String username, String newPassword) throws RegistrationException {
 
         if (newPassword.length() < 8 || newPassword.length() > 96) {
@@ -111,19 +134,24 @@ public class UserManager {
         RandomStringGenerator generator = new RandomStringGenerator(128);
         String token = generator.nextString();
 
-        user.setAccessToken(token);
+        user.setAccessToken(token); //Token is not saved in DB, and is erased when used
 
         LogManager.LOGGER.fine("(Web) Generated access token for " + username);
 
         return token;
     }
 
+    /**
+     * Validate an access token sent by the client
+     * @param token 128-char accesss token
+     * @return username of the corresponding user, null if not found
+     */
     public User validateAuthToken(String token) {
 
         for (User user : GameServer.INSTANCE.getGameUniverse().getUsers()) {
 
-            if (user.getAccessToken().equals(token)) {
-                user.setAccessToken("");
+            if (user.getAccessToken() != null && user.getAccessToken().equals(token)) {
+                user.setAccessToken(""); //Token is erased when used
 
                 return user;
             }

@@ -2,7 +2,6 @@ package net.simon987.server;
 
 
 import com.mongodb.*;
-import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.crypto.CryptoProvider;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
@@ -19,6 +18,7 @@ import net.simon987.server.websocket.SocketServer;
 
 import java.io.File;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class GameServer implements Runnable {
 
@@ -202,7 +202,6 @@ public class GameServer implements Runnable {
         DB db = mongo.getDB("mar");
 
         DBCollection worlds = db.getCollection("world");
-        DBCollection users = db.getCollection("user");
         DBCollection server = db.getCollection("server");
 
         BasicDBObject whereQuery = new BasicDBObject();
@@ -215,13 +214,9 @@ public class GameServer implements Runnable {
         }
 
         //Load users
-        cursor = users.find();
-        while (cursor.hasNext()) {
-            try {
-                universe.addUser(User.deserialize(cursor.next()));
-            } catch (CancelledException e) {
-                e.printStackTrace();
-            }
+        ArrayList<User> userList = userManager.getUsers();
+        for (User user : userList) {
+            universe.addUser(user);
         }
 
         //Load misc server info
