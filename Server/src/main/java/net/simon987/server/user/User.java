@@ -19,12 +19,14 @@ public class User implements MongoSerialisable {
 
     private String userCode;
     private String password;
+    private String accessToken;
 
     private CPU cpu;
 
     private ControllableUnit controlledUnit;
 
-    private boolean guest;
+    private boolean guest = false;
+    private boolean moderator = false;
 
     public User() throws CancelledException {
         GameEvent event = new UserCreationEvent(this);
@@ -32,7 +34,6 @@ public class User implements MongoSerialisable {
         if (event.isCancelled()) {
             throw new CancelledException();
         }
-
 
     }
 
@@ -51,6 +52,7 @@ public class User implements MongoSerialisable {
         dbObject.put("controlledUnit", controlledUnit.getObjectId());
         dbObject.put("cpu", cpu.mongoSerialise());
         dbObject.put("password", password);
+        dbObject.put("moderator", moderator);
 
         return dbObject;
 
@@ -62,6 +64,7 @@ public class User implements MongoSerialisable {
         user.username = (String) obj.get("username");
         user.userCode = (String) obj.get("code");
         user.password = (String) obj.get("password");
+        user.moderator = (boolean) obj.get("moderator");
 
         user.getControlledUnit().setParent(user);
 
@@ -113,5 +116,21 @@ public class User implements MongoSerialisable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public boolean isModerator() {
+        return moderator;
+    }
+
+    public void setModerator(boolean moderator) {
+        this.moderator = moderator;
     }
 }

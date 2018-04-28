@@ -18,7 +18,7 @@ public class UserInfoRequestHandler implements MessageHandler {
             LogManager.LOGGER.fine("(WS) User info request from " + user.getUser().getUsername());
             JSONObject json = new JSONObject();
 
-            if (user.isGuest()) {
+            if (user.getUser().isGuest()) {
                 json.put("worldX", GameServer.INSTANCE.getConfig().getInt("new_user_worldX"));
                 json.put("worldY", GameServer.INSTANCE.getConfig().getInt("new_user_worldY"));
                 json.put("dimension", GameServer.INSTANCE.getConfig().getString("new_user_dimension"));

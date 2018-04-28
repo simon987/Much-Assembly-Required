@@ -6,6 +6,7 @@ import net.simon987.server.web.AlertMessage;
 import net.simon987.server.web.AlertType;
 import net.simon987.server.websocket.SocketServer;
 import org.apache.velocity.app.VelocityEngine;
+import org.json.simple.JSONObject;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.velocity.VelocityTemplateEngine;
@@ -153,9 +154,50 @@ public class Main {
                 request.session().attribute("messages", messages);
             }
 
-
             response.redirect("/account");
             return null;
+        });
+
+        Spark.get("/server_info", (request, response) -> {
+
+            //TODO put that in a constructor somewhere
+            String address;
+            if (GameServer.INSTANCE.getConfig().getInt("use_ssl") == 0) {
+                address = "ws://" +
+                        GameServer.INSTANCE.getConfig().getString("mar_address") + ":" +
+                        GameServer.INSTANCE.getConfig().getString("mar_port") + "/socket";
+            } else {
+                address = "wss://" +
+                        GameServer.INSTANCE.getConfig().getString("mar_address") + ":" +
+                        GameServer.INSTANCE.getConfig().getString("mar_port") + "/socket";
+            }
+            String serverName = GameServer.INSTANCE.getConfig().getString("server_name");
+            int tickLength = GameServer.INSTANCE.getConfig().getInt("tick_length");
+
+            JSONObject json = new JSONObject();
+
+            String username = request.session().attribute("username");
+
+            if (username != null) {
+                String token = GameServer.INSTANCE.getUserManager().generateAndGetToken(username);
+
+                json.put("token", token);
+                json.put("username", username);
+
+            } else {
+
+                json.put("token", "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+                json.put("username", "guest");
+            }
+
+            json.put("address", address);
+            json.put("serverName", serverName);
+            json.put("tickLength", tickLength);
+
+            response.header("Content-Type", "application/json");
+
+            return json.toJSONString();
+
         });
 
         Spark.after((request, response) -> response.header("Content-Encoding", "gzip"));

@@ -374,7 +374,7 @@ class GameClient {
         }
 
         let xhr = new XMLHttpRequest();
-        xhr.open("GET", "./getServerInfo.php", true);
+        xhr.open("GET", "./server_info", true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {

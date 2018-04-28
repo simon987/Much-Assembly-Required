@@ -3,6 +3,8 @@ package net.simon987.server.user;
 import com.mongodb.*;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.exception.CancelledException;
+import net.simon987.server.crypto.RandomStringGenerator;
+import net.simon987.server.logging.LogManager;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
@@ -90,5 +92,43 @@ public class UserManager {
         user.setPassword(hashedPassword);
 
         userCollection.save(user.mongoSerialise()); //Save new password immediately
+    }
+
+    /**
+     * Generate and save a access token for websocket auth
+     *
+     * @param username Username
+     * @return The generated token
+     */
+    public String generateAndGetToken(String username) {
+
+        User user = GameServer.INSTANCE.getGameUniverse().getUser(username);
+
+        if (user == null) {
+            return null;
+        }
+
+        RandomStringGenerator generator = new RandomStringGenerator(128);
+        String token = generator.nextString();
+
+        user.setAccessToken(token);
+
+        LogManager.LOGGER.fine("(Web) Generated access token for " + username);
+
+        return token;
+    }
+
+    public User validateAuthToken(String token) {
+
+        for (User user : GameServer.INSTANCE.getGameUniverse().getUsers()) {
+
+            if (user.getAccessToken().equals(token)) {
+                user.setAccessToken("");
+
+                return user;
+            }
+        }
+
+        return null;
     }
 }

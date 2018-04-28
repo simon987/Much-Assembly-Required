@@ -13,7 +13,7 @@ public class CodeRequestHandler implements MessageHandler {
 
             LogManager.LOGGER.fine("(WS) Code request from " + user.getUser().getUsername());
 
-            if (user.isGuest()) {
+            if (user.getUser().isGuest()) {
 
                 JSONObject response = new JSONObject();
 

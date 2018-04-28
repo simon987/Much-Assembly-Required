@@ -10,10 +10,6 @@ public class OnlineUser {
 
     private Session webSocket;
 
-    private boolean guest;
-
-    private boolean moderator;
-
     /**
      * Associated game user (if authenticated)
      */
@@ -44,20 +40,4 @@ public class OnlineUser {
         this.authenticated = authenticated;
     }
 
-    public void setGuest(boolean guest) {
-        this.guest = guest;
-        user.setGuest(guest);
-    }
-
-    public boolean isGuest() {
-        return guest;
-    }
-
-    public boolean isModerator() {
-        return moderator;
-    }
-
-    public void setModerator(boolean moderator) {
-        this.moderator = moderator;
-    }
 }

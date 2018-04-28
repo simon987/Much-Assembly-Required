@@ -695,7 +695,7 @@ var GameClient = (function () {
             console.log("[MAR] Getting server info... ");
         }
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "./getServerInfo.php", true);
+        xhr.open("GET", "./server_info", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 if (DEBUG) {

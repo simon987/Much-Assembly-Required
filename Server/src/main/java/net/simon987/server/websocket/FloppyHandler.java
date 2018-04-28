@@ -15,7 +15,7 @@ public class FloppyHandler implements MessageHandler {
 
             LogManager.LOGGER.fine("(WS) Floppy download request from " + user.getUser().getUsername());
 
-            if (user.isGuest()) {
+            if (user.getUser().isGuest()) {
                 return;
             }
 

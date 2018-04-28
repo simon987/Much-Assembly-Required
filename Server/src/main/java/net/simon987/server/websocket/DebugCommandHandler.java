@@ -10,7 +10,7 @@ public class DebugCommandHandler implements MessageHandler {
     public void handle(OnlineUser user, JSONObject json) {
 
 
-        if (json.get("t").equals("debug") && user.isModerator()) {
+        if (json.get("t").equals("debug") && user.getUser().isModerator()) {
 
             DebugCommandEvent e = new DebugCommandEvent(json, user);
             GameServer.INSTANCE.getEventDispatcher().dispatch(e); //Ignore cancellation

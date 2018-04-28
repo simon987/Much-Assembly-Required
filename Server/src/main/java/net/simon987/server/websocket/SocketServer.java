@@ -1,7 +1,9 @@
 package net.simon987.server.websocket;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.game.ControllableUnit;
 import net.simon987.server.logging.LogManager;
+import net.simon987.server.user.User;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -57,14 +59,46 @@ public class SocketServer {
             } else {
 
                 LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + session.getRemoteAddress());
-                //todo
 
+                if (message.length() == 128) {
+
+                    User user = GameServer.INSTANCE.getUserManager().validateAuthToken(message);
+
+                    if (user != null) {
+
+                        LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
+
+                        onlineUser.setUser(user);
+                        onlineUser.setAuthenticated(true);
+
+                        try {
+                            session.getRemote().sendString("{\"t\":\"auth\", \"m\":\"ok\"}");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+
+                        User guestUser = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(GameServer.INSTANCE.getGameUniverse().getGuestUsername(), false);
+                        onlineUser.setUser(guestUser);
+                        onlineUser.setAuthenticated(true);
+                        onlineUser.getUser().setGuest(true);
+
+                        LogManager.LOGGER.info("(WS) Created guest user " +
+                                onlineUser.getUser().getUsername() + session.getRemoteAddress());
+
+                        try {
+                            session.getRemote().sendString("{\"t\":\"auth\", \"m\":\"ok\"}");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
 
         } else {
 
             LogManager.LOGGER.severe("(WS) FIXME: SocketServer:onMessage");
-
         }
     }
 
@@ -81,7 +115,7 @@ public class SocketServer {
 
             if (user.getWebSocket().isOpen()) {
 
-                if (user.isGuest()) {
+                if (user.getUser().isGuest()) {
 
                     json.remove("c");
                     try {

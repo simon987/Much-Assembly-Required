@@ -16,7 +16,7 @@ public class CodeUploadHandler implements MessageHandler {
 
             LogManager.LOGGER.fine("(WS) Code upload from " + user.getUser().getUsername());
 
-            if (user.isGuest()) {
+            if (user.getUser().isGuest()) {
                 //Ignore
 
             } else {
