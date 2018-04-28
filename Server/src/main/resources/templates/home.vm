@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <a class="btn btn-primary btn-lg btn-shadow text-mono" href="#" role="button">Play now!</a>
+            <a class="btn btn-primary btn-lg btn-shadow text-mono" href="/play" role="button">Play now!</a>
 
         </div>
 

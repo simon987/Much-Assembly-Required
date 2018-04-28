@@ -36,13 +36,13 @@ public class SocketServer {
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
-        LogManager.LOGGER.info("(WS) New Websocket connection " + session.getRemoteAddress());
+        LogManager.LOGGER.info("(WS) New Websocket connection " + session.getRemoteAddress().getAddress());
         onlineUserManager.add(new OnlineUser(session));
     }
 
     @OnWebSocketClose
     public void onClose(Session session, int code, String reason) {
-        LogManager.LOGGER.info("(WS) Closed " + session.getRemoteAddress() + " with exit code " + code + " additional info: " + reason);
+        LogManager.LOGGER.info("(WS) Closed " + session.getRemoteAddress().getAddress() + " with exit code " + code + " additional info: " + reason);
         onlineUserManager.remove(onlineUserManager.getUser(session));
     }
 
@@ -58,8 +58,7 @@ public class SocketServer {
 
             } else {
 
-                LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + session.getRemoteAddress());
-
+                LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + session.getRemoteAddress().getAddress());
                 if (message.length() == 128) {
 
                     User user = GameServer.INSTANCE.getUserManager().validateAuthToken(message);
@@ -85,7 +84,7 @@ public class SocketServer {
                         onlineUser.getUser().setGuest(true);
 
                         LogManager.LOGGER.info("(WS) Created guest user " +
-                                onlineUser.getUser().getUsername() + session.getRemoteAddress());
+                                onlineUser.getUser().getUsername() + session.getRemoteAddress().getAddress());
 
                         try {
                             session.getRemote().sendString("{\"t\":\"auth\", \"m\":\"ok\"}");
@@ -158,6 +157,5 @@ public class SocketServer {
                 }
             }
         }
-
     }
 }

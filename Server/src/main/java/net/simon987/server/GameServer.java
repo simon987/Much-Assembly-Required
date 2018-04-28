@@ -48,7 +48,7 @@ public class GameServer implements Runnable {
 
         try{
 	        mongo = new MongoClient("localhost", 27017);
-            userManager = new UserManager(mongo);
+            userManager = new UserManager(mongo, config);
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -199,7 +199,7 @@ public class GameServer implements Runnable {
 
         LogManager.LOGGER.info("Loading all data from MongoDB");
 
-        DB db = mongo.getDB("mar");
+        DB db = mongo.getDB(config.getString("mongo_dbname"));
 
         DBCollection worlds = db.getCollection("world");
         DBCollection server = db.getCollection("server");
@@ -235,7 +235,7 @@ public class GameServer implements Runnable {
 
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
         try{
-	        DB db = mongo.getDB("mar");
+            DB db = mongo.getDB(config.getString("mongo_dbname"));
 
 	        int unloaded_worlds = 0;
 

@@ -55,8 +55,8 @@ public class GameUniverse {
      * @return World, null if not found
      */
     private World loadWorld(int x, int y, String dimension) {
-        
-        DB db = mongo.getDB("mar");
+
+        DB db = mongo.getDB(GameServer.INSTANCE.getConfig().getString("mongo_dbname"));
         DBCollection worlds = db.getCollection("world");
 
         BasicDBObject whereQuery = new BasicDBObject();
