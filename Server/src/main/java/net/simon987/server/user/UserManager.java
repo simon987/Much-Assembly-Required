@@ -76,4 +76,19 @@ public class UserManager {
         DBObject user = userCollection.findOne(where);
         return user != null && BCrypt.checkpw(password, (String) user.get("password"));
     }
+
+    public void changePassword(String username, String newPassword) throws RegistrationException {
+
+        if (newPassword.length() < 8 || newPassword.length() > 96) {
+            throw new RegistrationException("Password must be 8-96 characters");
+        }
+
+        User user = GameServer.INSTANCE.getGameUniverse().getUser(username);
+
+        String salt = BCrypt.gensalt();
+        String hashedPassword = BCrypt.hashpw(newPassword, salt);
+        user.setPassword(hashedPassword);
+
+        userCollection.save(user.mongoSerialise()); //Save new password immediately
+    }
 }

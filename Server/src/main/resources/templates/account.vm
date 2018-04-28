@@ -15,6 +15,7 @@
             #if($session.attribute("username"))
             ## ALREADY LOGGED IN
                 <p>Logged in as <strong>$session.attribute("username")</strong></p>
+                <a href="/logout" class="btn btn-warning text-mono"><i class="mi">eject</i> Logout</a>
 
                 <hr>
 
@@ -38,12 +39,12 @@
                         <div class="col">
                             <div class="form-group">
                                 <input title="Repeat new password" type="password" placeholder="Repeat new password"
-                                       name="new_password" class="form-control">
+                                       name="new_password_repeat" class="form-control">
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-outline-primary text-mono">Register</button>
+                    <button type="submit" class="btn btn-outline-primary text-mono">Change password</button>
                 </form>
 
                 <hr>
@@ -53,9 +54,6 @@
                     <h5>CPU</h5>
                     <pre>$user.getCpu()</pre>
 
-                    <h5>Code</h5>
-                    <pre>$user.getUserCode()</pre>
-
                     <h5>Controlled unit</h5>
                     <p>id: $user.getControlledUnit().getObjectId()</p>
                     <p>energy: $user.getControlledUnit().getEnergy()</p>
@@ -63,8 +61,12 @@
                     <p>y: $user.getControlledUnit().getY()</p>
                     <p>console mode: $user.getControlledUnit().getConsoleMode()</p>
                     <p>kbBuffer size: $user.getControlledUnit().getKeyboardBuffer().size()</p>
+
                     <h5>World</h5>
                     <pre>$user.getControlledUnit().getWorld()</pre>
+
+                    <h5>User code</h5>
+                    <pre>$user.getUserCode()</pre>
                 </div>
             #else
             ## NOT LOGGED IN

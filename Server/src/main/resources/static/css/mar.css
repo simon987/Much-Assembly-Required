@@ -80,3 +80,11 @@
     flex: 0 0 16.66667%;
     max-width: 16.66667%;
 }
+
+.col-sm-3 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}

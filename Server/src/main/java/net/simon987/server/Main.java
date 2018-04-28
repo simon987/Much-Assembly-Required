@@ -99,7 +99,7 @@ public class Main {
 
             if (username != null && password != null) {
                 if (GameServer.INSTANCE.getUserManager().validateUser(username, password)) {
-                    AlertMessage[] messages = {new AlertMessage("Logged in as " + username, AlertType.INFO)};
+                    AlertMessage[] messages = {new AlertMessage("Logged in as " + username, AlertType.SUCCESS)};
                     request.session().attribute("messages", messages);
                     request.session().attribute("username", username);
 
@@ -119,6 +119,40 @@ public class Main {
             AlertMessage[] messages = {new AlertMessage("Logged out", AlertType.INFO)};
             request.session().attribute("messages", messages);
             request.session().removeAttribute("username");
+
+            response.redirect("/account");
+            return null;
+        });
+
+        Spark.post("change_password", (request, response) -> {
+
+            String username = request.session().attribute("username");
+            String currentPassword = request.queryParams("password");
+            String newPassword = request.queryParams("new_password");
+            String newPasswordRepeat = request.queryParams("new_password_repeat");
+
+            if (newPassword.equals(newPasswordRepeat)) {
+
+                if (username != null && GameServer.INSTANCE.getUserManager().validateUser(username, currentPassword)) {
+
+                    try {
+                        GameServer.INSTANCE.getUserManager().changePassword(username, newPassword);
+                        AlertMessage[] messages = {new AlertMessage("Changed password", AlertType.SUCCESS)};
+                        request.session().attribute("messages", messages);
+                    } catch (RegistrationException e) {
+                        AlertMessage[] messages = {new AlertMessage(e.getMessage(), AlertType.DANGER)};
+                        request.session().attribute("messages", messages);
+                    }
+
+                } else {
+                    AlertMessage[] messages = {new AlertMessage("Invalid password", AlertType.DANGER)};
+                    request.session().attribute("messages", messages);
+                }
+            } else {
+                AlertMessage[] messages = {new AlertMessage("Passwords did not match", AlertType.DANGER)};
+                request.session().attribute("messages", messages);
+            }
+
 
             response.redirect("/account");
             return null;

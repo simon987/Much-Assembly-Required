@@ -114,24 +114,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <button id="colorButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">
-                            Color
+                            Invert colors
                         </button>
                         <button onclick="$('#colorButton').click()"
                                 class="btn btn-outline-info text-mono btn-shadow small-screen"><i class="mi">invert_colors_off</i>
                         </button>
                     </div>
-                    <div class="col-sm-2">
-                        <button id="scrollButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">
-                            Scroll
+                    <div class="col-sm-3">
+                        <button id="scrollButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">Auto
+                            scrolling
                         </button>
                         <button onclick="$('#scrollButton').click()"
                                 class="btn btn-outline-info text-mono btn-shadow small-screen"><i
                                 class="mi">swap_vert</i></button>
                     </div>
                     <div class="col-sm-2">
-                        <button id="resetButton" class="btn btn-danger text-mono btn-shadow regular-screen">Reset
+                        <button id="resetButton" class="btn btn-danger text-mono btn-shadow regular-screen">Clear
                         </button>
                         <button onclick="$('#resetButton').click()"
                                 class="btn btn-danger text-mono btn-shadow small-screen"><i class="mi">replay</i>
