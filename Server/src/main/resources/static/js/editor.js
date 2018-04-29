@@ -505,7 +505,8 @@ editorOnThemeChange();
 
 document.getElementById("floppyIn").onchange = function () {
 
-    //document.getElementById("floppyUp").innerHTML = "<i class=\"fa fa-cog fa-spin fa-fw\" aria-hidden=\"true\"></i>";
+    document.getElementById("floppyUp").innerHTML = '<i class="mi rotating">cached</i> Floppy';
+
 
     var formData = new FormData(document.getElementById("floppyForm"));
 
@@ -517,8 +518,6 @@ document.getElementById("floppyIn").onchange = function () {
         if (xhr.status === 200) {
 
             if (xhr.responseText === "ok") {
-                //Upload ok, notify the game server
-                mar.client.notifyFloppyUp();
                 alert("Uploaded floppy disk to the drive!")
             } else {
                 alert(xhr.responseText)
@@ -528,7 +527,8 @@ document.getElementById("floppyIn").onchange = function () {
             alert("Couldn't upload floppy code (" + xhr.status + ")");
         }
 
-        document.getElementById("floppyUp").innerHTML = "<i class=\"fa fa-long-arrow-up\" aria-hidden=\"true\"></i> <i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i>";
+        document.getElementById("floppyUp").innerHTML = '<i class="mi">file_upload</i> Floppy';
+
     };
     xhr.onerror = function (ev) {
         ev.preventDefault();

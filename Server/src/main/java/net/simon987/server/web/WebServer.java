@@ -2,7 +2,6 @@ package net.simon987.server.web;
 
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.logging.LogManager;
-import net.simon987.server.websocket.FloppyUploadRoute;
 import net.simon987.server.websocket.SocketServer;
 import org.apache.velocity.app.VelocityEngine;
 import spark.Spark;
@@ -11,6 +10,8 @@ import spark.template.velocity.VelocityTemplateEngine;
 import java.util.Properties;
 
 public class WebServer {
+
+    private SocketServer socketServer;
 
     public WebServer(ServerConfiguration config) {
 
@@ -36,7 +37,8 @@ public class WebServer {
             LogManager.LOGGER.info("(Web) Enabled ssl");
         }
 
-        Spark.webSocket("/socket", SocketServer.class);
+        socketServer = new SocketServer();
+        Spark.webSocket("/socket", socketServer);
 
         Spark.get("/", new HomePage(), templateEngine);
         Spark.get("/leaderboard", new LeaderBoardPage(), templateEngine);
@@ -49,8 +51,12 @@ public class WebServer {
         Spark.post("/change_password", new ChangePasswordRoute());
         Spark.get("/server_info", new ServerInfoRoute());
         Spark.post("/floppy_upload", new FloppyUploadRoute());
+        Spark.get("/floppy_download", new FloppyDownloadRoute());
 
         Spark.after((request, response) -> response.header("Content-Encoding", "gzip"));
     }
 
+    public SocketServer getSocketServer() {
+        return socketServer;
+    }
 }

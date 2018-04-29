@@ -667,19 +667,6 @@ var GameClient = (function () {
             this.socket.send(JSON.stringify({ t: "k", k: key }));
         }
     };
-    GameClient.prototype.requestFloppy = function () {
-        document.getElementById("floppyDown").innerHTML = "<i class=\"fa fa-cog fa-spin fa-fw\"></i>";
-        if (DEBUG) {
-            console.log("[MAR] Requesting floppy");
-        }
-        this.socket.send(JSON.stringify({ t: "floppyDown" }));
-    };
-    GameClient.prototype.notifyFloppyUp = function () {
-        if (DEBUG) {
-            console.log("[MAR] Notifying the game server of floppy upload");
-        }
-        this.socket.send(JSON.stringify({ t: "floppyUp" }));
-    };
     GameClient.prototype.requestObjects = function () {
         if (DEBUG) {
             console.log("[MAR] Requesting game objects");

@@ -49,51 +49,63 @@
 
         ## EDITOR
             <div id="editor-tab" style="display: none">
+                #if($session.attribute("username"))
 
-                <div class="row">
-                    <div class="col-sm-4">
-                        <select title="Select Theme" class="form-control" id="editorTheme"></select>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-shadow btn-success text-mono regular-screen" href="#"><i class="mi">file_upload</i>
-                            Upload
-                        </button>
-                        <button class="btn btn-shadow btn-success text-mono small-screen" href="#"><i class="mi">file_upload</i>
-                        </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-shadow btn-danger text-mono regular-screen" href="#"><i
-                                class="mi">replay</i> Reload
-                        </button>
-                        <button class="btn btn-shadow btn-danger text-mono small-screen" href="#"><i
-                                class="mi">replay</i></button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button id="floppyUp" onclick="document.getElementById('floppyIn').click();"
-                                class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_upload</i>
-                            Floppy
-                        </button>
-                        <button class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_upload</i>
-                        </button>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <select title="Select Theme" class="form-control" id="editorTheme"></select>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button onclick="mar.client.uploadCode(ace.edit('editor').getValue())"
+                                    class="btn btn-shadow btn-success text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                                Upload
+                            </button>
+                            <button class="btn btn-shadow btn-success text-mono small-screen" href="#"><i class="mi">file_upload</i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-shadow btn-danger text-mono regular-screen"
+                                    onclick="mar.client.reloadCode()" href="#"><i
+                                    class="mi">replay</i> Reload
+                            </button>
+                            <button class="btn btn-shadow btn-danger text-mono small-screen"
+                                    onclick="mar.client.reloadCode()" href="#"><i
+                                    class="mi">replay</i></button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button id="floppyUp" onclick="document.getElementById('floppyIn').click();"
+                                    class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                                Floppy
+                            </button>
+                            <button onclick="document.getElementById('floppyIn').click();"
+                                    class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_upload</i>
+                            </button>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button class="btn btn-shadow btn-info text-mono regular-screen"
+                                    onclick="window.location.assign('floppy_download')"><i class="mi">file_download</i>
+                                Floppy
+                            </button>
+                            <button class="btn btn-shadow btn-info text-mono small-screen"
+                                    onclick="window.location.assign('floppy_download')"><i class="mi">file_download</i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="col-sm-2">
-                        <button class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_download</i>
-                            Floppy
-                        </button>
-                        <button class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_download</i>
-                        </button>
-                    </div>
-                </div>
+                    <form id="floppyForm" style="display: none;" enctype='multipart/form-data'>
+                        <input id="floppyIn" type="file" name="floppyIn"/>
+                    </form>
 
-                <form id="floppyForm" style="display: none;" enctype='multipart/form-data'>
-                    <input id="floppyIn" type="file" name="floppyIn"/>
-                </form>
+                    <div id="editor"></div>
 
-                <div id="editor"></div>
-
-                <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+                    <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+                #else
+                    <p style="text-align: left"><a href="/account">Login</a> to use the editor</p>
+                #end
                 <script src="js/editor.js"></script>
+
             </div>
         </div>
     </div>
@@ -142,7 +154,7 @@
             </p>
         </div>
         <div class="noisy">
-            <div id="consoleText" class="piece output noclick ctr-selection ctr-text">Hello World</div>
+            <div id="consoleText" class="piece output noclick ctr-selection ctr-text"></div>
             <div class="piece scanlines noclick"></div>
             <div class="piece glow noclick"></div>
         </div>

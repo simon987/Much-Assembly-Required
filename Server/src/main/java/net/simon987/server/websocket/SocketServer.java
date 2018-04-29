@@ -30,7 +30,6 @@ public class SocketServer {
         messageDispatcher.addHandler(new CodeUploadHandler());
         messageDispatcher.addHandler(new CodeRequestHandler());
         messageDispatcher.addHandler(new KeypressHandler());
-        messageDispatcher.addHandler(new FloppyHandler());
         messageDispatcher.addHandler(new DebugCommandHandler());
     }
 

@@ -154,7 +154,6 @@ public class GameServer implements Runnable {
         GameEvent event = new TickEvent(gameUniverse.getTime());
         eventDispatcher.dispatch(event); //Ignore cancellation
 
-
         //Process user code
         for (User user : gameUniverse.getUsers()) {
 
@@ -189,7 +188,7 @@ public class GameServer implements Runnable {
             save();
         }
 
-//        socketServer.tick();
+        socketServer.tick();
 
 //        LogManager.LOGGER.info("Processed " + gameUniverse.getWorldCount() + " worlds (" + updatedWorlds +
 //                " updated)");

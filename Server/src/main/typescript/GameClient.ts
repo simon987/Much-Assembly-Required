@@ -329,26 +329,7 @@ class GameClient {
         }
     }
 
-    public requestFloppy(): void {
-        //Start loading animation
-        document.getElementById("floppyDown").innerHTML = "<i class=\"fa fa-cog fa-spin fa-fw\"></i>";
-
-        if (DEBUG) {
-            console.log("[MAR] Requesting floppy");
-        }
-
-        this.socket.send(JSON.stringify({t: "floppyDown"}));
-    }
-
-    public notifyFloppyUp(): void {
-
-        if (DEBUG) {
-            console.log("[MAR] Notifying the game server of floppy upload");
-        }
-
-        this.socket.send(JSON.stringify({t: "floppyUp"}));
-    }
-
+    à
     public requestObjects(): void {
         if (DEBUG) {
             console.log("[MAR] Requesting game objects");
