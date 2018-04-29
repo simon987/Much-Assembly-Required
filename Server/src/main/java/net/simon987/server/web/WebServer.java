@@ -26,7 +26,7 @@ public class WebServer {
 
             /*
              * Generate keystore from Let's Encrypt with command:
-             * openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.kjs -name muchassemblyrequired -CAfile chain.pem -caname root -password file:password.txt
+             * openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.jks -name muchassemblyrequired -CAfile chain.pem -caname root -password file:password.txt
              *
              * Certificates generated from Let's Encrypt are usually in /etc/letsencrypt/live/www.site.com
              */
