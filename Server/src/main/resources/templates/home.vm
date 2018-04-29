@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-    #set ($title = "Home - Much Assembly Required")
+    #set ($title = "Home - M.A.R")
     #parse("head.vm")
 <body>
 
@@ -10,8 +10,9 @@
     <div class="container">
 
         <div class="jumbotron">
-            <h1 class="display-4">Much Assembly Required</h1>
-            <p class="lead">Program the 8086-like microprocessor of a robot in a grid-based multiplayer world.</p>
+            <h1 class="display-4">Much Assembly Required<span class="vim-caret">&nbsp;</span></h1>
+            <p class="lead text-mono text-success">Program the 8086-like microprocessor of a robot in a grid-based
+                multiplayer world.</p>
             <hr class="my-4">
 
             <div class="card-columns">

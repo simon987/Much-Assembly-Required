@@ -279,7 +279,7 @@ class GameClient {
     constructor() {
         this.getServerInfo();
 
-        this.consoleScreen = new PlainTextConsole(defaultText, "consoleText", "colorButton", "scrollButton", "resetButton", "widthDial");
+        this.consoleScreen = new PlainTextConsole(defaultText, "consoleText", "colorButton", "scrollButton", "resetButton");
     }
 
     public requestUserInfo(): void {

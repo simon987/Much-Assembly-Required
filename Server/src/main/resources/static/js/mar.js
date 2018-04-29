@@ -632,7 +632,7 @@ var GameClient = (function () {
     function GameClient() {
         this.listeners = [];
         this.getServerInfo();
-        this.consoleScreen = new PlainTextConsole(defaultText, "consoleText", "colorButton", "scrollButton", "resetButton", "widthDial");
+        this.consoleScreen = new PlainTextConsole(defaultText, "consoleText", "colorButton", "scrollButton", "resetButton");
     }
     GameClient.prototype.requestUserInfo = function () {
         if (DEBUG) {
@@ -1743,9 +1743,9 @@ var defaultText = " _______                    __     __\n" +
     "|___|___||   __|___._|____||__|__||__||____|_____|__| |   __|\n" +
     "         |__|                                         |__|\n" +
     "\n" +
-    "Version 1.4A, 1985-05-17\n" +
+    "Version 1.5A, 1985-05-17\n" +
     "Initialising Universal Communication Port connection...Done\n" +
-    "Current date is 2790-03-11\n" +
+    "Current date is 2790-04-28\n" +
     "Cubot Status: Much Assembly Required";
 var ConsoleMode;
 (function (ConsoleMode) {
@@ -1760,16 +1760,15 @@ var PlainTextConsoleMode = (function () {
     return PlainTextConsoleMode;
 }());
 var PlainTextConsole = (function () {
-    function PlainTextConsole(text, id, colorId, scrollId, resetID, dialId) {
+    function PlainTextConsole(text, id, colorId, scrollId, resetID) {
         this.colorToggled = false;
-        this.autoScroll = true;
+        this.autoScroll = false;
         this.modes = [];
         this.lastLineLength = 0;
         this.txtDiv = document.getElementById(id);
         this.colorButton = document.getElementById(colorId);
         this.scrollButton = document.getElementById(scrollId);
         this.resetButton = document.getElementById(resetID);
-        this.widthDial = document.getElementById(dialId);
         var self = this;
         this.colorButton.onclick = function () {
             self.toggleColor(self);
@@ -1779,9 +1778,6 @@ var PlainTextConsole = (function () {
         };
         this.resetButton.onclick = function () {
             self.reset(self);
-        };
-        this.widthDial.onselect = function (e) {
-            PlainTextConsole.widthDialSelect(self, e);
         };
         this.txtDiv.innerHTML = text;
         this.consoleText = text;
@@ -1815,13 +1811,13 @@ var PlainTextConsole = (function () {
     PlainTextConsole.prototype.toggleScrolling = function (self) {
         if (self.autoScroll) {
             self.autoScroll = false;
-            self.scrollButton.classList.remove("btn-outline-info");
-            self.scrollButton.classList.add("btn-info");
+            self.scrollButton.classList.add("btn-outline-info");
+            self.scrollButton.classList.remove("btn-info");
         }
         else {
             self.autoScroll = true;
-            self.scrollButton.classList.remove("btn-info");
-            self.scrollButton.classList.add("btn-outline-info");
+            self.scrollButton.classList.add("btn-info");
+            self.scrollButton.classList.remove("btn-outline-info");
             self.txtDiv.scrollTop = self.txtDiv.scrollHeight;
         }
     };
@@ -1830,14 +1826,8 @@ var PlainTextConsole = (function () {
         self.consoleText = "";
         self.lastLineLength = 0;
     };
-    PlainTextConsole.widthDialSelect = function (self, e) {
-        console.log(e);
-        if (self.mode < self.modes.length - 1) {
-            self.mode++;
-        }
-        else {
-            self.mode = 0;
-        }
+    PlainTextConsole.prototype.setMode = function (mode) {
+        this.mode = mode;
     };
     PlainTextConsole.prototype.handleConsoleBufferUpdate = function (consoleBuffer, mode) {
         if (mode == ConsoleMode.CLEAR) {

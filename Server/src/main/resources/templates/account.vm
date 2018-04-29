@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-    #set ($title = "Login")
+    #set ($title = "Account - M.A.R")
     #set ($cur_page = "account")
     #parse("head.vm")
 <body>

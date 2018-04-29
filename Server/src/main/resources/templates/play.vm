@@ -24,12 +24,6 @@
                             class="mi">code</i></a>
                 </li>
                 <li class="nav-item">
-                    <a id="tab-console" class="nav-link regular-screen" href="#" onclick="tabConsoleClick()"><i
-                            class="mi">computer</i> Console</a>
-                    <a id="tab-console-sm" class="nav-link small-screen" href="#" onclick="tabConsoleClick()"><i
-                            class="mi">computer</i></a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link regular-screen" target="_blank"
                        href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i>
                         Documentation</a>
@@ -75,7 +69,8 @@
                                 class="mi">replay</i></button>
                     </div>
                     <div class="col-sm-2">
-                        <button class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                        <button id="floppyUp" onclick="document.getElementById('floppyIn').click();"
+                                class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_upload</i>
                             Floppy
                         </button>
                         <button class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_upload</i>
@@ -91,66 +86,82 @@
                     </div>
                 </div>
 
+                <form id="floppyForm" style="display: none;" enctype='multipart/form-data'>
+                    <input id="floppyIn" type="file" name="floppyIn"/>
+                </form>
+
                 <div id="editor"></div>
+
                 <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
                 <script src="js/editor.js"></script>
             </div>
-
-        ## CONSOLE
-            <div id="console-tab" style="display: none">
-
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="dropdown">
-                            <button id="widthDial" class="btn btn-secondary btn-shadow dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true">Line width
-                            </button>
-                            <div class="dropdown-menu">
-                                <a href="#" class="dropdown-item">16</a>
-                                <a href="#" class="dropdown-item">24</a>
-                                <a href="#" class="dropdown-item">40</a>
-                                <a href="#" class="dropdown-item">56</a>
-                                <a href="#" class="dropdown-item">64</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <button id="colorButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">
-                            Invert colors
-                        </button>
-                        <button onclick="$('#colorButton').click()"
-                                class="btn btn-outline-info text-mono btn-shadow small-screen"><i class="mi">invert_colors_off</i>
-                        </button>
-                    </div>
-                    <div class="col-sm-3">
-                        <button id="scrollButton" class="btn btn-outline-info text-mono btn-shadow regular-screen">Auto
-                            scrolling
-                        </button>
-                        <button onclick="$('#scrollButton').click()"
-                                class="btn btn-outline-info text-mono btn-shadow small-screen"><i
-                                class="mi">swap_vert</i></button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button id="resetButton" class="btn btn-danger text-mono btn-shadow regular-screen">Clear
-                        </button>
-                        <button onclick="$('#resetButton').click()"
-                                class="btn btn-danger text-mono btn-shadow small-screen"><i class="mi">replay</i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="console-wrapper" class="noisy">
-                    <div id="consoleText" class="piece output noclick ctr-selection ctr-text">test123</div>
-                    <div class="piece scanlines noclick"></div>
-                    <div class="piece glow noclick"></div>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
 
     #parse("footer.vm")
+
+##Console
+<style>
+</style>
+
+<div class="bottom-panel">
+    <div class="splitter-horizontal"></div>
+    <div class="console-wrapper">
+        <div class="console-side-bar">
+            <p>
+                <button id="colorButton" class="btn btn-outline-info"
+                        data-container="body" data-toggle="popover" data-trigger="hover"
+                        data-placement="right" data-content="Invert colors"><i class="mi">invert_colors_off</i></button>
+            </p>
+            <p>
+                <button id="scrollButton" class="btn btn-outline-info"
+                        data-container="body" data-toggle="popover" data-trigger="hover"
+                        data-placement="right" data-content="Toggle auto scroll"><i class="mi">swap_vert</i></button>
+            </p>
+            <p>
+            <div class="btn-group dropright">
+                <button type="button" class="btn btn-shadow btn-info" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    <i class="mi">short_text</i>
+                </button>
+                <div class="dropdown-menu">
+                    <h6 class="dropdown-header">Line width</h6>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(0)">16 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(1)">24 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(2)">40 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(3)">56 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(4)">64 chars</button>
+                </div>
+            </div>
+            </p>
+            <p>
+                <button id="resetButton" class="btn btn-danger btn-shadow" style="margin-left: 0"
+                        data-container="body" data-toggle="popover" data-trigger="hover"
+                        data-placement="right" data-content="Clear console"><i class="mi">delete_sweep</i></button>
+            </p>
+        </div>
+        <div class="noisy">
+            <div id="consoleText" class="piece output noclick ctr-selection ctr-text">Hello World</div>
+            <div class="piece scanlines noclick"></div>
+            <div class="piece glow noclick"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $(".bottom-panel").resizable({
+        handleSelector: ".splitter-horizontal",
+        resizeWidth: false,
+        resizeHeightFrom: "top"
+    });
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+</script>
 
 <script src="js/phaser.js"></script>
 <script src="js/phaser-plugin-isometric.js"></script>

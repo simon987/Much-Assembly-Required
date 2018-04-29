@@ -403,12 +403,9 @@ function tabWorldClick() {
     document.getElementById("tab-world-sm").classList.add("active");
     document.getElementById("tab-editor").classList.remove("active");
     document.getElementById("tab-editor-sm").classList.remove("active");
-    document.getElementById("tab-console").classList.remove("active");
-    document.getElementById("tab-console-sm").classList.remove("active");
 
     document.getElementById("world-tab").setAttribute("style", "");
     document.getElementById("editor-tab").setAttribute("style", "display: none");
-    document.getElementById("console-tab").setAttribute("style", "display: none");
 }
 
 function tabEditorClick() {
@@ -416,25 +413,9 @@ function tabEditorClick() {
     document.getElementById("tab-world-sm").classList.remove("active");
     document.getElementById("tab-editor").classList.add("active");
     document.getElementById("tab-editor-sm").classList.add("active");
-    document.getElementById("tab-console").classList.remove("active");
-    document.getElementById("tab-console-sm").classList.remove("active");
 
     document.getElementById("world-tab").setAttribute("style", "display: none");
     document.getElementById("editor-tab").setAttribute("style", "");
-    document.getElementById("console-tab").setAttribute("style", "display: none");
-}
-
-function tabConsoleClick() {
-    document.getElementById("tab-world").classList.remove("active");
-    document.getElementById("tab-world-sm").classList.remove("active");
-    document.getElementById("tab-editor").classList.remove("active");
-    document.getElementById("tab-editor-sm").classList.remove("active");
-    document.getElementById("tab-console").classList.add("active");
-    document.getElementById("tab-console-sm").classList.add("active");
-
-    document.getElementById("world-tab").setAttribute("style", "display: none");
-    document.getElementById("editor-tab").setAttribute("style", "display: none");
-    document.getElementById("console-tab").setAttribute("style", "");
 }
 
 //-----
@@ -463,7 +444,7 @@ var editorThemeOptions = {
         "theme/tomorrow_night_blue", "theme/tomorrow_night_bright", "theme/tomorrow_night_eighties",
         "theme/tomorrow_night", "theme/twilight", "theme/vibrant_ink", "theme/xcode"
     ],
-    defaultTheme: "theme/tomorrow_night_eighties"
+    defaultTheme: "theme/tomorrow_night"
 };
 
 //Get the stored default theme
@@ -519,6 +500,43 @@ editorThemeOptions.available.forEach(function (theme) {
 
 //Manually call handler once
 editorOnThemeChange();
+
+//------ Floppy upload form code ------------------
+
+document.getElementById("floppyIn").onchange = function () {
+
+    //document.getElementById("floppyUp").innerHTML = "<i class=\"fa fa-cog fa-spin fa-fw\" aria-hidden=\"true\"></i>";
+
+    var formData = new FormData(document.getElementById("floppyForm"));
+
+    formData.append("floppyData", document.getElementById("floppyIn").files[0]);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/floppy_upload', true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+
+            if (xhr.responseText === "ok") {
+                //Upload ok, notify the game server
+                mar.client.notifyFloppyUp();
+                alert("Uploaded floppy disk to the drive!")
+            } else {
+                alert(xhr.responseText)
+            }
+
+        } else {
+            alert("Couldn't upload floppy code (" + xhr.status + ")");
+        }
+
+        document.getElementById("floppyUp").innerHTML = "<i class=\"fa fa-long-arrow-up\" aria-hidden=\"true\"></i> <i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i>";
+    };
+    xhr.onerror = function (ev) {
+        ev.preventDefault();
+        alert("Couldn't upload floppy code: File is too large");
+    };
+
+    xhr.send(formData);
+};
 
 editor.getSession().setMode("ace/mode/mar");
 editor.setFontSize(16);

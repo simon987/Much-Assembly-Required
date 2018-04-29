@@ -6,9 +6,9 @@ let defaultText =
     "|___|___||   __|___._|____||__|__||__||____|_____|__| |   __|\n" +
     "         |__|                                         |__|\n" +
     "\n" +
-    "Version 1.4A, 1985-05-17\n" +
+    "Version 1.5A, 1985-05-17\n" +
     "Initialising Universal Communication Port connection...Done\n" +
-    "Current date is 2790-03-11\n" +
+    "Current date is 2790-04-28\n" +
     "Cubot Status: Much Assembly Required";
 
 enum ConsoleMode {
@@ -45,10 +45,9 @@ class PlainTextConsole implements ConsoleScreen {
     private colorButton: HTMLButtonElement;
     private scrollButton: HTMLButtonElement;
     private resetButton: HTMLButtonElement;
-    private widthDial: HTMLSelectElement;
 
     private colorToggled: boolean = false;
-    public autoScroll: boolean = true;
+    public autoScroll: boolean = false;
 
     private modes: PlainTextConsoleMode[] = [];
     private mode: number;
@@ -64,12 +63,11 @@ class PlainTextConsole implements ConsoleScreen {
      */
     private lastLineLength: number = 0;
 
-    constructor(text: string, id: string, colorId: string, scrollId: string, resetID: string, dialId: string) {
+    constructor(text: string, id: string, colorId: string, scrollId: string, resetID: string) {
         this.txtDiv = document.getElementById(id);
         this.colorButton = document.getElementById(colorId) as HTMLButtonElement;
         this.scrollButton = document.getElementById(scrollId) as HTMLButtonElement;
         this.resetButton = document.getElementById(resetID) as HTMLButtonElement;
-        this.widthDial = document.getElementById(dialId) as HTMLSelectElement;
 
         let self = this;
         this.colorButton.onclick = function () {
@@ -81,21 +79,17 @@ class PlainTextConsole implements ConsoleScreen {
         this.resetButton.onclick = function () {
             self.reset(self);
         };
-        this.widthDial.onselect = function (e) {
-            PlainTextConsole.widthDialSelect(self, e);
-        };
 
         this.txtDiv.innerHTML = text;
         this.consoleText = text;
 
-        //Line width modes. Might break if shorter than
+        //Line width modes. Might break if shorter than CubotComPort::MESSAGE_LENGTH
         this.modes.push(new PlainTextConsoleMode(16, "./images/knob-170.png"));
         this.modes.push(new PlainTextConsoleMode(24, "./images/knob-123.png"));
         this.modes.push(new PlainTextConsoleMode(40, "./images/knob-90.png"));
         this.modes.push(new PlainTextConsoleMode(56, "./images/knob-65.png"));
         this.modes.push(new PlainTextConsoleMode(64, "./images/knob-10.png"));
         this.mode = 3; //Mode 56
-
     }
 
     /**
@@ -133,13 +127,13 @@ class PlainTextConsole implements ConsoleScreen {
         if (self.autoScroll) {
 
             self.autoScroll = false;
-            self.scrollButton.classList.remove("btn-outline-info");
-            self.scrollButton.classList.add("btn-info");
+            self.scrollButton.classList.add("btn-outline-info");
+            self.scrollButton.classList.remove("btn-info");
 
         } else {
             self.autoScroll = true;
-            self.scrollButton.classList.remove("btn-info");
-            self.scrollButton.classList.add("btn-outline-info");
+            self.scrollButton.classList.add("btn-info");
+            self.scrollButton.classList.remove("btn-outline-info");
 
             //Scroll to bottom
             self.txtDiv.scrollTop = self.txtDiv.scrollHeight;
@@ -157,17 +151,8 @@ class PlainTextConsole implements ConsoleScreen {
         self.lastLineLength = 0;
     }
 
-    /**
-     * Update dial image and change console mode
-     */
-    private static widthDialSelect(self: PlainTextConsole, e): void {
-        console.log(e);
-
-        if (self.mode < self.modes.length - 1) {
-            self.mode++;
-        } else {
-            self.mode = 0;
-        }
+    public setMode(mode: number) {
+        this.mode = mode;
     }
 
     /**

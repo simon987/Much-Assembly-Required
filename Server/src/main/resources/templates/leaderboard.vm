@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
-    #set ($title = "Leaderboard")
-    #set ($cur_page = "leaderboarc")
+    #set ($title = "Leaderboard - M.A.R")
+    #set ($cur_page = "leaderboard")
     #parse("head.vm")
 <body>
 
@@ -23,6 +23,7 @@
                     <td>Test1</td>
                     <td>Test2</td>
                 </tr>
+                Account - M.A.R
                 <tr>
                     <td>Test1</td>
                     <td>Test2</td>

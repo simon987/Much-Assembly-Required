@@ -2,6 +2,7 @@ package net.simon987.server.web;
 
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.logging.LogManager;
+import net.simon987.server.websocket.FloppyUploadRoute;
 import net.simon987.server.websocket.SocketServer;
 import org.apache.velocity.app.VelocityEngine;
 import spark.Spark;
@@ -47,6 +48,7 @@ public class WebServer {
         Spark.get("/logout", new LogoutRoute());
         Spark.post("/change_password", new ChangePasswordRoute());
         Spark.get("/server_info", new ServerInfoRoute());
+        Spark.post("/floppy_upload", new FloppyUploadRoute());
 
         Spark.after((request, response) -> response.header("Content-Encoding", "gzip"));
     }
