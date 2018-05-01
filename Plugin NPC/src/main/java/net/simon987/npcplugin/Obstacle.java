@@ -8,7 +8,6 @@ import org.json.simple.JSONObject;
 
 /**
  * Generic game object that blocks the path.
- * Some types of obstacles might have some more interesting features (see ElectricBox)
  */
 public class Obstacle extends GameObject implements Attackable {
 

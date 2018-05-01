@@ -10,19 +10,31 @@ import net.simon987.server.logging.LogManager;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Find Biomass, move towards it, collect it, repeat
+ */
 public class HarvestTask extends NPCTask {
 
     private Random random;
 
+    /**
+     * Number of ticks to wait before continuing
+     */
     private int pause;
+
+    /**
+     * Direction of the next world to visit (randomly chosen)
+     */
+    private Direction nextWorldDirection = null;
 
     public HarvestTask() {
         random = new Random();
         pause = 0;
     }
 
-    private Direction nextWorldDirection = null;
-
+    /**
+     * This task never finishes
+     */
     @Override
     public boolean checkCompleted() {
         return false;

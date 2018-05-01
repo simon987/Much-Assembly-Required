@@ -15,7 +15,6 @@ public class CpuInitialisationListener implements GameEventListener {
 
     @Override
     public void handle(GameEvent event) {
-        //LogManager.LOGGER.fine("(Plugin) Handled CPU Initialisation event (Cubot Plugin)");
 
         CPU cpu = (CPU) event.getSource();
         User user = ((CpuInitialisationEvent) event).getUser();

@@ -24,7 +24,6 @@ public class RadioTower extends GameObject implements Programmable, Updatable {
         return MAP_INFO;
     }
 
-
     /**
      * Messages from the current tick
      */

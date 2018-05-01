@@ -329,7 +329,7 @@ class GameClient {
         }
     }
 
-    à
+
     public requestObjects(): void {
         if (DEBUG) {
             console.log("[MAR] Requesting game objects");

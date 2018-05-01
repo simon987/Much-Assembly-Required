@@ -21,5 +21,4 @@ public class Main {
 
         (new Thread(GameServer.INSTANCE)).start();
     }
-
 }

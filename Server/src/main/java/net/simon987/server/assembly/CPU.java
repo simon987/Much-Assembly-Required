@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 /**
  * CPU: Central Processing Unit. A CPU is capable of reading bytes from
- * a Memory object and execute them. A CPU object holds registers objects &
+ * a Memory object and execute them. A CPU object holds registers objects and
  * a Memory object.
  */
 public class CPU implements MongoSerialisable {

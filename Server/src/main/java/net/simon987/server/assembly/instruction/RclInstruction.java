@@ -6,9 +6,9 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
 /**
- * +---------------------+
- * |                     |
- * CF < 0<0<0<0<0<0<0<0 <-+
+ *<br>            +---------------------+
+ *<br>            |                     |
+ *<br> {@literal CF < 0<0<0<0<0<0<0<0 <-+  @}
  */
 public class RclInstruction extends Instruction {
 

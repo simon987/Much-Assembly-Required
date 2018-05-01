@@ -6,6 +6,9 @@ import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
 
+/**
+ * Hardware to get game time
+ */
 public class Clock extends CpuHardware {
 
     public static final char HWID = 0x0008;

@@ -18,6 +18,7 @@ public class WorldCreationListener implements GameEventListener {
 
     /**
      * Spawn rate. Higher = rarer: A factory will be spawn about every FACTORY_SPAWN_RATE generated Worlds
+     * <br>TODO: Get from config.properties
      */
     private static final int FACTORY_SPAWN_RATE = 35;
 

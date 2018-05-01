@@ -9,27 +9,40 @@ import net.simon987.server.logging.LogManager;
 
 import java.util.ArrayList;
 
+/**
+ * Game object that actively interacts with the game world by doing tasks
+ */
 public abstract class NonPlayerCharacter extends GameObject implements Updatable, Attackable {
 
     private static final int MAP_INFO = 0x0040;
 
+    /**
+     * Maximum distance to travel from its factory, in Worlds
+     */
     private static final int MAX_FACTORY_DISTANCE = GameServer.INSTANCE.getConfig().getInt("npc_max_factory_distance");
 
+    /**
+     * Number of ticks to live
+     */
     public static final int LIFETIME = GameServer.INSTANCE.getConfig().getInt("npc_lifetime");
 
     // Set these just in case they aren't overridden in the subclass
     public static final int HP_MAX_DEFAULT = 100;
     public static final int HP_REGEN_RATE_DEFAULT = 0;
 
-    //Unused
+    /**
+     * Currently unused
+     */
     int energy;
-    int maxEnergy;
 
     /**
      * Current task
      */
     private NPCTask task;
 
+    /**
+     * Action at the end of the last tick
+     */
     private Action lastAction = Action.IDLE;
 
     /**

@@ -141,7 +141,7 @@ public class VaultDimension {
         if (exitPortalPt != null) {
 
             VaultExitPortal exitPortal = new VaultExitPortal();
-            exitPortal.setDst(exitLocation);
+            exitPortal.setDestination(exitLocation);
             exitPortal.setX(exitPortalPt.x);
             exitPortal.setY(exitPortalPt.y);
             exitPortal.setWorld(objectiveWorld);
@@ -158,7 +158,7 @@ public class VaultDimension {
         if (homePortalPt != null) {
 
             Portal homePortal = new Portal();
-            homePortal.setDst(exitLocation);
+            homePortal.setDestination(exitLocation);
             homePortal.setX(homePortalPt.x);
             homePortal.setY(homePortalPt.y);
             homePortal.setWorld(homeWorld);

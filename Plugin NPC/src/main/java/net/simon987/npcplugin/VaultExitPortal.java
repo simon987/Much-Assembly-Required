@@ -22,11 +22,11 @@ public class VaultExitPortal extends Portal {
         dbObject.put("x", getX());
         dbObject.put("y", getY());
         dbObject.put("t", ID);
-        dbObject.put("dstWorldX", getDst().worldX);
-        dbObject.put("dstWorldY", getDst().worldY);
-        dbObject.put("dstX", getDst().x);
-        dbObject.put("dstY", getDst().y);
-        dbObject.put("dstDimension", getDst().dimension);
+        dbObject.put("dstWorldX", getDestination().worldX);
+        dbObject.put("dstWorldY", getDestination().worldY);
+        dbObject.put("dstX", getDestination().x);
+        dbObject.put("dstY", getDestination().y);
+        dbObject.put("dstDimension", getDestination().dimension);
 
         return dbObject;
     }
@@ -37,8 +37,7 @@ public class VaultExitPortal extends Portal {
         LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Completed vault " +
                 object.getWorld().getDimension());
 
-        NpcPlugin.getStatsDbManager().saveVaultCompletion((ControllableUnit) object, object.getWorld().getDimension());
-
+        //todo: save vault completion stat
 
         return super.enter(object);
     }
@@ -47,7 +46,7 @@ public class VaultExitPortal extends Portal {
 
         VaultExitPortal portal = new VaultExitPortal();
 
-        portal.setDst(new Location(
+        portal.setDestination(new Location(
                 (int) obj.get("dstWorldX"),
                 (int) obj.get("dstWorldY"),
                 (String) obj.get("dstDimension"),

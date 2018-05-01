@@ -8,6 +8,9 @@ import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
 
+/**
+ * Plugin that adds miscellaneous hardware to the game
+ */
 public class MiscHWPlugin extends ServerPlugin implements CpuHardwareDeserializer {
 
 

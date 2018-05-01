@@ -12,6 +12,9 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
     public static final int ID = 10;
 
+    /**
+     *
+     */
     public static final int MAX_HEALTH = GameServer.INSTANCE.getConfig().getInt("harvester_hp_max");
     public static final int HEAL_RATE = GameServer.INSTANCE.getConfig().getInt("harvester_regen");
 
@@ -85,7 +88,6 @@ public class HarvesterNPC extends NonPlayerCharacter {
         dbObject.put("y", getY());
         dbObject.put("direction", getDirection().ordinal());
         dbObject.put("hp", getHp());
-        //  dbObject.put("energy", energy);
         dbObject.put("action", getAction().ordinal());
         dbObject.put("t", ID);
 
@@ -100,8 +102,6 @@ public class HarvesterNPC extends NonPlayerCharacter {
         npc.setY((int) obj.get("y"));
         npc.setHp((int) obj.get("hp"));
         npc.setDirection(Direction.getDirection((int) obj.get("direction")));
-        // npc.energy = (int) obj.get("energy");
-        // npc.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
 
         return npc;
 

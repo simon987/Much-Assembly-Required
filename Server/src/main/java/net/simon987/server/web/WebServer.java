@@ -37,6 +37,7 @@ public class WebServer {
             LogManager.LOGGER.info("(Web) Enabled ssl");
         }
 
+
         socketServer = new SocketServer();
         Spark.webSocket("/socket", socketServer);
 

@@ -8,16 +8,25 @@ import org.json.simple.JSONObject;
 
 public class Portal extends GameObject implements Enterable {
 
-    private Location dst;
+    /**
+     * Destination location
+     */
+    private Location destination;
 
     public static final int MAP_INFO = 0x0020;
 
     public static final int ID = 8;
 
+    /**
+     * Called when an object attempts to walk directly into a Enterable object
+     *
+     * @param object The game object that attempted to enter
+     * @return true if successful, false to block the object
+     */
     @Override
     public boolean enter(GameObject object) {
 
-        World world = GameServer.INSTANCE.getGameUniverse().getWorld(dst.worldX, dst.worldY, false, dst.dimension);
+        World world = GameServer.INSTANCE.getGameUniverse().getWorld(destination.worldX, destination.worldY, false, destination.dimension);
 
         if (object instanceof Updatable) {
             object.getWorld().decUpdatable();
@@ -27,8 +36,8 @@ public class Portal extends GameObject implements Enterable {
         object.setWorld(world);
         world.addObject(object);
 
-        object.setX(dst.x);
-        object.setY(dst.y);
+        object.setX(destination.x);
+        object.setY(destination.y);
 
         return true;
     }
@@ -46,11 +55,11 @@ public class Portal extends GameObject implements Enterable {
         dbObject.put("x", getX());
         dbObject.put("y", getY());
         dbObject.put("t", ID);
-        dbObject.put("dstWorldX", dst.worldX);
-        dbObject.put("dstWorldY", dst.worldY);
-        dbObject.put("dstX", dst.x);
-        dbObject.put("dstY", dst.y);
-        dbObject.put("dstDimension", dst.dimension);
+        dbObject.put("dstWorldX", destination.worldX);
+        dbObject.put("dstWorldY", destination.worldY);
+        dbObject.put("dstX", destination.x);
+        dbObject.put("dstY", destination.y);
+        dbObject.put("dstDimension", destination.dimension);
 
         return dbObject;
     }
@@ -59,7 +68,7 @@ public class Portal extends GameObject implements Enterable {
 
         Portal portal = new Portal();
 
-        portal.dst = new Location(
+        portal.destination = new Location(
                 (int) obj.get("dstWorldX"),
                 (int) obj.get("dstWorldY"),
                 (String) obj.get("dstDimension"),
@@ -83,11 +92,11 @@ public class Portal extends GameObject implements Enterable {
         return json;
     }
 
-    public Location getDst() {
-        return dst;
+    public Location getDestination() {
+        return destination;
     }
 
-    public void setDst(Location dst) {
-        this.dst = dst;
+    public void setDestination(Location destination) {
+        this.destination = destination;
     }
 }

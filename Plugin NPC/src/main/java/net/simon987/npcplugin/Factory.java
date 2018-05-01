@@ -11,15 +11,27 @@ import org.json.simple.JSONObject;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Game objects that regularly creates NonPlayerCharacters
+ */
 public class Factory extends GameObject implements Updatable {
 
     private static final int MAP_INFO = 0x0200;
     static final int ID = 3;
 
+    /**
+     * Maximum number of NonPlayerCharacters assigned to this Factory
+     */
     private static final int MAX_NPC_COUNT = GameServer.INSTANCE.getConfig().getInt("factory_max_npc_count");
 
+    /**
+     * Number of ticks to wait after creating a NonPlayerCharacter
+     */
     private static final int NPC_CREATION_COOLDOWN = NonPlayerCharacter.LIFETIME / MAX_NPC_COUNT;
 
+    /**
+     * List of associated NonPlayerCharacters
+     */
     private ArrayList<NonPlayerCharacter> npcs = new ArrayList<>();
 
     /**
@@ -43,6 +55,10 @@ public class Factory extends GameObject implements Updatable {
         return MAP_INFO;
     }
 
+    /**
+     * Called every tick
+     * <br>The fist time this is called, NPCs retrieved from the database are linked to the Factory
+     */
     @Override
     public void update() {
 
@@ -60,6 +76,8 @@ public class Factory extends GameObject implements Updatable {
                 }
 
             }
+
+            tmpNpcArray = null;
 
         } else {
 
@@ -141,7 +159,7 @@ public class Factory extends GameObject implements Updatable {
         factory.setX((int) obj.get("x"));
         factory.setY((int) obj.get("y"));
 
-        factory.tmpNpcArray = ((BasicDBList) obj.get("n")).toArray();
+        factory.tmpNpcArray = ((BasicDBList) obj.get("tmpNpcArray")).toArray();
 
         return factory;
     }

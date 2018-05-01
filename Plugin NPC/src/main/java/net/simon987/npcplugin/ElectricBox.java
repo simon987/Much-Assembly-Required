@@ -13,24 +13,43 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ * Game object that deals damage to nearby objects and gives them energy
+ */
 public class ElectricBox extends GameObject implements Updatable, Attackable {
 
     public static final int ID = 7;
 
+    /**
+     * Hit points
+     */
+    private int hp;
+    /**
+     * Maximum hit points
+     */
     private static final int maxHp = GameServer.INSTANCE.getConfig().getInt("electric_box_hp");
+    /**
+     * Number of hit points dealt to nearby objects each tick
+     */
     private static final int damageDealt = GameServer.INSTANCE.getConfig().getInt("electric_box_damage");
+    /**
+     * Number of energy points given to nearby objects each tick
+     */
     private static final int energyGiven = GameServer.INSTANCE.getConfig().getInt("electric_box_energy_given");
 
-    private int hp;
-
+    /**
+     * List of nearby objects. Is updated every tick
+     */
     private ArrayList<Attackable> nearObjects = new ArrayList<>();
 
     public ElectricBox() {
 
         this.hp = maxHp;
-
     }
 
+    /**
+     * Currently has no effect
+     */
     @Override
     public void setHealRate(int hp) {
         //no op
@@ -51,11 +70,17 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
         return hp;
     }
 
+    /**
+     * Currently has no effect
+     */
     @Override
     public void setMaxHp(int hp) {
         //No op
     }
 
+    /**
+     * Currently has no effect
+     */
     @Override
     public void heal(int amount) {
         //No op
@@ -77,6 +102,10 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
         return Obstacle.MAP_INFO;
     }
 
+    /**
+     * Updates the current list nearby objects
+     * <br>An object is considered 'nearby' if its Manhattan distance is {@literal <= @} 1 and is Attackable
+     */
     private void updateNearObjects() {
 
         nearObjects.clear();
@@ -89,6 +118,9 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
         }
     }
 
+    /**
+     * Called every tick
+     */
     @Override
     public void update() {
 

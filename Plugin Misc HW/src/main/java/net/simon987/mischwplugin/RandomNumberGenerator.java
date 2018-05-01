@@ -6,6 +6,9 @@ import net.simon987.server.assembly.Status;
 
 import java.util.Random;
 
+/**
+ * Hardware to generate random numbers
+ */
 public class RandomNumberGenerator extends CpuHardware {
 
     public static final char HWID = 0x0007;
