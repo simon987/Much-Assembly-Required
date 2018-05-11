@@ -9,12 +9,16 @@ public class UserStats implements MongoSerialisable {
 
     private BasicDBObject stats;
 
-    public UserStats() {
+    UserStats() {
         this.stats = new BasicDBObject();
     }
 
-    public UserStats(BasicDBObject stats) {
-        this.stats = stats;
+    UserStats(BasicDBObject stats) {
+        if (stats != null) {
+            this.stats = stats;
+        } else {
+            this.stats = new BasicDBObject();
+        }
     }
 
     @Override

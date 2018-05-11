@@ -50,7 +50,7 @@ public class GameServer implements Runnable {
         this.config = new ServerConfiguration("config.properties");
 
         try{
-	        mongo = new MongoClient("localhost", 27017);
+            mongo = new MongoClient(config.getString("mongo_address"), config.getInt("mongo_port"));
             DB db = mongo.getDB(config.getString("mongo_dbname"));
 
             DBCollection userCollection = db.getCollection("user");
