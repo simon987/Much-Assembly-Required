@@ -34,6 +34,8 @@ public class MessageDispatcher {
                         handler.handle(user, json);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (IllegalStateException e) {
+                        //Socket is closed
                     }
                 }
             } else {

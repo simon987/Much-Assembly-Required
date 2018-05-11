@@ -1,4 +1,5 @@
-// Typescript V2.4.1
+{
+}// Typescript V2.4.1
 
 let RENDERER_WIDTH = document.getElementById("game").clientWidth * window.devicePixelRatio;
 let RENDERER_HEIGHT = (window.innerHeight / 1.40) * window.devicePixelRatio;
@@ -213,6 +214,10 @@ class Debug {
 
     public static setEnergy(objectId, amount) {
         mar.client.sendDebugCommand({t: "debug", command: "setEnergy", objectId: objectId, amount: amount});
+    }
+
+    public static saveGame() {
+        mar.client.sendDebugCommand({t: "debug", command: "saveGame"});
     }
 
 

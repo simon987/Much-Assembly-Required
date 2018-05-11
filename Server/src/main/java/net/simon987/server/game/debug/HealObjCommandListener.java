@@ -42,5 +42,4 @@ public class HealObjCommandListener implements GameEventListener {
             }
         }
     }
-
 }

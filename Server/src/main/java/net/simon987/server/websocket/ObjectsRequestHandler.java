@@ -13,7 +13,7 @@ public class ObjectsRequestHandler implements MessageHandler {
 
 
     @Override
-    public void handle(OnlineUser user, JSONObject json) throws IOException {
+    public void handle(OnlineUser user, JSONObject json) throws IllegalStateException, IOException {
         if (json.get("t").equals("object")) {
             // LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
 

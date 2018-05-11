@@ -253,6 +253,8 @@ var WorldIndicator = (function (_super) {
     };
     return WorldIndicator;
 }(DebugMessage));
+{
+}
 var RENDERER_WIDTH = document.getElementById("game").clientWidth * window.devicePixelRatio;
 var RENDERER_HEIGHT = (window.innerHeight / 1.40) * window.devicePixelRatio;
 var DEBUG = true;
@@ -436,6 +438,9 @@ var Debug = (function () {
     };
     Debug.setEnergy = function (objectId, amount) {
         mar.client.sendDebugCommand({ t: "debug", command: "setEnergy", objectId: objectId, amount: amount });
+    };
+    Debug.saveGame = function () {
+        mar.client.sendDebugCommand({t: "debug", command: "saveGame"});
     };
     return Debug;
 }());
