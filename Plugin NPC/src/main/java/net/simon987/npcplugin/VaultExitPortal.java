@@ -34,10 +34,12 @@ public class VaultExitPortal extends Portal {
     @Override
     public boolean enter(GameObject object) {
 
-        LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Completed vault " +
-                object.getWorld().getDimension());
+        if (object instanceof ControllableUnit) {
+            LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Completed vault " +
+                    object.getWorld().getDimension());
 
-        //todo: save vault completion stat
+            ((ControllableUnit) object).getParent().getStats().addToStringSet("completedVaults", getWorld().getDimension());
+        }
 
         return super.enter(object);
     }

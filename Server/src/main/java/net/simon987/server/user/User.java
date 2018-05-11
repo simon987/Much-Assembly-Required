@@ -28,6 +28,8 @@ public class User implements MongoSerialisable {
     private boolean guest = false;
     private boolean moderator = false;
 
+    private UserStats stats;
+
     public User() throws CancelledException {
         GameEvent event = new UserCreationEvent(this);
         GameServer.INSTANCE.getEventDispatcher().dispatch(event);
@@ -35,6 +37,7 @@ public class User implements MongoSerialisable {
             throw new CancelledException();
         }
 
+        this.stats = new UserStats();
     }
 
     public User(ControllableUnit unit) {
@@ -53,6 +56,7 @@ public class User implements MongoSerialisable {
         dbObject.put("cpu", cpu.mongoSerialise());
         dbObject.put("password", password);
         dbObject.put("moderator", moderator);
+        dbObject.put("stats", stats.mongoSerialise());
 
         return dbObject;
 
@@ -65,6 +69,7 @@ public class User implements MongoSerialisable {
         user.userCode = (String) obj.get("code");
         user.password = (String) obj.get("password");
         user.moderator = (boolean) obj.get("moderator");
+        user.stats = new UserStats((BasicDBObject) obj.get("stats"));
 
         user.getControlledUnit().setParent(user);
 
@@ -72,7 +77,6 @@ public class User implements MongoSerialisable {
 
         return user;
     }
-    //----
 
     public String getUserCode() {
         return userCode;
@@ -132,5 +136,9 @@ public class User implements MongoSerialisable {
 
     public void setModerator(boolean moderator) {
         this.moderator = moderator;
+    }
+
+    public UserStats getStats() {
+        return stats;
     }
 }

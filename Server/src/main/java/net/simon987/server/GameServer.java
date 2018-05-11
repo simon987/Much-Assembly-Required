@@ -14,6 +14,7 @@ import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
 import net.simon987.server.user.UserManager;
+import net.simon987.server.user.UserStatsHelper;
 import net.simon987.server.websocket.SocketServer;
 
 import java.io.File;
@@ -42,14 +43,20 @@ public class GameServer implements Runnable {
 
     private UserManager userManager;
 
+    private UserStatsHelper userStatsHelper;
+
     public GameServer() {
 
         this.config = new ServerConfiguration("config.properties");
 
         try{
 	        mongo = new MongoClient("localhost", 27017);
-            userManager = new UserManager(mongo, config);
+            DB db = mongo.getDB(config.getString("mongo_dbname"));
 
+            DBCollection userCollection = db.getCollection("user");
+
+            userManager = new UserManager(userCollection);
+            userStatsHelper = new UserStatsHelper(userCollection);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -74,7 +81,6 @@ public class GameServer implements Runnable {
                 if (pluginFile.getName().endsWith(".jar")) {
                     pluginManager.load(pluginFile, config);
                 }
-
             }
         } else {
             if (!pluginDir.mkdir()) {
@@ -98,7 +104,7 @@ public class GameServer implements Runnable {
         eventDispatcher.getListeners().add(new HealObjCommandListener());
         eventDispatcher.getListeners().add(new DamageObjCommandListener());
         eventDispatcher.getListeners().add(new SetEnergyCommandListener());
-
+        eventDispatcher.getListeners().add(new SaveGameCommandListener());
     }
 
     public GameUniverse getGameUniverse() {
@@ -141,10 +147,7 @@ public class GameServer implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-
-
     }
 
     private void tick() {
@@ -230,7 +233,7 @@ public class GameServer implements Runnable {
                 " | U:" + GameServer.INSTANCE.getGameUniverse().getUserCount());
     }
 
-    private void save() {
+    public void save() {
 
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
         try{
@@ -293,5 +296,9 @@ public class GameServer implements Runnable {
 
     public UserManager getUserManager() {
         return userManager;
+    }
+
+    public UserStatsHelper getUserStatsHelper() {
+        return userStatsHelper;
     }
 }

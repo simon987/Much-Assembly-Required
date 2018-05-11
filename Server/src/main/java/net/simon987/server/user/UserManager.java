@@ -1,8 +1,10 @@
 package net.simon987.server.user;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.crypto.RandomStringGenerator;
 import net.simon987.server.logging.LogManager;
@@ -12,14 +14,11 @@ import java.util.ArrayList;
 
 public class UserManager {
 
-    private MongoClient mongo;
     private DBCollection userCollection;
 
-    public UserManager(MongoClient mongo, ServerConfiguration config) {
+    public UserManager(DBCollection userCollection) {
 
-        this.mongo = mongo;
-        DB db = mongo.getDB(config.getString("mongo_dbname"));
-        userCollection = db.getCollection("user");
+        this.userCollection = userCollection;
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.simon987.server.web;
 
+import net.simon987.server.GameServer;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -12,9 +13,9 @@ public class LeaderBoardPage implements TemplateViewRoute {
 
     @Override
     public ModelAndView handle(Request request, Response response) {
-        Map<String, Object> model = new HashMap<>(1);
+        Map<String, Object> model = new HashMap<>(2);
         model.put("session", request.session());
-
+        model.put("stats", GameServer.INSTANCE.getUserStatsHelper().getTopNSetLength("completedVaults", 25));
         return new ModelAndView(model, "leaderboard.vm");
     }
 }

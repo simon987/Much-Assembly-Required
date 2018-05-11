@@ -19,18 +19,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Test1</td>
-                    <td>Test2</td>
-                </tr>
-                <tr>
-                    <td>Test1</td>
-                    <td>Test2</td>
-                </tr>
-                <tr>
-                    <td>Test1</td>
-                    <td>Test2</td>
-                </tr>
+                    #foreach($row in $stats)
+                    <tr>
+                        <td>$row.getKey().getUsername()</td>
+                        <td>$row.getValue().size()</td>
+                    </tr>
+                    #end
                 </tbody>
             </table>
         </div>
