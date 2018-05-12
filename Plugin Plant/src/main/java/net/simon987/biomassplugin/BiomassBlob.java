@@ -26,7 +26,7 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
     public BiomassBlob(Document document) {
         super(document);
 
-        biomassCount = document.getInteger("b");
+        biomassCount = document.getInteger("biomassCount");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
 
         Document dbObject = super.mongoSerialise();
 
-        dbObject.put("b", biomassCount);
+        dbObject.put("biomassCount", biomassCount);
 
         return dbObject;
 

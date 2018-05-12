@@ -4,6 +4,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 /**
@@ -19,8 +20,8 @@ public class Clock extends CpuHardware {
 
     }
 
-    public Clock(Document document) {
-        super(document);
+    public Clock(Document document, ControllableUnit unit) {
+        super(document, unit);
     }
 
     @Override

@@ -24,8 +24,8 @@ public class RadioReceiverHardware extends CpuHardware {
         this.cubot = cubot;
     }
 
-    public RadioReceiverHardware(Document document) {
-        super(document);
+    public RadioReceiverHardware(Document document, ControllableUnit unit) {
+        super(document, unit);
 
         this.cubot = (ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) document.get("cubot"));
     }

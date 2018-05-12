@@ -2,6 +2,7 @@ package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.logging.LogManager;
@@ -30,8 +31,8 @@ public class CubotLidar extends CubotHardware {
         super(cubot);
     }
 
-    public CubotLidar(Document document) {
-        super(document);
+    public CubotLidar(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

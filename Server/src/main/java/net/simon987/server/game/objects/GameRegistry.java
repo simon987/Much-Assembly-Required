@@ -27,13 +27,13 @@ public class GameRegistry {
     }
 
 
-    public CpuHardware deserializeHardware(Document document) {
+    public CpuHardware deserializeHardware(Document document, ControllableUnit controllableUnit) {
         String type = document.getString("type");
 
         if (hardware.containsKey(type)) {
 
             try {
-                return hardware.get(type).getConstructor(Document.class).newInstance(document);
+                return hardware.get(type).getConstructor(Document.class, ControllableUnit.class).newInstance(document, controllableUnit);
             } catch (InstantiationException | IllegalAccessException |
                     InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
@@ -53,9 +53,13 @@ public class GameRegistry {
 
             try {
                 return gameObjects.get(type).getConstructor(Document.class).newInstance(document);
-            } catch (InstantiationException | IllegalAccessException |
-                    InvocationTargetException | NoSuchMethodException e) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
                 e.printStackTrace();
+                return null;
+            } catch (InvocationTargetException e) {
+                LogManager.LOGGER.severe("Error while trying to deserialize object of type " + type + ": " + e.getTargetException().getMessage());
+                LogManager.LOGGER.severe(document.toJson());
+                e.getTargetException().printStackTrace();
                 return null;
             }
         } else {

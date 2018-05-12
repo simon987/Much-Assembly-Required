@@ -2,6 +2,7 @@ package net.simon987.mischwplugin;
 
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 import java.util.Random;
@@ -21,8 +22,8 @@ public class RandomNumberGenerator extends CpuHardware {
         random = new Random();
     }
 
-    public RandomNumberGenerator(Document document) {
-        super(document);
+    public RandomNumberGenerator(Document document, ControllableUnit unit) {
+        super(document, unit);
         random = new Random();
     }
 

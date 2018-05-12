@@ -145,7 +145,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
 
         dbObject.put("homeX", getHomeX());
         dbObject.put("homeY", getHomeY());
-        dbObject.put("pw", new String(password));
+        dbObject.put("password", new String(password));
 
         return dbObject;
     }

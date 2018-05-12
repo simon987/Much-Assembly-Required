@@ -2,6 +2,7 @@ package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.Action;
+import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.world.TileMap;
 import org.bson.Document;
 
@@ -21,8 +22,8 @@ public class CubotDrill extends CubotHardware {
         super(cubot);
     }
 
-    public CubotDrill(Document document) {
-        super(document);
+    public CubotDrill(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

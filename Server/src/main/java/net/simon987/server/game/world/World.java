@@ -200,27 +200,27 @@ public class World implements MongoSerializable {
     @Override
     public String toString() {
 
-        String str = "World (" + x + ", " + y + ")\n";
+        StringBuilder str = new StringBuilder("World (" + x + ", " + y + ")\n");
         int[][] tileMap = this.tileMap.getTiles();
 
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
-                str += tileMap[x][y] + " ";
+                str.append(tileMap[x][y]).append(" ");
             }
-            str += "\n";
+            str.append("\n");
         }
 
-        return str;
+        return str.toString();
 
     }
 
     public static World deserialize(Document dbObject) {
 
-        World world = new World((int) dbObject.get("size"));
-        world.x = (int) dbObject.get("x");
-        world.y = (int) dbObject.get("y");
-        world.dimension = (String) dbObject.get("dimension");
-        world.updatable = (int) dbObject.get("updatable");
+        World world = new World(dbObject.getInteger("size"));
+        world.x = dbObject.getInteger("x");
+        world.y = dbObject.getInteger("y");
+        world.dimension = dbObject.getString("dimension");
+        world.updatable = dbObject.getInteger("updatable");
 
         world.tileMap = TileMap.deserialize((Document) dbObject.get("terrain"), world.getWorldSize());
 
@@ -237,7 +237,6 @@ public class World implements MongoSerializable {
         }
 
         return world;
-
     }
 
     /**
@@ -518,6 +517,5 @@ public class World implements MongoSerializable {
                 }
             }
         }
-
     }
 }

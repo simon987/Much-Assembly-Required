@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 public class CubotKeyboard extends CubotHardware {
@@ -19,8 +20,8 @@ public class CubotKeyboard extends CubotHardware {
         super(cubot);
     }
 
-    public CubotKeyboard(Document document) {
-        super(document);
+    public CubotKeyboard(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

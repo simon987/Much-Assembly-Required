@@ -24,6 +24,8 @@ public class HarvesterNPC extends NonPlayerCharacter {
     public HarvesterNPC(Document document) {
         super(document);
 
+        setTask(new HarvestTask());
+
         setDirection(Direction.getDirection(document.getInteger("direction")));
     }
 

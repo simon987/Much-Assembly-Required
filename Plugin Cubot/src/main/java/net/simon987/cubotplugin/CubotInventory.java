@@ -2,6 +2,7 @@ package net.simon987.cubotplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 public class CubotInventory extends CubotHardware {
@@ -20,8 +21,8 @@ public class CubotInventory extends CubotHardware {
         super(cubot);
     }
 
-    public CubotInventory(Document document) {
-        super(document);
+    public CubotInventory(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

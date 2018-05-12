@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 public class CubotHologram extends CubotHardware {
@@ -25,8 +26,8 @@ public class CubotHologram extends CubotHardware {
         super(cubot);
     }
 
-    public CubotHologram(Document document) {
-        super(document);
+    public CubotHologram(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

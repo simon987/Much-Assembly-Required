@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.objects.Programmable;
 import org.bson.Document;
@@ -23,8 +24,8 @@ public class CubotComPort extends CubotHardware {
         super(cubot);
     }
 
-    public CubotComPort(Document document) {
-        super(document);
+    public CubotComPort(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     private static final int MESSAGE_LENGTH = 8;
@@ -117,8 +118,6 @@ public class CubotComPort extends CubotHardware {
 
             getCpu().getRegisterSet().getRegister("B").setValue(0); //Failed
         }
-
-
     }
 
     @Override

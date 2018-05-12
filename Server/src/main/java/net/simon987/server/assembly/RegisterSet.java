@@ -171,9 +171,9 @@ public class RegisterSet implements Target, MongoSerializable {
         for (Object sRegister : registers) {
 
             Register register = new Register((String) ((Document) sRegister).get("name"));
-            register.setValue((int) ((Document) sRegister).get("value"));
+            register.setValue(((Document) sRegister).getInteger("value"));
 
-            registerSet.registers.put((int) ((Document) sRegister).get("index"), register);
+            registerSet.registers.put(((Document) sRegister).getInteger("index"), register);
 
         }
 

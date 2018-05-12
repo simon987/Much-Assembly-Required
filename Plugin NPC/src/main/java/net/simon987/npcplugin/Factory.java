@@ -53,11 +53,7 @@ public class Factory extends GameObject implements Updatable {
     public Factory(Document document) {
         super(document);
 
-        setObjectId((long) document.get("i"));
-        setX((int) document.get("x"));
-        setY((int) document.get("y"));
-
-        tmpNpcArray = ((ArrayList) document.get("tmpNpcArray")).toArray();
+        tmpNpcArray = ((ArrayList) document.get("npcs")).toArray();
     }
 
     @Override
@@ -78,13 +74,12 @@ public class Factory extends GameObject implements Updatable {
 
             for (Object id : tmpNpcArray) {
 
-                NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((int) (long) id);
+                NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((long) id);
 
                 if (npc != null) {
                     npc.setFactory(this);
                     npcs.add(npc);
                 }
-
             }
 
             tmpNpcArray = null;
@@ -139,7 +134,7 @@ public class Factory extends GameObject implements Updatable {
             tmpNpcArray.add(npc.getObjectId());
         }
 
-        dbObject.put("n", tmpNpcArray);
+        dbObject.put("npcs", tmpNpcArray);
 
         return dbObject;
     }

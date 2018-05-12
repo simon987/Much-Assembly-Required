@@ -29,7 +29,7 @@ public class FloppyDisk implements MongoSerializable {
     }
 
     public FloppyDisk(Document document) {
-        this.rwHeadTrack = (int) document.get("rwHeadTrack");
+        this.rwHeadTrack = document.getInteger("rwHeadTrack");
         this.memory = new Memory((Document) document.get("memory"));
     }
 

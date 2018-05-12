@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 public class CubotFloppyDrive extends CubotHardware {
@@ -24,8 +25,8 @@ public class CubotFloppyDrive extends CubotHardware {
         floppyDisk = new FloppyDisk();
     }
 
-    public CubotFloppyDrive(Document document) {
-        super(document);
+    public CubotFloppyDrive(Document document, ControllableUnit cubot) {
+        super(document, cubot);
 
         if (document.containsKey("floppy")) {
             floppyDisk = new FloppyDisk((Document) document.get("floppy"));

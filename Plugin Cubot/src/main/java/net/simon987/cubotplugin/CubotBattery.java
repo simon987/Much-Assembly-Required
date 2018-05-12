@@ -1,6 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 public class CubotBattery extends CubotHardware {
@@ -19,8 +20,8 @@ public class CubotBattery extends CubotHardware {
         super(cubot);
     }
 
-    public CubotBattery(Document document) {
-        super(document);
+    public CubotBattery(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override
@@ -33,6 +34,8 @@ public class CubotBattery extends CubotHardware {
 
         } else if (a == BATTERY_GET_MAX_CAPACITY) {
             getCpu().getRegisterSet().getRegister("B").setValue(cubot.getMaxEnergy());
+
+            //TODO: Remove debug action
         } else if (a == 0xFFFF) {
             cubot.setEnergy(cubot.getMaxEnergy());
         }

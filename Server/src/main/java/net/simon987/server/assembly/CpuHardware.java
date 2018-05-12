@@ -1,6 +1,7 @@
 package net.simon987.server.assembly;
 
 
+import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 
@@ -13,7 +14,7 @@ public abstract class CpuHardware implements MongoSerializable {
 
     }
 
-    public CpuHardware(Document document) {
+    public CpuHardware(Document document, ControllableUnit unit) {
 
     }
 

@@ -44,7 +44,7 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
 
     public ElectricBox(Document document) {
         super(document);
-        hp = (int) document.get("hp");
+        hp = document.getInteger("hp");
     }
 
     /**

@@ -1,10 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.assembly.Status;
-import net.simon987.server.game.objects.Action;
-import net.simon987.server.game.objects.Attackable;
-import net.simon987.server.game.objects.GameObject;
-import net.simon987.server.game.objects.InventoryHolder;
+import net.simon987.server.game.objects.*;
 import org.bson.Document;
 
 import java.awt.*;
@@ -29,8 +26,8 @@ public class CubotLaser extends CubotHardware {
         super(cubot);
     }
 
-    public CubotLaser(Document document) {
-        super(document);
+    public CubotLaser(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

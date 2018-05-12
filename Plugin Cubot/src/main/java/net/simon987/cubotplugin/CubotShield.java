@@ -2,6 +2,7 @@ package net.simon987.cubotplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Status;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 public class CubotShield extends CubotHardware {
@@ -19,8 +20,8 @@ public class CubotShield extends CubotHardware {
         super(cubot);
     }
 
-    public CubotShield(Document document) {
-        super(document);
+    public CubotShield(Document document, ControllableUnit cubot) {
+        super(document, cubot);
     }
 
     @Override

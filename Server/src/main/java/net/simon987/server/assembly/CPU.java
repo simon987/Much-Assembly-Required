@@ -376,14 +376,14 @@ public class CPU implements MongoSerializable {
 
         CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), user);
 
-        cpu.codeSectionOffset = (int) obj.get("codeSegmentOffset");
+        cpu.codeSectionOffset = obj.getInteger("codeSegmentOffset");
 
         ArrayList hardwareList = (ArrayList) obj.get("hardware");
 
         for (Object serialisedHw : hardwareList) {
-            CpuHardware hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw);
+            CpuHardware hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw, user.getControlledUnit());
             hardware.setCpu(cpu);
-            cpu.attachHardware(hardware, (int) ((Document) serialisedHw).get("address"));
+            cpu.attachHardware(hardware, ((Document) serialisedHw).getInteger("address"));
         }
 
         cpu.memory = new Memory((Document) obj.get("memory"));
