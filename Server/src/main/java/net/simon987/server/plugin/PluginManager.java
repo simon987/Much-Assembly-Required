@@ -1,6 +1,7 @@
 package net.simon987.server.plugin;
 
 import net.simon987.server.ServerConfiguration;
+import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
 
 import java.io.File;
@@ -21,7 +22,7 @@ public class PluginManager {
         this.plugins = new ArrayList<>(10);
     }
 
-    public void load(File pluginFile, ServerConfiguration config) {
+    public void load(File pluginFile, ServerConfiguration config, GameRegistry gameRegistry) {
 
         LogManager.LOGGER.info("Loading plugin file " + pluginFile.getName());
 
@@ -53,7 +54,7 @@ public class PluginManager {
                 plugins.add(plugin);
 
                 //Init the plugin
-                plugin.init(config);
+                plugin.init(config, gameRegistry);
 
             } else {
                 LogManager.LOGGER.severe("Couldn't find plugin.properties in " + pluginFile.getName());

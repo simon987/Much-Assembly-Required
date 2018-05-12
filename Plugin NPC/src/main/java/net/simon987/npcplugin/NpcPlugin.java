@@ -4,17 +4,13 @@ import net.simon987.npcplugin.event.CpuInitialisationListener;
 import net.simon987.npcplugin.event.VaultWorldUpdateListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
 import net.simon987.server.ServerConfiguration;
-import net.simon987.server.assembly.CpuHardware;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.io.CpuHardwareDeserializer;
-import net.simon987.server.io.GameObjectDeserializer;
+import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.bson.Document;
 
 import java.util.ArrayList;
 
-public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, CpuHardwareDeserializer {
+public class NpcPlugin extends ServerPlugin {
 
     /**
      * Radio tower cache
@@ -22,53 +18,26 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
     private static ArrayList<RadioTower> radioTowers;
 
     @Override
-    public void init(ServerConfiguration configuration) {
+    public void init(ServerConfiguration configuration, GameRegistry registry) {
 
         listeners.add(new WorldCreationListener());
         listeners.add(new CpuInitialisationListener());
         listeners.add(new VaultWorldUpdateListener(configuration));
 
+        registry.registerGameObject(HarvesterNPC.class);
+        registry.registerGameObject(Factory.class);
+        registry.registerGameObject(RadioTower.class);
+        registry.registerGameObject(VaultDoor.class);
+        registry.registerGameObject(Obstacle.class);
+        registry.registerGameObject(ElectricBox.class);
+        registry.registerGameObject(Portal.class);
+        registry.registerGameObject(VaultExitPortal.class);
+
+        registry.registerHardware(RadioReceiverHardware.class);
+
         radioTowers = new ArrayList<>(32);
 
         LogManager.LOGGER.info("Initialised NPC plugin");
-    }
-
-    @Override
-    public GameObject deserializeObject(Document obj) {
-
-        int objType = (int) obj.get("t");
-
-        if (objType == HarvesterNPC.ID) {
-            return HarvesterNPC.deserialize(obj);
-        } else if (objType == Factory.ID) {
-            return Factory.deserialise(obj);
-        } else if (objType == RadioTower.ID) {
-            return RadioTower.deserialize(obj);
-        } else if (objType == VaultDoor.ID) {
-            return VaultDoor.deserialize(obj);
-        } else if (objType == Obstacle.ID) {
-            return Obstacle.deserialize(obj);
-        } else if (objType == ElectricBox.ID) {
-            return ElectricBox.deserialize(obj);
-        } else if (objType == Portal.ID) {
-            return Portal.deserialize(obj);
-        } else if (objType == VaultExitPortal.ID) {
-            return VaultExitPortal.deserialize(obj);
-        }
-
-        return null;
-    }
-
-    @Override
-    public CpuHardware deserializeHardware(Document obj) {
-        int hwid = (int) obj.get("hwid");
-
-        switch (hwid) {
-            case RadioReceiverHardware.HWID:
-                return RadioReceiverHardware.deserialize(obj);
-        }
-
-        return null;
     }
 
     public static ArrayList<RadioTower> getRadioTowers() {

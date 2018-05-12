@@ -1,19 +1,13 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
-import net.simon987.server.game.Action;
-import net.simon987.server.game.Direction;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.game.objects.Action;
+import net.simon987.server.game.objects.Direction;
 import org.bson.Document;
-import org.json.simple.JSONObject;
 
-public class CubotLeg extends CpuHardware implements JSONSerialisable {
+public class CubotLeg extends CubotHardware {
 
     public static final int DEFAULT_ADDRESS = 1;
-
-    public static final String NAME = "Cubot Leg";
 
     private static final int LEGS_SET_DIR = 1;
     private static final int LEGS_SET_DIR_AND_WALK = 2;
@@ -23,10 +17,12 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
      */
     static final char HWID = 0x0001;
 
-    private Cubot cubot;
-
     public CubotLeg(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
+    }
+
+    public CubotLeg(Document document) {
+        super(document);
     }
 
     @Override
@@ -73,31 +69,4 @@ public class CubotLeg extends CpuHardware implements JSONSerialisable {
             }
         }
     }
-
-    @Override
-    public JSONObject serialise() {
-
-        JSONObject json = new JSONObject();
-        json.put("hwid", (int) HWID);
-        json.put("cubot", cubot.getObjectId());
-
-        return json;
-    }
-
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        return dbObject;
-    }
-
-    public static CubotLeg deserialize(Document obj) {
-        return new CubotLeg((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
-    }
-
-
 }

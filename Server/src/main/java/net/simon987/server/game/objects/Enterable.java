@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.objects;
 
 public interface Enterable {
 

@@ -28,6 +28,11 @@ public class FloppyDisk implements MongoSerializable {
         this.memory = new Memory(512 * 1440);
     }
 
+    public FloppyDisk(Document document) {
+        this.rwHeadTrack = (int) document.get("rwHeadTrack");
+        this.memory = new Memory((Document) document.get("memory"));
+    }
+
     /**
      * Read 512 words from the specified sector to cpu memory at specified address
      *
@@ -90,16 +95,6 @@ public class FloppyDisk implements MongoSerializable {
         dbObject.put("memory", memory.mongoSerialise());
 
         return dbObject;
-    }
-
-    public static FloppyDisk deserialise(Document obj) {
-
-        FloppyDisk floppyDisk = new FloppyDisk();
-
-        floppyDisk.rwHeadTrack = (int) obj.get("rwHeadTrack");
-        floppyDisk.memory = Memory.deserialize((Document) obj.get("memory"));
-
-        return floppyDisk;
     }
 
     public Memory getMemory() {

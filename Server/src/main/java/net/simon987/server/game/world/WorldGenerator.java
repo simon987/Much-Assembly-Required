@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.world;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
@@ -43,7 +43,7 @@ public class WorldGenerator {
     private HashMap<Point, Integer> centerPointsMap;
 
 
-    WorldGenerator(ServerConfiguration config) {
+    public WorldGenerator(ServerConfiguration config) {
 
         centerPointCountMin = config.getInt("wg_centerPointCountMin");
         centerPointCountMax = config.getInt("wg_centerPointCountMax");

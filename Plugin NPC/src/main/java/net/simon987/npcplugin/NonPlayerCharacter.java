@@ -2,10 +2,11 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Util;
-import net.simon987.server.game.*;
+import net.simon987.server.game.objects.*;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 
 import java.util.ArrayList;
 
@@ -29,11 +30,6 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
     // Set these just in case they aren't overridden in the subclass
     public static final int HP_MAX_DEFAULT = 100;
     public static final int HP_REGEN_RATE_DEFAULT = 0;
-
-    /**
-     * Currently unused
-     */
-    int energy;
 
     /**
      * Current task
@@ -75,6 +71,17 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
      * Maximum health of the npc
      */
     private int maxHp = HP_MAX_DEFAULT;
+
+    public NonPlayerCharacter() {
+
+    }
+
+    public NonPlayerCharacter(Document document) {
+        super(document);
+
+        hp = document.getInteger("hp");
+        setDirection(Direction.getDirection(document.getInteger("direction")));
+    }
 
     @Override
     public char getMapInfo() {

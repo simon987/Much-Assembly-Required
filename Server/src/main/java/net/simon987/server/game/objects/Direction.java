@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.objects;
 
 /**
  * Direction of a game object in a 4-direction grid-based

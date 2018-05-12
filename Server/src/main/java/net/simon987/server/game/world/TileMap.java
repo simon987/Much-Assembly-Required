@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.world;
 
 
 import net.simon987.server.io.JSONSerialisable;
@@ -110,7 +110,7 @@ public class TileMap implements JSONSerialisable, MongoSerializable {
     }
 
     @Override
-    public JSONObject serialise() {
+    public JSONObject jsonSerialise() {
         JSONObject json = new JSONObject();
 
         byte[] terrain = new byte[width * width];
@@ -164,7 +164,6 @@ public class TileMap implements JSONSerialisable, MongoSerializable {
         ArrayList<Integer> terrain = (ArrayList<Integer>) object.get("tiles");
 
         int[][] tiles = new int[size][size];
-
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 tiles[x][y] = terrain.get(x * size + y);

@@ -4,8 +4,8 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.DebugCommandEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.World;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.world.World;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,7 +37,7 @@ public class ObjInfoCommandListener implements GameEventListener {
                     if (obj.isAt(e.getInt("x"), e.getInt("y")) || (obj.getX() == e.getInt("x") &&
                             obj.getY() == e.getInt("y"))) {
                         str += "Mongo:" + obj.mongoSerialise() + "\n";
-                        str += "JSON :" + obj.serialise().toJSONString() + "\n\n";
+                        str += "JSON :" + obj.jsonSerialise().toJSONString() + "\n\n";
                     }
                 }
 

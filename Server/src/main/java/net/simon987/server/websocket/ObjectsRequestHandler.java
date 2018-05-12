@@ -1,8 +1,8 @@
 package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.World;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,7 +37,7 @@ public class ObjectsRequestHandler implements MessageHandler {
 
 
                 for (GameObject object : world.getGameObjects()) {
-                    objects.add(object.serialise());
+                    objects.add(object.jsonSerialise());
                 }
 
                 response.put("t", "object");

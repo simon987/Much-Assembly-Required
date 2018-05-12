@@ -1,10 +1,9 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.Updatable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
-import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.List;
 public class Factory extends GameObject implements Updatable {
 
     private static final int MAP_INFO = 0x0200;
-    static final int ID = 3;
 
     /**
      * Maximum number of NonPlayerCharacters assigned to this Factory
@@ -48,6 +46,19 @@ public class Factory extends GameObject implements Updatable {
      * Factory are uninitialised until the first update() call
      */
     private boolean initialised = false;
+
+    public Factory() {
+    }
+
+    public Factory(Document document) {
+        super(document);
+
+        setObjectId((long) document.get("i"));
+        setX((int) document.get("x"));
+        setY((int) document.get("y"));
+
+        tmpNpcArray = ((ArrayList) document.get("tmpNpcArray")).toArray();
+    }
 
     @Override
     public char getMapInfo() {
@@ -119,26 +130,8 @@ public class Factory extends GameObject implements Updatable {
     }
 
     @Override
-    public JSONObject serialise() {
-
-        JSONObject json = new JSONObject();
-
-        json.put("i", getObjectId());
-        json.put("x", getX());
-        json.put("y", getY());
-        json.put("t", ID);
-
-        return json;
-    }
-
-    @Override
     public Document mongoSerialise() {
-        Document dbObject = new Document();
-
-        dbObject.put("i", getObjectId());
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
-        dbObject.put("t", ID);
+        Document dbObject = super.mongoSerialise();
 
         List<Long> tmpNpcArray = new ArrayList<>(npcs.size());
 
@@ -149,18 +142,6 @@ public class Factory extends GameObject implements Updatable {
         dbObject.put("n", tmpNpcArray);
 
         return dbObject;
-    }
-
-    public static Factory deserialise(Document obj) {
-
-        Factory factory = new Factory();
-        factory.setObjectId((long) obj.get("i"));
-        factory.setX((int) obj.get("x"));
-        factory.setY((int) obj.get("y"));
-
-        factory.tmpNpcArray = ((ArrayList) obj.get("tmpNpcArray")).toArray();
-
-        return factory;
     }
 
     /**

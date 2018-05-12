@@ -1,21 +1,17 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.Programmable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Programmable;
 import org.bson.Document;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CubotComPort extends CpuHardware {
+public class CubotComPort extends CubotHardware {
 
     public static final char HWID = 0xD;
     public static final int DEFAULT_ADDRESS = 0xD;
-
-    private Cubot cubot;
 
     private static final int COMPORT_BUFFER_CLEAR = 0;
     private static final int COMPORT_POLL = 1;
@@ -24,7 +20,11 @@ public class CubotComPort extends CpuHardware {
     private static final int COMPORT_CONSOLE_CLEAR = 4;
 
     public CubotComPort(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
+    }
+
+    public CubotComPort(Document document) {
+        super(document);
     }
 
     private static final int MESSAGE_LENGTH = 8;
@@ -124,20 +124,5 @@ public class CubotComPort extends CpuHardware {
     @Override
     public char getId() {
         return HWID;
-    }
-
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        return dbObject;
-    }
-
-    public static CubotComPort deserialize(Document obj) {
-        return new CubotComPort((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

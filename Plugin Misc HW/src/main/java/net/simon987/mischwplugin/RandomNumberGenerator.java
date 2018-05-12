@@ -11,13 +11,18 @@ import java.util.Random;
  */
 public class RandomNumberGenerator extends CpuHardware {
 
-    public static final char HWID = 0x0007;
+    private static final char HWID = 0x0007;
 
     public static final char DEFAULT_ADDRESS = 0x0007;
 
     private Random random;
 
     public RandomNumberGenerator() {
+        random = new Random();
+    }
+
+    public RandomNumberGenerator(Document document) {
+        super(document);
         random = new Random();
     }
 
@@ -37,13 +42,8 @@ public class RandomNumberGenerator extends CpuHardware {
     public Document mongoSerialise() {
 
         Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
+        dbObject.put("type", getClass().getCanonicalName());
 
         return dbObject;
-    }
-
-    public static RandomNumberGenerator deserialize() {
-        return new RandomNumberGenerator();
     }
 }

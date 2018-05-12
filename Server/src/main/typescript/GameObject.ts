@@ -1,13 +1,13 @@
 enum ObjectType {
-    CUBOT = 1,
-    BIOMASS = 2,
-    HARVESTER_NPC = 10,
-    FACTORY = 3,
-    RADIO_TOWER = 4,
-    VAULT_DOOR = 5,
-    OBSTACLE = 6,
-    ELECTRIC_BOX = 7,
-    PORTAL = 8
+    CUBOT = "net.simon987.cubotplugin.Cubot",
+    BIOMASS = "net.simon987.biomassplugin.BiomassBlob",
+    HARVESTER_NPC = "net.simon987.npcplugin.HarvesterNPC",
+    FACTORY = "net.simon987.npcplugin.Factory",
+    RADIO_TOWER = "net.simon987.npcplugin.RadioTower",
+    VAULT_DOOR = "net.simon987.npcplugin.VaultDoor",
+    OBSTACLE = "net.simon987.npcplugin.Obstacle",
+    ELECTRIC_BOX = "net.simon987.npcplugin.ElectricBox",
+    PORTAL = "net.simon987.npcplugin.Portal"
 }
 
 enum ItemType {

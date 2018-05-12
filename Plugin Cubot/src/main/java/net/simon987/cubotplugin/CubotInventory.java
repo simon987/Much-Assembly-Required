@@ -1,11 +1,10 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import org.bson.Document;
 
-public class CubotInventory extends CpuHardware {
+public class CubotInventory extends CubotHardware {
 
     /**
      * Hardware ID (Should be unique)
@@ -14,13 +13,15 @@ public class CubotInventory extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 6;
 
-    private Cubot cubot;
-
     private static final int INV_CLEAR = 0;
     private static final int INV_POLL = 1;
 
     public CubotInventory(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
+    }
+
+    public CubotInventory(Document document) {
+        super(document);
     }
 
     @Override
@@ -47,21 +48,5 @@ public class CubotInventory extends CpuHardware {
             }
         }
 
-    }
-
-
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        return dbObject;
-    }
-
-    public static CubotInventory deserialize(Document obj) {
-        return new CubotInventory((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

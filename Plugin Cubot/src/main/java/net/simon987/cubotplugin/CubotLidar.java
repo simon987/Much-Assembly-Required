@@ -1,19 +1,15 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
-import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.logging.LogManager;
 import org.bson.Document;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public class CubotLidar extends CpuHardware implements JSONSerialisable {
+public class CubotLidar extends CubotHardware {
 
     /**
      * Hardware ID (Should be unique)
@@ -21,8 +17,6 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
     public static final char HWID = 0x0003;
 
     public static final int DEFAULT_ADDRESS = 3;
-
-    private Cubot cubot;
 
     private static final int LIDAR_GET_POS = 1;
     private static final int LIDAR_GET_PATH = 2;
@@ -33,9 +27,12 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
     private static final int MEMORY_PATH_START = 0x0000;
 
     public CubotLidar(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
     }
 
+    public CubotLidar(Document document) {
+        super(document);
+    }
 
     @Override
     public char getId() {
@@ -134,32 +131,5 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
                 break;
 
         }
-
-
-    }
-
-    @Override
-    public JSONObject serialise() {
-
-        JSONObject json = new JSONObject();
-        json.put("hwid", (int) HWID);
-        json.put("cubot", cubot.getObjectId());
-
-        return json;
-    }
-
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        return dbObject;
-    }
-
-    public static CubotLidar deserialize(Document obj) {
-        return new CubotLidar((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

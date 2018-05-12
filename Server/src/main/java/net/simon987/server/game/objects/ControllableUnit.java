@@ -1,6 +1,7 @@
-package net.simon987.server.game;
+package net.simon987.server.game.objects;
 
 import net.simon987.server.assembly.Memory;
+import net.simon987.server.game.world.World;
 import net.simon987.server.user.User;
 
 import java.util.ArrayList;

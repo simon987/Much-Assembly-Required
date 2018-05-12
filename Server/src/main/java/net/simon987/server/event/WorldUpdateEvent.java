@@ -1,6 +1,6 @@
 package net.simon987.server.event;
 
-import net.simon987.server.game.World;
+import net.simon987.server.game.world.World;
 
 public class WorldUpdateEvent extends GameEvent {
 

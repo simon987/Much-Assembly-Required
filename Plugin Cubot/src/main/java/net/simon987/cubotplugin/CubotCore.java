@@ -1,11 +1,9 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import org.bson.Document;
 
-public class CubotCore extends CpuHardware {
+public class CubotCore extends CubotHardware {
 
     public static final int DEFAULT_ADDRESS = 0x000E;
 
@@ -17,10 +15,12 @@ public class CubotCore extends CpuHardware {
     private static final int CORE_STATUS_POLL = 1;
     private static final int CORE_HULL_POLL = 2;
 
-    private Cubot cubot;
-
     public CubotCore(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
+    }
+
+    public CubotCore(Document document) {
+        super(document);
     }
 
     @Override
@@ -38,21 +38,5 @@ public class CubotCore extends CpuHardware {
     @Override
     public char getId() {
         return HWID;
-    }
-
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        return dbObject;
-    }
-
-
-    public static CubotCore deserialize(Document obj) {
-        return new CubotCore((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

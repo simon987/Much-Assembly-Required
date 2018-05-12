@@ -1,7 +1,7 @@
 package net.simon987.server.game.pathfinding;
 
 import net.simon987.server.assembly.Util;
-import net.simon987.server.game.World;
+import net.simon987.server.game.world.World;
 
 import java.util.ArrayList;
 import java.util.Collections;

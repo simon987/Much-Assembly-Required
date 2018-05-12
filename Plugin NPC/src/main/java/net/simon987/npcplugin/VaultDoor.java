@@ -2,10 +2,13 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.crypto.RandomStringGenerator;
-import net.simon987.server.game.*;
+import net.simon987.server.game.objects.Enterable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Programmable;
+import net.simon987.server.game.objects.Updatable;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 import org.bson.Document;
-import org.json.simple.JSONObject;
 
 import java.util.Arrays;
 
@@ -14,7 +17,6 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
 
     private static final int MAP_INFO = 0x0800;
 
-    public static final int ID = 5;
     /**
      * Password to open the vault door
      */
@@ -46,6 +48,21 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         this.randomStringGenerator = new RandomStringGenerator();
 
         this.password = "12345678".toCharArray();
+    }
+
+    public VaultDoor(Document document) {
+        super(document);
+
+        setX(document.getInteger("x"));
+        setY(document.getInteger("y"));
+
+
+        if (document.containsKey("homeX") && document.containsKey("homeY")) {
+            homeX = document.getInteger("homeX");
+            homeY = document.getInteger("homeY");
+        }
+
+        password = document.getString("password").toCharArray();
     }
 
 
@@ -124,49 +141,13 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
 
     @Override
     public Document mongoSerialise() {
-        Document dbObject = new Document();
+        Document dbObject = super.mongoSerialise();
 
-        dbObject.put("i", getObjectId());
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
         dbObject.put("homeX", getHomeX());
         dbObject.put("homeY", getHomeY());
-        dbObject.put("t", ID);
         dbObject.put("pw", new String(password));
 
         return dbObject;
-    }
-
-    @Override
-    public JSONObject serialise() {
-
-        JSONObject json = new JSONObject();
-
-        json.put("i", getObjectId());
-        json.put("x", getX());
-        json.put("y", getY());
-        json.put("t", ID);
-        //Don't send the password to the client!
-
-        return json;
-    }
-
-    public static VaultDoor deserialize(Document obj) {
-
-        VaultDoor vaultDoor = new VaultDoor(0); //cypherId ?
-        vaultDoor.setX((int) obj.get("x"));
-        vaultDoor.setY((int) obj.get("y"));
-        vaultDoor.setObjectId((long) obj.get("i"));
-
-
-        if (obj.containsKey("homeX") && obj.containsKey("homeY")) {
-            vaultDoor.setHomeX((int) obj.get("homeX"));
-            vaultDoor.setHomeY((int) obj.get("homeY"));
-        }
-
-        vaultDoor.password = ((String) obj.get("pw")).toCharArray();
-
-        return vaultDoor;
     }
 
     @Override

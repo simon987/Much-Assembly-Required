@@ -1,10 +1,9 @@
-package net.simon987.server.game;
+package net.simon987.server.game.objects;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.io.GameObjectDeserializer;
+import net.simon987.server.game.world.World;
 import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.io.MongoSerializable;
-import net.simon987.server.plugin.ServerPlugin;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
@@ -12,7 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * An INSTANCE of an object (e.g. a Tree, a character ...) inside the
+ * An instance of an object (e.g. a Cubot, a NPC...) inside the
  * game universe
  */
 public abstract class GameObject implements JSONSerialisable, MongoSerializable {
@@ -43,6 +42,15 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
      */
     private World world;
 
+    public GameObject() {
+
+    }
+
+    public GameObject(Document document) {
+        objectId = document.getLong("id");
+        x = document.getInteger("x");
+        y = document.getInteger("y");
+    }
 
     /**
      * Increment the location of the game object by 1 tile
@@ -101,9 +109,7 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
             } else {
                 return false;
             }
-
         }
-
     }
 
     public abstract char getMapInfo();
@@ -119,7 +125,6 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
         } else {
             return new Point(x - 1, y);
         }
-
     }
 
     /**
@@ -219,24 +224,13 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
     }
 
     @Override
-    public JSONObject serialise() {
-        return new JSONObject();
-    }
-
-    public static GameObject deserialize(Document obj) {
-
-        for (ServerPlugin plugin : GameServer.INSTANCE.getPluginManager().getPlugins()) {
-
-            if (plugin instanceof GameObjectDeserializer) {
-                GameObject object = ((GameObjectDeserializer) plugin).deserializeObject(obj);
-
-                if (object != null) {
-                    return object;
-                }
-            }
-        }
-
-        return null;
+    public JSONObject jsonSerialise() {
+        JSONObject json = new JSONObject();
+        json.put("i", getObjectId());
+        json.put("t", getClass().getCanonicalName());
+        json.put("x", getX());
+        json.put("y", getY());
+        return json;
     }
 
 
@@ -254,6 +248,7 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
 
     /**
      * Called before this GameObject is removed from the world - defaults to doing nothing
+     *
      * @return true if cancelled
      */
     public boolean onDeadCallback() {
@@ -262,5 +257,18 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
 
     public void initialize() {
 
+    }
+
+
+    @Override
+    public Document mongoSerialise() {
+        Document document = new Document();
+
+        document.put("id", getObjectId());
+        document.put("type", getClass().getCanonicalName());
+        document.put("x", getX());
+        document.put("y", getY());
+
+        return document;
     }
 }

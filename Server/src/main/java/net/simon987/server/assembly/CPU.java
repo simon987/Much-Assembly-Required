@@ -381,12 +381,12 @@ public class CPU implements MongoSerializable {
         ArrayList hardwareList = (ArrayList) obj.get("hardware");
 
         for (Object serialisedHw : hardwareList) {
-            CpuHardware hardware = CpuHardware.deserialize((Document) serialisedHw);
+            CpuHardware hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw);
             hardware.setCpu(cpu);
             cpu.attachHardware(hardware, (int) ((Document) serialisedHw).get("address"));
         }
 
-        cpu.memory = Memory.deserialize((Document) obj.get("memory"));
+        cpu.memory = new Memory((Document) obj.get("memory"));
         cpu.registerSet = RegisterSet.deserialize((Document) obj.get("registerSet"));
 
         return cpu;

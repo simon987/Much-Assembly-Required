@@ -4,9 +4,9 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.DebugCommandEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.Updatable;
-import net.simon987.server.game.World;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Updatable;
+import net.simon987.server.game.world.World;
 
 
 public class TpObjectCommandListener implements GameEventListener {

@@ -2,11 +2,10 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Util;
-import net.simon987.server.game.Attackable;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.Rechargeable;
-import net.simon987.server.game.Updatable;
-import net.simon987.server.logging.LogManager;
+import net.simon987.server.game.objects.Attackable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Rechargeable;
+import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
@@ -16,8 +15,6 @@ import java.util.ArrayList;
  * Game object that deals damage to nearby objects and gives them energy
  */
 public class ElectricBox extends GameObject implements Updatable, Attackable {
-
-    public static final int ID = 7;
 
     /**
      * Hit points
@@ -42,8 +39,12 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
     private ArrayList<Attackable> nearObjects = new ArrayList<>();
 
     public ElectricBox() {
+        hp = maxHp;
+    }
 
-        this.hp = maxHp;
+    public ElectricBox(Document document) {
+        super(document);
+        hp = (int) document.get("hp");
     }
 
     /**
@@ -92,7 +93,6 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
         //YOU ARE DEAD
         if (hp <= 0) {
             setDead(true);
-            LogManager.LOGGER.severe("BOX DEAD");
         }
     }
 
@@ -136,13 +136,9 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
     }
 
     @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
+    public JSONObject jsonSerialise() {
+        JSONObject json = super.jsonSerialise();
 
-        json.put("i", getObjectId());
-        json.put("x", getX());
-        json.put("y", getY());
-        json.put("t", ID);
         json.put("hp", hp);
 
         return json;
@@ -150,26 +146,11 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
 
     @Override
     public Document mongoSerialise() {
-        Document dbObject = new Document();
+        Document dbObject = super.mongoSerialise();
 
-        dbObject.put("i", getObjectId());
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
-        dbObject.put("t", ID);
         dbObject.put("hp", getHp());
 
         return dbObject;
-    }
-
-    public static ElectricBox deserialize(Document obj) {
-
-        ElectricBox electricBox = new ElectricBox();
-        electricBox.setHp((int) obj.get("hp"));
-        electricBox.setObjectId((long) obj.get("i"));
-        electricBox.setX((int) obj.get("x"));
-        electricBox.setY((int) obj.get("y"));
-
-        return electricBox;
     }
 
     @Override

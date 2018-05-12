@@ -1,7 +1,7 @@
 package net.simon987.server.websocket;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.ControllableUnit;
+import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.eclipse.jetty.websocket.api.Session;

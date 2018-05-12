@@ -7,7 +7,7 @@ import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldUpdateEvent;
-import net.simon987.server.game.World;
+import net.simon987.server.game.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;

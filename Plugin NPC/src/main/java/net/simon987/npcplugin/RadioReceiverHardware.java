@@ -4,8 +4,8 @@ import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
-import net.simon987.server.game.Action;
-import net.simon987.server.game.ControllableUnit;
+import net.simon987.server.game.objects.Action;
+import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -22,6 +22,12 @@ public class RadioReceiverHardware extends CpuHardware {
 
     public RadioReceiverHardware(ControllableUnit cubot) {
         this.cubot = cubot;
+    }
+
+    public RadioReceiverHardware(Document document) {
+        super(document);
+
+        this.cubot = (ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) document.get("cubot"));
     }
 
     @Override
@@ -70,13 +76,9 @@ public class RadioReceiverHardware extends CpuHardware {
 
         Document dbObject = new Document();
 
-        dbObject.put("hwid", (int) HWID);
+        dbObject.put("type", getClass().getCanonicalName());
         dbObject.put("cubot", cubot.getObjectId());
 
         return dbObject;
-    }
-
-    public static RadioReceiverHardware deserialize(Document obj) {
-        return new RadioReceiverHardware((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

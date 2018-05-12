@@ -1,8 +1,8 @@
 package net.simon987.biomassplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.TileMap;
-import net.simon987.server.game.World;
+import net.simon987.server.game.world.TileMap;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 
 import java.awt.*;

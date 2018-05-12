@@ -5,15 +5,16 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.ReplaceOptions;
 import net.simon987.server.crypto.CryptoProvider;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
 import net.simon987.server.event.TickEvent;
-import net.simon987.server.game.DayNightCycle;
 import net.simon987.server.game.GameUniverse;
-import net.simon987.server.game.World;
 import net.simon987.server.game.debug.*;
+import net.simon987.server.game.objects.GameRegistry;
+import net.simon987.server.game.world.DayNightCycle;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
@@ -43,14 +44,15 @@ public class GameServer implements Runnable {
 
     private CryptoProvider cryptoProvider;
 
-	private MongoClient mongo = null;
+    private MongoClient mongo;
 
     private UserManager userManager;
 
     private UserStatsHelper userStatsHelper;
 
-    public GameServer() {
+    private GameRegistry gameRegistry;
 
+    public GameServer() {
         this.config = new ServerConfiguration("config.properties");
 
         mongo = new MongoClient(config.getString("mongo_address"), config.getInt("mongo_port"));
@@ -64,6 +66,7 @@ public class GameServer implements Runnable {
         gameUniverse = new GameUniverse(config);
         gameUniverse.setMongo(mongo);
         pluginManager = new PluginManager();
+        gameRegistry = new GameRegistry();
 
         maxExecutionTime = config.getInt("user_timeout");
 
@@ -79,7 +82,7 @@ public class GameServer implements Runnable {
             for (File pluginFile : pluginDirListing) {
 
                 if (pluginFile.getName().endsWith(".jar")) {
-                    pluginManager.load(pluginFile, config);
+                    pluginManager.load(pluginFile, config, gameRegistry);
                 }
             }
         } else {
@@ -238,7 +241,7 @@ public class GameServer implements Runnable {
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
         try{
             MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
-            UpdateOptions updateOptions = new UpdateOptions();
+            ReplaceOptions updateOptions = new ReplaceOptions();
             updateOptions.upsert(true);
 
 	        int unloaded_worlds = 0;
@@ -259,7 +262,6 @@ public class GameServer implements Runnable {
                     universe.removeWorld(w);
 	        	}
 	        }
-
 
             for (User u : GameServer.INSTANCE.getGameUniverse().getUsers()) {
 	            if (!u.isGuest()) {
@@ -302,5 +304,9 @@ public class GameServer implements Runnable {
 
     public UserStatsHelper getUserStatsHelper() {
         return userStatsHelper;
+    }
+
+    public GameRegistry getRegistry() {
+        return gameRegistry;
     }
 }

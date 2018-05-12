@@ -4,8 +4,8 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.DebugCommandEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.game.Attackable;
-import net.simon987.server.game.GameObject;
+import net.simon987.server.game.objects.Attackable;
+import net.simon987.server.game.objects.GameObject;
 
 
 public class DamageObjCommandListener implements GameEventListener {

@@ -4,70 +4,34 @@ import net.simon987.cubotplugin.event.ChargeShieldCommandListener;
 import net.simon987.cubotplugin.event.CpuInitialisationListener;
 import net.simon987.cubotplugin.event.UserCreationListener;
 import net.simon987.server.ServerConfiguration;
-import net.simon987.server.assembly.CpuHardware;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.io.CpuHardwareDeserializer;
-import net.simon987.server.io.GameObjectDeserializer;
+import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.bson.Document;
 
-public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer, CpuHardwareDeserializer {
+public class CubotPlugin extends ServerPlugin {
 
 
     @Override
-    public void init(ServerConfiguration config) {
+    public void init(ServerConfiguration config, GameRegistry registry) {
         listeners.add(new CpuInitialisationListener());
         listeners.add(new UserCreationListener());
         listeners.add(new ChargeShieldCommandListener());
 
+        registry.registerGameObject(Cubot.class);
+
+        registry.registerHardware(CubotLeg.class);
+        registry.registerHardware(CubotLaser.class);
+        registry.registerHardware(CubotLidar.class);
+        registry.registerHardware(CubotDrill.class);
+        registry.registerHardware(CubotInventory.class);
+        registry.registerHardware(CubotKeyboard.class);
+        registry.registerHardware(CubotHologram.class);
+        registry.registerHardware(CubotBattery.class);
+        registry.registerHardware(CubotFloppyDrive.class);
+        registry.registerHardware(CubotComPort.class);
+        registry.registerHardware(CubotShield.class);
+        registry.registerHardware(CubotCore.class);
+
         LogManager.LOGGER.info("Initialised Cubot plugin");
-    }
-
-    @Override
-    public GameObject deserializeObject(Document object) {
-
-        int objType = (int) object.get("t");
-
-        if (objType == Cubot.ID) {
-
-            return Cubot.deserialize(object);
-        }
-
-        return null;
-    }
-
-    @Override
-    public CpuHardware deserializeHardware(Document obj) {
-        int hwid = (int) obj.get("hwid");
-
-        switch (hwid) {
-            case CubotLeg.HWID:
-                return CubotLeg.deserialize(obj);
-            case CubotLaser.HWID:
-                return CubotLaser.deserialize(obj);
-            case CubotLidar.HWID:
-                return CubotLidar.deserialize(obj);
-            case CubotDrill.HWID:
-                return CubotDrill.deserialize(obj);
-            case CubotInventory.HWID:
-                return CubotInventory.deserialize(obj);
-            case CubotKeyboard.HWID:
-                return CubotKeyboard.deserialize(obj);
-            case CubotHologram.HWID:
-                return CubotHologram.deserialize(obj);
-            case CubotBattery.HWID:
-                return CubotBattery.deserialize(obj);
-            case CubotFloppyDrive.HWID:
-                return CubotFloppyDrive.deserialize(obj);
-            case CubotComPort.HWID:
-                return CubotComPort.deserialize(obj);
-            case CubotShield.HWID:
-                return CubotShield.deserialize(obj);
-            case CubotCore.HWID:
-                return CubotCore.deserialize(obj);
-        }
-
-        return null;
     }
 }

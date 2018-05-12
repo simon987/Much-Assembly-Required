@@ -4,35 +4,28 @@ import net.simon987.biomassplugin.event.ObjectDeathListener;
 import net.simon987.biomassplugin.event.WorldCreationListener;
 import net.simon987.biomassplugin.event.WorldUpdateListener;
 import net.simon987.server.ServerConfiguration;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.io.GameObjectDeserializer;
+import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
-import org.bson.Document;
 
 
-public class BiomassPlugin extends ServerPlugin implements GameObjectDeserializer {
+public class BiomassPlugin extends ServerPlugin {
 
 
     @Override
-    public void init(ServerConfiguration config) {
+    public void init(ServerConfiguration config, GameRegistry registry) {
         listeners.add(new WorldCreationListener());
         listeners.add(new WorldUpdateListener(config));
-        listeners.add(new ObjectDeathListener(config));
 
-        LogManager.LOGGER.info("Initialised Biomass plugin");
-    }
-
-    @Override
-    public GameObject deserializeObject(Document object) {
-
-        int objType = (int) object.get("t");
-
-        if (objType == BiomassBlob.ID) {
-
-            return BiomassBlob.deserialize(object);
+        if (registry.isGameObjectRegistered("net.simon987.npcplugin.HarvesterNPC")) {
+            listeners.add(new ObjectDeathListener(config));
+        } else {
+            LogManager.LOGGER.severe("(BiomassPlugin) NPC plugin is not loaded so biomass will not spawn on death of HarvesterNPC");
         }
 
-        return null;
+
+        registry.registerGameObject(BiomassBlob.class);
+
+        LogManager.LOGGER.info("(BiomassPlugin) Initialised Biomass plugin");
     }
 }

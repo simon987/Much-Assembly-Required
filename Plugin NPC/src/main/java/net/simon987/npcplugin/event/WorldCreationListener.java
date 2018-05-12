@@ -8,7 +8,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldGenerationEvent;
-import net.simon987.server.game.World;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 
 import java.awt.*;

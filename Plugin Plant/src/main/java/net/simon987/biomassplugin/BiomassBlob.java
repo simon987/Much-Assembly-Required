@@ -1,14 +1,13 @@
 package net.simon987.biomassplugin;
 
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.InventoryHolder;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.InventoryHolder;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
 public class BiomassBlob extends GameObject implements InventoryHolder {
 
     private static final char MAP_INFO = 0x4000;
-    public static final int ID = 2;
 
     /**
      * Yield of the blob, in biomass units
@@ -21,22 +20,26 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
 
     private static final int ITM_BIOMASS = 1;
 
+    public BiomassBlob() {
+    }
+
+    public BiomassBlob(Document document) {
+        super(document);
+
+        biomassCount = document.getInteger("b");
+    }
+
     @Override
     public char getMapInfo() {
         return MAP_INFO;
     }
 
     @Override
-    public JSONObject serialise() {
+    public JSONObject jsonSerialise() {
 
-        JSONObject json = new JSONObject();
+        JSONObject json = super.jsonSerialise();
 
-        json.put("t", ID);
-        json.put("i", getObjectId());
-        json.put("x", getX());
-        json.put("y", getY());
         json.put("b", biomassCount);
-        //  json.put("style", style);
 
         return json;
     }
@@ -44,12 +47,8 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
     @Override
     public Document mongoSerialise() {
 
-        Document dbObject = new Document();
+        Document dbObject = super.mongoSerialise();
 
-        dbObject.put("t", ID);
-        dbObject.put("i", getObjectId());
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
         dbObject.put("b", biomassCount);
 
         return dbObject;
@@ -62,20 +61,6 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
 
     public void setBiomassCount(int biomassCount) {
         this.biomassCount = biomassCount;
-    }
-
-
-    public static BiomassBlob deserialize(Document obj) {
-
-        BiomassBlob biomassBlob = new BiomassBlob();
-
-        biomassBlob.setObjectId((long) obj.get("i"));
-        biomassBlob.setX((int) obj.get("x"));
-        biomassBlob.setY((int) obj.get("y"));
-        //   biomassBlob.style = (int) json.get("style");
-        biomassBlob.biomassCount = (int) obj.get("b");
-
-        return biomassBlob;
     }
 
     /**

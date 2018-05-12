@@ -2,6 +2,7 @@ package net.simon987.server.plugin;
 
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEventListener;
+import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.io.JSONSerialisable;
 import org.json.simple.JSONObject;
 
@@ -27,7 +28,7 @@ public abstract class ServerPlugin implements JSONSerialisable {
     /**
      * Called when the plugin is loaded
      */
-    public abstract void init(ServerConfiguration config);
+    public abstract void init(ServerConfiguration config, GameRegistry gameRegistry);
 
     public String getName() {
         return name;
@@ -50,7 +51,7 @@ public abstract class ServerPlugin implements JSONSerialisable {
     }
 
     @Override
-    public JSONObject serialise() {
+    public JSONObject jsonSerialise() {
 
         JSONObject json = new JSONObject();
 

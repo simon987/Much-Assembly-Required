@@ -10,6 +10,9 @@ import net.simon987.server.assembly.Assembler;
 import net.simon987.server.assembly.AssemblyResult;
 import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.world.World;
+import net.simon987.server.game.world.WorldGenerator;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.bson.Document;
@@ -115,7 +118,7 @@ public class GameUniverse {
         }
     }
 
-    World getLoadedWorld(int x, int y, String dimension) {
+    public World getLoadedWorld(int x, int y, String dimension) {
         // Wrapping coordinates around cyclically
         x %= maxWidth;
         y %= maxWidth;

@@ -785,15 +785,15 @@ var GameClient = (function () {
 }());
 var ObjectType;
 (function (ObjectType) {
-    ObjectType[ObjectType["CUBOT"] = 1] = "CUBOT";
-    ObjectType[ObjectType["BIOMASS"] = 2] = "BIOMASS";
-    ObjectType[ObjectType["HARVESTER_NPC"] = 10] = "HARVESTER_NPC";
-    ObjectType[ObjectType["FACTORY"] = 3] = "FACTORY";
-    ObjectType[ObjectType["RADIO_TOWER"] = 4] = "RADIO_TOWER";
-    ObjectType[ObjectType["VAULT_DOOR"] = 5] = "VAULT_DOOR";
-    ObjectType[ObjectType["OBSTACLE"] = 6] = "OBSTACLE";
-    ObjectType[ObjectType["ELECTRIC_BOX"] = 7] = "ELECTRIC_BOX";
-    ObjectType[ObjectType["PORTAL"] = 8] = "PORTAL";
+    ObjectType["CUBOT"] = "net.simon987.cubotplugin.Cubot";
+    ObjectType["BIOMASS"] = "net.simon987.biomassplugin.BiomassBlob";
+    ObjectType["HARVESTER_NPC"] = "net.simon987.npcplugin.HarvesterNPC";
+    ObjectType["FACTORY"] = "net.simon987.npcplugin.Factory";
+    ObjectType["RADIO_TOWER"] = "net.simon987.npcplugin.RadioTower";
+    ObjectType["VAULT_DOOR"] = "net.simon987.npcplugin.VaultDoor";
+    ObjectType["OBSTACLE"] = "net.simon987.npcplugin.Obstacle";
+    ObjectType["ELECTRIC_BOX"] = "net.simon987.npcplugin.ElectricBox";
+    ObjectType["PORTAL"] = "net.simon987.npcplugin.Portal";
 })(ObjectType || (ObjectType = {}));
 var ItemType;
 (function (ItemType) {

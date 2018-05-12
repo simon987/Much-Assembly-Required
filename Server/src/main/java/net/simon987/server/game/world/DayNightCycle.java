@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.world;
 
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;

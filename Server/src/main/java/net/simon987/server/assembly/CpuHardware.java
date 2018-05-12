@@ -1,15 +1,21 @@
 package net.simon987.server.assembly;
 
 
-import net.simon987.server.GameServer;
-import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.io.MongoSerializable;
-import net.simon987.server.plugin.ServerPlugin;
 import org.bson.Document;
+
 
 public abstract class CpuHardware implements MongoSerializable {
 
-    CPU cpu;
+    private CPU cpu;
+
+    public CpuHardware() {
+
+    }
+
+    public CpuHardware(Document document) {
+
+    }
 
     /**
      * Handle an HWI instruction
@@ -25,22 +31,6 @@ public abstract class CpuHardware implements MongoSerializable {
     }
 
     public abstract char getId();
-
-    public static CpuHardware deserialize(Document obj) {
-
-        for (ServerPlugin plugin : GameServer.INSTANCE.getPluginManager().getPlugins()) {
-
-            if (plugin instanceof CpuHardwareDeserializer) {
-                CpuHardware hw = ((CpuHardwareDeserializer) plugin).deserializeHardware(obj);
-
-                if (hw != null) {
-                    return hw;
-                }
-            }
-        }
-
-        return null;
-    }
 
     @Override
     public String toString() {

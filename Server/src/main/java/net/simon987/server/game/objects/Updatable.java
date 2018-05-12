@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.objects;
 
 /**
  * Updatable objects needs to be updated each tick

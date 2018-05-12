@@ -1,4 +1,4 @@
-package net.simon987.server.game;
+package net.simon987.server.game.world;
 
 /**
  * Represents a location in the game universe

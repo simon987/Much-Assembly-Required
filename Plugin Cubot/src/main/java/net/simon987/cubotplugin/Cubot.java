@@ -3,7 +3,7 @@ package net.simon987.cubotplugin;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.Memory;
-import net.simon987.server.game.*;
+import net.simon987.server.game.objects.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.bson.Document;
@@ -16,7 +16,6 @@ import java.util.Random;
 public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable, Attackable, Rechargeable {
 
     private static final char MAP_INFO = 0x0080;
-    public static final int ID = 1;
 
     /**
      * Hologram value that is displayed
@@ -171,9 +170,23 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         NORMAL
     }
 
-
     public Cubot() {
 
+    }
+
+    public Cubot(Document document) {
+        super(document);
+
+        hp = document.getInteger("hp");
+        shield = document.getInteger("shield");
+        setDirection(Direction.getDirection(document.getInteger("direction")));
+        heldItem = document.getInteger("heldItem");
+        energy = document.getInteger("energy");
+
+        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        maxEnergy = config.getInt("battery_max_energy");
+        maxHp = config.getInt("cubot_max_hp");
+        maxShield = config.getInt("cubot_max_shield");
     }
 
     @Override
@@ -225,12 +238,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     }
 
     @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
-        json.put("i", getObjectId());
-        json.put("t", ID);
-        json.put("x", getX());
-        json.put("y", getY());
+    public JSONObject jsonSerialise() {
+        JSONObject json = super.jsonSerialise();
         json.put("direction", getDirection().ordinal());
         json.put("heldItem", heldItem);
         json.put("hp", hp);
@@ -251,12 +260,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     @Override
     public Document mongoSerialise() {
-        Document dbObject = new Document();
+        Document dbObject = super.mongoSerialise();
 
-        dbObject.put("i", getObjectId());
-        dbObject.put("t", ID);
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
         dbObject.put("direction", getDirection().ordinal());
         dbObject.put("heldItem", heldItem);
         dbObject.put("hp", hp);
@@ -273,26 +278,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         }
 
         return dbObject;
-    }
-
-    public static Cubot deserialize(Document obj) {
-
-        Cubot cubot = new Cubot();
-        cubot.setObjectId((long) obj.get("i"));
-        cubot.setX((int) obj.get("x"));
-        cubot.setY((int) obj.get("y"));
-        cubot.hp = (int) obj.get("hp");
-        cubot.shield = (int) obj.get("shield");
-        cubot.setDirection(Direction.getDirection((int) obj.get("direction")));
-        cubot.heldItem = (int) obj.get("heldItem");
-        cubot.energy = (int) obj.get("energy");
-
-        ServerConfiguration config = GameServer.INSTANCE.getConfig();
-        cubot.maxEnergy = config.getInt("battery_max_energy");
-        cubot.maxHp = config.getInt("cubot_max_hp");
-        cubot.maxShield = config.getInt("cubot_max_shield");
-
-        return cubot;
     }
 
     /**

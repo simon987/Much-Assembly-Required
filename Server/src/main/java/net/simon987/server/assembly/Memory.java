@@ -38,6 +38,31 @@ public class Memory implements Target, MongoSerializable {
         words = new char[size];
     }
 
+    public Memory(Document document) {
+
+        String zipBytesStr = (String) document.get("zipBytes");
+
+        if (zipBytesStr != null) {
+            byte[] compressedBytes = Base64.getDecoder().decode((String) document.get("zipBytes"));
+
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Inflater decompressor = new Inflater(true);
+                InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
+                inflaterOutputStream.write(compressedBytes);
+                inflaterOutputStream.close();
+
+                setBytes(baos.toByteArray());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            LogManager.LOGGER.severe("Memory was manually deleted");
+            words = new char[GameServer.INSTANCE.getConfig().getInt("memory_size")];
+        }
+    }
+
     /**
      * Get the value at an address
      *
@@ -151,35 +176,6 @@ public class Memory implements Target, MongoSerializable {
         }
 
         return dbObject;
-    }
-
-    public static Memory deserialize(Document obj) {
-
-        Memory memory = new Memory(0);
-
-        String zipBytesStr = (String) obj.get("zipBytes");
-
-        if (zipBytesStr != null) {
-            byte[] compressedBytes = Base64.getDecoder().decode((String) obj.get("zipBytes"));
-
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                Inflater decompressor = new Inflater(true);
-                InflaterOutputStream inflaterOutputStream = new InflaterOutputStream(baos, decompressor);
-                inflaterOutputStream.write(compressedBytes);
-                inflaterOutputStream.close();
-
-                memory.setBytes(baos.toByteArray());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            LogManager.LOGGER.severe("Memory was manually deleted");
-            memory = new Memory(GameServer.INSTANCE.getConfig().getInt("memory_size"));
-        }
-
-        return memory;
     }
 
     public void setBytes(byte[] bytes) {

@@ -2,9 +2,9 @@ package net.simon987.npcplugin;
 
 
 import net.simon987.server.assembly.Util;
-import net.simon987.server.game.Direction;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.InventoryHolder;
+import net.simon987.server.game.objects.Direction;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.InventoryHolder;
 import net.simon987.server.logging.LogManager;
 
 import java.util.ArrayList;
@@ -105,8 +105,5 @@ public class HarvestTask extends NPCTask {
         } else {
             pause--;
         }
-
     }
-
-
 }

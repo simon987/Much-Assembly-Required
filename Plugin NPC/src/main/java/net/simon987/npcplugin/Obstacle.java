@@ -1,7 +1,7 @@
 package net.simon987.npcplugin;
 
-import net.simon987.server.game.Attackable;
-import net.simon987.server.game.GameObject;
+import net.simon987.server.game.objects.Attackable;
+import net.simon987.server.game.objects.GameObject;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
@@ -10,7 +10,6 @@ import org.json.simple.JSONObject;
  */
 public class Obstacle extends GameObject implements Attackable {
 
-    public static final int ID = 6;
     public static final int MAP_INFO = 0x0400;
 
     /**
@@ -31,6 +30,10 @@ public class Obstacle extends GameObject implements Attackable {
     public Obstacle(int hp) {
         this.hp = hp;
         this.maxHp = hp;
+    }
+
+    public Obstacle(Document document) {
+        style = document.getInteger("style");
     }
 
     @Override
@@ -89,12 +92,8 @@ public class Obstacle extends GameObject implements Attackable {
 
     @Override
     public Document mongoSerialise() {
-        Document dbObject = new Document();
+        Document dbObject = super.mongoSerialise();
 
-        dbObject.put("i", getObjectId());
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
-        dbObject.put("t", ID);
         dbObject.put("hp", hp);
         dbObject.put("style", style);
 
@@ -102,27 +101,12 @@ public class Obstacle extends GameObject implements Attackable {
     }
 
     @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
+    public JSONObject jsonSerialise() {
+        JSONObject json = super.jsonSerialise();
 
-        json.put("i", getObjectId());
-        json.put("x", getX());
-        json.put("y", getY());
-        json.put("t", ID);
         json.put("hp", hp);
         json.put("style", style);
 
         return json;
-    }
-
-    public static Obstacle deserialize(Document obj) {
-
-        Obstacle obstacle = new Obstacle((int) obj.get("hp"));
-        obstacle.setObjectId((long) obj.get("i"));
-        obstacle.setX((int) obj.get("x"));
-        obstacle.setY((int) obj.get("y"));
-        obstacle.setStyle((int) obj.get("style"));
-
-        return obstacle;
     }
 }

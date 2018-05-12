@@ -1,8 +1,8 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.TileMap;
-import net.simon987.server.game.World;
+import net.simon987.server.game.world.TileMap;
+import net.simon987.server.game.world.World;
 
 import java.awt.*;
 import java.util.ArrayList;

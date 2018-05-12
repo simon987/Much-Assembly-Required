@@ -5,7 +5,7 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.UserCreationEvent;
-import net.simon987.server.game.ControllableUnit;
+import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 

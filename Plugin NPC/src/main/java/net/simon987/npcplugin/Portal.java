@@ -1,9 +1,13 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.*;
+import net.simon987.server.game.objects.Enterable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Updatable;
+import net.simon987.server.game.world.Location;
+import net.simon987.server.game.world.World;
 import org.bson.Document;
-import org.json.simple.JSONObject;
+
 
 public class Portal extends GameObject implements Enterable {
 
@@ -14,7 +18,22 @@ public class Portal extends GameObject implements Enterable {
 
     public static final int MAP_INFO = 0x0020;
 
-    public static final int ID = 8;
+    public Portal() {
+
+    }
+
+    public Portal(Document document) {
+        super(document);
+
+        destination = new Location(
+                document.getInteger("dstWorldX"),
+                document.getInteger("dstWorldY"),
+                document.getString("dstDimension"),
+                document.getInteger("dstX"),
+                document.getInteger("dstY"));
+        setX(document.getInteger("x"));
+        setY(document.getInteger("y"));
+    }
 
     /**
      * Called when an object attempts to walk directly into a Enterable object
@@ -48,12 +67,8 @@ public class Portal extends GameObject implements Enterable {
 
     @Override
     public Document mongoSerialise() {
-        Document dbObject = new Document();
+        Document dbObject = super.mongoSerialise();
 
-        dbObject.put("i", getObjectId());
-        dbObject.put("x", getX());
-        dbObject.put("y", getY());
-        dbObject.put("t", ID);
         dbObject.put("dstWorldX", destination.worldX);
         dbObject.put("dstWorldY", destination.worldY);
         dbObject.put("dstX", destination.x);
@@ -61,34 +76,6 @@ public class Portal extends GameObject implements Enterable {
         dbObject.put("dstDimension", destination.dimension);
 
         return dbObject;
-    }
-
-    public static Portal deserialize(Document obj) {
-
-        Portal portal = new Portal();
-
-        portal.destination = new Location(
-                (int) obj.get("dstWorldX"),
-                (int) obj.get("dstWorldY"),
-                (String) obj.get("dstDimension"),
-                (int) obj.get("dstX"),
-                (int) obj.get("dstY"));
-        portal.setX((int) obj.get("x"));
-        portal.setY((int) obj.get("y"));
-
-        return portal;
-    }
-
-    @Override
-    public JSONObject serialise() {
-        JSONObject json = new JSONObject();
-
-        json.put("i", getObjectId());
-        json.put("x", getX());
-        json.put("y", getY());
-        json.put("t", ID);
-
-        return json;
     }
 
     public Location getDestination() {

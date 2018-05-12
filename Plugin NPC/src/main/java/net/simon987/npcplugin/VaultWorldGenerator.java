@@ -1,8 +1,8 @@
 package net.simon987.npcplugin;
 
-import net.simon987.server.game.Direction;
-import net.simon987.server.game.TileMap;
-import net.simon987.server.game.World;
+import net.simon987.server.game.objects.Direction;
+import net.simon987.server.game.world.TileMap;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 
 import java.awt.*;

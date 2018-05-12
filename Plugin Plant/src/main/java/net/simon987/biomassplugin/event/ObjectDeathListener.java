@@ -6,8 +6,8 @@ import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.ObjectDeathEvent;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.World;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 
 /**
@@ -29,11 +29,10 @@ public class ObjectDeathListener implements GameEventListener {
 
     @Override
     public void handle(GameEvent event) {
-        // TODO: setup enum with all GameObject type IDs
-        if (((ObjectDeathEvent) event).getSourceObjectId() == 10) {
+
+        if (event.getSource().getClass().getCanonicalName().equals("net.simon987.npcplugin.HarvesterNPC")) {
             //An HarvesterNPC ObjectDeathEvent is received
             GameObject dyingHarvesterNPC = (GameObject)event.getSource();
-
 
             //Don't spawn biomass on World border
             if (dyingHarvesterNPC.getX() != 0 && dyingHarvesterNPC.getX() != dyingHarvesterNPC.getWorld().getWorldSize() - 1 &&

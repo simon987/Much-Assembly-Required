@@ -1,8 +1,11 @@
-package net.simon987.server.game;
+package net.simon987.server.game.world;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
+import net.simon987.server.game.GameUniverse;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Updatable;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
@@ -221,11 +224,11 @@ public class World implements MongoSerializable {
 
         world.tileMap = TileMap.deserialize((Document) dbObject.get("terrain"), world.getWorldSize());
 
-        ArrayList<Document> objects = (ArrayList<Document>) dbObject.get("objects");
+        ArrayList objects = (ArrayList) dbObject.get("objects");
 
         for (Object obj : objects) {
 
-            GameObject object = GameObject.deserialize((Document) obj);
+            GameObject object = GameServer.INSTANCE.getRegistry().deserializeGameObject((Document) obj);
 
             object.setWorld(world);
             world.addObject(object);

@@ -1,18 +1,16 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
-import net.simon987.server.game.Action;
-import net.simon987.server.game.Attackable;
-import net.simon987.server.game.GameObject;
-import net.simon987.server.game.InventoryHolder;
+import net.simon987.server.game.objects.Action;
+import net.simon987.server.game.objects.Attackable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.InventoryHolder;
 import org.bson.Document;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CubotLaser extends CpuHardware {
+public class CubotLaser extends CubotHardware {
 
     /**
      * Hardware ID (Should be unique)
@@ -21,8 +19,6 @@ public class CubotLaser extends CpuHardware {
 
     public static final int DEFAULT_ADDRESS = 2;
 
-    private Cubot cubot;
-
     private static final int LASER_WITHDRAW = 1;
     private static final int LASER_DEPOSIT = 2;
     private static final int LASER_ATTACK = 3;
@@ -30,7 +26,11 @@ public class CubotLaser extends CpuHardware {
     private static final int LASER_DAMAGE = 25;
 
     public CubotLaser(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
+    }
+
+    public CubotLaser(Document document) {
+        super(document);
     }
 
     @Override
@@ -89,20 +89,5 @@ public class CubotLaser extends CpuHardware {
             }
         }
 
-    }
-
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        return dbObject;
-    }
-
-    public static CubotLaser deserialize(Document obj) {
-        return new CubotLaser((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

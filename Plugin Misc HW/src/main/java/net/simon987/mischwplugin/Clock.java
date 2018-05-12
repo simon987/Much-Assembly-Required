@@ -11,9 +11,17 @@ import org.bson.Document;
  */
 public class Clock extends CpuHardware {
 
-    public static final char HWID = 0x0008;
+    private static final char HWID = 0x0008;
 
     public static final char DEFAULT_ADDRESS = 0x0008;
+
+    public Clock() {
+
+    }
+
+    public Clock(Document document) {
+        super(document);
+    }
 
     @Override
     public void handleInterrupt(Status status) {
@@ -31,17 +39,12 @@ public class Clock extends CpuHardware {
         return HWID;
     }
 
-    public static Clock deserialize() {
-        return new Clock();
-    }
-
 
     @Override
     public Document mongoSerialise() {
 
         Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
+        dbObject.put("type", getClass().getCanonicalName());
 
         return dbObject;
     }

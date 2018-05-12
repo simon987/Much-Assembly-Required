@@ -1,11 +1,9 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import org.bson.Document;
 
-public class CubotFloppyDrive extends CpuHardware {
+public class CubotFloppyDrive extends CubotHardware {
 
     /**
      * Hardware ID (Should be unique)
@@ -18,13 +16,22 @@ public class CubotFloppyDrive extends CpuHardware {
     private static final int FLOPPY_READ_SECTOR = 2;
     private static final int FLOPPY_WRITE_SECTOR = 3;
 
-    private Cubot cubot;
     private FloppyDisk floppyDisk;
 
     public CubotFloppyDrive(Cubot cubot) {
-        this.cubot = cubot;
+        super(cubot);
 
         floppyDisk = new FloppyDisk();
+    }
+
+    public CubotFloppyDrive(Document document) {
+        super(document);
+
+        if (document.containsKey("floppy")) {
+            floppyDisk = new FloppyDisk((Document) document.get("floppy"));
+        } else {
+            floppyDisk = new FloppyDisk();
+        }
     }
 
     @Override
@@ -77,31 +84,6 @@ public class CubotFloppyDrive extends CpuHardware {
         return HWID;
     }
 
-    @Override
-    public Document mongoSerialise() {
-
-        Document dbObject = new Document();
-
-        dbObject.put("hwid", (int) HWID);
-        dbObject.put("cubot", cubot.getObjectId());
-
-        if (floppyDisk != null) {
-            dbObject.put("floppy", floppyDisk.mongoSerialise());
-        }
-
-        return dbObject;
-    }
-
-    public static CubotFloppyDrive deserialize(Document obj) {
-
-        CubotFloppyDrive drive = new CubotFloppyDrive((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
-
-        if (obj.containsKey("floppy")) {
-            drive.floppyDisk = FloppyDisk.deserialise((Document) obj.get("floppy"));
-        }
-
-        return drive;
-    }
 
     public FloppyDisk getFloppy() {
         return floppyDisk;
