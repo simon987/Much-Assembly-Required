@@ -1,13 +1,13 @@
 package net.simon987.server.assembly;
 
 
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.io.CpuHardwareDeserializer;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.plugin.ServerPlugin;
+import org.bson.Document;
 
-public abstract class CpuHardware implements MongoSerialisable {
+public abstract class CpuHardware implements MongoSerializable {
 
     CPU cpu;
 
@@ -26,7 +26,7 @@ public abstract class CpuHardware implements MongoSerialisable {
 
     public abstract char getId();
 
-    public static CpuHardware deserialize(DBObject obj) {
+    public static CpuHardware deserialize(Document obj) {
 
         for (ServerPlugin plugin : GameServer.INSTANCE.getPluginManager().getPlugins()) {
 

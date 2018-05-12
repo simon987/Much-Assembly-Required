@@ -1,11 +1,14 @@
 package net.simon987.mischwplugin;
 
-import com.mongodb.BasicDBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
+import org.bson.Document;
 
+/**
+ * Hardware to get game time
+ */
 public class Clock extends CpuHardware {
 
     public static final char HWID = 0x0008;
@@ -34,9 +37,9 @@ public class Clock extends CpuHardware {
 
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("hwid", (int) HWID);
 

@@ -1,11 +1,10 @@
 package net.simon987.server.assembly;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,7 +21,7 @@ import java.util.zip.InflaterOutputStream;
 /**
  * Represents the available memory for a CPU in the game universe
  */
-public class Memory implements Target, MongoSerialisable {
+public class Memory implements Target, MongoSerializable {
 
 
     /**
@@ -133,9 +132,9 @@ public class Memory implements Target, MongoSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -154,7 +153,7 @@ public class Memory implements Target, MongoSerialisable {
         return dbObject;
     }
 
-    public static Memory deserialize(DBObject obj) {
+    public static Memory deserialize(Document obj) {
 
         Memory memory = new Memory(0);
 

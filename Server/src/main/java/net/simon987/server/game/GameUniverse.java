@@ -1,6 +1,9 @@
 package net.simon987.server.game;
 
-import com.mongodb.*;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.Assembler;
@@ -9,6 +12,7 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
+import org.bson.Document;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,13 +59,13 @@ public class GameUniverse {
      * @return World, null if not found
      */
     private World loadWorld(int x, int y, String dimension) {
-        
-        DB db = mongo.getDB("mar");
-        DBCollection worlds = db.getCollection("world");
 
-        BasicDBObject whereQuery = new BasicDBObject();
+        MongoDatabase db = mongo.getDatabase(GameServer.INSTANCE.getConfig().getString("mongo_dbname"));
+        MongoCollection<Document> worlds = db.getCollection("world");
+
+        Document whereQuery = new Document();
         whereQuery.put("_id", World.idFromCoordinates(x, y, dimension));
-        DBCursor cursor = worlds.find(whereQuery);
+        MongoCursor<Document> cursor = worlds.find(whereQuery).iterator();
         if (cursor.hasNext()) {
             return World.deserialize(cursor.next());
         }

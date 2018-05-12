@@ -1,13 +1,12 @@
 package net.simon987.cubotplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -19,41 +18,159 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     private static final char MAP_INFO = 0x0080;
     public static final int ID = 1;
 
+    /**
+     * Hologram value that is displayed
+     * <br>TODO: Move to CubotHologram class
+     */
     private int hologram = 0;
+    /**
+     * Hologram string that is displayed
+     * <br>TODO: Move to CubotHologram class
+     */
     private String hologramString = "";
+    /**
+     * Hologram mode that was set during this tick
+     * <br>TODO: Move to CubotHologram class
+     */
     private HologramMode hologramMode = HologramMode.CLEARED;
+    /**
+     * Hologram mode at the end of the last tick
+     * <br>TODO: Move to CubotHologram class
+     */
     private HologramMode lastHologramMode = HologramMode.CLEARED;
+    /**
+     * Hologram color code. Format is handled by the client
+     * <br>TODO: Move to CubotHologram class
+     */
     private int hologramColor = 0;
 
     /**
      * Hit points
      */
     private int hp;
+    /**
+     * Maximum hit points
+     */
     private int maxHp;
+
+    /**
+     * Shield points
+     */
     private int shield;
+
+    /**
+     * Maximum shield points
+     */
     private int maxShield;
+
+    /**
+     * Item ID of the current 'active' item
+     */
     private int heldItem;
 
+    /**
+     * Action that was set during the current tick. It is set to IDLE by default
+     */
     private Action currentAction = Action.IDLE;
+
+    /**
+     * Action at the end of the last tick
+     */
     private Action lastAction = Action.IDLE;
 
+    /**
+     * Status bit field that was set during the current tick. It is set to 0 by default
+     * <br>See CubotStatus and addStatus() method
+     */
     private char currentStatus;
+
+    /**
+     * Status bit field at the end of the last tick
+     */
     private char lastStatus;
 
+    /**
+     * Buffer of keypress codes. It is not changed between ticks and it is reset when
+     * the player uploads their code
+     */
     private ArrayList<Integer> keyboardBuffer = new ArrayList<>();
 
+    /**
+     * Buffer of console messages (also called 'internal buffer') that was set during the current tick
+     */
     private ArrayList<char[]> consoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
+    /**
+     * Buffer of console messages (also called 'internal buffer') at the end of the last tick
+     */
     private ArrayList<char[]> lastConsoleMessagesBuffer = new ArrayList<>(CONSOLE_BUFFER_MAX_SIZE);
+    /**
+     * Console mode that was set during the current tick. It is set to NORMAL by default
+     */
     private ConsoleMode consoleMode = ConsoleMode.NORMAL;
+    /**
+     * Console mode at the end of the last tick
+     */
     private ConsoleMode lastConsoleMode = ConsoleMode.NORMAL;
 
+    /**
+     * User that controls this Cubot
+     */
     private User parent;
 
+    /**
+     * Energy units in kJ
+     */
     private int energy;
+
+    /**
+     * Maximum energy units in kJ
+     */
     private int maxEnergy;
 
+    /**
+     * Solar panel multiplier
+     * <br>TODO: Set this constant in dimension
+     */
     private static final float SOLAR_PANEL_MULTIPLIER = 1;
+    /**
+     * Maximum size of the console buffer (also called 'internal buffer')
+     */
     private static final int CONSOLE_BUFFER_MAX_SIZE = 40;
+
+    /**
+     * Display mode of the hologram hardware
+     * <br>TODO: move this inside CubotHologram class
+     */
+    public enum HologramMode {
+        /**
+         * Display nothing
+         */
+        CLEARED,
+        /**
+         * Display value as hexadecimal in format 0x0000
+         */
+        HEX,
+        /**
+         * Display string
+         */
+        STRING,
+        /**
+         * Display value as decimal
+         */
+        DEC
+    }
+
+    public enum ConsoleMode {
+        /**
+         * Used by the ComPort hardware - clears the console screen (client-side)
+         */
+        CLEAR,
+        /**
+         * No specific client-side action
+         */
+        NORMAL
+    }
+
 
     public Cubot() {
 
@@ -64,6 +181,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return MAP_INFO;
     }
 
+    /**
+     * Called every tick
+     */
     @Override
     public void update() {
 
@@ -130,8 +250,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("t", ID);
@@ -155,7 +275,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return dbObject;
     }
 
-    public static Cubot deserialize(DBObject obj) {
+    public static Cubot deserialize(Document obj) {
 
         Cubot cubot = new Cubot();
         cubot.setObjectId((long) obj.get("i"));
@@ -173,7 +293,52 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         cubot.maxShield = config.getInt("cubot_max_shield");
 
         return cubot;
+    }
 
+    /**
+     * Reset to 'factory settings', as it were when it was first created
+     */
+    private void reset() {
+        setDead(false);
+        setHp(maxHp);
+        setShield(0);
+        setHeldItem(0);
+        setEnergy(maxEnergy);
+        clearKeyboardBuffer();
+        consoleMessagesBuffer.clear();
+        lastConsoleMessagesBuffer.clear();
+        hologramColor = 0;
+        currentStatus = 0;
+        lastStatus = 0;
+        addStatus(CubotStatus.FACTORY_NEW);
+    }
+
+    @Override
+    public boolean onDeadCallback() {
+        LogManager.LOGGER.info(getParent().getUsername() + "'s Cubot died");
+
+        reset();
+
+        //Teleport to spawn point
+        this.getWorld().removeObject(this);
+        this.getWorld().decUpdatable();
+
+        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        Random random = new Random();
+
+        int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);
+        int spawnY = config.getInt("new_user_worldY") + random.nextInt(5);
+        String dimension = config.getString("new_user_dimension");
+        this.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true, dimension));
+
+        Point point = this.getWorld().getRandomPassableTile();
+        this.setX(point.x);
+        this.setY(point.y);
+
+        this.getWorld().addObject(this);
+        this.getWorld().incUpdatable();
+
+        return true;
     }
 
     public void setHeldItem(int heldItem) {
@@ -314,18 +479,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         this.hologramMode = hologramMode;
     }
 
-    public enum HologramMode {
-        CLEARED,
-        HEX,
-        STRING,
-        DEC
-    }
-
-    public enum ConsoleMode {
-        CLEAR,
-        NORMAL
-    }
-
     @Override
     public void setAction(Action action) {
         currentAction = action;
@@ -373,6 +526,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return lastStatus;
     }
 
+    /**
+     * Currently has no effect
+     */
     @Override
     public void setHealRate(int hp) {
         //no op
@@ -398,6 +554,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         this.maxHp = hp;
     }
 
+    public int getMaxShield() {
+        return maxShield;
+    }
+
+    public void setMaxShield(int maxShield) {
+        this.maxShield = maxShield;
+    }
     @Override
     public void heal(int amount) {
         hp += amount;
@@ -419,56 +582,5 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         if (hp <= 0) {
             setDead(true);
         }
-    }
-
-    public void reset() {
-        setDead(false);
-        setHp(maxHp);
-        setShield(0);
-        setHeldItem(0);
-        setEnergy(maxEnergy);
-        clearKeyboardBuffer();
-        consoleMessagesBuffer.clear();
-        lastConsoleMessagesBuffer.clear();
-        hologramColor = 0;
-        currentStatus = 0;
-        lastStatus = 0;
-        addStatus(CubotStatus.FACTORY_NEW);
-    }
-
-    @Override
-    public boolean onDeadCallback() {
-        LogManager.LOGGER.info(getParent().getUsername() + "'s Cubot died");
-
-        reset();
-
-        //Teleport to spawn point
-        this.getWorld().removeObject(this);
-        this.getWorld().decUpdatable();
-
-        ServerConfiguration config = GameServer.INSTANCE.getConfig();
-        Random random = new Random();
-
-        int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);
-        int spawnY = config.getInt("new_user_worldY") + random.nextInt(5);
-        String dimension = config.getString("new_user_dimension");
-        this.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true, dimension));
-
-        Point point = this.getWorld().getRandomPassableTile();
-        this.setX(point.x);
-        this.setY(point.y);
-
-        this.getWorld().addObject(this);
-        this.getWorld().incUpdatable();
-
-        return true;
-    }
-
-    public int getMaxShield() {
-        return maxShield;
-    }
-
-    public void setMaxShield(int maxShield) {
-        this.maxShield = maxShield;
     }
 }

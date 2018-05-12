@@ -7,6 +7,9 @@ import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.game.GameObject;
 
+/**
+ * Debug command to add shield points to a Cubot
+ */
 public class ChargeShieldCommandListener implements GameEventListener {
     @Override
     public Class getListenedEventType() {

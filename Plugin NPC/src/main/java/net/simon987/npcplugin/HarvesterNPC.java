@@ -1,10 +1,9 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.ObjectDeathEvent;
 import net.simon987.server.game.Direction;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 
@@ -12,6 +11,9 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
     public static final int ID = 10;
 
+    /**
+     *
+     */
     public static final int MAX_HEALTH = GameServer.INSTANCE.getConfig().getInt("harvester_hp_max");
     public static final int HEAL_RATE = GameServer.INSTANCE.getConfig().getInt("harvester_regen");
 
@@ -77,22 +79,21 @@ public class HarvesterNPC extends NonPlayerCharacter {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
         dbObject.put("y", getY());
         dbObject.put("direction", getDirection().ordinal());
         dbObject.put("hp", getHp());
-        //  dbObject.put("energy", energy);
         dbObject.put("action", getAction().ordinal());
         dbObject.put("t", ID);
 
         return dbObject;
     }
 
-    public static HarvesterNPC deserialize(DBObject obj) {
+    public static HarvesterNPC deserialize(Document obj) {
 
         HarvesterNPC npc = new HarvesterNPC();
         npc.setObjectId((long) obj.get("i"));
@@ -100,8 +101,6 @@ public class HarvesterNPC extends NonPlayerCharacter {
         npc.setY((int) obj.get("y"));
         npc.setHp((int) obj.get("hp"));
         npc.setDirection(Direction.getDirection((int) obj.get("direction")));
-        // npc.energy = (int) obj.get("energy");
-        // npc.maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
 
         return npc;
 

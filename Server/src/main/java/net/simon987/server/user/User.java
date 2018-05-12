@@ -1,29 +1,33 @@
 package net.simon987.server.user;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.UserCreationEvent;
 import net.simon987.server.game.ControllableUnit;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
+import org.bson.Document;
 
 /**
  * Represents a User (or player) of the game
  */
-public class User implements MongoSerialisable {
+public class User implements MongoSerializable {
 
     private String username;
 
     private String userCode;
+    private String password;
+    private String accessToken;
 
     private CPU cpu;
 
     private ControllableUnit controlledUnit;
 
-    private boolean guest;
+    private boolean guest = false;
+    private boolean moderator = false;
+
+    private UserStats stats;
 
     public User() throws CancelledException {
         GameEvent event = new UserCreationEvent(this);
@@ -32,7 +36,7 @@ public class User implements MongoSerialisable {
             throw new CancelledException();
         }
 
-
+        this.stats = new UserStats();
     }
 
     public User(ControllableUnit unit) {
@@ -40,33 +44,38 @@ public class User implements MongoSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("_id", username); // a constant id ensures only one entry per user is kept and updated, instead of a new entry created every save for every user.
         dbObject.put("username", username);
         dbObject.put("code", userCode);
         dbObject.put("controlledUnit", controlledUnit.getObjectId());
         dbObject.put("cpu", cpu.mongoSerialise());
+        dbObject.put("password", password);
+        dbObject.put("moderator", moderator);
+        dbObject.put("stats", stats.mongoSerialise());
 
         return dbObject;
 
     }
 
-    public static User deserialize(DBObject obj) throws CancelledException {
+    public static User deserialize(Document obj) throws CancelledException {
 
         User user = new User((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("controlledUnit")));
         user.username = (String) obj.get("username");
         user.userCode = (String) obj.get("code");
+        user.password = (String) obj.get("password");
+        user.moderator = (boolean) obj.get("moderator");
+        user.stats = new UserStats((Document) obj.get("stats"));
 
         user.getControlledUnit().setParent(user);
 
-        user.cpu = CPU.deserialize((DBObject) obj.get("cpu"), user);
+        user.cpu = CPU.deserialize((Document) obj.get("cpu"), user);
 
         return user;
     }
-    //----
 
     public String getUserCode() {
         return userCode;
@@ -106,5 +115,29 @@ public class User implements MongoSerialisable {
 
     public void setGuest(boolean guest) {
         this.guest = guest;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public boolean isModerator() {
+        return moderator;
+    }
+
+    public void setModerator(boolean moderator) {
+        this.moderator = moderator;
+    }
+
+    public UserStats getStats() {
+        return stats;
     }
 }

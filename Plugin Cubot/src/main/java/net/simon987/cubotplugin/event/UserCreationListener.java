@@ -57,7 +57,5 @@ public class UserCreationListener implements GameEventListener {
         user.setControlledUnit(cubot);
 
         LogManager.LOGGER.fine("(Plugin) Handled User creation event (Cubot Plugin)");
-
-
     }
 }

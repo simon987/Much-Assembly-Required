@@ -7,7 +7,7 @@
     <groupId>net.simon987.server</groupId>
     <artifactId>server_root</artifactId>
     <version>1.4a</version>
-	<packaging>pom</packaging>
+    <packaging>pom</packaging>
 
 
     <build>
@@ -22,30 +22,30 @@
                 </configuration>
             </plugin>
             <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
-                    <configuration>
-                        <outputDirectory>../target/plugins</outputDirectory>
-                        <archive>
-                            <manifest>
-                                <addClasspath>false</addClasspath>
-                                <mainClass>net.simon987.server.Main</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <outputDirectory>../target/plugins</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <addClasspath>false</addClasspath>
+                            <mainClass>net.simon987.server.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-	
-	<modules>
-		<module>Server</module>
-		<module>Plugin Plant</module>
-		<module>Plugin NPC</module>
-		<module>Plugin Misc HW</module>
-		<module>Plugin Cubot</module>
-		<module>Plugin Radioactive Cloud</module>
-	</modules>
+
+    <modules>
+        <module>Server</module>
+        <module>Plugin Plant</module>
+        <module>Plugin NPC</module>
+        <module>Plugin Misc HW</module>
+        <module>Plugin Cubot</module>
+        <module>Plugin Radioactive Cloud</module>
+    </modules>
 
     <properties>
         <!-- explicitly set build encoding so not altered by build platform defaults -->

@@ -1,10 +1,8 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.DBObject;
 import net.simon987.npcplugin.event.CpuInitialisationListener;
 import net.simon987.npcplugin.event.VaultWorldUpdateListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
-import net.simon987.npcplugin.io.StatsDatabaseManager;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.game.GameObject;
@@ -12,6 +10,7 @@ import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
+import org.bson.Document;
 
 import java.util.ArrayList;
 
@@ -22,8 +21,6 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
      */
     private static ArrayList<RadioTower> radioTowers;
 
-    private static StatsDatabaseManager statsDbManager;
-
     @Override
     public void init(ServerConfiguration configuration) {
 
@@ -33,13 +30,11 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
 
         radioTowers = new ArrayList<>(32);
 
-        statsDbManager = new StatsDatabaseManager(configuration);
-
         LogManager.LOGGER.info("Initialised NPC plugin");
     }
 
     @Override
-    public GameObject deserializeObject(DBObject obj) {
+    public GameObject deserializeObject(Document obj) {
 
         int objType = (int) obj.get("t");
 
@@ -65,7 +60,7 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
     }
 
     @Override
-    public CpuHardware deserializeHardware(DBObject obj) {
+    public CpuHardware deserializeHardware(Document obj) {
         int hwid = (int) obj.get("hwid");
 
         switch (hwid) {
@@ -80,7 +75,4 @@ public class NpcPlugin extends ServerPlugin implements GameObjectDeserializer, C
         return radioTowers;
     }
 
-    public static StatsDatabaseManager getStatsDbManager() {
-        return statsDbManager;
-    }
 }

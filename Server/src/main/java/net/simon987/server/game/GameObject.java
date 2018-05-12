@@ -1,11 +1,11 @@
 package net.simon987.server.game;
 
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.io.JSONSerialisable;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.plugin.ServerPlugin;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * An INSTANCE of an object (e.g. a Tree, a character ...) inside the
  * game universe
  */
-public abstract class GameObject implements JSONSerialisable, MongoSerialisable {
+public abstract class GameObject implements JSONSerialisable, MongoSerializable {
 
     private boolean dead;
     /**
@@ -223,8 +223,8 @@ public abstract class GameObject implements JSONSerialisable, MongoSerialisable 
         return new JSONObject();
     }
 
-    public static GameObject deserialize(DBObject obj) {
-//
+    public static GameObject deserialize(Document obj) {
+
         for (ServerPlugin plugin : GameServer.INSTANCE.getPluginManager().getPlugins()) {
 
             if (plugin instanceof GameObjectDeserializer) {

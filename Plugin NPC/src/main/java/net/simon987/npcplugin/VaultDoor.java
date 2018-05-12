@@ -1,11 +1,10 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.crypto.RandomStringGenerator;
 import net.simon987.server.game.*;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.util.Arrays;
@@ -124,8 +123,8 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
@@ -152,7 +151,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         return json;
     }
 
-    public static VaultDoor deserialize(DBObject obj) {
+    public static VaultDoor deserialize(Document obj) {
 
         VaultDoor vaultDoor = new VaultDoor(0); //cypherId ?
         vaultDoor.setX((int) obj.get("x"));
@@ -160,7 +159,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
         vaultDoor.setObjectId((long) obj.get("i"));
 
 
-        if (obj.containsField("homeX") && obj.containsField("homeY")) {
+        if (obj.containsKey("homeX") && obj.containsKey("homeY")) {
             vaultDoor.setHomeX((int) obj.get("homeX"));
             vaultDoor.setHomeY((int) obj.get("homeY"));
         }

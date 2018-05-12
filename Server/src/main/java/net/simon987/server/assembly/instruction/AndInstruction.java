@@ -7,10 +7,11 @@ import net.simon987.server.assembly.Util;
 
 /**
  * AND two numbers together, the result is stored in the destination operand
- * <p>
+ * <br>
  * AND A, B
- * A = A & B
- * </p>
+ * <br>
+ * {@literal A = A & B @}
+ * <br>
  * FLAGS: OF=0 S=* Z=* X=0
  */
 public class AndInstruction extends Instruction {

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    #set ($title = "Home - M.A.R")
+    #parse("head.vm")
+<body>
+
+    #parse("header.vm")
+
+<div class="wrapper">
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1 class="display-4">Much Assembly Required<span class="vim-caret">&nbsp;</span></h1>
+            <p class="lead text-mono text-success">Program the 8086-like microprocessor of a robot in a grid-based
+                multiplayer world.</p>
+            <hr class="my-4">
+
+            <div class="card-columns">
+                <div class="card">
+                    <img src="images/code.png" class="feature-image">
+                    <div class="card-body">
+                        <h5 class="card-title">Online code editor</h5>
+                        <p class="card-text">Program an 8086-like virtual microprocessor in the online code editor with
+                            real-time syntax check and highlighting.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/cubot.png" class="feature-image">
+                    <div class="card-body">
+                        <h5 class="card-title">Program your robot</h5>
+                        <p class="card-text">Reprogram your robot's microprocessor to make it navigate the game
+                            universe, gather resources and build structures.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/world.png" class="feature-image">
+                    <div class="card-body">
+                        <h5 class="card-title">Large game universe</h5>
+                        <p class="card-text">The persistent game universe holds up to 4,294,967,296 procedurally
+                            generated 16x16 Worlds.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/github-logo.png" class="feature-image">
+                    <div class="card-body">
+                        <h5 class="card-title">Free and open source</h5>
+                        <p class="card-text">The project's source code and the game's documentation are
+                            available <a href="https://github.com/simon987/Much-Assembly-Required">on GitHub</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <a class="btn btn-primary btn-lg btn-shadow text-mono" href="/play" role="button">Play now!</a>
+
+        </div>
+
+    </div>
+</div>
+
+    #parse("footer.vm")
+
+</body>
+</html>

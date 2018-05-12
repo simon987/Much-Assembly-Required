@@ -5,9 +5,9 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
 /**
- * +-----------------+
- * |                 |
- * +-> 0>0>0>0>0>0>0>0 > CF
+ * <br>           +-----------------+
+ * <br>           |                 |
+ * <br> {@literal +-> 0>0>0>0>0>0>0>0 > CF @}
  */
 public class RorInstruction extends Instruction {
 

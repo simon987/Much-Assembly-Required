@@ -6,9 +6,9 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
 /**
- * Send hardware interupt
- * Used to interact with the World using hardware
- * </p>
+ * Send hardware interrupt
+ * <br>Used to interact with the World using hardware
+ *
  */
 public class HwiInstruction extends Instruction {
 

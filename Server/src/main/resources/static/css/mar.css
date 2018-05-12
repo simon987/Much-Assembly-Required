@@ -1,0 +1,316 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(/webfonts/MaterialIcons-Regular.woff2) format('woff2'),
+    url(/webfonts/MaterialIcons-Regular.woff) format('woff'),
+    url(/webfonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.mi {
+    font-family: 'Material Icons', serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    vertical-align: bottom;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/* Console */
+
+.console-wrapper {
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+.piece {
+    display: block;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+.noclick {
+    pointer-events: none;
+}
+
+#consoleText {
+    font-family: fixedsys, monospace;
+    font-size: 24px;
+    white-space: pre;
+    overflow-y: scroll;
+    position: absolute;
+    padding: 0.5em 1em;
+    pointer-events: auto;
+    text-align: left;
+    text-shadow: 0 0.2rem 1rem #0c7b46;
+    z-index: -1;
+
+    left: 60px;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.scanlines {
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), color-stop(50%, rgba(255, 255, 255, 0)), color-stop(70%, rgba(0, 0, 0, 0.2)), to(rgba(0, 0, 0, 0.6)));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.2) 70%, rgba(0, 0, 0, 0.6));
+    background-size: 100% 0.3rem;
+    position: absolute;
+    left: 60px;
+}
+
+.ctr-selection::-moz-selection {
+    background-color: #14fdce;
+    color: #031e11;
+}
+
+.ctr-selection::selection {
+    background-color: #14fdce;
+    color: #031e11;
+}
+
+.ctr-selection-inverted::-moz-selection {
+    background-color: #031e11;
+    color: #14fdce;
+}
+
+.ctr-selection-inverted::selection {
+    background-color: #031e11;
+    color: #14fdce;
+}
+
+.ctr-text {
+    color: #14fdce;
+    background-color: #1D1F21;
+}
+
+.ctr-text-inverted {
+    color: #031e11;
+    background-color: #14fdce;
+}
+
+.bottom-panel {
+    min-height: 18px;
+    max-height: 100%;
+    height: 235px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 8;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.splitter-horizontal {
+    height: 18px;
+    background: url(/images/hsizegrip.png) center center no-repeat #714cdf;
+    cursor: row-resize;
+    border-bottom: solid 1px #151623;
+}
+
+.console-side-bar {
+    width: 60px;
+    padding: 8px 4px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #2d2d2d;
+    height: 100%;
+    pointer-events: auto;
+    box-shadow: rgba(0, 0, 0, 0.2) 3px 0 8px;
+}
+
+.bottom-panel {
+    min-height: 18px;
+    height: 235px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: 8;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.splitter-horizontal {
+    height: 18px;
+    background: url(/images/hsizegrip.png) center center no-repeat #714cdf;
+    cursor: row-resize;
+    border-bottom: solid 1px #151623;
+}
+
+/* Misc */
+
+.feature-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+/* Grow
+ * https://ianlunn.co.uk/store/licenses/personal/
+ */
+.hvr-grow {
+    display: inline-block;
+    vertical-align: middle;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+
+.hvr-grow:hover,
+.hvr-grow:focus,
+.hvr-grow:active {
+    transform: scale(1.1);
+}
+
+.footer {
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background-color: #282A38;
+}
+
+@media (min-width: 550px) {
+    .card-columns {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card-columns {
+        column-count: 4;
+    }
+}
+
+@media (min-width: 1500px) {
+    .container {
+        max-width: 1440px;
+    }
+}
+
+@media (min-width: 1800px) {
+    .container {
+        max-width: 1550px;
+    }
+}
+
+.dropdown-header {
+    color: #aaadc7;
+}
+
+.container {
+    margin-top: 1em;
+}
+
+#editor {
+    margin: 1em 0 1em 0;
+    height: 35em;
+    box-shadow: rgba(46, 94, 80, 0.45) 0 0 2ex;
+}
+
+@font-face {
+    font-family: 'fixedsys';
+    src: url("../webfonts/FSEX301-L2.ttf");
+}
+
+.regular-screen {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .small-screen {
+        display: none;
+    }
+
+    .regular-screen {
+        display: inherit;
+    }
+}
+
+.col-sm-4 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 33.33333%;
+    -ms-flex: 0 0 33.33333%;
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+}
+
+.col-sm-2 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 16.66667%;
+    -ms-flex: 0 0 16.66667%;
+    flex: 0 0 16.66667%;
+    max-width: 16.66667%;
+}
+
+.col-sm-3 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+/** https://stackoverflow.com/questions/6410730/ */
+@-webkit-keyframes rotating /* Safari and Chrome */
+{
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotating {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    -ms-animation: rotating 2s linear infinite;
+    -o-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
+}

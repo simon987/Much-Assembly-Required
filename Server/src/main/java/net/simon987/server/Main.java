@@ -1,9 +1,8 @@
 package net.simon987.server;
 
 import net.simon987.server.logging.LogManager;
-import net.simon987.server.webserver.SocketServer;
-
-import java.net.InetSocketAddress;
+import net.simon987.server.web.WebServer;
+import spark.Spark;
 
 
 public class Main {
@@ -12,15 +11,14 @@ public class Main {
         ServerConfiguration config = new ServerConfiguration("config.properties");
         LogManager.initialize(config);
 
-        //Load
         GameServer.INSTANCE.load();
 
-        SocketServer socketServer = new SocketServer(new InetSocketAddress(config.getString("webSocket_host"),
-                config.getInt("webSocket_port")), config);
+        //Web server
+        WebServer webServer = new WebServer(GameServer.INSTANCE.getConfig());
 
-        GameServer.INSTANCE.setSocketServer(socketServer);
+        Spark.awaitInitialization();
+        GameServer.INSTANCE.setSocketServer(webServer.getSocketServer());
 
-        (new Thread(socketServer)).start();
         (new Thread(GameServer.INSTANCE)).start();
     }
 }

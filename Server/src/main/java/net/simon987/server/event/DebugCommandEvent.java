@@ -1,7 +1,9 @@
 package net.simon987.server.event;
 
-import net.simon987.server.webserver.OnlineUser;
+import net.simon987.server.websocket.OnlineUser;
 import org.json.simple.JSONObject;
+
+import java.io.IOException;
 
 public class DebugCommandEvent extends GameEvent {
 
@@ -37,7 +39,11 @@ public class DebugCommandEvent extends GameEvent {
         response.put("t", "debug");
         response.put("message", message);
 
-        ((OnlineUser) getSource()).getWebSocket().send(response.toJSONString());
+        try {
+            ((OnlineUser) getSource()).getWebSocket().getRemote().sendString(response.toJSONString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,11 +1,11 @@
 package net.simon987.pluginradioactivecloud;
 
-import com.mongodb.DBObject;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
+import org.bson.Document;
 
 public class RadioactiveCloudPlugin extends ServerPlugin implements GameObjectDeserializer {
 
@@ -16,7 +16,7 @@ public class RadioactiveCloudPlugin extends ServerPlugin implements GameObjectDe
     }
 
     @Override
-    public GameObject deserializeObject(DBObject object) {
+    public GameObject deserializeObject(Document object) {
 
         return null;
     }

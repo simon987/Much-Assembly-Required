@@ -23,10 +23,10 @@ public class RandomStringGenerator {
         return new String(buf);
     }
 
-    public static final String UPPER_ALPHA_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String LOWER_ALPHA_CHARSET = UPPER_ALPHA_CHARSET.toLowerCase(Locale.ROOT);
-    public static final String NUMERIC_CHARSET = "0123456789";
-    public static final String ALPHANUMERIC_CHARSET = UPPER_ALPHA_CHARSET + LOWER_ALPHA_CHARSET + NUMERIC_CHARSET;
+    static final String UPPER_ALPHA_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static final String LOWER_ALPHA_CHARSET = UPPER_ALPHA_CHARSET.toLowerCase(Locale.ROOT);
+    static final String NUMERIC_CHARSET = "0123456789";
+    static final String ALPHANUMERIC_CHARSET = UPPER_ALPHA_CHARSET + LOWER_ALPHA_CHARSET + NUMERIC_CHARSET;
 
     private final Random random;
 

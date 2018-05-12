@@ -1,21 +1,20 @@
 package net.simon987.server.game;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldUpdateEvent;
 import net.simon987.server.game.pathfinding.Pathfinder;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
+import org.bson.Document;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class World implements MongoSerialisable {
+public class World implements MongoSerializable {
 
     /**
      * Size of the side of this world
@@ -171,17 +170,15 @@ public class World implements MongoSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
-        BasicDBList objects = new BasicDBList();
+        List<Document> objects = new ArrayList<>();
         for (GameObject obj : gameObjects.values()) {
             objects.add(obj.mongoSerialise());
         }
 
-
-        dbObject.put("_id", getId());
         dbObject.put("dimension", getDimension());
 
         dbObject.put("objects", objects);
@@ -214,7 +211,7 @@ public class World implements MongoSerialisable {
 
     }
 
-    public static World deserialize(DBObject dbObject) {
+    public static World deserialize(Document dbObject) {
 
         World world = new World((int) dbObject.get("size"));
         world.x = (int) dbObject.get("x");
@@ -222,13 +219,13 @@ public class World implements MongoSerialisable {
         world.dimension = (String) dbObject.get("dimension");
         world.updatable = (int) dbObject.get("updatable");
 
-        world.tileMap = TileMap.deserialize((BasicDBObject) dbObject.get("terrain"), world.getWorldSize());
+        world.tileMap = TileMap.deserialize((Document) dbObject.get("terrain"), world.getWorldSize());
 
-        BasicDBList objects = (BasicDBList) dbObject.get("objects");
+        ArrayList<Document> objects = (ArrayList<Document>) dbObject.get("objects");
 
         for (Object obj : objects) {
 
-            GameObject object = GameObject.deserialize((DBObject) obj);
+            GameObject object = GameObject.deserialize((Document) obj);
 
             object.setWorld(world);
             world.addObject(object);

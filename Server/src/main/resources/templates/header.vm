@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg bg-primary navbar-light">
+
+    <a class="navbar-brand text-mono hvr-grow" href="/" title="Home"><img src="/images/icon.png"></img></a>
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+            <li class="nav-item">
+                <a class="nav-link #if ($cur_page == 'play')active#end" href="/play"><i class="mi">code</i> Play</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link #if ($cur_page == 'leaderboard')active#end" href="/leaderboard"><i class="mi">assessment</i>
+                    Leaderboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link #if ($cur_page == 'account')active#end" href="/account"><i
+                        class="mi">account_circle</i> Account</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" target="_blank" href="https://github.com/simon987/Much-Assembly-Required"><img
+                        width="23px" src="images/GitHub-Mark-32px.png"> Contribute</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    #foreach($msg in $session.attribute("messages"))
+        <div class="alert $msg.getType()"><a href="#" class="close" data-dismiss="alert"
+                                             aria-label="close">&times;</a>$msg.getMessage()</div>
+    #end
+    $session.removeAttribute("messages")
+</div>
+

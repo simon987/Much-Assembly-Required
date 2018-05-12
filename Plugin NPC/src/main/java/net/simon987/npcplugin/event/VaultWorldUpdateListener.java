@@ -14,11 +14,26 @@ import java.util.HashMap;
 
 public class VaultWorldUpdateListener implements GameEventListener {
 
+    /**
+     * Map of worlds and their time to wait until next respawn event
+     */
     private HashMap<World, Long> worldWaitMap = new HashMap<>(200);
 
+    /**
+     * Lower bound of ElectricBox to be created on a respawn event
+     */
     private static int minElectricBoxCount;
+    /**
+     * Upper bound of ElectricBox to be created on a respawn event
+     */
     private static int maxElectricBoxCount;
+    /**
+     * Number of game ticks to wait after the threshold has been met
+     */
     private static int waitTime;
+    /**
+     * Threshold before starting the
+     */
     private static int electricBoxThreshold;
 
     public VaultWorldUpdateListener(ServerConfiguration config) {
@@ -37,6 +52,7 @@ public class VaultWorldUpdateListener implements GameEventListener {
     @Override
     public void handle(GameEvent event) {
 
+        //TODO: Move this and the Biomass UpdateListener to a 'RespawnManager' kind of deal
         World world = ((WorldUpdateEvent) event).getWorld();
 
         if (world.getDimension().startsWith("v")) {
@@ -66,6 +82,5 @@ public class VaultWorldUpdateListener implements GameEventListener {
                 }
             }
         }
-
     }
 }

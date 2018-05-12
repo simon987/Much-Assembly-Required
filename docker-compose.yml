@@ -3,19 +3,25 @@ services:
   server:
     build:
       context: .
-    command: sh -c "sed -i -e 's#localhost#db#' config.properties && /usr/bin/java -jar /app/target/server-1.2a.jar"
+    command: sh -c "/usr/bin/java -jar /app/target/server-1.4a.jar"
     depends_on:
-      db:
+      mongodb:
         condition: service_healthy
     ports:
-      - "8887:8887"
-  db:
-    image: mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-umar", "-pmar"]
-    environment:
-      MYSQL_DATABASE: mar
-      MYSQL_PASSWORD: mar
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-      MYSQL_ROOT_PASSWORD: something-secret
-      MYSQL_USER: mar
+      - 4567:4567
+  mongodb:
+        image: mongo:latest
+        container_name: "mongodb"
+        environment:
+          - MONGO_DATA_DIR=/data/db
+          - MONGO_LOG_DIR=/dev/null
+        volumes:
+          - ./data/db:/data/db
+        ports:
+            - 27017:27017
+        command: mongod --smallfiles --logpath=/dev/null --port 27017
+        healthcheck:
+          test: echo 'db.stats().ok' | mongo localhost:27017/mar --quiet
+          interval: 2s
+          timeout: 2s
+          retries: 2

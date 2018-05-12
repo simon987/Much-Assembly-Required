@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+    #set ($title = "Official game server")  ## TODO get from config
+    #set ($cur_page = "play")
+    #parse("head.vm")
+<body>
+
+    #parse("header.vm")
+
+<div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a id="tab-world" class="nav-link active regular-screen" href="#" onclick="tabWorldClick()"><i
+                            class="mi">public</i> World</a>
+                    <a id="tab-world-sm" class="nav-link active small-screen" href="#" onclick="tabWorldClick()"><i
+                            class="mi">public</i></a>
+                </li>
+                <li class="nav-item">
+                    <a id="tab-editor" class="nav-link regular-screen" href="#" onclick="tabEditorClick()"><i
+                            class="mi">code</i> Editor</a>
+                    <a id="tab-editor-sm" class="nav-link small-screen" href="#" onclick="tabEditorClick()"><i
+                            class="mi">code</i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link regular-screen" target="_blank"
+                       href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i>
+                        Documentation</a>
+                    <a class="nav-link small-screen" target="_blank"
+                       href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link regular-screen" target="_blank"
+                       href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg"><i
+                            class="mi">chat</i> Slack</a>
+                    <a class="nav-link small-screen" target="_blank"
+                       href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg"><i
+                            class="mi">chat</i></a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+
+        ## GAME / WORLD
+            <div id="world-tab">
+                <div id="game" tabindex="0"></div>
+            </div>
+
+        ## EDITOR
+            <div id="editor-tab" style="display: none">
+                #if($session.attribute("username"))
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <select title="Select Theme" class="form-control" id="editorTheme"></select>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button onclick="mar.client.uploadCode(ace.edit('editor').getValue())"
+                                    class="btn btn-shadow btn-success text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                                Upload
+                            </button>
+                            <button class="btn btn-shadow btn-success text-mono small-screen" href="#"><i class="mi">file_upload</i>
+                            </button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-shadow btn-danger text-mono regular-screen"
+                                    onclick="mar.client.reloadCode()" href="#"><i
+                                    class="mi">replay</i> Reload
+                            </button>
+                            <button class="btn btn-shadow btn-danger text-mono small-screen"
+                                    onclick="mar.client.reloadCode()" href="#"><i
+                                    class="mi">replay</i></button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button id="floppyUp" onclick="document.getElementById('floppyIn').click();"
+                                    class="btn btn-shadow btn-info text-mono regular-screen" href="#"><i class="mi">file_upload</i>
+                                Floppy
+                            </button>
+                            <button onclick="document.getElementById('floppyIn').click();"
+                                    class="btn btn-shadow btn-info text-mono small-screen" href="#"><i class="mi">file_upload</i>
+                            </button>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button class="btn btn-shadow btn-info text-mono regular-screen"
+                                    onclick="window.location.assign('floppy_download')"><i class="mi">file_download</i>
+                                Floppy
+                            </button>
+                            <button class="btn btn-shadow btn-info text-mono small-screen"
+                                    onclick="window.location.assign('floppy_download')"><i class="mi">file_download</i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="floppyForm" style="display: none;" enctype='multipart/form-data'>
+                        <input id="floppyIn" type="file" name="floppyIn"/>
+                    </form>
+
+                    <div id="editor"></div>
+
+                    <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+                #else
+                    <p style="text-align: left"><a href="/account">Login</a> to use the editor</p>
+                #end
+                <script src="js/editor.js"></script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    #parse("footer.vm")
+
+##Console
+<style>
+</style>
+
+<div class="bottom-panel">
+    <div class="splitter-horizontal"></div>
+    <div class="console-wrapper">
+        <div class="console-side-bar">
+            <p>
+                <button id="colorButton" class="btn btn-outline-info"
+                        data-container="body" data-toggle="popover" data-trigger="hover"
+                        data-placement="right" data-content="Invert colors"><i class="mi">invert_colors_off</i></button>
+            </p>
+            <p>
+                <button id="scrollButton" class="btn btn-outline-info"
+                        data-container="body" data-toggle="popover" data-trigger="hover"
+                        data-placement="right" data-content="Toggle auto scroll"><i class="mi">swap_vert</i></button>
+            </p>
+            <p>
+            <div class="btn-group dropright">
+                <button type="button" class="btn btn-shadow btn-info" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    <i class="mi">short_text</i>
+                </button>
+                <div class="dropdown-menu">
+                    <h6 class="dropdown-header">Line width</h6>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(0)">16 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(1)">24 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(2)">40 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(3)">56 chars</button>
+                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(4)">64 chars</button>
+                </div>
+            </div>
+            </p>
+            <p>
+                <button id="resetButton" class="btn btn-danger btn-shadow" style="margin-left: 0"
+                        data-container="body" data-toggle="popover" data-trigger="hover"
+                        data-placement="right" data-content="Clear console"><i class="mi">delete_sweep</i></button>
+            </p>
+        </div>
+        <div class="noisy">
+            <div id="consoleText" class="piece output noclick ctr-selection ctr-text"></div>
+            <div class="piece scanlines noclick"></div>
+            <div class="piece glow noclick"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $(".bottom-panel").resizable({
+        handleSelector: ".splitter-horizontal",
+        resizeWidth: false,
+        resizeHeightFrom: "top"
+    });
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+</script>
+
+<script src="js/phaser.js"></script>
+<script src="js/phaser-plugin-isometric.js"></script>
+<script src="js/mar.js"></script>
+</body>
+</html>

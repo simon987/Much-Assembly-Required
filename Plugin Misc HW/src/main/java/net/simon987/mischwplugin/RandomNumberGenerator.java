@@ -1,11 +1,14 @@
 package net.simon987.mischwplugin;
 
-import com.mongodb.BasicDBObject;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
+import org.bson.Document;
 
 import java.util.Random;
 
+/**
+ * Hardware to generate random numbers
+ */
 public class RandomNumberGenerator extends CpuHardware {
 
     public static final char HWID = 0x0007;
@@ -31,9 +34,9 @@ public class RandomNumberGenerator extends CpuHardware {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("hwid", (int) HWID);
 

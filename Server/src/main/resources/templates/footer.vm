@@ -1,0 +1,8 @@
+<div class="container">
+    <span class="text-muted">©2018 Simon Fortier</span>
+</div>
+
+<script src="js/popper.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-resizable.min.js"></script>
