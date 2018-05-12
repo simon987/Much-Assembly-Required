@@ -131,6 +131,19 @@ public class World implements MongoSerializable {
         return matchingObjects;
     }
 
+    public ArrayList<GameObject> findGameObjects(String type) {
+
+        ArrayList<GameObject> matchingObjects = new ArrayList<>(2);
+
+        for (GameObject obj : gameObjects.values()) {
+            if ((obj.getClass().getName().equals(type))) {
+                matchingObjects.add(obj);
+            }
+        }
+
+        return matchingObjects;
+    }
+
     public void addObject(GameObject object) {
         gameObjects.put(object.getObjectId(), object);
     }
