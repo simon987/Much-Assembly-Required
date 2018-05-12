@@ -1,9 +1,8 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.game.Attackable;
 import net.simon987.server.game.GameObject;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 /**
@@ -89,8 +88,8 @@ public class Obstacle extends GameObject implements Attackable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
@@ -116,7 +115,7 @@ public class Obstacle extends GameObject implements Attackable {
         return json;
     }
 
-    public static Obstacle deserialize(DBObject obj) {
+    public static Obstacle deserialize(Document obj) {
 
         Obstacle obstacle = new Obstacle((int) obj.get("hp"));
         obstacle.setObjectId((long) obj.get("i"));

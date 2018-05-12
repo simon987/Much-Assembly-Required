@@ -1,6 +1,5 @@
 package net.simon987.cubotplugin;
 
-import com.mongodb.DBObject;
 import net.simon987.cubotplugin.event.ChargeShieldCommandListener;
 import net.simon987.cubotplugin.event.CpuInitialisationListener;
 import net.simon987.cubotplugin.event.UserCreationListener;
@@ -11,6 +10,7 @@ import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.io.GameObjectDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
+import org.bson.Document;
 
 public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer, CpuHardwareDeserializer {
 
@@ -25,7 +25,7 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
     }
 
     @Override
-    public GameObject deserializeObject(DBObject object) {
+    public GameObject deserializeObject(Document object) {
 
         int objType = (int) object.get("t");
 
@@ -38,7 +38,7 @@ public class CubotPlugin extends ServerPlugin implements GameObjectDeserializer,
     }
 
     @Override
-    public CpuHardware deserializeHardware(DBObject obj) {
+    public CpuHardware deserializeHardware(Document obj) {
         int hwid = (int) obj.get("hwid");
 
         switch (hwid) {

@@ -1,13 +1,12 @@
 package net.simon987.cubotplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -251,8 +250,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("t", ID);
@@ -276,7 +275,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return dbObject;
     }
 
-    public static Cubot deserialize(DBObject obj) {
+    public static Cubot deserialize(Document obj) {
 
         Cubot cubot = new Cubot();
         cubot.setObjectId((long) obj.get("i"));
@@ -294,7 +293,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         cubot.maxShield = config.getInt("cubot_max_shield");
 
         return cubot;
-
     }
 
     /**

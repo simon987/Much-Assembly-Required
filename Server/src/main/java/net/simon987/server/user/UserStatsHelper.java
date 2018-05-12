@@ -1,11 +1,11 @@
 package net.simon987.server.user;
 
-import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import net.simon987.server.GameServer;
+import org.bson.Document;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Retrieve user stats in a structured fashion
@@ -15,12 +15,12 @@ public class UserStatsHelper {
     /**
      * Database collection of users
      */
-    private DBCollection users;
+    private MongoCollection<Document> users;
 
     /**
      * @param users Database collection of users
      */
-    public UserStatsHelper(DBCollection users) {
+    public UserStatsHelper(MongoCollection<Document> users) {
         this.users = users;
     }
 
@@ -35,11 +35,11 @@ public class UserStatsHelper {
 
         ArrayList<Map.Entry<User, Integer>> rows = new ArrayList<>();
 
-        BasicDBObject orderBy = new BasicDBObject("$stats." + statName, -1);
-        DBCursor cursor = users.find().sort(orderBy).limit(n);
+        Document orderBy = new Document("$stats." + statName, -1);
+        MongoCursor<Document> cursor = users.find().sort(orderBy).limit(n).iterator();
 
         while (cursor.hasNext()) {
-            DBObject dbUser = cursor.next();
+            Document dbUser = cursor.next();
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
             rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getInt(statName)));
         }
@@ -54,26 +54,27 @@ public class UserStatsHelper {
      * @param n        Maximum number of players
      * @return Top n players, in User,set format, in descending order
      */
-    public ArrayList<Map.Entry<User, BasicDBList>> getTopNSetLength(String statName, int n) {
+    public ArrayList<Map.Entry<User, ArrayList>> getTopNSetLength(String statName, int n) {
 
-        ArrayList<Map.Entry<User, BasicDBList>> rows = new ArrayList<>();
+        ArrayList<Map.Entry<User, ArrayList>> rows = new ArrayList<>();
 
-        BasicDBList ifNullList = new BasicDBList();
+        List<Object> ifNullList = new ArrayList<>(2);
         ifNullList.add("$stats." + statName);
-        ifNullList.add(new BasicDBList());
+        ifNullList.add(new ArrayList());
 
-        BasicDBObject project = new BasicDBObject();
-        project.put("setLength", new BasicDBObject("$size", new BasicDBObject("$ifNull", ifNullList)));
+        Document project = new Document();
+        project.put("setLength", new Document("$size", new Document("$ifNull", ifNullList)));
         project.put("username", 1);
 
-        Iterable<DBObject> results = users.aggregate(
-                new BasicDBObject("$project", project),
-                new BasicDBObject("$sort", new BasicDBObject("setLength", -1)),
-                new BasicDBObject("$limit", n)
-        ).results();
 
-        for (DBObject dbUser : results) {
-            User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
+        Iterator<Document> results = users.aggregate(Arrays.asList(
+                new Document("$project", project),
+                new Document("$sort", new Document("setLength", -1)),
+                new Document("$limit", n))
+        ).iterator();
+
+        while (results.hasNext()) {
+            User user = GameServer.INSTANCE.getGameUniverse().getUser((String) results.next().get("username"));
             rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getSet(statName)));
         }
 

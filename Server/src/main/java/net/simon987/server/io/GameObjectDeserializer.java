@@ -1,10 +1,10 @@
 package net.simon987.server.io;
 
-import com.mongodb.DBObject;
 import net.simon987.server.game.GameObject;
+import org.bson.Document;
 
 public interface GameObjectDeserializer {
 
-    GameObject deserializeObject(DBObject object);
+    GameObject deserializeObject(Document object);
 
 }

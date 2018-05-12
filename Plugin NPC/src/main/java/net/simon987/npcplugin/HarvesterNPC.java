@@ -1,10 +1,9 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.event.ObjectDeathEvent;
 import net.simon987.server.game.Direction;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 
@@ -80,8 +79,8 @@ public class HarvesterNPC extends NonPlayerCharacter {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
@@ -94,7 +93,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
         return dbObject;
     }
 
-    public static HarvesterNPC deserialize(DBObject obj) {
+    public static HarvesterNPC deserialize(Document obj) {
 
         HarvesterNPC npc = new HarvesterNPC();
         npc.setObjectId((long) obj.get("i"));

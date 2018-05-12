@@ -1,22 +1,21 @@
 package net.simon987.server.user;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.crypto.RandomStringGenerator;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.ArrayList;
 
 public class UserManager {
 
-    private DBCollection userCollection;
+    private MongoCollection<Document> userCollection;
 
-    public UserManager(DBCollection userCollection) {
+    public UserManager(MongoCollection<Document> userCollection) {
 
         this.userCollection = userCollection;
     }
@@ -30,7 +29,7 @@ public class UserManager {
 
         ArrayList<User> userList = new ArrayList<>();
 
-        DBCursor cursor = userCollection.find();
+        MongoCursor<Document> cursor = userCollection.find().iterator();
         while (cursor.hasNext()) {
             try {
                 userList.add(User.deserialize(cursor.next()));
@@ -58,10 +57,10 @@ public class UserManager {
         }
 
         //Check if exists
-        DBObject where = new BasicDBObject();
+        Document where = new Document();
         where.put("_id", username);
 
-        if (userCollection.findOne(where) != null) {
+        if (userCollection.find(where).first() != null) {
             throw new RegistrationException("Username is already in use");
         }
 
@@ -73,9 +72,9 @@ public class UserManager {
             String hashedPassword = BCrypt.hashpw(password, salt);
             user.setPassword(hashedPassword);
 
-            DBObject dbUser = user.mongoSerialise();
+            Document dbUser = user.mongoSerialise();
 
-            userCollection.save(dbUser);
+            userCollection.insertOne(dbUser);
         } catch (Exception e) {
             throw new RegistrationException("An exception occurred while trying to create user: " + e.getMessage());
         }
@@ -89,10 +88,10 @@ public class UserManager {
      */
     public boolean validateUser(String username, String password) {
 
-        DBObject where = new BasicDBObject();
+        Document where = new Document();
         where.put("_id", username);
 
-        DBObject user = userCollection.findOne(where);
+        Document user = userCollection.find(where).first();
         return user != null && BCrypt.checkpw(password, (String) user.get("password"));
     }
 
@@ -114,7 +113,7 @@ public class UserManager {
         String hashedPassword = BCrypt.hashpw(newPassword, salt);
         user.setPassword(hashedPassword);
 
-        userCollection.save(user.mongoSerialise()); //Save new password immediately
+        userCollection.replaceOne(new Document("_id", username), user.mongoSerialise()); //Save new password immediately
     }
 
     /**

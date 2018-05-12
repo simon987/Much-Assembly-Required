@@ -1,16 +1,15 @@
 package net.simon987.server.game;
 
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.io.JSONSerialisable;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Random;
 import java.util.zip.Deflater;
@@ -19,7 +18,7 @@ import java.util.zip.DeflaterOutputStream;
 /**
  * A 2D map of Tile objects of size width*height
  */
-public class TileMap implements JSONSerialisable, MongoSerialisable {
+public class TileMap implements JSONSerialisable, MongoSerializable {
 
     public static final int VOID = -1;
     public static final int PLAIN_TILE = 0;
@@ -141,25 +140,34 @@ public class TileMap implements JSONSerialisable, MongoSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
-        dbObject.put("tiles", tiles);
+        //Flatten multi-dimensional array
+        ArrayList<Integer> bsonTiles = new ArrayList<>();
+
+        for (int x = 0; x < this.width; x++) {
+            for (int y = 0; y < this.height; y++) {
+                bsonTiles.add(tiles[x][y]);
+            }
+        }
+
+        dbObject.put("tiles", bsonTiles);
 
         return dbObject;
 
     }
 
-    public static TileMap deserialize(DBObject object, int size) {
+    public static TileMap deserialize(Document object, int size) {
 
-        BasicDBList terrain = (BasicDBList) object.get("tiles");
+        ArrayList<Integer> terrain = (ArrayList<Integer>) object.get("tiles");
 
         int[][] tiles = new int[size][size];
 
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                tiles[x][y] = (int) ((BasicDBList) terrain.get(x)).get(y);
+                tiles[x][y] = terrain.get(x * size + y);
             }
         }
 

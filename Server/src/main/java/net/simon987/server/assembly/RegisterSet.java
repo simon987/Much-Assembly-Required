@@ -1,21 +1,20 @@
 package net.simon987.server.assembly;
 
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A set of registers for a CPU
  */
-public class RegisterSet implements Target, MongoSerialisable {
+public class RegisterSet implements Target, MongoSerializable {
 
     /**
      * List of registers
@@ -145,10 +144,10 @@ public class RegisterSet implements Target, MongoSerialisable {
 
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBList registers = new BasicDBList();
+    public Document mongoSerialise() {
+        List<Document> registers = new ArrayList<>();
         for (Integer index : this.registers.keySet()) {
-            JSONObject register = new JSONObject();
+            Document register = new Document();
 
             register.put("index", index);
             register.put("name", getRegister(index).getName());
@@ -157,24 +156,24 @@ public class RegisterSet implements Target, MongoSerialisable {
             registers.add(register);
         }
 
-        BasicDBObject obj = new BasicDBObject();
+        Document obj = new Document();
         obj.put("registers", registers);
 
         return obj;
     }
 
-    public static RegisterSet deserialize(DBObject obj) {
+    public static RegisterSet deserialize(Document obj) {
 
         RegisterSet registerSet = new RegisterSet();
 
-        BasicDBList registers = (BasicDBList) obj.get("registers");
+        List registers = (ArrayList) obj.get("registers");
 
         for (Object sRegister : registers) {
 
-            Register register = new Register((String) ((DBObject) sRegister).get("name"));
-            register.setValue((int) ((DBObject) sRegister).get("value"));
+            Register register = new Register((String) ((Document) sRegister).get("name"));
+            register.setValue((int) ((Document) sRegister).get("value"));
 
-            registerSet.registers.put((int) ((DBObject) sRegister).get("index"), register);
+            registerSet.registers.put((int) ((Document) sRegister).get("index"), register);
 
         }
 

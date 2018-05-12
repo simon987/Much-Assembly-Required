@@ -1,10 +1,9 @@
 package net.simon987.cubotplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
+import org.bson.Document;
 
 public class CubotFloppyDrive extends CpuHardware {
 
@@ -79,9 +78,9 @@ public class CubotFloppyDrive extends CpuHardware {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("hwid", (int) HWID);
         dbObject.put("cubot", cubot.getObjectId());
@@ -93,12 +92,12 @@ public class CubotFloppyDrive extends CpuHardware {
         return dbObject;
     }
 
-    public static CubotFloppyDrive deserialize(DBObject obj) {
+    public static CubotFloppyDrive deserialize(Document obj) {
 
         CubotFloppyDrive drive = new CubotFloppyDrive((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
 
-        if (obj.containsField("floppy")) {
-            drive.floppyDisk = FloppyDisk.deserialise((DBObject) obj.get("floppy"));
+        if (obj.containsKey("floppy")) {
+            drive.floppyDisk = FloppyDisk.deserialise((Document) obj.get("floppy"));
         }
 
         return drive;

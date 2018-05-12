@@ -1,10 +1,9 @@
 package net.simon987.cubotplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
+import org.bson.Document;
 
 public class CubotShield extends CpuHardware {
 
@@ -28,8 +27,8 @@ public class CubotShield extends CpuHardware {
     }
 
 	@Override
-	public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("hwid", (int) HWID);
         dbObject.put("cubot", cubot.getObjectId());
@@ -49,8 +48,8 @@ public class CubotShield extends CpuHardware {
             getCpu().getRegisterSet().getRegister("B").setValue(shield);
         }
     }
-    
-    public static CubotShield deserialize(DBObject obj) {
+
+    public static CubotShield deserialize(Document obj) {
         return new CubotShield((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

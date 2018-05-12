@@ -1,7 +1,5 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Util;
 import net.simon987.server.game.Attackable;
@@ -9,6 +7,7 @@ import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Rechargeable;
 import net.simon987.server.game.Updatable;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -150,8 +149,8 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
@@ -162,7 +161,7 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
         return dbObject;
     }
 
-    public static ElectricBox deserialize(DBObject obj) {
+    public static ElectricBox deserialize(Document obj) {
 
         ElectricBox electricBox = new ElectricBox();
         electricBox.setHp((int) obj.get("hp"));

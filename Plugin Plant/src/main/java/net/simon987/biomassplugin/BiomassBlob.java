@@ -1,9 +1,8 @@
 package net.simon987.biomassplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.InventoryHolder;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 public class BiomassBlob extends GameObject implements InventoryHolder {
@@ -43,9 +42,9 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("t", ID);
         dbObject.put("i", getObjectId());
@@ -65,15 +64,8 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
         this.biomassCount = biomassCount;
     }
 
-//    public int getStyle() {
-//        return style;
-//    }
-//
-//    public void setStyle(int style) {
-//        this.style = style;
-//    }
 
-    public static BiomassBlob deserialize(DBObject obj) {
+    public static BiomassBlob deserialize(Document obj) {
 
         BiomassBlob biomassBlob = new BiomassBlob();
 

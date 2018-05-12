@@ -1,12 +1,12 @@
 package net.simon987.mischwplugin;
 
-import com.mongodb.DBObject;
 import net.simon987.mischwplugin.event.CpuInitialisationListener;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.io.CpuHardwareDeserializer;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
+import org.bson.Document;
 
 /**
  * Plugin that adds miscellaneous hardware to the game
@@ -22,7 +22,7 @@ public class MiscHWPlugin extends ServerPlugin implements CpuHardwareDeserialize
     }
 
     @Override
-    public CpuHardware deserializeHardware(DBObject hwJson) {
+    public CpuHardware deserializeHardware(Document hwJson) {
         int hwid = (int) hwJson.get("hwid");
 
         switch (hwid) {

@@ -1,28 +1,29 @@
 package net.simon987.server.user;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 
-public class UserStats implements MongoSerialisable {
+import java.util.ArrayList;
 
-    private BasicDBObject stats;
+public class UserStats implements MongoSerializable {
+
+    private Document stats;
 
     UserStats() {
-        this.stats = new BasicDBObject();
+        this.stats = new Document();
     }
 
-    UserStats(BasicDBObject stats) {
+    UserStats(Document stats) {
         if (stats != null) {
             this.stats = stats;
         } else {
-            this.stats = new BasicDBObject();
+            this.stats = new Document();
         }
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
         return stats;
     }
@@ -36,7 +37,7 @@ public class UserStats implements MongoSerialisable {
     public void incrementStat(String name, int count) {
 
         stats.putIfAbsent(name, 0);
-        stats.put(name, stats.getInt(name) + count);
+        stats.put(name, stats.getInteger(name) + count);
     }
 
     /**
@@ -57,8 +58,7 @@ public class UserStats implements MongoSerialisable {
      * @return The value of the stat. Returns 0 if not found
      */
     public int getInt(String name) {
-
-        return stats.getInt(name, 0);
+        return stats.getInteger(name, 0);
     }
 
     /**
@@ -69,10 +69,10 @@ public class UserStats implements MongoSerialisable {
      */
     public void addToStringSet(String name, String value) {
 
-        stats.putIfAbsent(name, new BasicDBList());
+        stats.putIfAbsent(name, new ArrayList<>());
 
         try {
-            ((BasicDBList) stats.get(name)).add(value);
+            ((ArrayList<String>) stats.get(name)).add(value);
         } catch (ClassCastException e) {
             LogManager.LOGGER.severe("UserStats: cannot add to list because stat already exists and is not a list");
         }
@@ -87,16 +87,16 @@ public class UserStats implements MongoSerialisable {
      */
     public boolean removeFromSet(String name, String value) {
 
-        if (stats.putIfAbsent(name, new BasicDBList()) != null) {
-            return ((BasicDBList) stats.get(name)).remove(value);
+        if (stats.putIfAbsent(name, new ArrayList()) != null) {
+            return ((ArrayList) stats.get(name)).remove(value);
         }
 
         return false;
     }
 
-    public BasicDBList getSet(String name) {
-        stats.putIfAbsent(name, new BasicDBList());
+    public ArrayList getSet(String name) {
+        stats.putIfAbsent(name, new ArrayList());
 
-        return (BasicDBList) stats.get(name);
+        return (ArrayList) stats.get(name);
     }
 }

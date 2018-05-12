@@ -1,15 +1,14 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Updatable;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Game objects that regularly creates NonPlayerCharacters
@@ -133,15 +132,15 @@ public class Factory extends GameObject implements Updatable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
         dbObject.put("y", getY());
         dbObject.put("t", ID);
 
-        BasicDBList tmpNpcArray = new BasicDBList();
+        List<Long> tmpNpcArray = new ArrayList<>(npcs.size());
 
         for (NonPlayerCharacter npc : npcs) {
             tmpNpcArray.add(npc.getObjectId());
@@ -152,14 +151,14 @@ public class Factory extends GameObject implements Updatable {
         return dbObject;
     }
 
-    public static Factory deserialise(DBObject obj) {
+    public static Factory deserialise(Document obj) {
 
         Factory factory = new Factory();
         factory.setObjectId((long) obj.get("i"));
         factory.setX((int) obj.get("x"));
         factory.setY((int) obj.get("y"));
 
-        factory.tmpNpcArray = ((BasicDBList) obj.get("tmpNpcArray")).toArray();
+        factory.tmpNpcArray = ((ArrayList) obj.get("tmpNpcArray")).toArray();
 
         return factory;
     }

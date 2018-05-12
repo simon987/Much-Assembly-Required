@@ -1,7 +1,11 @@
 package net.simon987.server;
 
 
-import com.mongodb.*;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 import net.simon987.server.crypto.CryptoProvider;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
@@ -16,9 +20,9 @@ import net.simon987.server.user.User;
 import net.simon987.server.user.UserManager;
 import net.simon987.server.user.UserStatsHelper;
 import net.simon987.server.websocket.SocketServer;
+import org.bson.Document;
 
 import java.io.File;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class GameServer implements Runnable {
@@ -49,17 +53,13 @@ public class GameServer implements Runnable {
 
         this.config = new ServerConfiguration("config.properties");
 
-        try{
-            mongo = new MongoClient(config.getString("mongo_address"), config.getInt("mongo_port"));
-            DB db = mongo.getDB(config.getString("mongo_dbname"));
+        mongo = new MongoClient(config.getString("mongo_address"), config.getInt("mongo_port"));
+        MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
 
-            DBCollection userCollection = db.getCollection("user");
+        MongoCollection<Document> userCollection = db.getCollection("user");
 
-            userManager = new UserManager(userCollection);
-            userStatsHelper = new UserStatsHelper(userCollection);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        userManager = new UserManager(userCollection);
+        userStatsHelper = new UserStatsHelper(userCollection);
 
         gameUniverse = new GameUniverse(config);
         gameUniverse.setMongo(mongo);
@@ -201,14 +201,14 @@ public class GameServer implements Runnable {
 
         LogManager.LOGGER.info("Loading all data from MongoDB");
 
-        DB db = mongo.getDB(config.getString("mongo_dbname"));
+        MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
 
-        DBCollection worlds = db.getCollection("world");
-        DBCollection server = db.getCollection("server");
+        MongoCollection<Document> worlds = db.getCollection("world");
+        MongoCollection<Document> server = db.getCollection("server");
 
-        BasicDBObject whereQuery = new BasicDBObject();
+        Document whereQuery = new Document();
         whereQuery.put("shouldUpdate", true);
-        DBCursor cursor = worlds.find(whereQuery);
+        MongoCursor<Document> cursor = worlds.find(whereQuery).iterator();
         GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
         while (cursor.hasNext()) {
         	World w = World.deserialize(cursor.next());
@@ -222,9 +222,9 @@ public class GameServer implements Runnable {
         }
 
         //Load misc server info
-        cursor = server.find();
+        cursor = server.find().iterator();
         if (cursor.hasNext()) {
-            DBObject serverObj = cursor.next();
+            Document serverObj = cursor.next();
             gameUniverse.setTime((long) serverObj.get("time"));
             gameUniverse.setNextObjectId((long) serverObj.get("nextObjectId"));
         }
@@ -237,19 +237,21 @@ public class GameServer implements Runnable {
 
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
         try{
-            DB db = mongo.getDB(config.getString("mongo_dbname"));
+            MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
+            UpdateOptions updateOptions = new UpdateOptions();
+            updateOptions.upsert(true);
 
 	        int unloaded_worlds = 0;
 
-	        DBCollection worlds = db.getCollection("world");
-	        DBCollection users = db.getCollection("user");
-	        DBCollection server = db.getCollection("server");
+            MongoCollection<Document> worlds = db.getCollection("world");
+            MongoCollection<Document> users = db.getCollection("user");
+            MongoCollection<Document> server = db.getCollection("server");
 
 	        int insertedWorlds = 0;
 	        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
             for (World w : universe.getWorlds()) {
                 insertedWorlds++;
-	            worlds.save(w.mongoSerialise());
+                worlds.replaceOne(new Document("_id", w.getId()), w.mongoSerialise(), updateOptions);
 
                 //If the world should unload, it is removed from the Universe after having been saved.
 	        	if (w.shouldUnload()){
@@ -258,18 +260,18 @@ public class GameServer implements Runnable {
 	        	}
 	        }
 
-            for (User u : GameServer.INSTANCE.getGameUniverse().getUsers()) {
 
+            for (User u : GameServer.INSTANCE.getGameUniverse().getUsers()) {
 	            if (!u.isGuest()) {
-	            	users.save(u.mongoSerialise());
+                    users.replaceOne(new Document("_id", u.getUsername()), u.mongoSerialise(), updateOptions);
 	            }
 	        }
 
-	        BasicDBObject serverObj = new BasicDBObject();
-            serverObj.put("_id", "serverinfo"); //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
+            Document serverObj = new Document();
 	        serverObj.put("time", gameUniverse.getTime());
 	        serverObj.put("nextObjectId", gameUniverse.getNextObjectId());
-			server.save(serverObj);
+            //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
+            server.replaceOne(new Document("_id", "serverinfo"), serverObj, updateOptions);
 
             LogManager.LOGGER.info("" + insertedWorlds + " worlds saved, " + unloaded_worlds + " unloaded");
         } catch (Exception e) {

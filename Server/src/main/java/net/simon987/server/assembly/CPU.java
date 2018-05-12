@@ -1,26 +1,26 @@
 package net.simon987.server.assembly;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.assembly.instruction.*;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
+import org.bson.Document;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * CPU: Central Processing Unit. A CPU is capable of reading bytes from
  * a Memory object and execute them. A CPU object holds registers objects and
  * a Memory object.
  */
-public class CPU implements MongoSerialisable {
+public class CPU implements MongoSerializable {
 
     /**
      *
@@ -347,21 +347,21 @@ public class CPU implements MongoSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("memory", memory.mongoSerialise());
 
         dbObject.put("registerSet", registerSet.mongoSerialise());
         dbObject.put("codeSegmentOffset", codeSectionOffset);
 
-        BasicDBList hardwareList = new BasicDBList();
+        List<Document> hardwareList = new ArrayList<>();
 
         for (Integer address : attachedHardware.keySet()) {
 
             CpuHardware hardware = attachedHardware.get(address);
 
-            BasicDBObject serialisedHw = hardware.mongoSerialise();
+            Document serialisedHw = hardware.mongoSerialise();
             serialisedHw.put("address", address);
             hardwareList.add(serialisedHw);
         }
@@ -372,22 +372,22 @@ public class CPU implements MongoSerialisable {
 
     }
 
-    public static CPU deserialize(DBObject obj, User user) throws CancelledException {
+    public static CPU deserialize(Document obj, User user) throws CancelledException {
 
         CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), user);
 
         cpu.codeSectionOffset = (int) obj.get("codeSegmentOffset");
 
-        BasicDBList hardwareList = (BasicDBList) obj.get("hardware");
+        ArrayList hardwareList = (ArrayList) obj.get("hardware");
 
         for (Object serialisedHw : hardwareList) {
-            CpuHardware hardware = CpuHardware.deserialize((DBObject) serialisedHw);
+            CpuHardware hardware = CpuHardware.deserialize((Document) serialisedHw);
             hardware.setCpu(cpu);
-            cpu.attachHardware(hardware, (int) ((BasicDBObject) serialisedHw).get("address"));
+            cpu.attachHardware(hardware, (int) ((Document) serialisedHw).get("address"));
         }
 
-        cpu.memory = Memory.deserialize((DBObject) obj.get("memory"));
-        cpu.registerSet = RegisterSet.deserialize((DBObject) obj.get("registerSet"));
+        cpu.memory = Memory.deserialize((Document) obj.get("memory"));
+        cpu.registerSet = RegisterSet.deserialize((Document) obj.get("registerSet"));
 
         return cpu;
 

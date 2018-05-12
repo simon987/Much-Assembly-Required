@@ -1,13 +1,12 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
 import net.simon987.server.game.Action;
 import net.simon987.server.game.ControllableUnit;
+import org.bson.Document;
 
 import java.util.ArrayList;
 
@@ -67,9 +66,9 @@ public class RadioReceiverHardware extends CpuHardware {
 
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("hwid", (int) HWID);
         dbObject.put("cubot", cubot.getObjectId());
@@ -77,7 +76,7 @@ public class RadioReceiverHardware extends CpuHardware {
         return dbObject;
     }
 
-    public static RadioReceiverHardware deserialize(DBObject obj) {
+    public static RadioReceiverHardware deserialize(Document obj) {
         return new RadioReceiverHardware((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

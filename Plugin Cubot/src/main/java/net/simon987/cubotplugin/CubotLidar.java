@@ -1,7 +1,5 @@
 package net.simon987.cubotplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.CpuHardware;
 import net.simon987.server.assembly.Memory;
@@ -10,6 +8,7 @@ import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -150,9 +149,9 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
+    public Document mongoSerialise() {
 
-        BasicDBObject dbObject = new BasicDBObject();
+        Document dbObject = new Document();
 
         dbObject.put("hwid", (int) HWID);
         dbObject.put("cubot", cubot.getObjectId());
@@ -160,7 +159,7 @@ public class CubotLidar extends CpuHardware implements JSONSerialisable {
         return dbObject;
     }
 
-    public static CubotLidar deserialize(DBObject obj) {
+    public static CubotLidar deserialize(Document obj) {
         return new CubotLidar((Cubot) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("cubot")));
     }
 }

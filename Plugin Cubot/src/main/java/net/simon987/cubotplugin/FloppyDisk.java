@@ -1,17 +1,16 @@
 package net.simon987.cubotplugin;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.assembly.Memory;
-import net.simon987.server.io.MongoSerialisable;
+import net.simon987.server.io.MongoSerializable;
+import org.bson.Document;
 
 /**
  * Represents a floppy disk that is inside a floppy drive.
  * Floppies contains 80 tracks with 18 sectors per track.
  * That's 1440 sectors of 512 words. (total 1,474,560 bytes / 737,280 words / 1.44Mb)
  */
-public class FloppyDisk implements MongoSerialisable {
+public class FloppyDisk implements MongoSerializable {
 
     /**
      * Contents of the disk
@@ -84,8 +83,8 @@ public class FloppyDisk implements MongoSerialisable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("rwHeadTrack", rwHeadTrack);
         dbObject.put("memory", memory.mongoSerialise());
@@ -93,12 +92,12 @@ public class FloppyDisk implements MongoSerialisable {
         return dbObject;
     }
 
-    public static FloppyDisk deserialise(DBObject obj) {
+    public static FloppyDisk deserialise(Document obj) {
 
         FloppyDisk floppyDisk = new FloppyDisk();
 
         floppyDisk.rwHeadTrack = (int) obj.get("rwHeadTrack");
-        floppyDisk.memory = Memory.deserialize((DBObject) obj.get("memory"));
+        floppyDisk.memory = Memory.deserialize((Document) obj.get("memory"));
 
         return floppyDisk;
     }

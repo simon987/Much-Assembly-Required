@@ -1,9 +1,8 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.*;
+import org.bson.Document;
 import org.json.simple.JSONObject;
 
 public class Portal extends GameObject implements Enterable {
@@ -48,8 +47,8 @@ public class Portal extends GameObject implements Enterable {
     }
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
@@ -64,7 +63,7 @@ public class Portal extends GameObject implements Enterable {
         return dbObject;
     }
 
-    public static Portal deserialize(DBObject obj) {
+    public static Portal deserialize(Document obj) {
 
         Portal portal = new Portal();
 

@@ -1,11 +1,10 @@
 package net.simon987.npcplugin;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import net.simon987.server.game.ControllableUnit;
 import net.simon987.server.game.GameObject;
 import net.simon987.server.game.Location;
 import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 
 /**
  * Final exit portal located in the 'last' World of a Vault dimension
@@ -15,8 +14,8 @@ public class VaultExitPortal extends Portal {
     public static final int ID = 9;
 
     @Override
-    public BasicDBObject mongoSerialise() {
-        BasicDBObject dbObject = new BasicDBObject();
+    public Document mongoSerialise() {
+        Document dbObject = new Document();
 
         dbObject.put("i", getObjectId());
         dbObject.put("x", getX());
@@ -44,7 +43,7 @@ public class VaultExitPortal extends Portal {
         return super.enter(object);
     }
 
-    public static Portal deserialize(DBObject obj) {
+    public static Portal deserialize(Document obj) {
 
         VaultExitPortal portal = new VaultExitPortal();
 
