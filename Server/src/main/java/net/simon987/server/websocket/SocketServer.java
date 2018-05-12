@@ -152,6 +152,8 @@ public class SocketServer {
                         user.getWebSocket().getRemote().sendString(json.toJSONString());
                     } catch (NullPointerException | IOException e) {
                         e.printStackTrace();
+                    } catch (IllegalStateException e) {
+                        //Ignore
                     }
                 }
             }
