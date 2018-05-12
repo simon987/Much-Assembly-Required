@@ -72,6 +72,19 @@ application's directory:
 
 Make sure to change `mongo_address` in `config.properties` to `mongodb`.
 
+
+## Vagrant
+### Requirements   
+1. [Vagrant](https://www.vagrantup.com/downloads.html)
+2. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+
+### Installation
+
+When vagrant is installed, you can build and start this application by running the following
+command inside this application's directory:
+
+`vagrant up`
+
 # Running 
 
 Once the server is running, you should be able to connect to `http://localhost:4567` with your browser
