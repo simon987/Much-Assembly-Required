@@ -20,7 +20,7 @@ public class NpcPlugin extends ServerPlugin {
     @Override
     public void init(ServerConfiguration configuration, GameRegistry registry) {
 
-        listeners.add(new WorldCreationListener());
+        listeners.add(new WorldCreationListener(configuration.getInt("factory_spawn_rate")));
         listeners.add(new CpuInitialisationListener());
         listeners.add(new VaultWorldUpdateListener(configuration));
 

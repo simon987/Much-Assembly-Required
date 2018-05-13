@@ -3,13 +3,14 @@ package net.simon987.npcplugin;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.Enterable;
 import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import net.simon987.server.game.world.Location;
 import net.simon987.server.game.world.World;
 import org.bson.Document;
 
 
-public class Portal extends GameObject implements Enterable {
+public class Portal extends Structure implements Enterable {
 
     /**
      * Destination location
@@ -19,11 +20,11 @@ public class Portal extends GameObject implements Enterable {
     public static final int MAP_INFO = 0x0020;
 
     public Portal() {
-
+        super(1, 1);
     }
 
     public Portal(Document document) {
-        super(document);
+        super(document, 1, 1);
 
         destination = new Location(
                 document.getInteger("dstWorldX"),

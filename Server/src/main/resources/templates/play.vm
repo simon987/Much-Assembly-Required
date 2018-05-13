@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-    #set ($title = "Official game server")  ## TODO get from config
+    #set ($title = $gamePageTitle)
     #set ($cur_page = "play")
     #parse("head.vm")
 <body>

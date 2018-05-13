@@ -1,7 +1,7 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
 
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Game objects that regularly creates NonPlayerCharacters
  */
-public class Factory extends GameObject implements Updatable {
+public class Factory extends Structure implements Updatable {
 
     private static final int MAP_INFO = 0x0200;
 
@@ -48,10 +48,11 @@ public class Factory extends GameObject implements Updatable {
     private boolean initialised = false;
 
     public Factory() {
+        super(2, 2);
     }
 
     public Factory(Document document) {
-        super(document);
+        super(document, 2, 2);
 
         tmpNpcArray = ((ArrayList) document.get("npcs")).toArray();
     }
@@ -113,18 +114,6 @@ public class Factory extends GameObject implements Updatable {
     }
 
     @Override
-    public boolean isAt(int x, int y) {
-
-        /*
-         * Object is 2x2 tiles, the (x,y) coordinates of the object being
-         * at top-left.
-         * # .
-         * . .
-         */
-        return (x == getX() + 1 || x == getX()) && (y == getY() + 1 || y == getY());
-    }
-
-    @Override
     public Document mongoSerialise() {
         Document dbObject = super.mongoSerialise();
 
@@ -139,54 +128,6 @@ public class Factory extends GameObject implements Updatable {
         return dbObject;
     }
 
-    /**
-     * Get the first non-blocked tile that is directly adjacent to the factory, starting from the north-east corner
-     * going clockwise.
-     *
-     * @return The coordinates of the first non-blocked tile, null otherwise.
-     */
-    public Point getAdjacentTile() {
-
-        /*
-         * (2,0)
-         * (2,1)
-         * (1,2)
-         * (0,2)
-         * (-1,1)
-         * (-1,0)
-         * (0,-1)
-         * (1,-1)
-         */
-
-        if (!getWorld().isTileBlocked(getX() + 2, getY())) {
-            return new Point(getX() + 2, getY());
-
-        } else if (!getWorld().isTileBlocked(getX() + 2, getY() + 1)) {
-            return new Point(getX() + 2, getY() + 1);
-
-        } else if (!getWorld().isTileBlocked(getX() + 1, getY() + 2)) {
-            return new Point(getX() + 1, getY() + 2);
-
-        } else if (!getWorld().isTileBlocked(getX(), getY() + 2)) {
-            return new Point(getX(), getY() + 2);
-
-        } else if (!getWorld().isTileBlocked(getX() + -1, getY() + 1)) {
-            return new Point(getX() + -1, getY() + 1);
-
-        } else if (!getWorld().isTileBlocked(getX() + -1, getY())) {
-            return new Point(getX() + -1, getY());
-
-        } else if (!getWorld().isTileBlocked(getX(), getY() + -1)) {
-            return new Point(getX(), getY() + -1);
-
-        } else if (!getWorld().isTileBlocked(getX() + 1, getY() + -1)) {
-            return new Point(getX() + 1, getY() + -1);
-
-        } else {
-            return null;
-        }
-
-    }
 
     ArrayList<NonPlayerCharacter> getNpcs() {
         return npcs;

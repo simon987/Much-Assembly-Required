@@ -1,26 +1,27 @@
 package net.simon987.npcplugin;
 
-import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.Programmable;
+import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
 
 import java.util.ArrayList;
 
-public class RadioTower extends GameObject implements Programmable, Updatable {
+public class RadioTower extends Structure implements Programmable, Updatable {
 
     private static final int MAP_INFO = 0x1000;
 
-    public static final int MAX_RANGE = 3; //todo load from config
+    public static final int MAX_RANGE = GameServer.INSTANCE.getConfig().getInt("radio_tower_range");
 
     private static final int MAX_MESSAGES = 16;
 
     public RadioTower() {
-
+        super(1, 1);
     }
 
     public RadioTower(Document document) {
-        super(document);
+        super(document, 1, 1);
         NpcPlugin.getRadioTowers().add(this);
     }
 

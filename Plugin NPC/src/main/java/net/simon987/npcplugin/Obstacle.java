@@ -33,6 +33,7 @@ public class Obstacle extends GameObject implements Attackable {
     }
 
     public Obstacle(Document document) {
+        super(document);
         style = document.getInteger("style");
     }
 

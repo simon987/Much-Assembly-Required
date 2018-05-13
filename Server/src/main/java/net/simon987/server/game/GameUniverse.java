@@ -274,7 +274,7 @@ public class GameUniverse {
     public String getGuestUsername() {
         int i = 1;
 
-        while (i < 10000) { //todo get Max guest user cap from config
+        while (i < 50000) {
             if (getUser("guest" + String.valueOf(i)) != null) {
                 i++;
                 continue;

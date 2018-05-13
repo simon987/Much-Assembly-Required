@@ -1,5 +1,6 @@
 package net.simon987.server.assembly;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.assembly.exception.*;
 import net.simon987.server.logging.LogManager;
@@ -24,7 +25,7 @@ public class Assembler {
 
     private RegisterSet registerSet;
 
-    private static final int MEM_SIZE = 0x10000;  // Size in words todo load from config
+    private static final int MEM_SIZE = GameServer.INSTANCE.getConfig().getInt("memory_size");
 
     public Assembler(InstructionSet instructionSet, RegisterSet registerSet, ServerConfiguration config) {
         this.instructionSet = instructionSet;

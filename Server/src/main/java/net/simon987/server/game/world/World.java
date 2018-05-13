@@ -456,24 +456,6 @@ public class World implements MongoSerializable {
         return res;
     }
 
-    public Point getAdjacentTile(int x, int y) {
-
-        if (!isTileBlocked(x + 1, y)) {
-            return new Point(x + 1, y);
-
-        } else if (!isTileBlocked(x, y + 1)) {
-            return new Point(x, getY() + 1);
-
-        } else if (!isTileBlocked(x - 1, y)) {
-            return new Point(x - 1, getY());
-
-        } else if (!isTileBlocked(x, y - 1)) {
-            return new Point(x, y - 1);
-        } else {
-            return null;
-        }
-    }
-
     public Collection<GameObject> getGameObjects() {
         return gameObjects.values();
     }

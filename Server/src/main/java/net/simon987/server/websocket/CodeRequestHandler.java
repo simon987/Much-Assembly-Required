@@ -1,5 +1,6 @@
 package net.simon987.server.websocket;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
@@ -18,7 +19,7 @@ public class CodeRequestHandler implements MessageHandler {
                 JSONObject response = new JSONObject();
 
                 response.put("t", "code");
-                response.put("code", "; Create a free account to control your own Cubot with assembly language!"); //todo load from config
+                response.put("code", GameServer.INSTANCE.getConfig().getString("guest_user_code"));
 
                 user.getWebSocket().getRemote().sendString(response.toJSONString());
 

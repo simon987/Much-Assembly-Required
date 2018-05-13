@@ -2,10 +2,7 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.crypto.RandomStringGenerator;
-import net.simon987.server.game.objects.Enterable;
-import net.simon987.server.game.objects.GameObject;
-import net.simon987.server.game.objects.Programmable;
-import net.simon987.server.game.objects.Updatable;
+import net.simon987.server.game.objects.*;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 import org.bson.Document;
@@ -13,7 +10,7 @@ import org.bson.Document;
 import java.util.Arrays;
 
 
-public class VaultDoor extends GameObject implements Programmable, Enterable, Updatable {
+public class VaultDoor extends Structure implements Programmable, Enterable, Updatable {
 
     private static final int MAP_INFO = 0x0800;
 
@@ -43,6 +40,8 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     private int cypherId;
 
     public VaultDoor(int cypherId) {
+        super(1, 1);
+
         this.cypherId = cypherId;
 
         this.randomStringGenerator = new RandomStringGenerator();
@@ -51,7 +50,7 @@ public class VaultDoor extends GameObject implements Programmable, Enterable, Up
     }
 
     public VaultDoor(Document document) {
-        super(document);
+        super(document, 1, 1);
 
         setX(document.getInteger("x"));
         setY(document.getInteger("y"));

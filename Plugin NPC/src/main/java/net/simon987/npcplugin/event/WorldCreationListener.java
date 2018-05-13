@@ -8,6 +8,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldGenerationEvent;
+import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
 
@@ -18,11 +19,14 @@ public class WorldCreationListener implements GameEventListener {
 
     /**
      * Spawn rate. Higher = rarer: A factory will be spawn about every FACTORY_SPAWN_RATE generated Worlds
-     * <br>TODO: Get from config.properties
      */
-    private static final int FACTORY_SPAWN_RATE = 35;
+    private static int FACTORY_SPAWN_RATE = 0;
 
     private Random random = new Random();
+
+    public WorldCreationListener(int factorySpawnRate) {
+        FACTORY_SPAWN_RATE = factorySpawnRate;
+    }
 
     @Override
     public Class getListenedEventType() {
@@ -66,7 +70,7 @@ public class WorldCreationListener implements GameEventListener {
             }
 
             //Also spawn a radio tower in the same World
-            Point p = world.getRandomPassableTile();
+            Point p = world.getRandomTileWithAdjacent(8, TileMap.PLAIN_TILE);
             if (p != null) {
                 while (p.x == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 || p.y == 0) {
                     p = world.getRandomPassableTile();

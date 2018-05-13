@@ -59,7 +59,6 @@ public class ObjectDeathListener implements GameEventListener {
 
         BiomassBlob biomassBlob = new BiomassBlob();
         biomassBlob.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
-        // biomassBlob.setStyle(0); //TODO: set style depending on difficulty level? or random? from config?
         biomassBlob.setBiomassCount(biomassDropCount);
         biomassBlob.setX(x);
         biomassBlob.setY(y);
