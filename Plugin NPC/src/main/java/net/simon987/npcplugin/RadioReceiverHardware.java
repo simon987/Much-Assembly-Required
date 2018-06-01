@@ -1,6 +1,5 @@
 package net.simon987.npcplugin;
 
-import net.simon987.server.GameServer;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
@@ -27,7 +26,7 @@ public class RadioReceiverHardware extends HardwareModule {
     public RadioReceiverHardware(Document document, ControllableUnit unit) {
         super(document, unit);
 
-        this.cubot = (ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) document.get("cubot"));
+        this.cubot = unit;
     }
 
     @Override
