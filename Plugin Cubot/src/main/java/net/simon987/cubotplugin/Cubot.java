@@ -664,4 +664,15 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         //Overwrite item at current position
         ((CubotInventory) getHardware(CubotInventory.class)).putItem(item);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder(super.toString());
+
+        str.append("\nHardware: \n");
+        for (Integer i : hardwareAddresses.keySet()) {
+            str.append(String.format("%04X", i)).append(":").append(hardwareAddresses.get(i)).append("\n");
+        }
+        return str.toString();
+    }
 }

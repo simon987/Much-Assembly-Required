@@ -71,9 +71,10 @@
                         <p>Moderator: $user.isModerator()</p>
 
                         <h5>CPU</h5>
-                        <pre>$user.getCpu()</pre>
+                        <pre>$user.getControlledUnit().getCpu()</pre>
 
                         <h5>Controlled unit</h5>
+                        <p>$user.getControlledUnit()</p>
                         <p>id: $user.getControlledUnit().getObjectId()</p>
                         <p>energy: $user.getControlledUnit().getEnergy()</p>
                         <p>x: $user.getControlledUnit().getX()</p>
