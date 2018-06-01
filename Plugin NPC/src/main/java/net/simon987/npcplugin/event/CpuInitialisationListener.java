@@ -23,6 +23,6 @@ public class CpuInitialisationListener implements GameEventListener {
         RadioReceiverHardware radioHw = new RadioReceiverHardware(controllableUnit);
         radioHw.setCpu(cpu);
 
-        cubot.attachHardware(radioHw, RadioReceiverHardware.DEFAULT_ADDRESS);
+        cpu.getHardwareHost().attachHardware(radioHw, RadioReceiverHardware.DEFAULT_ADDRESS);
     }
 }

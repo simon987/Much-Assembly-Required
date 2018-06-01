@@ -23,7 +23,7 @@ public class HwiInstruction extends Instruction {
 
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
-        status.setErrorFlag(cubot.hardwareInterrupt(src.get(srcIndex), cpu.getStatus()));
+        status.setErrorFlag(cpu.getHardwareHost().hardwareInterrupt(src.get(srcIndex), cpu.getStatus()));
 
         return status;
     }
@@ -31,7 +31,7 @@ public class HwiInstruction extends Instruction {
     @Override
     public Status execute(int src, Status status) {
 
-        status.setErrorFlag(cubot.hardwareInterrupt(src, cpu.getStatus()));
+        status.setErrorFlag(cpu.getHardwareHost().hardwareInterrupt(src, cpu.getStatus()));
 
         return status;
     }

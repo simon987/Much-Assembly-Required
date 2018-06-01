@@ -18,14 +18,14 @@ public class HwqInstruction extends Instruction {
 
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
-        cubot.hardwareQuery(src.get(srcIndex));
+        cpu.getHardwareHost().hardwareQuery(src.get(srcIndex));
 
         return status;
     }
 
     @Override
     public Status execute(int src, Status status) {
-        cubot.hardwareQuery(src);
+        cpu.getHardwareHost().hardwareQuery(src);
 
         return status;
     }
