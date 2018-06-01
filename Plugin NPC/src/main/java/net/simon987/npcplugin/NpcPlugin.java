@@ -1,6 +1,7 @@
 package net.simon987.npcplugin;
 
 import net.simon987.npcplugin.event.CpuInitialisationListener;
+import net.simon987.npcplugin.event.VaultCompleteListener;
 import net.simon987.npcplugin.event.VaultWorldUpdateListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
 import net.simon987.server.ServerConfiguration;
@@ -23,6 +24,7 @@ public class NpcPlugin extends ServerPlugin {
         listeners.add(new WorldCreationListener(configuration.getInt("factory_spawn_rate")));
         listeners.add(new CpuInitialisationListener());
         listeners.add(new VaultWorldUpdateListener(configuration));
+        listeners.add(new VaultCompleteListener());
 
         registry.registerGameObject(HarvesterNPC.class);
         registry.registerGameObject(Factory.class);

@@ -3,10 +3,9 @@ package net.simon987.cubotplugin;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.Action;
 import net.simon987.server.game.objects.ControllableUnit;
-import net.simon987.server.game.world.TileMap;
 import org.bson.Document;
 
-public class CubotDrill extends CubotHardware {
+public class CubotDrill extends CubotHardwareModule {
 
     /**
      * Hardware ID (Should be unique)
@@ -43,17 +42,10 @@ public class CubotDrill extends CubotHardware {
 
             if (cubot.spendEnergy(1400)) {
                 if (cubot.getCurrentAction() == Action.IDLE) {
-                    int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
 
-                    if (tile == TileMap.IRON_TILE) {
-                        cubot.setHeldItem(TileMap.ITEM_IRON);
-                        cubot.setCurrentAction(Action.DIGGING);
-
-                    } else if (tile == TileMap.COPPER_TILE) {
-                        cubot.setHeldItem(TileMap.ITEM_COPPER);
-                        cubot.setCurrentAction(Action.DIGGING);
-
-                    }
+                    //TODO: Get Tile instance and call onDig()
+                    //int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
+                    //cubot.setCurrentAction(Action.DIGGING);
                 }
             }
         }

@@ -1,8 +1,6 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.cubotplugin.event.ChargeShieldCommandListener;
-import net.simon987.cubotplugin.event.CpuInitialisationListener;
-import net.simon987.cubotplugin.event.UserCreationListener;
+import net.simon987.cubotplugin.event.*;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
@@ -15,7 +13,11 @@ public class CubotPlugin extends ServerPlugin {
     public void init(ServerConfiguration config, GameRegistry registry) {
         listeners.add(new CpuInitialisationListener());
         listeners.add(new UserCreationListener());
+        //Debug commands
         listeners.add(new ChargeShieldCommandListener());
+        listeners.add(new SetInventoryPosition());
+        listeners.add(new PutItemCommandListener());
+        listeners.add(new PopItemCommandListener());
 
         registry.registerGameObject(Cubot.class);
 

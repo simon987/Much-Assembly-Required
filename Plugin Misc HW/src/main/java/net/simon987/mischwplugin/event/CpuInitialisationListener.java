@@ -24,7 +24,7 @@ public class CpuInitialisationListener implements GameEventListener {
         Clock clock = new Clock();
         clock.setCpu(cpu);
 
-        cpu.attachHardware(rngHW, RandomNumberGenerator.DEFAULT_ADDRESS);
-        cpu.attachHardware(clock, Clock.DEFAULT_ADDRESS);
+        cubot.attachHardware(rngHW, RandomNumberGenerator.DEFAULT_ADDRESS);
+        cubot.attachHardware(clock, Clock.DEFAULT_ADDRESS);
     }
 }

@@ -4,7 +4,7 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
-public class CubotBattery extends CubotHardware {
+public class CubotBattery extends CubotHardwareModule {
 
     public static final int DEFAULT_ADDRESS = 0x000A;
 

@@ -1,6 +1,6 @@
 package net.simon987.server.game.objects;
 
-public interface Programmable {
+public interface MessageReceiver {
 
     boolean sendMessage(char[] message);
 

@@ -76,6 +76,7 @@ public class UserManager {
 
             userCollection.insertOne(dbUser);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RegistrationException("An exception occurred while trying to create user: " + e.getMessage());
         }
     }

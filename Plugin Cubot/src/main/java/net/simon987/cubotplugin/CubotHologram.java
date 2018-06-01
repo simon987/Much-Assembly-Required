@@ -4,7 +4,7 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
-public class CubotHologram extends CubotHardware {
+public class CubotHologram extends CubotHardwareModule {
 
 
     /**

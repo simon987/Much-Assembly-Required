@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/bootstrap4-neon-glow.min.css">
     <link rel="stylesheet" href="css/mar.css">
-    <link rel="stylesheet" href="css/console.css">
 
     <title>$title</title>
 </head>

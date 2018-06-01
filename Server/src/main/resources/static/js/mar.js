@@ -253,8 +253,6 @@ var WorldIndicator = (function (_super) {
     };
     return WorldIndicator;
 }(DebugMessage));
-{
-}
 var RENDERER_WIDTH = document.getElementById("game").clientWidth * window.devicePixelRatio;
 var RENDERER_HEIGHT = (window.innerHeight / 1.40) * window.devicePixelRatio;
 var DEBUG = true;
@@ -441,6 +439,20 @@ var Debug = (function () {
     };
     Debug.saveGame = function () {
         mar.client.sendDebugCommand({t: "debug", command: "saveGame"});
+    };
+    Debug.popItem = function (objectId) {
+        mar.client.sendDebugCommand({t: "debug", command: "popItem", objectId: objectId});
+    };
+    Debug.putItem = function (objectId, item) {
+        mar.client.sendDebugCommand({t: "debug", command: "putItem", objectId: objectId, item: item});
+    };
+    Debug.setInventoryPosition = function (objectId, position) {
+        mar.client.sendDebugCommand({
+            t: "debug",
+            command: "setInventoryPosition",
+            objectId: objectId,
+            position: position
+        });
     };
     return Debug;
 }());

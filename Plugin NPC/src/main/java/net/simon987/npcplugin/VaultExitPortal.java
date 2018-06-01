@@ -1,9 +1,7 @@
 package net.simon987.npcplugin;
 
-import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.world.Location;
-import net.simon987.server.logging.LogManager;
 import org.bson.Document;
 
 /**
@@ -31,12 +29,8 @@ public class VaultExitPortal extends Portal {
     @Override
     public boolean enter(GameObject object) {
 
-        if (object instanceof ControllableUnit) {
-            LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Completed vault " +
-                    object.getWorld().getDimension());
 
-            ((ControllableUnit) object).getParent().getStats().addToStringSet("completedVaults", getWorld().getDimension());
-        }
+        //TODO: Trigger vault complete event instead
 
         return super.enter(object);
     }

@@ -1,5 +1,6 @@
 package net.simon987.cubotplugin;
 
+import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.*;
 import org.bson.Document;
@@ -7,7 +8,7 @@ import org.bson.Document;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CubotLaser extends CubotHardware {
+public class CubotLaser extends CubotHardwareModule {
 
     /**
      * Hardware ID (Should be unique)
@@ -51,12 +52,12 @@ public class CubotLaser extends CubotHardware {
             if (cubot.getCurrentAction() == Action.IDLE && objects.size() > 0) {
                 //FIXME: Problem here if more than 1 object
                 if (objects.get(0) instanceof InventoryHolder) {
+
                     if (((InventoryHolder) objects.get(0)).canTakeItem(b)) {
                         if (cubot.spendEnergy(30)) {
                             //Take the item
                             ((InventoryHolder) objects.get(0)).takeItem(b);
-
-                            cubot.setHeldItem(b);
+                            cubot.giveItem(GameServer.INSTANCE.getRegistry().makeItem(b));
                             cubot.setCurrentAction(Action.WITHDRAWING);
                         }
                     }

@@ -10,7 +10,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 
-public class CubotLidar extends CubotHardware {
+public class CubotLidar extends CubotHardwareModule {
 
     /**
      * Hardware ID (Should be unique)

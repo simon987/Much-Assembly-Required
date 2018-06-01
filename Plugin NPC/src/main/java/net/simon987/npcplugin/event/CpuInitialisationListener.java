@@ -5,7 +5,7 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.user.User;
+import net.simon987.server.game.objects.ControllableUnit;
 
 public class CpuInitialisationListener implements GameEventListener {
     @Override
@@ -17,11 +17,12 @@ public class CpuInitialisationListener implements GameEventListener {
     @Override
     public void handle(GameEvent event) {
         CPU cpu = (CPU) event.getSource();
-        User user = ((CpuInitialisationEvent) event).getUser();
 
-        RadioReceiverHardware radioHw = new RadioReceiverHardware(user.getControlledUnit());
+        ControllableUnit controllableUnit = ((CpuInitialisationEvent) event).getUnit();
+
+        RadioReceiverHardware radioHw = new RadioReceiverHardware(controllableUnit);
         radioHw.setCpu(cpu);
 
-        cpu.attachHardware(radioHw, RadioReceiverHardware.DEFAULT_ADDRESS);
+        cubot.attachHardware(radioHw, RadioReceiverHardware.DEFAULT_ADDRESS);
     }
 }

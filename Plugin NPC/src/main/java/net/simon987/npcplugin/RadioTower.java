@@ -1,14 +1,14 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.game.objects.Programmable;
+import net.simon987.server.game.objects.MessageReceiver;
 import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
 
 import java.util.ArrayList;
 
-public class RadioTower extends Structure implements Programmable, Updatable {
+public class RadioTower extends Structure implements MessageReceiver, Updatable {
 
     private static final int MAP_INFO = 0x1000;
 

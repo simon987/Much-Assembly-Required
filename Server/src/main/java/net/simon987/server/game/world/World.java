@@ -298,7 +298,7 @@ public class World implements MongoSerializable {
      * and will be able to leave the World
      * <br>
      * Note: This function is quite expensive and shouldn't be used
-     * by some CpuHardware in its current state
+     * by some HardwareModule in its current state
      *
      * @return random non-blocked tile
      */

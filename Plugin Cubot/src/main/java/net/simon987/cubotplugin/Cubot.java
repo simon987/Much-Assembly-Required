@@ -2,18 +2,24 @@ package net.simon987.cubotplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
+import net.simon987.server.assembly.CPU;
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Memory;
+import net.simon987.server.assembly.Status;
+import net.simon987.server.assembly.exception.CancelledException;
+import net.simon987.server.game.item.Item;
+import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.*;
-import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
-public class Cubot extends GameObject implements Updatable, ControllableUnit, Programmable, Attackable, Rechargeable {
+public class Cubot extends GameObject implements Updatable, ControllableUnit, MessageReceiver,
+        Attackable, Rechargeable, HardwareHost {
 
     private static final char MAP_INFO = 0x0080;
 
@@ -61,11 +67,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
      * Maximum shield points
      */
     private int maxShield;
-
-    /**
-     * Item ID of the current 'active' item
-     */
-    private int heldItem;
 
     /**
      * Action that was set during the current tick. It is set to IDLE by default
@@ -137,6 +138,17 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     private static final int CONSOLE_BUFFER_MAX_SIZE = 40;
 
     /**
+     * List of attached hardware, 'modules'
+     */
+    private Map<Integer, HardwareModule> hardwareAddresses = new HashMap<>();
+    private Map<Class<? extends HardwareModule>, Integer> hardwareModules = new HashMap<>();
+
+    /**
+     * Cubot's brain box
+     */
+    private CPU cpu;
+
+    /**
      * Display mode of the hologram hardware
      * <br>TODO: move this inside CubotHologram class
      */
@@ -180,13 +192,26 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         hp = document.getInteger("hp");
         shield = document.getInteger("shield");
         setDirection(Direction.getDirection(document.getInteger("direction")));
-        heldItem = document.getInteger("heldItem");
         energy = document.getInteger("energy");
 
         ServerConfiguration config = GameServer.INSTANCE.getConfig();
         maxEnergy = config.getInt("battery_max_energy");
         maxHp = config.getInt("cubot_max_hp");
         maxShield = config.getInt("cubot_max_shield");
+
+        try {
+            cpu = CPU.deserialize((Document) document.get("cpu"), this);
+
+            ArrayList hardwareList = (ArrayList) document.get("hardware");
+
+            for (Object serialisedHw : hardwareList) {
+                HardwareModule hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw, this);
+                hardware.setCpu(cpu);
+                attachHardware(hardware, ((Document) serialisedHw).getInteger("address"));
+            }
+        } catch (CancelledException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -241,6 +266,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     public JSONObject jsonSerialise() {
         JSONObject json = super.jsonSerialise();
         json.put("direction", getDirection().ordinal());
+        CubotInventory inv = (CubotInventory) getHardware(CubotInventory.class);
+        int heldItem = inv.getInventory().getOrDefault(inv.getPosition(), new ItemVoid()).getId();
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("shield", shield);
@@ -263,7 +290,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         Document dbObject = super.mongoSerialise();
 
         dbObject.put("direction", getDirection().ordinal());
-        dbObject.put("heldItem", heldItem);
         dbObject.put("hp", hp);
         dbObject.put("shield", shield);
         dbObject.put("action", lastAction.ordinal());
@@ -277,6 +303,20 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
             dbObject.put("parent", parent.getUsername()); //Only used client-side for now
         }
 
+        List<Document> hardwareList = new ArrayList<>();
+
+        for (Integer address : hardwareAddresses.keySet()) {
+
+            HardwareModule hardware = hardwareAddresses.get(address);
+
+            Document serialisedHw = hardware.mongoSerialise();
+            serialisedHw.put("address", address);
+            hardwareList.add(serialisedHw);
+        }
+
+        dbObject.put("hardware", hardwareList);
+
+        dbObject.put("cpu", cpu.mongoSerialise());
         return dbObject;
     }
 
@@ -287,7 +327,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         setDead(false);
         setHp(maxHp);
         setShield(0);
-        setHeldItem(0);
         setEnergy(maxEnergy);
         clearKeyboardBuffer();
         consoleMessagesBuffer.clear();
@@ -300,7 +339,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
 
     @Override
     public boolean onDeadCallback() {
-        LogManager.LOGGER.info(getParent().getUsername() + "'s Cubot died");
+        //TODO make death event instead
+//        LogManager.LOGGER.info(getParent().getUsername() + "'s Cubot died");
 
         reset();
 
@@ -326,14 +366,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         return true;
     }
 
-    public void setHeldItem(int heldItem) {
-        this.heldItem = heldItem;
-    }
-
-    public int getHeldItem() {
-        return heldItem;
-    }
-
     @Override
     public void setKeyboardBuffer(ArrayList<Integer> kbBuffer) {
         keyboardBuffer = kbBuffer;
@@ -352,12 +384,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         this.currentAction = currentAction;
     }
 
-    public User getParent() {
-        return parent;
-    }
-
     public void setParent(User parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public User getParent() {
+        return parent;
     }
 
     public Action getAction() {
@@ -446,7 +479,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
     @Override
     public Memory getFloppyData() {
 
-        CubotFloppyDrive drive = ((CubotFloppyDrive) getParent().getCpu().getHardware(CubotFloppyDrive.DEFAULT_ADDRESS));
+        //TODO change DEFAULT_ADDRESS to getHW(class) to allow mutable addresses
+        CubotFloppyDrive drive = ((CubotFloppyDrive) getHardware(CubotFloppyDrive.DEFAULT_ADDRESS));
 
         if (drive.getFloppy() != null) {
             return drive.getFloppy().getMemory();
@@ -567,5 +601,67 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Pr
         if (hp <= 0) {
             setDead(true);
         }
+    }
+
+    public void attachHardware(HardwareModule hardware, int address) {
+        hardwareAddresses.put(address, hardware);
+        hardwareModules.put(hardware.getClass(), address);
+    }
+
+    public void detachHardware(int address) {
+        hardwareAddresses.remove(address);
+
+        Class<? extends HardwareModule> toRemove = null;
+        for (Class<? extends HardwareModule> clazz : hardwareModules.keySet()) {
+            if (hardwareModules.get(clazz) == address) {
+                toRemove = clazz;
+            }
+        }
+        hardwareModules.remove(toRemove);
+    }
+
+    public boolean hardwareInterrupt(int address, Status status) {
+        HardwareModule hardware = hardwareAddresses.get(address);
+
+        if (hardware != null) {
+            hardware.handleInterrupt(status);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int hardwareQuery(int address) {
+        HardwareModule hardware = hardwareAddresses.get(address);
+
+
+        if (hardware != null) {
+            return hardware.getId();
+        } else {
+            return 0;
+        }
+    }
+
+    public HardwareModule getHardware(Class<? extends HardwareModule> clazz) {
+        return hardwareAddresses.get(hardwareModules.get(clazz));
+    }
+
+    public HardwareModule getHardware(int address) {
+        return hardwareAddresses.get(address);
+    }
+
+    @Override
+    public CPU getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(CPU cpu) {
+        this.cpu = cpu;
+    }
+
+    @Override
+    public void giveItem(Item item) {
+        //Overwrite item at current position
+        ((CubotInventory) getHardware(CubotInventory.class)).putItem(item);
     }
 }

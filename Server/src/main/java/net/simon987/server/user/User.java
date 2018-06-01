@@ -1,7 +1,6 @@
 package net.simon987.server.user;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.UserCreationEvent;
@@ -19,8 +18,6 @@ public class User implements MongoSerializable {
     private String userCode;
     private String password;
     private String accessToken;
-
-    private CPU cpu;
 
     private ControllableUnit controlledUnit;
 
@@ -52,7 +49,6 @@ public class User implements MongoSerializable {
         dbObject.put("username", username);
         dbObject.put("code", userCode);
         dbObject.put("controlledUnit", controlledUnit.getObjectId());
-        dbObject.put("cpu", cpu.mongoSerialise());
         dbObject.put("password", password);
         dbObject.put("moderator", moderator);
         dbObject.put("stats", stats.mongoSerialise());
@@ -70,9 +66,6 @@ public class User implements MongoSerializable {
         user.moderator = (boolean) obj.get("moderator");
         user.stats = new UserStats((Document) obj.get("stats"));
 
-        user.getControlledUnit().setParent(user);
-
-        user.cpu = CPU.deserialize((Document) obj.get("cpu"), user);
 
         return user;
     }
@@ -83,14 +76,6 @@ public class User implements MongoSerializable {
 
     public void setUserCode(String userCode) {
         this.userCode = userCode;
-    }
-
-    public CPU getCpu() {
-        return cpu;
-    }
-
-    public void setCpu(CPU cpu) {
-        this.cpu = cpu;
     }
 
     public String getUsername() {

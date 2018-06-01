@@ -1,7 +1,7 @@
 package net.simon987.mischwplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
 import net.simon987.server.game.objects.ControllableUnit;
@@ -10,7 +10,7 @@ import org.bson.Document;
 /**
  * Hardware to get game time
  */
-public class Clock extends CpuHardware {
+public class Clock extends HardwareModule {
 
     private static final char HWID = 0x0008;
 

@@ -6,15 +6,15 @@ import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 
 
-public abstract class CpuHardware implements MongoSerializable {
+public abstract class HardwareModule implements MongoSerializable {
 
     private CPU cpu;
 
-    public CpuHardware() {
+    public HardwareModule() {
 
     }
 
-    public CpuHardware(Document document, ControllableUnit unit) {
+    public HardwareModule(Document document, ControllableUnit unit) {
 
     }
 
@@ -23,7 +23,7 @@ public abstract class CpuHardware implements MongoSerializable {
      */
     public abstract void handleInterrupt(Status status);
 
-    public CPU getCpu() {
+    protected CPU getCpu() {
         return cpu;
     }
 
@@ -35,6 +35,6 @@ public abstract class CpuHardware implements MongoSerializable {
 
     @Override
     public String toString() {
-        return String.format("<%04X>", (int) getId());
+        return String.format("{%s}", getClass().getSimpleName());
     }
 }

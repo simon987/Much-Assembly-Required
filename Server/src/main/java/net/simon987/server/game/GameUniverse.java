@@ -6,9 +6,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
-import net.simon987.server.assembly.Assembler;
-import net.simon987.server.assembly.AssemblyResult;
-import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.world.World;
@@ -190,20 +187,6 @@ public class GameUniverse {
             try {
                 if (makeControlledUnit) {
                     user = new User();
-                    user.setCpu(new CPU(GameServer.INSTANCE.getConfig(), user));
-                    user.setUserCode(GameServer.INSTANCE.getConfig().getString("new_user_code"));
-
-                    //Compile user code
-                    AssemblyResult ar = new Assembler(user.getCpu().getInstructionSet(), user.getCpu().getRegisterSet(),
-                            GameServer.INSTANCE.getConfig()).parse(user.getUserCode());
-
-                    user.getCpu().getMemory().clear();
-
-                    //Write assembled code to mem
-                    char[] assembledCode = ar.getWords();
-
-                    user.getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
-                    user.getCpu().setCodeSectionOffset(ar.getCodeSectionOffset());
 
 
                 } else {

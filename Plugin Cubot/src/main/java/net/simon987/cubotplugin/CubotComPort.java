@@ -3,13 +3,13 @@ package net.simon987.cubotplugin;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.GameObject;
-import net.simon987.server.game.objects.Programmable;
+import net.simon987.server.game.objects.MessageReceiver;
 import org.bson.Document;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CubotComPort extends CubotHardware {
+public class CubotComPort extends CubotHardwareModule {
 
     public static final char HWID = 0xD;
     public static final int DEFAULT_ADDRESS = 0xD;
@@ -73,7 +73,7 @@ public class CubotComPort extends CubotHardware {
                 //Todo will have to add getGameObjectsBlockingAt to enable Factory
                 ArrayList<GameObject> objects = cubot.getWorld().getGameObjectsAt(frontTile.x, frontTile.y);
 
-                if (objects.size() > 0 && objects.get(0) instanceof Programmable) {
+                if (objects.size() > 0 && objects.get(0) instanceof MessageReceiver) {
 
                     int x = getCpu().getRegisterSet().getRegister("X").getValue();
 
@@ -86,9 +86,9 @@ public class CubotComPort extends CubotHardware {
                         char[] message = new char[MESSAGE_LENGTH];
                         System.arraycopy(getCpu().getMemory().getWords(), x, message, 0, MESSAGE_LENGTH);
 
-                        //Send it to the Programmable object
+                        //Send it to the MessageReceiver object
                         getCpu().getRegisterSet().getRegister("B").setValue(
-                                ((Programmable) objects.get(0)).sendMessage(message) ? 1 : 0);
+                                ((MessageReceiver) objects.get(0)).sendMessage(message) ? 1 : 0);
                         return;
                     }
                 }

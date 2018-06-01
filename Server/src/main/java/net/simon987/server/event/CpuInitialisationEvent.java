@@ -1,18 +1,18 @@
 package net.simon987.server.event;
 
 import net.simon987.server.assembly.CPU;
-import net.simon987.server.user.User;
+import net.simon987.server.game.objects.ControllableUnit;
 
 public class CpuInitialisationEvent extends GameEvent {
 
-    private User user;
+    private ControllableUnit unit;
 
-    public CpuInitialisationEvent(CPU cpu, User user) {
+    public CpuInitialisationEvent(CPU cpu, ControllableUnit unit) {
         setSource(cpu);
-        this.user = user;
+        this.unit = unit;
     }
 
-    public User getUser() {
-        return user;
+    public ControllableUnit getUnit() {
+        return unit;
     }
 }

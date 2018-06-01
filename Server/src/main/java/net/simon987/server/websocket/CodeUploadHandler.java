@@ -3,6 +3,7 @@ package net.simon987.server.websocket;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.Assembler;
 import net.simon987.server.assembly.AssemblyResult;
+import net.simon987.server.assembly.CPU;
 import net.simon987.server.logging.LogManager;
 import org.json.simple.JSONObject;
 
@@ -24,17 +25,20 @@ public class CodeUploadHandler implements MessageHandler {
                 user.getUser().setUserCode((String) json.get("code"));
 
                 if (user.getUser().getUserCode() != null) {
-                    AssemblyResult ar = new Assembler(user.getUser().getCpu().getInstructionSet(),
-                            user.getUser().getCpu().getRegisterSet(),
+
+                    CPU cpu = user.getUser().getControlledUnit().getCpu();
+
+                    AssemblyResult ar = new Assembler(cpu.getInstructionSet(),
+                            cpu.getRegisterSet(),
                             GameServer.INSTANCE.getConfig()).parse(user.getUser().getUserCode());
 
-                    user.getUser().getCpu().getMemory().clear();
+                    cpu.getMemory().clear();
 
                     //Write assembled code to mem
                     char[] assembledCode = ar.getWords();
 
-                    user.getUser().getCpu().getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
-                    user.getUser().getCpu().setCodeSectionOffset(ar.getCodeSectionOffset());
+                    cpu.getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
+                    cpu.setCodeSectionOffset(ar.getCodeSectionOffset());
 
                     //Clear keyboard buffer
                     if (user.getUser().getControlledUnit() != null &&
@@ -43,7 +47,7 @@ public class CodeUploadHandler implements MessageHandler {
                     }
 
                     //Clear registers
-                    user.getUser().getCpu().getRegisterSet().clear();
+                    cpu.getRegisterSet().clear();
 
                     JSONObject response = new JSONObject();
                     response.put("t", "codeResponse");

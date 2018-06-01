@@ -12,6 +12,8 @@ import net.simon987.server.event.GameEventDispatcher;
 import net.simon987.server.event.TickEvent;
 import net.simon987.server.game.GameUniverse;
 import net.simon987.server.game.debug.*;
+import net.simon987.server.game.item.ItemCopper;
+import net.simon987.server.game.item.ItemIron;
 import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.game.world.DayNightCycle;
 import net.simon987.server.game.world.World;
@@ -108,6 +110,9 @@ public class GameServer implements Runnable {
         eventDispatcher.getListeners().add(new DamageObjCommandListener());
         eventDispatcher.getListeners().add(new SetEnergyCommandListener());
         eventDispatcher.getListeners().add(new SaveGameCommandListener());
+
+        gameRegistry.registerItem(ItemCopper.ID, ItemCopper.class);
+        gameRegistry.registerItem(ItemIron.ID, ItemIron.class);
     }
 
     public GameUniverse getGameUniverse() {
@@ -163,13 +168,13 @@ public class GameServer implements Runnable {
         //Process user code
         for (User user : gameUniverse.getUsers()) {
 
-            if (user.getCpu() != null) {
+            if (user.getControlledUnit() != null && user.getControlledUnit().getCpu() != null) {
                 try {
 
                     int timeout = Math.min(user.getControlledUnit().getEnergy(), maxExecutionTime);
 
-                    user.getCpu().reset();
-                    int cost = user.getCpu().execute(timeout);
+                    user.getControlledUnit().getCpu().reset();
+                    int cost = user.getControlledUnit().getCpu().execute(timeout);
                     user.getControlledUnit().spendEnergy(cost);
 
                 } catch (Exception e) {

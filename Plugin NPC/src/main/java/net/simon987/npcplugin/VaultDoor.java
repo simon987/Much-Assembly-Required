@@ -10,7 +10,7 @@ import org.bson.Document;
 import java.util.Arrays;
 
 
-public class VaultDoor extends Structure implements Programmable, Enterable, Updatable {
+public class VaultDoor extends Structure implements MessageReceiver, Enterable, Updatable {
 
     private static final int MAP_INFO = 0x0800;
 

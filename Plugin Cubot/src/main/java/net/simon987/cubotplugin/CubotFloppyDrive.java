@@ -4,7 +4,7 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
-public class CubotFloppyDrive extends CubotHardware {
+public class CubotFloppyDrive extends CubotHardwareModule {
 
     /**
      * Hardware ID (Should be unique)
@@ -58,7 +58,7 @@ public class CubotFloppyDrive extends CubotHardware {
                     int x = getCpu().getRegisterSet().getRegister("X").getValue();
                     int y = getCpu().getRegisterSet().getRegister("Y").getValue();
 
-                    floppyDisk.readSector(x, cubot.getParent().getCpu().getMemory(), y);
+                    floppyDisk.readSector(x, cubot.getCpu().getMemory(), y);
                 }
             }
 
@@ -73,7 +73,7 @@ public class CubotFloppyDrive extends CubotHardware {
                     int x = getCpu().getRegisterSet().getRegister("X").getValue();
                     int y = getCpu().getRegisterSet().getRegister("Y").getValue();
 
-                    floppyDisk.writeSector(x, cubot.getParent().getCpu().getMemory(), y);
+                    floppyDisk.writeSector(x, cubot.getCpu().getMemory(), y);
                 }
             }
         }

@@ -1,5 +1,4 @@
-{
-}// Typescript V2.4.1
+// Typescript V2.4.1
 
 let RENDERER_WIDTH = document.getElementById("game").clientWidth * window.devicePixelRatio;
 let RENDERER_HEIGHT = (window.innerHeight / 1.40) * window.devicePixelRatio;
@@ -95,7 +94,6 @@ class Util {
             case Direction.SOUTH:
                 return 1;
         }
-
     }
 
     static itemColor(item) {
@@ -109,7 +107,6 @@ class Util {
                 return config.itemCopper;
 
         }
-
     }
 }
 
@@ -220,10 +217,27 @@ class Debug {
         mar.client.sendDebugCommand({t: "debug", command: "saveGame"});
     }
 
+    public static popItem(objectId) {
+        mar.client.sendDebugCommand({t: "debug", command: "popItem", objectId: objectId})
+    }
+
+    public static putItem(objectId, item) {
+        mar.client.sendDebugCommand({t: "debug", command: "putItem", objectId: objectId, item: item})
+    }
+
+    public static setInventoryPosition(objectId, position) {
+        mar.client.sendDebugCommand({
+            t: "debug",
+            command: "setInventoryPosition",
+            objectId: objectId,
+            position: position
+        })
+    }
+
 
 }
 
-DEBUG = false; // todo remove
+DEBUG = false;
 
 let mar = new MarGame();
 

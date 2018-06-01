@@ -5,7 +5,6 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.user.User;
 
 public class CpuInitialisationListener implements GameEventListener {
     @Override
@@ -17,45 +16,46 @@ public class CpuInitialisationListener implements GameEventListener {
     public void handle(GameEvent event) {
 
         CPU cpu = (CPU) event.getSource();
-        User user = ((CpuInitialisationEvent) event).getUser();
+        Cubot cubot = (Cubot) ((CpuInitialisationEvent) event).getUnit();
+        cpu.setHardwareHost(cubot);
 
-        CubotLeg legHw = new CubotLeg((Cubot) user.getControlledUnit());
+        CubotLeg legHw = new CubotLeg(cubot);
         legHw.setCpu(cpu);
-        CubotLaser laserHw = new CubotLaser((Cubot) user.getControlledUnit());
+        CubotLaser laserHw = new CubotLaser(cubot);
         laserHw.setCpu(cpu);
-        CubotLidar radarHw = new CubotLidar((Cubot) user.getControlledUnit());
+        CubotLidar radarHw = new CubotLidar(cubot);
         radarHw.setCpu(cpu);
-        CubotKeyboard keyboard = new CubotKeyboard((Cubot) user.getControlledUnit());
+        CubotKeyboard keyboard = new CubotKeyboard(cubot);
         keyboard.setCpu(cpu);
-        CubotDrill drillHw = new CubotDrill((Cubot) user.getControlledUnit());
+        CubotDrill drillHw = new CubotDrill(cubot);
         drillHw.setCpu(cpu);
-        CubotInventory invHw = new CubotInventory((Cubot) user.getControlledUnit());
+        CubotInventory invHw = new CubotInventory(cubot);
         invHw.setCpu(cpu);
-        CubotHologram emoteHw = new CubotHologram((Cubot) user.getControlledUnit());
+        CubotHologram emoteHw = new CubotHologram(cubot);
         emoteHw.setCpu(cpu);
-        CubotBattery batteryHw = new CubotBattery((Cubot) user.getControlledUnit());
+        CubotBattery batteryHw = new CubotBattery(cubot);
         batteryHw.setCpu(cpu);
-        CubotFloppyDrive floppyHw = new CubotFloppyDrive((Cubot) user.getControlledUnit());
+        CubotFloppyDrive floppyHw = new CubotFloppyDrive(cubot);
         floppyHw.setCpu(cpu);
-        CubotComPort comPortHw = new CubotComPort((Cubot) user.getControlledUnit());
+        CubotComPort comPortHw = new CubotComPort(cubot);
         comPortHw.setCpu(cpu);
-        CubotCore coreHw = new CubotCore((Cubot) user.getControlledUnit());
+        CubotCore coreHw = new CubotCore(cubot);
         coreHw.setCpu(cpu);
-        CubotShield shieldHw = new CubotShield((Cubot) user.getControlledUnit());
+        CubotShield shieldHw = new CubotShield(cubot);
         shieldHw.setCpu(cpu);
 
-        cpu.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
-        cpu.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
-        cpu.attachHardware(radarHw, CubotLidar.DEFAULT_ADDRESS);
-        cpu.attachHardware(keyboard, CubotKeyboard.DEFAULT_ADDRESS);
-        cpu.attachHardware(drillHw, CubotDrill.DEFAULT_ADDRESS);
-        cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
-        cpu.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
-        cpu.attachHardware(emoteHw, CubotHologram.DEFAULT_ADDRESS);
-        cpu.attachHardware(batteryHw, CubotBattery.DEFAULT_ADDRESS);
-        cpu.attachHardware(floppyHw, CubotFloppyDrive.DEFAULT_ADDRESS);
-        cpu.attachHardware(comPortHw, CubotComPort.DEFAULT_ADDRESS);
-        cpu.attachHardware(coreHw, CubotCore.DEFAULT_ADDRESS);
-        cpu.attachHardware(shieldHw, CubotShield.DEFAULT_ADDRESS);
+        cubot.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
+        cubot.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
+        cubot.attachHardware(radarHw, CubotLidar.DEFAULT_ADDRESS);
+        cubot.attachHardware(keyboard, CubotKeyboard.DEFAULT_ADDRESS);
+        cubot.attachHardware(drillHw, CubotDrill.DEFAULT_ADDRESS);
+        cubot.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
+        cubot.attachHardware(invHw, CubotInventory.DEFAULT_ADDRESS);
+        cubot.attachHardware(emoteHw, CubotHologram.DEFAULT_ADDRESS);
+        cubot.attachHardware(batteryHw, CubotBattery.DEFAULT_ADDRESS);
+        cubot.attachHardware(floppyHw, CubotFloppyDrive.DEFAULT_ADDRESS);
+        cubot.attachHardware(comPortHw, CubotComPort.DEFAULT_ADDRESS);
+        cubot.attachHardware(coreHw, CubotCore.DEFAULT_ADDRESS);
+        cubot.attachHardware(shieldHw, CubotShield.DEFAULT_ADDRESS);
     }
 }

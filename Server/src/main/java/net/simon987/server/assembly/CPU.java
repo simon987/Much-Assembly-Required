@@ -6,14 +6,11 @@ import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.assembly.instruction.*;
 import net.simon987.server.event.CpuInitialisationEvent;
 import net.simon987.server.event.GameEvent;
+import net.simon987.server.game.objects.ControllableUnit;
+import net.simon987.server.game.objects.HardwareHost;
 import net.simon987.server.io.MongoSerializable;
 import net.simon987.server.logging.LogManager;
-import net.simon987.server.user.User;
 import org.bson.Document;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * CPU: Central Processing Unit. A CPU is capable of reading bytes from
@@ -54,9 +51,10 @@ public class CPU implements MongoSerializable {
     private int ip;
 
     /**
-     * List of attached hardware, 'modules'
+     * Hardware is connected to the hardwareHost
      */
-    private HashMap<Integer, CpuHardware> attachedHardware;
+    private HardwareHost hardwareHost;
+
 
     private ServerConfiguration config;
 
@@ -68,11 +66,10 @@ public class CPU implements MongoSerializable {
     /**
      * Creates a new CPU
      */
-    public CPU(ServerConfiguration config, User user) throws CancelledException {
+    public CPU(ServerConfiguration config, ControllableUnit unit) throws CancelledException {
         this.config = config;
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
-        attachedHardware = new HashMap<>();
         codeSectionOffset = config.getInt("org_offset");
 
         instructionSet.add(new JmpInstruction(this));
@@ -105,7 +102,7 @@ public class CPU implements MongoSerializable {
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
 
-        GameEvent event = new CpuInitialisationEvent(this, user);
+        GameEvent event = new CpuInitialisationEvent(this, unit);
         GameServer.INSTANCE.getEventDispatcher().dispatch(event);
         if (event.isCancelled()) {
             throw new CancelledException();
@@ -355,36 +352,17 @@ public class CPU implements MongoSerializable {
         dbObject.put("registerSet", registerSet.mongoSerialise());
         dbObject.put("codeSegmentOffset", codeSectionOffset);
 
-        List<Document> hardwareList = new ArrayList<>();
-
-        for (Integer address : attachedHardware.keySet()) {
-
-            CpuHardware hardware = attachedHardware.get(address);
-
-            Document serialisedHw = hardware.mongoSerialise();
-            serialisedHw.put("address", address);
-            hardwareList.add(serialisedHw);
-        }
-
-        dbObject.put("hardware", hardwareList);
 
         return dbObject;
 
     }
 
-    public static CPU deserialize(Document obj, User user) throws CancelledException {
+    public static CPU deserialize(Document obj, ControllableUnit unit) throws CancelledException {
 
-        CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), user);
+        CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), unit);
 
         cpu.codeSectionOffset = obj.getInteger("codeSegmentOffset");
 
-        ArrayList hardwareList = (ArrayList) obj.get("hardware");
-
-        for (Object serialisedHw : hardwareList) {
-            CpuHardware hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw, user.getControlledUnit());
-            hardware.setCpu(cpu);
-            cpu.attachHardware(hardware, ((Document) serialisedHw).getInteger("address"));
-        }
 
         cpu.memory = new Memory((Document) obj.get("memory"));
         cpu.registerSet = RegisterSet.deserialize((Document) obj.get("registerSet"));
@@ -421,56 +399,21 @@ public class CPU implements MongoSerializable {
         this.codeSectionOffset = codeSectionOffset;
     }
 
-    public void attachHardware(CpuHardware hardware, int address) {
-        attachedHardware.put(address, hardware);
-    }
-
-    public void detachHardware(int address) {
-        attachedHardware.remove(address);
-    }
-
-    public boolean hardwareInterrupt(int address) {
-        CpuHardware hardware = attachedHardware.get(address);
-
-        if (hardware != null) {
-            hardware.handleInterrupt(status);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void hardwareQuery(int address) {
-        CpuHardware hardware = attachedHardware.get(address);
-
-        if (hardware != null) {
-
-            registerSet.getRegister("B").setValue(hardware.getId());
-        } else {
-            registerSet.getRegister("B").setValue(0);
-        }
-    }
 
     @Override
     public String toString() {
 
-        String str = "------------------------\n";
-        str += registerSet.toString();
+        String str = registerSet.toString();
         str += status.toString();
-        str += "HW: ";
-        for (CpuHardware hw : attachedHardware.values()) {
-            str += hw + ", ";
-        }
-        str += "\n------------------------\n";
 
         return str;
     }
 
-    public CpuHardware getHardware(int address) {
-
-        return attachedHardware.get(address);
-
+    public HardwareHost getHardwareHost() {
+        return hardwareHost;
     }
 
-
+    public void setHardwareHost(HardwareHost hardwareHost) {
+        this.hardwareHost = hardwareHost;
+    }
 }

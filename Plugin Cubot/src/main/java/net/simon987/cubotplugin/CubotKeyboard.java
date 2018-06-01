@@ -4,7 +4,7 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
-public class CubotKeyboard extends CubotHardware {
+public class CubotKeyboard extends CubotHardwareModule {
 
     public static final int DEFAULT_ADDRESS = 4;
 

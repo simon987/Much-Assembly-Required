@@ -1,18 +1,18 @@
 package net.simon987.cubotplugin;
 
-import net.simon987.server.assembly.CpuHardware;
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
-public abstract class CubotHardware extends CpuHardware {
+public abstract class CubotHardwareModule extends HardwareModule {
 
     protected Cubot cubot;
 
-    public CubotHardware(Document document, ControllableUnit cubot) {
+    public CubotHardwareModule(Document document, ControllableUnit cubot) {
         this.cubot = (Cubot) cubot;
     }
 
-    public CubotHardware(Cubot cubot) {
+    public CubotHardwareModule(Cubot cubot) {
         this.cubot = cubot;
     }
 

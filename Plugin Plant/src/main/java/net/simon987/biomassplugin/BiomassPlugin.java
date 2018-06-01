@@ -23,8 +23,8 @@ public class BiomassPlugin extends ServerPlugin {
             LogManager.LOGGER.severe("(BiomassPlugin) NPC plugin is not loaded so biomass will not spawn on death of HarvesterNPC");
         }
 
-
         registry.registerGameObject(BiomassBlob.class);
+        registry.registerItem(ItemBiomass.ID, ItemBiomass.class);
 
         LogManager.LOGGER.info("(BiomassPlugin) Initialised Biomass plugin");
     }

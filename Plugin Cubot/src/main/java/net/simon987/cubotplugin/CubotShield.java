@@ -5,7 +5,7 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
-public class CubotShield extends CubotHardware {
+public class CubotShield extends CubotHardwareModule {
 
     public static final char DEFAULT_ADDRESS = 0x000F;
 

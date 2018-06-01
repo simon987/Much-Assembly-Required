@@ -6,7 +6,7 @@ import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.Direction;
 import org.bson.Document;
 
-public class CubotLeg extends CubotHardware {
+public class CubotLeg extends CubotHardwareModule {
 
     public static final int DEFAULT_ADDRESS = 1;
 

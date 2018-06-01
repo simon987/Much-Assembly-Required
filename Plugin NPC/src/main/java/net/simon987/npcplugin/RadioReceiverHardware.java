@@ -1,7 +1,7 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.assembly.CpuHardware;
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Util;
 import net.simon987.server.game.objects.Action;
@@ -10,7 +10,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 
-public class RadioReceiverHardware extends CpuHardware {
+public class RadioReceiverHardware extends HardwareModule {
 
     public static final char HWID = 0xC; //12
 
