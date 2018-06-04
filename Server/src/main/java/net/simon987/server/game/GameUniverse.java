@@ -16,6 +16,7 @@ import org.bson.Document;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class GameUniverse {
 
@@ -30,7 +31,7 @@ public class GameUniverse {
 
     private long time;
 
-    private long nextObjectId = 0;
+    private AtomicLong nextObjectId = new AtomicLong(0);
 
     private int maxWidth = 0xFFFF;
 
@@ -251,7 +252,7 @@ public class GameUniverse {
     }
 
     public long getNextObjectId() {
-        return ++nextObjectId;
+        return nextObjectId.getAndIncrement();
     }
 
     public String getGuestUsername() {
@@ -287,6 +288,6 @@ public class GameUniverse {
     }
 
     public void setNextObjectId(long nextObjectId) {
-        this.nextObjectId = nextObjectId;
+        this.nextObjectId.set(nextObjectId);
     }
 }
