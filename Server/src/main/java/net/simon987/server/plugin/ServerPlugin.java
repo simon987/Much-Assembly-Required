@@ -3,12 +3,10 @@ package net.simon987.server.plugin;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.game.objects.GameRegistry;
-import net.simon987.server.io.JSONSerialisable;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-public abstract class ServerPlugin implements JSONSerialisable {
+public abstract class ServerPlugin {
 
     /**
      * Name of the plugin
@@ -48,16 +46,5 @@ public abstract class ServerPlugin implements JSONSerialisable {
 
     public ArrayList<GameEventListener> getListeners() {
         return listeners;
-    }
-
-    @Override
-    public JSONObject jsonSerialise() {
-
-        JSONObject json = new JSONObject();
-
-        json.put("name", name);
-        json.put("version", version);
-
-        return json;
     }
 }
