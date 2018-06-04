@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebSocket
 public class SocketServer {
@@ -21,6 +22,8 @@ public class SocketServer {
     private OnlineUserManager onlineUserManager = new OnlineUserManager();
 
     private MessageDispatcher messageDispatcher = new MessageDispatcher();
+
+    private static final String AUTH_OK_MESSAGE = "{\"t\":\"auth\", \"m\":\"ok\"}";
 
     public SocketServer() {
 
@@ -70,7 +73,7 @@ public class SocketServer {
                         onlineUser.setAuthenticated(true);
 
                         try {
-                            session.getRemote().sendString("{\"t\":\"auth\", \"m\":\"ok\"}");
+                            session.getRemote().sendString(AUTH_OK_MESSAGE);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -86,7 +89,7 @@ public class SocketServer {
                                 onlineUser.getUser().getUsername() + session.getRemoteAddress().getAddress());
 
                         try {
-                            session.getRemote().sendString("{\"t\":\"auth\", \"m\":\"ok\"}");
+                            session.getRemote().sendString(AUTH_OK_MESSAGE);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -105,59 +108,59 @@ public class SocketServer {
      */
     public void tick() {
 
-        //TODO: refactor this function (1. Create json instance for each user 2. Extract functions 3. rename variables)
-        JSONObject json = new JSONObject();
-        json.put("t", "tick");
+        //Avoid ConcurrentModificationException
+        ArrayList<OnlineUser> onlineUsers = new ArrayList<>(onlineUserManager.getOnlineUsers());
 
-        ArrayList<OnlineUser> onlineUsers = new ArrayList<>(onlineUserManager.getOnlineUsers()); //Avoid ConcurrentModificationException
         for (OnlineUser user : onlineUsers) {
+            if (user.getWebSocket().isOpen() && user.getUser() != null) {
 
-            if (user.getWebSocket().isOpen()) {
+                JSONObject json = new JSONObject();
+                json.put("t", "tick");
 
-                if (user.getUser() != null && user.getUser().isGuest()) {
+                if (user.getUser().isGuest()) {
 
-                    json.remove("c");
-                    try {
-                        user.getWebSocket().getRemote().sendString((json.toJSONString()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    sendJSONObject(user, json);
 
-                } else if (user.getUser() != null) {
-                    try {
-                        ControllableUnit unit = user.getUser().getControlledUnit();
+                } else {
+                    ControllableUnit unit = user.getUser().getControlledUnit();
 
-                        //Send keyboard updated buffer
-                        ArrayList<Integer> kbBuffer = unit.getKeyboardBuffer();
-                        JSONArray keys = new JSONArray();
-                        keys.addAll(kbBuffer);
-                        json.put("keys", keys);
+                    json.put("c", charArraysToJSON(unit.getConsoleMessagesBuffer()));
+                    json.put("keys", intListToJSON(unit.getKeyboardBuffer()));
+                    json.put("cm", unit.getConsoleMode());
 
-                        //Send console buffer
-                        if (unit.getConsoleMessagesBuffer().size() > 0) {
-
-                            JSONArray buff = new JSONArray();
-
-                            for (char[] message : unit.getConsoleMessagesBuffer()) {
-                                buff.add(new String(message));
-                            }
-
-                            json.put("c", buff);
-                        } else {
-                            json.remove("c");
-                        }
-
-                        json.put("cm", unit.getConsoleMode());
-
-                        //Send tick message
-                        user.getWebSocket().getRemote().sendString(json.toJSONString());
-                    } catch (NullPointerException | IOException e) {
-                        e.printStackTrace();
-                    } catch (IllegalStateException e) {
-                        //Ignore
-                    }
+                    sendJSONObject(user, json);
                 }
             }
         }
+    }
+
+    private void sendJSONObject(OnlineUser user, JSONObject json) {
+        try {
+            user.getWebSocket().getRemote().sendString((json.toJSONString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            //Ignore
+        }
+    }
+
+    private JSONArray charArraysToJSON(List<char[]> charArrays) {
+
+        JSONArray jsonMessages = new JSONArray();
+
+        for (char[] message : charArrays) {
+            jsonMessages.add(new String(message));
+        }
+
+        return jsonMessages;
+    }
+
+    private JSONArray intListToJSON(List<Integer> ints) {
+
+        JSONArray jsonInts = new JSONArray();
+
+        jsonInts.addAll(ints);
+
+        return jsonInts;
     }
 }
