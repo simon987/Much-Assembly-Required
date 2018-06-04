@@ -3,7 +3,6 @@ package net.simon987.npcplugin;
 import net.simon987.server.game.objects.Direction;
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
-import net.simon987.server.logging.LogManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class VaultWorldGenerator {
 
     public World generateVaultWorld(int worldX, int worldY, ArrayList<Direction> openings, String dimension) {
 
-        LogManager.LOGGER.info("Generating vault World");
+//        LogManager.LOGGER.info("Generating vault World");
 
         /*
          * Openings are always at the same spot (marked by '?')

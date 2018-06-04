@@ -2,7 +2,6 @@ package net.simon987.biomassplugin;
 
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
-import net.simon987.server.logging.LogManager;
 import org.bson.types.ObjectId;
 
 import java.awt.*;
@@ -73,8 +72,8 @@ public class WorldUtils {
             }
         }
 
-        LogManager.LOGGER.info("Generated " + biomassBlobs.size() + " biomassBlobs for World (" + world.getX() + ',' +
-                world.getY() + ')');
+//        LogManager.LOGGER.info("Generated " + biomassBlobs.size() + " biomassBlobs for World (" + world.getX() + ',' +
+//                world.getY() + ')');
 
         return biomassBlobs;
     }

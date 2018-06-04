@@ -152,7 +152,7 @@ public class VaultDimension {
             exitPortal.setObjectId(new ObjectId());
             objectiveWorld.addObject(exitPortal);
 
-            LogManager.LOGGER.severe("Objective: " + objectiveWorld.getId());
+//            LogManager.LOGGER.severe("Objective: " + objectiveWorld.getId());
 
         } else {
             LogManager.LOGGER.severe("FIXME: Couldn't create exit portal for world " + homeWorld.getId());
