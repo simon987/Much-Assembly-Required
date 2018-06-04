@@ -7,6 +7,7 @@ import net.simon987.server.event.GameEventListener;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.world.World;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Arrays;
 
@@ -28,7 +29,7 @@ public class SpawnObjCommandListener implements GameEventListener {
                         false, e.getString("dimension"));
 
                 Document dbObj = Document.parse(e.getString("data"));
-                dbObj.put("i", GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                dbObj.put("id", new ObjectId());
 
                 GameObject object = GameServer.INSTANCE.getRegistry().deserializeGameObject(dbObj);
 

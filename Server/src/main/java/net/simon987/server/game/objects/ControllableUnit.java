@@ -5,12 +5,13 @@ import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.item.Item;
 import net.simon987.server.game.world.World;
 import net.simon987.server.user.User;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 
 public interface ControllableUnit {
 
-    long getObjectId();
+    ObjectId getObjectId();
 
     void setKeyboardBuffer(ArrayList<Integer> kbBuffer);
 

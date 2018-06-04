@@ -1,9 +1,9 @@
 package net.simon987.biomassplugin;
 
-import net.simon987.server.GameServer;
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class WorldUtils {
                 }
 
                 BiomassBlob biomassBlob = new BiomassBlob();
-                biomassBlob.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                biomassBlob.setObjectId(new ObjectId());
                 biomassBlob.setBiomassCount(yield);
                 biomassBlob.setX(p.x);
                 biomassBlob.setY(p.y);

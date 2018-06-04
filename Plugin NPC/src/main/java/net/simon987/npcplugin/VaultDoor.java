@@ -113,7 +113,7 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
     @Override
     public boolean enter(GameObject object) {
 
-        LogManager.LOGGER.fine("VAULT enter " + open);
+//        LogManager.LOGGER.fine("VAULT enter " + open);
 
         if (open) {
 

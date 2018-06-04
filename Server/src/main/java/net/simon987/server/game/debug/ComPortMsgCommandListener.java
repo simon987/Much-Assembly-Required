@@ -6,6 +6,7 @@ import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.objects.MessageReceiver;
+import org.bson.types.ObjectId;
 
 public class ComPortMsgCommandListener implements GameEventListener {
 
@@ -21,7 +22,7 @@ public class ComPortMsgCommandListener implements GameEventListener {
 
         if (e.getName().equals("comPortMsg")) {
 
-            long objectId = e.getLong("objectId");
+            ObjectId objectId = e.getObjectId("objectId");
 
             GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(objectId);
 

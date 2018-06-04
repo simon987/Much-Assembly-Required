@@ -4,13 +4,13 @@ import net.simon987.npcplugin.Factory;
 import net.simon987.npcplugin.NpcPlugin;
 import net.simon987.npcplugin.RadioTower;
 import net.simon987.npcplugin.VaultDoor;
-import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldGenerationEvent;
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.Random;
@@ -50,7 +50,7 @@ public class WorldCreationListener implements GameEventListener {
                         Factory factory = new Factory();
 
                         factory.setWorld(world);
-                        factory.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                        factory.setObjectId(new ObjectId());
                         factory.setX(x);
                         factory.setY(y);
 
@@ -84,7 +84,7 @@ public class WorldCreationListener implements GameEventListener {
                 RadioTower radioTower = new RadioTower();
 
                 radioTower.setWorld(world);
-                radioTower.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                radioTower.setObjectId(new ObjectId());
                 radioTower.setX(p.x);
                 radioTower.setY(p.y);
 
@@ -128,7 +128,7 @@ public class WorldCreationListener implements GameEventListener {
                     }
                 }
 
-                vaultDoor.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                vaultDoor.setObjectId(new ObjectId());
                 world.addObject(vaultDoor);
                 world.incUpdatable(); //In case the Factory & Radio Tower couldn't be spawned.
                 vaultDoor.setWorld(world);

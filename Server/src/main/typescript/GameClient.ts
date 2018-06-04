@@ -412,30 +412,18 @@ class GameClient {
 
                 let message;
 
-                try {
-                    message = JSON.parse(received.data);
-
-                    if (DEBUG) {
-                        console.log("[MAR] Received: " + received.data)
-                    }
-
-                    for (let i = 0; i < self.listeners.length; i++) {
-
-                        if (self.listeners[i].getListenedMessageType() === message.t) {
-                            self.listeners[i].handle(message)
-                        }
-                    }
-
-                } catch (e) {
-                    if (DEBUG) {
-                        console.log("[MAR] Received invalid message, assuming floppy data");
-                    }
-                    document.getElementById("floppyDown").innerHTML = "<i class=\"fa fa-long-arrow-down\" aria-hidden=\"true\"></i> <i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i>";
-                    let blob = new Blob([received.data], {type: "application/octet-stream"});
-                    saveAs(blob, "floppy.bin");
+                if (DEBUG) {
+                    console.log("[MAR] Received: " + received.data)
                 }
 
+                message = JSON.parse(received.data);
 
+                for (let i = 0; i < self.listeners.length; i++) {
+
+                    if (self.listeners[i].getListenedMessageType() === message.t) {
+                        self.listeners[i].handle(message)
+                    }
+                }
             };
 
             self.reloadCode();

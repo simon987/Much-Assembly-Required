@@ -40,7 +40,7 @@ let config = {
         }
     },
     kbBufferX: 350, ///Position of the keyboard buffer fill on screen
-    kbBufferY: 20,
+    kbBufferY: 35,
     arrowTextStyle: {
         fontSize: 32,
         fill: "#ffffff",

@@ -9,6 +9,7 @@ import net.simon987.server.game.objects.Updatable;
 import net.simon987.server.game.pathfinding.Pathfinder;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class World implements MongoSerializable {
 
     private String dimension;
 
-    private ConcurrentHashMap<Long, GameObject> gameObjects = new ConcurrentHashMap<>(8);
+    private ConcurrentHashMap<ObjectId, GameObject> gameObjects = new ConcurrentHashMap<>(8);
 
     /**
      * If this number is greater than 0, the World will be updated.
@@ -152,11 +153,9 @@ public class World implements MongoSerializable {
         gameObjects.remove(object.getObjectId());
     }
 
-    public GameObject findObject(long objectId) {
+    public GameObject findObject(ObjectId objectId) {
         return gameObjects.get(objectId);
     }
-
-
 
     /**
      * Update this World and its GameObjects

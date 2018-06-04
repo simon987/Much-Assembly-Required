@@ -7,6 +7,7 @@ import net.simon987.server.game.world.Location;
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -148,6 +149,7 @@ public class VaultDimension {
             exitPortal.setX(exitPortalPt.x);
             exitPortal.setY(exitPortalPt.y);
             exitPortal.setWorld(objectiveWorld);
+            exitPortal.setObjectId(new ObjectId());
             objectiveWorld.addObject(exitPortal);
 
             LogManager.LOGGER.severe("Objective: " + objectiveWorld.getId());
@@ -165,6 +167,7 @@ public class VaultDimension {
             homePortal.setX(homePortalPt.x);
             homePortal.setY(homePortalPt.y);
             homePortal.setWorld(homeWorld);
+            homePortal.setObjectId(new ObjectId());
             homeWorld.addObject(homePortal);
 
             Point entryCoords = homePortal.getAdjacentTile();

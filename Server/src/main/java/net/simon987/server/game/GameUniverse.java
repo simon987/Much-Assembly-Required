@@ -13,10 +13,10 @@ import net.simon987.server.game.world.WorldGenerator;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class GameUniverse {
 
@@ -30,8 +30,6 @@ public class GameUniverse {
 
 
     private long time;
-
-    private AtomicLong nextObjectId = new AtomicLong(0);
 
     private int maxWidth = 0xFFFF;
 
@@ -216,7 +214,7 @@ public class GameUniverse {
      * @param id id of the game object
      * @return GameObject, null if not found
      */
-    public GameObject getObject(long id) {
+    public GameObject getObject(ObjectId id) {
 
         for (World world : getWorlds()) {
             GameObject obj = world.findObject(id);
@@ -251,10 +249,6 @@ public class GameUniverse {
         return users.size();
     }
 
-    public long getNextObjectId() {
-        return nextObjectId.getAndIncrement();
-    }
-
     public String getGuestUsername() {
         int i = 1;
 
@@ -287,7 +281,4 @@ public class GameUniverse {
         this.time = time;
     }
 
-    public void setNextObjectId(long nextObjectId) {
-        this.nextObjectId.set(nextObjectId);
-    }
 }

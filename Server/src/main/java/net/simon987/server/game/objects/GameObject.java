@@ -5,6 +5,7 @@ import net.simon987.server.game.world.World;
 import net.simon987.server.io.JSONSerialisable;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -20,7 +21,7 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
     /**
      * Object's unique identifier
      */
-    private long objectId;
+    private ObjectId objectId;
 
     /**
      * X coordinate of the object in its World
@@ -47,7 +48,7 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
     }
 
     public GameObject(Document document) {
-        objectId = document.getLong("id");
+        objectId = document.getObjectId("id");
         x = document.getInteger("x");
         y = document.getInteger("y");
     }
@@ -183,11 +184,11 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
         return count;
     }
 
-    public long getObjectId() {
+    public ObjectId getObjectId() {
         return objectId;
     }
 
-    public void setObjectId(long objectId) {
+    public void setObjectId(ObjectId objectId) {
         this.objectId = objectId;
     }
 
@@ -226,7 +227,7 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
     @Override
     public JSONObject jsonSerialise() {
         JSONObject json = new JSONObject();
-        json.put("i", getObjectId());
+        json.put("i", getObjectId().toHexString());
         json.put("t", getClass().getCanonicalName());
         json.put("x", getX());
         json.put("y", getY());

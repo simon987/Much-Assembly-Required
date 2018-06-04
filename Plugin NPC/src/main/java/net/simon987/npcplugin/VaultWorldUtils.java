@@ -1,8 +1,8 @@
 package net.simon987.npcplugin;
 
-import net.simon987.server.GameServer;
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class VaultWorldUtils {
                 }
 
                 ElectricBox box = new ElectricBox();
-                box.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                box.setObjectId(new ObjectId());
                 box.setX(p.x);
                 box.setY(p.y);
                 box.setWorld(world);

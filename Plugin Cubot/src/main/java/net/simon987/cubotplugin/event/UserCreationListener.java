@@ -13,6 +13,7 @@ import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.UserCreationEvent;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.Random;
@@ -31,7 +32,7 @@ public class UserCreationListener implements GameEventListener {
         User user = (User) event.getSource();
         Cubot cubot = new Cubot();
         cubot.addStatus(CubotStatus.FACTORY_NEW);
-        cubot.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+        cubot.setObjectId(new ObjectId());
         ServerConfiguration config = GameServer.INSTANCE.getConfig();
 
         Point point = null;

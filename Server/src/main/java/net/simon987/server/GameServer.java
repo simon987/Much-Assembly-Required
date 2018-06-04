@@ -234,7 +234,6 @@ public class GameServer implements Runnable {
         if (cursor.hasNext()) {
             Document serverObj = cursor.next();
             gameUniverse.setTime((long) serverObj.get("time"));
-            gameUniverse.setNextObjectId((long) serverObj.get("nextObjectId"));
         }
 
         LogManager.LOGGER.info("Done loading! W:" + GameServer.INSTANCE.getGameUniverse().getWorldCount() +
@@ -276,7 +275,6 @@ public class GameServer implements Runnable {
 
             Document serverObj = new Document();
 	        serverObj.put("time", gameUniverse.getTime());
-	        serverObj.put("nextObjectId", gameUniverse.getNextObjectId());
             //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
             server.replaceOne(new Document("_id", "serverinfo"), serverObj, updateOptions);
 

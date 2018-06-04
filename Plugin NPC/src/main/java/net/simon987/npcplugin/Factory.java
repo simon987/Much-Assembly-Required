@@ -4,6 +4,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class Factory extends Structure implements Updatable {
 
             for (Object id : tmpNpcArray) {
 
-                NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((long) id);
+                NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((ObjectId) id);
 
                 if (npc != null) {
                     npc.setFactory(this);
@@ -94,7 +95,7 @@ public class Factory extends Structure implements Updatable {
                     if (p != null) {
                         NonPlayerCharacter npc = new HarvesterNPC();
                         npc.setWorld(getWorld());
-                        npc.setObjectId(GameServer.INSTANCE.getGameUniverse().getNextObjectId());
+                        npc.setObjectId(new ObjectId());
                         npc.setX(p.x);
                         npc.setY(p.y);
                         getWorld().addObject(npc);
@@ -117,7 +118,7 @@ public class Factory extends Structure implements Updatable {
     public Document mongoSerialise() {
         Document dbObject = super.mongoSerialise();
 
-        List<Long> tmpNpcArray = new ArrayList<>(npcs.size());
+        List<ObjectId> tmpNpcArray = new ArrayList<>(npcs.size());
 
         for (NonPlayerCharacter npc : npcs) {
             tmpNpcArray.add(npc.getObjectId());

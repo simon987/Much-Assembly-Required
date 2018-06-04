@@ -84,7 +84,7 @@
                         </div>
 
                         <div class="col-sm-2">
-                            <button class="btn btn-shadow btn-info text-mono regular-screen"
+                            <button id="floppyDown" class="btn btn-shadow btn-info text-mono regular-screen"
                                     onclick="window.location.assign('floppy_download')"><i class="mi">file_download</i>
                                 Floppy
                             </button>

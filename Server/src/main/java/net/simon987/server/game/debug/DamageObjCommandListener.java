@@ -22,7 +22,7 @@ public class DamageObjCommandListener implements GameEventListener {
 
         if (e.getName().equals("damageObj")) {
 
-            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getLong("objectId"));
+            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getObjectId("objectId"));
 
             if (object != null) {
 

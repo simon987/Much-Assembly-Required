@@ -20,7 +20,7 @@ public class MoveObjCommandListener implements GameEventListener {
 
         if (e.getName().equals("moveObj")) {
 
-            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getLong("objectId"));
+            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getObjectId("objectId"));
 
             if (object != null) {
 

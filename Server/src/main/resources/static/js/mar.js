@@ -291,7 +291,7 @@ var config = {
         };
     },
     kbBufferX: 350,
-    kbBufferY: 20,
+    kbBufferY: 35,
     arrowTextStyle: {
         fontSize: 32,
         fill: "#ffffff",
@@ -735,24 +735,14 @@ var GameClient = (function () {
             self.listeners.push(new DebugResponseListener());
             self.socket.onmessage = function (received) {
                 var message;
-                try {
-                    message = JSON.parse(received.data);
-                    if (DEBUG) {
-                        console.log("[MAR] Received: " + received.data);
-                    }
-                    for (var i = 0; i < self.listeners.length; i++) {
-                        if (self.listeners[i].getListenedMessageType() === message.t) {
-                            self.listeners[i].handle(message);
-                        }
-                    }
+                if (DEBUG) {
+                    console.log("[MAR] Received: " + received.data);
                 }
-                catch (e) {
-                    if (DEBUG) {
-                        console.log("[MAR] Received invalid message, assuming floppy data");
+                message = JSON.parse(received.data);
+                for (var i = 0; i < self.listeners.length; i++) {
+                    if (self.listeners[i].getListenedMessageType() === message.t) {
+                        self.listeners[i].handle(message);
                     }
-                    document.getElementById("floppyDown").innerHTML = "<i class=\"fa fa-long-arrow-down\" aria-hidden=\"true\"></i> <i class=\"fa fa-floppy-o\" aria-hidden=\"true\"></i>";
-                    var blob = new Blob([received.data], { type: "application/octet-stream" });
-                    saveAs(blob, "floppy.bin");
                 }
             };
             self.reloadCode();
