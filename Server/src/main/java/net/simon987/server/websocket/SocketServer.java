@@ -113,7 +113,7 @@ public class SocketServer {
 
             if (user.getWebSocket().isOpen()) {
 
-                if (user.getUser().isGuest()) {
+                if (user.getUser() != null && user.getUser().isGuest()) {
 
                     json.remove("c");
                     try {
