@@ -60,12 +60,12 @@ public class User implements MongoSerializable {
     public static User deserialize(Document obj) throws CancelledException {
 
         User user = new User((ControllableUnit) GameServer.INSTANCE.getGameUniverse().getObject((long) obj.get("controlledUnit")));
+        user.getControlledUnit().setParent(user);
         user.username = (String) obj.get("username");
         user.userCode = (String) obj.get("code");
         user.password = (String) obj.get("password");
         user.moderator = (boolean) obj.get("moderator");
         user.stats = new UserStats((Document) obj.get("stats"));
-
 
         return user;
     }
