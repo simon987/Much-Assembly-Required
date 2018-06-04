@@ -105,6 +105,7 @@ public class SocketServer {
      */
     public void tick() {
 
+        //TODO: refactor this function (1. Create json instance for each user 2. Extract functions 3. rename variables)
         JSONObject json = new JSONObject();
         json.put("t", "tick");
 

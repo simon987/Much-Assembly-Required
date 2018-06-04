@@ -15,14 +15,14 @@ public class ObjectsRequestHandler implements MessageHandler {
     @Override
     public void handle(OnlineUser user, JSONObject json) throws IllegalStateException, IOException {
         if (json.get("t").equals("object")) {
-            // LogManager.LOGGER.fine("(WS) Objects request from " + user.getUser().getUsername());
-
             int x, y;
             String dimension;
+            boolean sendDebugInfo;
             try {
                 x = Long.valueOf((long) json.get("x")).intValue();
                 y = Long.valueOf((long) json.get("y")).intValue();
                 dimension = (String) json.get("dimension");
+                sendDebugInfo = json.containsKey("debug") && (boolean) json.get("debug");
             } catch (Exception e) {
                 LogManager.LOGGER.severe("(WS) Malformed Objects request from " + user.getUser().getUsername());
                 return;
@@ -37,7 +37,11 @@ public class ObjectsRequestHandler implements MessageHandler {
 
 
                 for (GameObject object : world.getGameObjects()) {
-                    objects.add(object.jsonSerialise());
+                    if (sendDebugInfo) {
+                        objects.add(object.debugJsonSerialise());
+                    } else {
+                        objects.add(object.jsonSerialise());
+                    }
                 }
 
                 response.put("t", "object");

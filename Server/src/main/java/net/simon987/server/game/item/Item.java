@@ -43,6 +43,11 @@ public abstract class Item implements JSONSerialisable, MongoSerializable {
     }
 
     @Override
+    public JSONObject debugJsonSerialise() {
+        return jsonSerialise();
+    }
+
+    @Override
     public Document mongoSerialise() {
         Document document = new Document();
 

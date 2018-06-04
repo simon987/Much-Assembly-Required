@@ -76,6 +76,15 @@ public class HarvesterNPC extends NonPlayerCharacter {
     }
 
     @Override
+    public JSONObject debugJsonSerialise() {
+        JSONObject json = jsonSerialise();
+
+        json.put("taskCompleted", getTask().checkCompleted());
+
+        return json;
+    }
+
+    @Override
     public Document mongoSerialise() {
         Document dbObject = super.mongoSerialise();
 

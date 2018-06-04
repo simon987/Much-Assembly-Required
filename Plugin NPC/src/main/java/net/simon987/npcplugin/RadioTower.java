@@ -5,6 +5,8 @@ import net.simon987.server.game.objects.MessageReceiver;
 import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
@@ -61,4 +63,18 @@ public class RadioTower extends Structure implements MessageReceiver, Updatable 
         return lastMessages;
     }
 
+    @Override
+    public JSONObject debugJsonSerialise() {
+        JSONObject json = super.debugJsonSerialise();
+
+        JSONArray messages = new JSONArray();
+
+        for (char[] message : this.messages) {
+            messages.add(new String(message));
+        }
+
+        json.put("messages", messages);
+
+        return json;
+    }
 }

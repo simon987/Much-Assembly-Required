@@ -234,6 +234,11 @@ public abstract class GameObject implements JSONSerialisable, MongoSerializable 
         return json;
     }
 
+    @Override
+    public JSONObject debugJsonSerialise() {
+        return jsonSerialise();
+    }
+
 
     public boolean isAt(int x, int y) {
         return this.x == x && this.y == y;

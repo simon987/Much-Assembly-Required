@@ -140,6 +140,11 @@ public class TileMap implements JSONSerialisable, MongoSerializable {
     }
 
     @Override
+    public JSONObject debugJsonSerialise() {
+        return jsonSerialise();
+    }
+
+    @Override
     public Document mongoSerialise() {
 
         Document dbObject = new Document();
