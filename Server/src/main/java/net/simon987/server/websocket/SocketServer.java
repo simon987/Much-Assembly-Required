@@ -122,7 +122,7 @@ public class SocketServer {
                         e.printStackTrace();
                     }
 
-                } else {
+                } else if (user.getUser() != null) {
                     try {
                         ControllableUnit unit = user.getUser().getControlledUnit();
 
