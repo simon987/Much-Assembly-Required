@@ -34,7 +34,6 @@ public class NpcPlugin extends ServerPlugin {
         registry.registerGameObject(ElectricBox.class);
         registry.registerGameObject(Portal.class);
         registry.registerGameObject(VaultExitPortal.class);
-        registry.registerGameObject(RadioactiveObstacle.class);
 
         registry.registerHardware(RadioReceiverHardware.class);
 
