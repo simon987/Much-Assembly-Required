@@ -28,8 +28,6 @@ public class TileMap implements JSONSerialisable, MongoSerializable {
     public static final int VAULT_FLOOR = 4;
     public static final int VAULT_WALL = 5;
 
-    public static final int ITEM_IRON = 3;
-    public static final int ITEM_COPPER = 4;
 
     /**
      * The map of tile

@@ -11,6 +11,10 @@ public class ItemIron extends Item {
         return ID;
     }
 
+    public ItemIron() {
+        super(null);
+    }
+
     public ItemIron(Document document) {
         super(document);
     }

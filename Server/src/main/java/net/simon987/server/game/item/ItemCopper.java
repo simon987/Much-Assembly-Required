@@ -12,6 +12,10 @@ public class ItemCopper extends Item {
         return ID;
     }
 
+    public ItemCopper() {
+        super(null);
+    }
+
     public ItemCopper(Document document) {
         super(document);
     }

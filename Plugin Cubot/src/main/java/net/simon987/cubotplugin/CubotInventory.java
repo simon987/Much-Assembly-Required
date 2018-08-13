@@ -31,7 +31,7 @@ public class CubotInventory extends CubotHardwareModule {
         super(cubot);
 
         inventory = new HashMap<>();
-        inventory.put(2, new ItemCopper(new Document()));
+        inventory.put(2, new ItemCopper(new Document()));  // TODO: Remove debug value
     }
 
     public CubotInventory(Document document, ControllableUnit cubot) {

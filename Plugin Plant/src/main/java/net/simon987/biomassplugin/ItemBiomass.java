@@ -17,6 +17,10 @@ public class ItemBiomass extends Item {
         return ID;
     }
 
+    public ItemBiomass() {
+        super(null);
+    }
+
     public ItemBiomass(Document document) {
         super(document);
     }
