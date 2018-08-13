@@ -38,6 +38,11 @@
                        href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg"><i
                             class="mi">chat</i></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link regular-screen" onclick="mar.client.findMyRobot()" href="#"><i class="mi">my_location</i>
+                        Find Cubot</a>
+                    <a class="nav-link small-screen" onclick="mar.client.findMyRobot()" href="#"><i class="mi">my_location</i></a>
+                </li>
             </ul>
         </div>
         <div class="card-body">
