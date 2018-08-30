@@ -18,3 +18,5 @@ Server/src/main/java/META-INF/MANIFEST.MF
 .settings
 .project
 .classpath
+# VSCode Workspace
+.vscode/
