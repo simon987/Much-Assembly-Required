@@ -156,7 +156,14 @@ public class Assembler {
 
                         //Unescape the string
                         String string = value.substring(1, value.length() - 1);
-                        string = StringEscapeUtils.unescapeJava(string);
+
+                        try {
+                            string = StringEscapeUtils.unescapeJava(string);
+                        } catch (IllegalArgumentException e) {
+                            throw new InvalidOperandException(
+                                "Invalid string operand \"" + string + "\": " + e.getMessage(), 
+                                currentLine);
+                        }
 
                         out.write(string.getBytes(StandardCharsets.UTF_16BE));
                     } else if (labels != null && labels.containsKey(value)) {
