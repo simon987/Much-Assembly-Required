@@ -15,17 +15,7 @@ public class ServerInfoRoute implements Route {
     public ServerInfoRoute() {
 
         //Info variables that don't change
-
-        if (GameServer.INSTANCE.getConfig().getInt("use_ssl") == 0) {
-            address = "ws://" +
-                    GameServer.INSTANCE.getConfig().getString("mar_address") + ":" +
-                    GameServer.INSTANCE.getConfig().getString("mar_port") + "/socket";
-        } else {
-            address = "wss://" +
-                    GameServer.INSTANCE.getConfig().getString("mar_address") + ":" +
-                    GameServer.INSTANCE.getConfig().getString("mar_port") + "/socket";
-        }
-
+        address = GameServer.INSTANCE.getConfig().getString("mar_address");
         serverName = GameServer.INSTANCE.getConfig().getString("server_name");
         tickLength = GameServer.INSTANCE.getConfig().getInt("tick_length");
     }
