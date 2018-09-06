@@ -116,6 +116,11 @@ public class OperandTest {
             assertEquals(8 + 2 * registerSet.size(), mem9.getValue());
             assertEquals(1, mem9.getData());
 
+            Operand mem10 = new Operand("[   B -    label1     ]", labels, registerSet, 0);
+            assertEquals(OperandType.MEMORY_REG_DISP16, mem10.getType());
+            assertEquals(2 + 2 * registerSet.size(), mem10.getValue());
+            assertEquals(-10, mem10.getData());
+
 
         } catch (InvalidOperandException e) {
             fail("Failed trying to parse a valid operand");
