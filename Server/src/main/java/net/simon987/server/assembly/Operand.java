@@ -216,7 +216,7 @@ public class Operand {
 
                 Character address = labels.get(expr.replaceAll("[^A-Za-z0-9_]", ""));
                 if (address != null) {
-                    data = address;
+                    data = (expr.startsWith("-")) ? -address : address;
                     value += registerSet.size() * 2;//refers to memory with disp
 
                     return true;
