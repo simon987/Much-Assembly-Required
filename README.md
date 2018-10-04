@@ -4,16 +4,33 @@ In its current state, players can walk around the game universe and collect Biom
 
 ![screenshot from 2017-11-12 13-01-43](https://user-images.githubusercontent.com/7120851/32701793-e5d07e98-c7a9-11e7-9931-f8db7b287994.png)
 
-Wiki: [GitHub](https://github.com/simon987/Much-Assembly-Required/wiki)    
+Wiki: [GitHub](https://github.com/simon987/Much-Assembly-Required/wiki)
 Chat: [Slack](https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLTkyOTIwOTA5OGY4MDVlMGI4NzM5YzlhMWJiMGY1OWE2NjUxODQ1NWQ1YTcxMTA1NGZkYzNjYzMyM2E1ODdmNzg)
 
-# Deploying the server 
+# Deploying the server
 
-## Linux (Ubuntu 16.04)
+## Linux
+
+**Installing tools**
+
+On Ubuntu 16.04:
 ```bash
-# Install tools
 sudo apt install git maven openjdk-8-jdk mongodb
+```
 
+On Arch:
+``` bash
+sudo pacman -S git maven mongodb jdk8-opendjk
+
+# Don't forget to start mongodb
+sudo systemctl start mongodb.service
+```
+
+*If needed, visit [troubleshooting mongodb](https://wiki.archlinux.org/index.php/MongoDB#Troubleshooting).*
+
+**Deploying server**
+
+``` bash
 # Obtain source files
 git clone https://github.com/simon987/Much-Assembly-Required.git
 
@@ -58,7 +75,7 @@ java -jar server-1.4a.jar
 ```
 
 ## Docker
-### Requirements  
+### Requirements
 
 1. [Docker Compose](https://docs.docker.com/compose/install/#install-compose) (and dependencies)
 
@@ -74,7 +91,7 @@ Make sure to change `mongo_address` in `config.properties` to `mongodb`.
 
 
 ## Vagrant
-### Requirements   
+### Requirements
 1. [Vagrant](https://www.vagrantup.com/downloads.html)
 2. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 
@@ -85,7 +102,7 @@ command inside this application's directory:
 
 `vagrant up`
 
-# Running 
+# Running
 
 Once the server is running, you should be able to connect to `http://localhost:4567` with your browser
 
