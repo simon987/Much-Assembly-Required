@@ -76,7 +76,7 @@ java -jar server-1.4a.jar
 
 ## macOS (tested on Sierra 10.12.6)
 
-### Installation
+**Installation**
 
 1. Install [Maven3](https://maven.apache.org/)
    -Add Maven bin to your path
@@ -105,7 +105,7 @@ java -jar server-1.4a.jar
    ```
 If you do not wish to use the default data directory (/data/db), follow the steps for running MongoDB in the install doc.
 
-### Deploying Server
+**Deploying Server**
 
 1. Begin MongoDB service
    ```bash
