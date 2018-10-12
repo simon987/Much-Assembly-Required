@@ -76,7 +76,7 @@ java -jar server-1.4a.jar
 
 ## macOS (tested on Sierra 10.12.6)
 
-###Installation
+### Installation
 
 1. Install [Maven3](https://maven.apache.org/)
    -Add Maven bin to your path
