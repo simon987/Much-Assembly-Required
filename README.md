@@ -74,6 +74,67 @@ cd Much-Assembly-Required\target
 java -jar server-1.4a.jar
 ```
 
+## macOS (tested on Sierra 10.12.6)
+
+**Installation**
+
+1. Install [Maven3](https://maven.apache.org/)
+   -Add Maven bin to your path
+   ```bash
+   export PATH=/path/to/maven/bin.:$PATH
+   ```
+2. Install [MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/?_ga=2.201359831.774868398.1539369140-197602459.1539369140).
+   -Via Brew:
+   ```bash
+   #Update brew
+   brew update
+
+   #Install mongodb
+   brew install mongodb
+
+   #Install latest development release
+   brew install mongodb --devel
+   ```
+   -Via .tar.gz
+   ```bash
+   #Extract files:
+   tar -zxvf mongodb-osx-ssl-x86_64-4.0.3.tgz
+   
+   #Ensure binaries are in your path
+   export PATH=<mongodb-install-directory>/bin:$PATH
+   ```
+If you do not wish to use the default data directory (/data/db), follow the steps for running MongoDB in the install doc.
+
+**Deploying Server**
+
+1. Begin MongoDB service
+   ```bash
+   #If brew:
+   #Launch on login
+   brew services start mongodb
+   #Or, if you don't want/need a background service you can just run:
+   mongod --config /usr/local/etc/mongod.conf
+   
+   #If binary:
+   mongod
+   #Optional, set data directory path:
+   mongod --dbpath <path to data directory>
+   ```
+
+2. Deploy server:
+   ```bash
+   # Obtain source files
+   git clone https://github.com/simon987/Much-Assembly-Required.git
+
+   # Build
+   cd Much-Assembly-Required
+   mvn package
+
+   # Run
+   cd target
+   java -jar server-1.4a.jar
+   ```
+
 ## Docker
 ### Requirements
 
