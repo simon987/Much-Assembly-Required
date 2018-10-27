@@ -20,7 +20,7 @@ public class ItemsContainer extends GameObject implements InventoryHolder {
 
     public ItemsContainer(Document document) {
         super(document);
-        this.items = (List<Item>) document.get("itemsCount");
+        this.items = (List<Item>) document.get("items");
     }
 
     @Override
@@ -56,14 +56,14 @@ public class ItemsContainer extends GameObject implements InventoryHolder {
     @Override
     public JSONObject jsonSerialise() {
         JSONObject json = super.jsonSerialise();
-        json.put("itemsCount", items);
+        json.put("items", items);
         return json;
     }
 
     @Override
     public Document mongoSerialise() {
         Document dbObject = super.mongoSerialise();
-        dbObject.put("itemsCount", items);
+        dbObject.put("items", items);
         return dbObject;
     }
 }
