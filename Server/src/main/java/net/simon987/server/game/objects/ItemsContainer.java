@@ -4,25 +4,23 @@ import net.simon987.server.game.item.Item;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ItemsContainer extends GameObject implements InventoryHolder {
 
     private static final char MAP_INFO = 0x0240;
 
-    private final Map<Integer, Integer> itemsTypeCount;
+    private final List<Item> items;
     private int containerCapacity;
-    private int size = 0;
 
     public ItemsContainer(int containerCapacity) {
         this.containerCapacity = containerCapacity;
-        this.itemsTypeCount = new HashMap<>();
+        this.items = new ArrayList<>();
     }
 
     public ItemsContainer(Document document) {
         super(document);
-        itemsTypeCount = (Map<Integer, Integer>) document.get("itemsCount");
+        this.items = (List<Item>) document.get("itemsCount");
     }
 
     @Override
@@ -32,41 +30,40 @@ public class ItemsContainer extends GameObject implements InventoryHolder {
 
     @Override
     public boolean placeItem(Item item) {
-        if (size < containerCapacity) {
-            int itemId = item.getId();
-            itemsTypeCount.putIfAbsent(itemId, 0);
-            Integer oldCount = itemsTypeCount.get(itemId);
-            itemsTypeCount.replace(itemId, ++oldCount);
-            size++;
+        if (items.size() < containerCapacity) {
+            items.add(item);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
     public void takeItem(int itemId) {
-        Integer oldCount = itemsTypeCount.get(itemId);
-        itemsTypeCount.replace(itemId, --oldCount);
-        size--;
+        Optional<Item> first = items.stream()
+                .filter(item -> item.getId() == itemId)
+                .findFirst();
+
+        items.remove(first.get());
     }
 
     @Override
     public boolean canTakeItem(int itemId) {
-        Integer integer = itemsTypeCount.get(itemId);
-        return integer != null && integer > 0;
+        return items.stream()
+                .anyMatch(item -> item.getId() == itemId);
     }
 
     @Override
     public JSONObject jsonSerialise() {
         JSONObject json = super.jsonSerialise();
-        json.put("itemsCount", itemsTypeCount);
+        json.put("itemsCount", items);
         return json;
     }
 
     @Override
     public Document mongoSerialise() {
         Document dbObject = super.mongoSerialise();
-        dbObject.put("itemsCount", itemsTypeCount);
+        dbObject.put("itemsCount", items);
         return dbObject;
     }
 }
