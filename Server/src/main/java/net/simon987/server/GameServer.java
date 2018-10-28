@@ -1,12 +1,12 @@
 package net.simon987.server;
 
-
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import net.simon987.server.crypto.CryptoProvider;
+import net.simon987.server.crypto.SecretKeyGenerator;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventDispatcher;
 import net.simon987.server.event.TickEvent;
@@ -54,6 +54,8 @@ public class GameServer implements Runnable {
 
     private GameRegistry gameRegistry;
 
+    private String secretKey;
+
     public GameServer() {
         this.config = new ServerConfiguration("config.properties");
 
@@ -75,6 +77,13 @@ public class GameServer implements Runnable {
         cryptoProvider = new CryptoProvider();
 
         dayNightCycle = new DayNightCycle();
+
+        SecretKeyGenerator keyGenerator = new SecretKeyGenerator();
+        secretKey = config.getString("secret_key");
+        if (secretKey == null) {
+            secretKey = keyGenerator.generate();
+            config.setString("secret_key", secretKey);
+        }
 
         //Load all plugins in plugins folder, if it doesn't exist, create it
         File pluginDir = new File("plugins/");
@@ -123,7 +132,7 @@ public class GameServer implements Runnable {
         return eventDispatcher;
     }
 
-    public CryptoProvider getCryptoProvider(){
+    public CryptoProvider getCryptoProvider() {
         return cryptoProvider;
     }
 
@@ -176,12 +185,10 @@ public class GameServer implements Runnable {
                     user.getControlledUnit().getCpu().reset();
                     int cost = user.getControlledUnit().getCpu().execute(timeout);
                     user.getControlledUnit().spendEnergy(cost);
-
                 } catch (Exception e) {
                     LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
                     e.printStackTrace();
                 }
-
             }
         }
 
@@ -219,7 +226,7 @@ public class GameServer implements Runnable {
         MongoCursor<Document> cursor = worlds.find(whereQuery).iterator();
         GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
         while (cursor.hasNext()) {
-        	World w = World.deserialize(cursor.next());
+            World w = World.deserialize(cursor.next());
             universe.addWorld(w);
         }
 
@@ -243,38 +250,38 @@ public class GameServer implements Runnable {
     public void save() {
 
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
-        try{
+        try {
             MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
             ReplaceOptions updateOptions = new ReplaceOptions();
             updateOptions.upsert(true);
 
-	        int unloaded_worlds = 0;
+            int unloaded_worlds = 0;
 
             MongoCollection<Document> worlds = db.getCollection("world");
             MongoCollection<Document> users = db.getCollection("user");
             MongoCollection<Document> server = db.getCollection("server");
 
-	        int insertedWorlds = 0;
-	        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
+            int insertedWorlds = 0;
+            GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
             for (World w : universe.getWorlds()) {
                 insertedWorlds++;
                 worlds.replaceOne(new Document("_id", w.getId()), w.mongoSerialise(), updateOptions);
 
                 //If the world should unload, it is removed from the Universe after having been saved.
-	        	if (w.shouldUnload()){
-	        		unloaded_worlds++;
+                if (w.shouldUnload()) {
+                    unloaded_worlds++;
                     universe.removeWorld(w);
-	        	}
-	        }
+                }
+            }
 
             for (User u : GameServer.INSTANCE.getGameUniverse().getUsers()) {
-	            if (!u.isGuest()) {
+                if (!u.isGuest()) {
                     users.replaceOne(new Document("_id", u.getUsername()), u.mongoSerialise(), updateOptions);
-	            }
-	        }
+                }
+            }
 
             Document serverObj = new Document();
-	        serverObj.put("time", gameUniverse.getTime());
+            serverObj.put("time", gameUniverse.getTime());
             //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
             server.replaceOne(new Document("_id", "serverinfo"), serverObj, updateOptions);
 
@@ -311,5 +318,14 @@ public class GameServer implements Runnable {
 
     public GameRegistry getRegistry() {
         return gameRegistry;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+        config.setString("secret_key", secretKey);
     }
 }
