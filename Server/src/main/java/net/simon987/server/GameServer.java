@@ -82,6 +82,7 @@ public class GameServer implements Runnable {
         secretKey = config.getString("secret_key");
         if (secretKey == null) {
             secretKey = keyGenerator.generate();
+            config.setString("secret_key", secretKey);
         }
 
         //Load all plugins in plugins folder, if it doesn't exist, create it
@@ -325,5 +326,6 @@ public class GameServer implements Runnable {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+        config.setString("secret_key", secretKey);
     }
 }
