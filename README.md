@@ -99,7 +99,7 @@ java -jar server-1.4a.jar
    ```bash
    #Extract files:
    tar -zxvf mongodb-osx-ssl-x86_64-4.0.3.tgz
-   
+
    #Ensure binaries are in your path
    export PATH=<mongodb-install-directory>/bin:$PATH
    ```
@@ -114,7 +114,7 @@ If you do not wish to use the default data directory (/data/db), follow the step
    brew services start mongodb
    #Or, if you don't want/need a background service you can just run:
    mongod --config /usr/local/etc/mongod.conf
-   
+
    #If binary:
    mongod
    #Optional, set data directory path:
@@ -170,3 +170,6 @@ Once the server is running, you should be able to connect to `http://localhost:4
 ## VS Code Extensions
 - [Much Assembly Required (Upload on Save)](https://marketplace.visualstudio.com/items?itemName=tomhodder.much-assembly-required-upload-on-save) by tomhodder
 - [Much Assembly Required Language Support](https://marketplace.visualstudio.com/items?itemName=PJB3005.much-assembly-required-language-support) by PJB3005
+
+# Bil481 Project Members
+- Deniz Beştepe
