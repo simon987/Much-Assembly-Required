@@ -44,7 +44,7 @@ public class CubotDrill extends CubotHardwareModule {
                 if (cubot.getCurrentAction() == Action.IDLE) {
 
                     //TODO: Get Tile instance and call onDig()
-                    //int tile = cubot.getWorld().getTileMap().getTileAt(cubot.getX(), cubot.getY());
+                    //int tile = cubot.getWorld().getTileMap().getTileIdAt(cubot.getX(), cubot.getY());
                     //cubot.setCurrentAction(Action.DIGGING);
                 }
             }

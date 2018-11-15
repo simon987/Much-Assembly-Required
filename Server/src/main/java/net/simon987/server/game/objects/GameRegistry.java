@@ -2,6 +2,7 @@ package net.simon987.server.game.objects;
 
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.game.item.Item;
+import net.simon987.server.game.world.Tile;
 import net.simon987.server.logging.LogManager;
 import org.bson.Document;
 
@@ -13,12 +14,14 @@ public class GameRegistry {
     private HashMap<String, Class<? extends GameObject>> gameObjects;
     private HashMap<String, Class<? extends HardwareModule>> hardware;
     private HashMap<Integer, Class<? extends Item>> items;
+    private HashMap<Integer, Class<? extends Tile>> tiles;
 
 
     public GameRegistry() {
         gameObjects = new HashMap<>();
         hardware = new HashMap<>();
         items = new HashMap<>();
+        tiles = new HashMap<>();
     }
 
     public void registerGameObject(Class<? extends GameObject> clazz) {
@@ -31,6 +34,10 @@ public class GameRegistry {
 
     public void registerItem(int id, Class<? extends Item> clazz) {
         items.put(id, clazz);
+    }
+
+    public void registerTile(int id, Class<? extends Tile> clazz) {
+        tiles.put(id, clazz);
     }
 
     public HardwareModule deserializeHardware(Document document, ControllableUnit controllableUnit) {
@@ -115,6 +122,23 @@ public class GameRegistry {
 
         } else {
             LogManager.LOGGER.severe("Trying to create an unknown Item type: " + itemId);
+            return null;
+        }
+    }
+
+    public Tile makeTile(int tileId) {
+        if (tiles.containsKey(tileId)) {
+
+            try {
+                return tiles.get(tileId).getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
+                    | InvocationTargetException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        } else {
+            LogManager.LOGGER.severe("Trying to create an unknown Tile type: " + tileId);
             return null;
         }
     }

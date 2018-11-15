@@ -1,5 +1,6 @@
 package net.simon987.npcplugin;
 
+import net.simon987.npcplugin.world.TileVaultFloor;
 import net.simon987.server.game.world.TileMap;
 import net.simon987.server.game.world.World;
 import org.bson.types.ObjectId;
@@ -19,12 +20,12 @@ public class VaultWorldUtils {
 
         //Count number of floor tiles. If there is less plain tiles than desired amount of boxes,
         //set the desired amount of blobs to the plain tile count
-        int[][] tiles = world.getTileMap().getTiles();
+        TileMap m = world.getTileMap();
         int floorCount = 0;
         for (int y = 0; y < world.getWorldSize(); y++) {
             for (int x = 0; x < world.getWorldSize(); x++) {
 
-                if (tiles[x][y] == TileMap.VAULT_FLOOR) {
+                if (m.getTileIdAt(x, y) == TileVaultFloor.ID) {
                     floorCount++;
                 }
             }
@@ -37,14 +38,14 @@ public class VaultWorldUtils {
         outerLoop:
         for (int i = 0; i < boxesCount; i++) {
 
-            Point p = world.getTileMap().getRandomTile(TileMap.VAULT_FLOOR);
+            Point p = m.getRandomTile(TileVaultFloor.ID);
             if (p != null) {
 
                 //Don't block worlds
                 int counter = 0;
                 while (p.x == 0 || p.y == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 ||
                         world.getGameObjectsAt(p.x, p.y).size() != 0) {
-                    p = world.getTileMap().getRandomTile(TileMap.VAULT_FLOOR);
+                    p = m.getRandomTile(TileVaultFloor.ID);
                     counter++;
 
                     if (counter > 25) {

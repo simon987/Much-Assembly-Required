@@ -2,6 +2,7 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.game.objects.Direction;
 import net.simon987.server.game.world.TileMap;
+import net.simon987.server.game.world.TileVoid;
 import net.simon987.server.game.world.World;
 
 import java.awt.*;
@@ -216,7 +217,7 @@ public class VaultWorldGenerator {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
 
-                if (map.getTileAt(x, y) != floorTile && hasTileAdjacent(x, y, map, floorTile)) {
+                if (map.getTileIdAt(x, y) != floorTile && hasTileAdjacent(x, y, map, floorTile)) {
                     map.setTileAt(wallTile, x, y);
                 }
             }
@@ -226,8 +227,8 @@ public class VaultWorldGenerator {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
 
-                if (map.getTileAt(x, y) != floorTile && map.getTileAt(x, y) != wallTile) {
-                    map.setTileAt(TileMap.VOID, x, y);
+                if (map.getTileIdAt(x, y) != floorTile && map.getTileIdAt(x, y) != wallTile) {
+                    map.setTileAt(new TileVoid(), x, y);
                 }
             }
         }
@@ -241,7 +242,7 @@ public class VaultWorldGenerator {
         for (int dX = -1; dX <= 1; dX++) {
             for (int dY = -1; dY <= 1; dY++) {
 
-                if (map.getTileAt(x + dX, y + dY) == tile) {
+                if (map.getTileIdAt(x + dX, y + dY) == tile) {
                     return true;
                 }
             }
