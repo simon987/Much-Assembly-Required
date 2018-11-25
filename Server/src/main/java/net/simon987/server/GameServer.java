@@ -15,8 +15,7 @@ import net.simon987.server.game.debug.*;
 import net.simon987.server.game.item.ItemCopper;
 import net.simon987.server.game.item.ItemIron;
 import net.simon987.server.game.objects.GameRegistry;
-import net.simon987.server.game.world.DayNightCycle;
-import net.simon987.server.game.world.World;
+import net.simon987.server.game.world.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
 import net.simon987.server.user.User;
@@ -122,6 +121,12 @@ public class GameServer implements Runnable {
 
         gameRegistry.registerItem(ItemCopper.ID, ItemCopper.class);
         gameRegistry.registerItem(ItemIron.ID, ItemIron.class);
+
+        gameRegistry.registerTile(TileVoid.ID, TileVoid.class);
+        gameRegistry.registerTile(TilePlain.ID, TilePlain.class);
+        gameRegistry.registerTile(TileWall.ID, TileWall.class);
+        gameRegistry.registerTile(TileCopper.ID, TileCopper.class);
+        gameRegistry.registerTile(TileIron.ID, TileIron.class);
     }
 
     public GameUniverse getGameUniverse() {

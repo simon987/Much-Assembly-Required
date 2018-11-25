@@ -5,7 +5,7 @@ import org.bson.Document;
 
 public class ItemCopper extends Item {
 
-    public static final int ID = 0x0003;
+    public static final int ID = 0x0004;
 
     @Override
     public int getId() {

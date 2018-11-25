@@ -4,7 +4,7 @@ import org.bson.Document;
 
 public class ItemIron extends Item {
 
-    public static final int ID = 0x0004;
+    public static final int ID = 0x0003;
 
     @Override
     public int getId() {

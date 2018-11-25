@@ -25,6 +25,7 @@ public class World implements MongoSerializable {
      */
     private int worldSize;
 
+    //TODO: This info should be pulled from the Tile class
     private static final char INFO_BLOCKED = 0x8000;
     private static final char INFO_IRON = 0x0200;
     private static final char INFO_COPPER = 0x0100;
@@ -68,11 +69,7 @@ public class World implements MongoSerializable {
      * Check if a tile is blocked, either by a game object or an impassable tile type
      */
     public boolean isTileBlocked(int x, int y) {
-
-        int tile = tileMap.getTileAt(x, y);
-
-        return getGameObjectsBlockingAt(x, y).size() > 0 || tile == TileMap.WALL_TILE ||
-                tile == TileMap.VAULT_WALL || tile == TileMap.VOID;
+        return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y).isBlocked();
     }
 
     /**
@@ -213,11 +210,10 @@ public class World implements MongoSerializable {
     public String toString() {
 
         StringBuilder str = new StringBuilder("World (" + x + ", " + y + ")\n");
-        int[][] tileMap = this.tileMap.getTiles();
 
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
-                str.append(tileMap[x][y]).append(" ");
+                str.append(tileMap.getTileIdAt(x, y)).append(" ");
             }
             str.append("\n");
         }
@@ -260,22 +256,22 @@ public class World implements MongoSerializable {
     public char[][] getMapInfo() {
 
         char[][] mapInfo = new char[worldSize][worldSize];
-        int[][] tiles = tileMap.getTiles();
 
         //Tile
         for (int y = 0; y < worldSize; y++) {
             for (int x = 0; x < worldSize; x++) {
 
-                if (tiles[x][y] == TileMap.PLAIN_TILE) {
+                if (tileMap.getTileIdAt(x, y) == TilePlain.ID) {
                     mapInfo[x][y] = 0;
 
-                } else if (tiles[x][y] == TileMap.WALL_TILE || tiles[x][y] == TileMap.VAULT_WALL) {
+                } else if (tileMap.getTileAt(x, y).isBlocked()) {
                     mapInfo[x][y] = INFO_BLOCKED;
 
-                } else if (tiles[x][y] == TileMap.COPPER_TILE) {
+                    //TODO: Tiles should have their .getMapInfo() method
+                } else if (tileMap.getTileIdAt(x, y) == TileCopper.ID) {
                     mapInfo[x][y] = INFO_COPPER;
 
-                } else if (tiles[x][y] == TileMap.IRON_TILE) {
+                } else if (tileMap.getTileIdAt(x, y) == TileIron.ID) {
                     mapInfo[x][y] = INFO_IRON;
                 }
             }

@@ -159,7 +159,7 @@ public class WorldGenerator {
                 }
 
 
-                world.getTileMap().getTiles()[x][y] = tile;
+                world.getTileMap().setTileAt(tile, x, y);
             }
         }
 
@@ -169,18 +169,18 @@ public class WorldGenerator {
 
         for (int i = 0; i < ironCount; i++) {
 
-            Point p = world.getTileMap().getRandomTile(TileMap.PLAIN_TILE);
+            Point p = world.getTileMap().getRandomTile(TilePlain.ID);
 
             if (p != null) {
-                world.getTileMap().getTiles()[p.x][p.y] = TileMap.IRON_TILE;
+                world.getTileMap().setTileAt(new TileIron(), p.x, p.y);
             }
         }
         for (int i = 0; i < copperCount; i++) {
 
-            Point p = world.getTileMap().getRandomTile(TileMap.PLAIN_TILE);
+            Point p = world.getTileMap().getRandomTile(TilePlain.ID);
 
             if (p != null) {
-                world.getTileMap().getTiles()[p.x][p.y] = TileMap.COPPER_TILE;
+                world.getTileMap().setTileAt(new TileCopper(), p.x, p.y);
             }
         }
 

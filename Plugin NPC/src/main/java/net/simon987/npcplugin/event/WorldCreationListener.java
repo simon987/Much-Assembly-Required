@@ -7,7 +7,7 @@ import net.simon987.npcplugin.VaultDoor;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldGenerationEvent;
-import net.simon987.server.game.world.TileMap;
+import net.simon987.server.game.world.TilePlain;
 import net.simon987.server.game.world.World;
 import org.bson.types.ObjectId;
 
@@ -69,7 +69,7 @@ public class WorldCreationListener implements GameEventListener {
             }
 
             //Also spawn a radio tower in the same World
-            Point p = world.getRandomTileWithAdjacent(8, TileMap.PLAIN_TILE);
+            Point p = world.getRandomTileWithAdjacent(8, TilePlain.ID);
             if (p != null) {
                 while (p.x == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 || p.y == 0) {
                     p = world.getRandomPassableTile();

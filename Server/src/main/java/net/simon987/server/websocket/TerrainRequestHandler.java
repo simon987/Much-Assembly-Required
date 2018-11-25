@@ -3,7 +3,6 @@ package net.simon987.server.websocket;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -30,20 +29,10 @@ public class TerrainRequestHandler implements MessageHandler {
 
             //todo It might be a good idea to cache this
             if (world != null) {
-                JSONObject response = new JSONObject();
-
-                JSONArray terrain = new JSONArray();
-
-                int[][] tiles = world.getTileMap().getTiles();
-                for (int x = 0; x < world.getWorldSize(); x++) {
-                    for (int y = 0; y < world.getWorldSize(); y++) {
-                        terrain.add(tiles[y][x]);
-                    }
-                }
+                JSONObject response = world.getTileMap().jsonSerialise();
 
                 response.put("t", "terrain");
                 response.put("ok", true);
-                response.put("terrain", terrain);
                 response.put("size", world.getWorldSize());
 
                 user.getWebSocket().getRemote().sendString(response.toJSONString());
