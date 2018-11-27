@@ -4,6 +4,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
+import net.simon987.server.web.GuestPolicy;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -24,8 +25,14 @@ public class SocketServer {
     private MessageDispatcher messageDispatcher = new MessageDispatcher();
 
     private static final String AUTH_OK_MESSAGE = "{\"t\":\"auth\", \"m\":\"ok\"}";
+    private static final String FORBIDDEN_MESSAGE = "{\"t\":\"auth\", \"m\":\"forbidden\"}";
+    private static final int AUTH_TOKEN_LEN = 128;
 
-    public SocketServer() {
+    private GuestPolicy guestPolicy;
+
+    public SocketServer(GuestPolicy guestPolicy) {
+
+        this.guestPolicy = guestPolicy;
 
         messageDispatcher.addHandler(new UserInfoRequestHandler());
         messageDispatcher.addHandler(new TerrainRequestHandler());
@@ -34,6 +41,7 @@ public class SocketServer {
         messageDispatcher.addHandler(new CodeRequestHandler());
         messageDispatcher.addHandler(new KeypressHandler());
         messageDispatcher.addHandler(new DebugCommandHandler());
+
     }
 
     @OnWebSocketConnect
@@ -52,55 +60,62 @@ public class SocketServer {
     public void onMessage(Session session, String message) {
         OnlineUser onlineUser = onlineUserManager.getUser(session);
 
-        if (onlineUser != null) {
-
-            if (onlineUser.isAuthenticated()) {
-
-                messageDispatcher.dispatch(onlineUser, message);
-
-            } else {
-
-                LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + session.getRemoteAddress().getAddress());
-                if (message.length() == 128) {
-
-                    User user = GameServer.INSTANCE.getUserManager().validateAuthToken(message);
-
-                    if (user != null) {
-
-                        LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
-
-                        onlineUser.setUser(user);
-                        onlineUser.setAuthenticated(true);
-
-                        try {
-                            session.getRemote().sendString(AUTH_OK_MESSAGE);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else {
-
-                        User guestUser = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(GameServer.INSTANCE.getGameUniverse().getGuestUsername(), false);
-                        onlineUser.setUser(guestUser);
-                        onlineUser.setAuthenticated(true);
-                        onlineUser.getUser().setGuest(true);
-
-                        LogManager.LOGGER.info("(WS) Created guest user " +
-                                onlineUser.getUser().getUsername() + session.getRemoteAddress().getAddress());
-
-                        try {
-                            session.getRemote().sendString(AUTH_OK_MESSAGE);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-        } else {
-
+        //Shouldn't happen
+        if (onlineUser == null) {
             LogManager.LOGGER.severe("(WS) FIXME: SocketServer:onMessage");
+            return;
         }
+
+        //Authenticated user
+        if (onlineUser.isAuthenticated()) {
+            messageDispatcher.dispatch(onlineUser, message);
+            return;
+        }
+
+        //Handle auth request
+        if (message.length() == AUTH_TOKEN_LEN) {
+            LogManager.LOGGER.info("(WS) Received message from unauthenticated user " + session.getRemoteAddress().getAddress());
+
+            User user = GameServer.INSTANCE.getUserManager().validateAuthToken(message);
+
+            if (user != null) {
+                doPostAuthUser(session, onlineUser, user);
+            } else if (this.guestPolicy != GuestPolicy.BLOCK) {
+                doPostAuthGuest(session, onlineUser);
+            } else {
+                LogManager.LOGGER.info("(WS) Blocked guest user " + session.getRemoteAddress().getAddress());
+                kickOnlineUser(session, onlineUser);
+            }
+        }
+
+        //Ignore other cases
+    }
+
+    private void kickOnlineUser(Session session, OnlineUser onlineUser) {
+        sendString(session, FORBIDDEN_MESSAGE);
+        session.close();
+    }
+
+    private void doPostAuthGuest(Session session, OnlineUser onlineUser) {
+        User guestUser = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(GameServer.INSTANCE.getGameUniverse().getGuestUsername(), false);
+        onlineUser.setUser(guestUser);
+        onlineUser.setAuthenticated(true);
+        onlineUser.getUser().setGuest(true);
+
+        LogManager.LOGGER.info("(WS) Created guest user " +
+                onlineUser.getUser().getUsername() + session.getRemoteAddress().getAddress());
+
+        sendString(session, AUTH_OK_MESSAGE);
+    }
+
+
+    private void doPostAuthUser(Session session, OnlineUser onlineUser, User user) {
+        LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
+
+        onlineUser.setUser(user);
+        onlineUser.setAuthenticated(true);
+
+        sendString(session, AUTH_OK_MESSAGE);
     }
 
     /**
@@ -134,6 +149,14 @@ public class SocketServer {
         }
     }
 
+    private void sendString(Session session, String message) {
+        try {
+            session.getRemote().sendString(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sendJSONObject(OnlineUser user, JSONObject json) {
         try {
             user.getWebSocket().getRemote().sendString((json.toJSONString()));
@@ -158,7 +181,6 @@ public class SocketServer {
     private JSONArray intListToJSON(List<Integer> ints) {
 
         JSONArray jsonInts = new JSONArray();
-
         jsonInts.addAll(ints);
 
         return jsonInts;

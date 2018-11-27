@@ -134,6 +134,8 @@ class AuthListener implements MessageListener {
             }
             mar.client.requestUserInfo();
 
+        } else if (message.m == "forbidden") {
+            alert("Authentication failed. Guest accounts are blocked on this server")
         } else {
             alert("Authentication failed. Please make sure you are logged in and reload the page.");
         }
@@ -343,7 +345,6 @@ class GameClient {
         this.socket.send(JSON.stringify(json));
     }
 
-
     /**
      * Get server info from game website
      */
@@ -364,7 +365,7 @@ class GameClient {
                     console.log("[MAR] Received server info " + xhr.responseText);
                 }
 
-                setTimeout(self.connectToGameServer(JSON.parse(xhr.responseText)), 100);
+                setTimeout(() => self.connectToGameServer(JSON.parse(xhr.responseText)), 100);
             }
         };
         xhr.send(null);

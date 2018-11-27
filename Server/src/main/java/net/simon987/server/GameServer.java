@@ -160,8 +160,6 @@ public class GameServer implements Runnable {
             uTime = System.currentTimeMillis() - startTime;
             waitTime = config.getInt("tick_length") - uTime;
 
-//            LogManager.LOGGER.info("Wait time : " + waitTime + "ms | Update time: " + uTime + "ms | " + (int) (((double) uTime / waitTime) * 100) + "% load");
-
             try {
                 if (waitTime >= 0) {
                     Thread.sleep(waitTime);
