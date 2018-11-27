@@ -84,14 +84,14 @@ public class SocketServer {
                 doPostAuthGuest(session, onlineUser);
             } else {
                 LogManager.LOGGER.info("(WS) Blocked guest user " + session.getRemoteAddress().getAddress());
-                kickOnlineUser(session, onlineUser);
+                kickOnlineUser(session);
             }
         }
 
         //Ignore other cases
     }
 
-    private void kickOnlineUser(Session session, OnlineUser onlineUser) {
+    private void kickOnlineUser(Session session) {
         sendString(session, FORBIDDEN_MESSAGE);
         session.close();
     }
@@ -107,7 +107,6 @@ public class SocketServer {
 
         sendString(session, AUTH_OK_MESSAGE);
     }
-
 
     private void doPostAuthUser(Session session, OnlineUser onlineUser, User user) {
         LogManager.LOGGER.info("(WS) User was successfully authenticated: " + user.getUsername());
