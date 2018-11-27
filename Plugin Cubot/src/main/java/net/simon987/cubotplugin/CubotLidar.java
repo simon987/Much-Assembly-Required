@@ -5,7 +5,6 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.pathfinding.Node;
 import net.simon987.server.game.pathfinding.Pathfinder;
-import net.simon987.server.logging.LogManager;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ public class CubotLidar extends CubotHardwareModule {
     private static final int LIDAR_GET_MAP = 3;
     private static final int LIDAR_GET_WORLD_POS = 4;
     private static final int LIDAR_GET_WORLD_SIZE = 5;
-
-    private static final int MEMORY_PATH_START = 0x0000;
 
     public CubotLidar(Cubot cubot) {
         super(cubot);
@@ -52,6 +49,7 @@ public class CubotLidar extends CubotHardwareModule {
                 break;
             case LIDAR_GET_PATH:
                 if (cubot.spendEnergy(50)) {
+                    int c = getCpu().getRegisterSet().getRegister("C").getValue();
                     int b = getCpu().getRegisterSet().getRegister("B").getValue();
                     int destX = getCpu().getRegisterSet().getRegister("X").getValue();
                     int destY = getCpu().getRegisterSet().getRegister("Y").getValue();
@@ -63,7 +61,7 @@ public class CubotLidar extends CubotHardwareModule {
                     //Write to memory
                     Memory mem = getCpu().getMemory();
 
-                    int counter = MEMORY_PATH_START;
+                    int counter = c;
 
                     if (nodes != null) {
 
@@ -71,7 +69,6 @@ public class CubotLidar extends CubotHardwareModule {
 
                         for (Node n : nodes) {
                             //Store the path as a sequence of directions
-
                             if (lastNode == null) {
                                 lastNode = n;
                                 continue;
@@ -100,8 +97,6 @@ public class CubotLidar extends CubotHardwareModule {
                         //Indicate invalid path 0xFFFF
                         mem.set(counter, 0xFFFF);
                     }
-
-                    LogManager.LOGGER.fine("DEBUG: path to" + destX + "," + destY);
                 }
 
                 break;
@@ -118,7 +113,6 @@ public class CubotLidar extends CubotHardwareModule {
                         }
                     }
                 }
-
                 break;
 
             case LIDAR_GET_WORLD_SIZE:

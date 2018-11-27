@@ -540,9 +540,10 @@ public class Assembler {
         }
 
         //Check operands and encode instruction
+        final int beginIndex = line.indexOf(mnemonic) + mnemonic.length();
         if (line.contains(",")) {
             //2 operands
-            String strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length(), line.indexOf(','));
+            String strO1 = line.substring(beginIndex, line.indexOf(','));
             String strO2 = line.substring(line.indexOf(','));
 
             Operand o1, o2;
@@ -562,7 +563,7 @@ public class Assembler {
         } else if (tokens.length > 1) {
             //1 operand
 
-            String strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length());
+            String strO1 = line.substring(beginIndex);
 
             Operand o1;
             if (assumeLabels) {
@@ -583,6 +584,5 @@ public class Assembler {
         }
 
         return out.toByteArray();
-
     }
 }
