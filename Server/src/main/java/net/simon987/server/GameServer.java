@@ -198,11 +198,9 @@ public class GameServer implements Runnable {
         }
 
         //Process each worlds
-        int updatedWorlds = 0;
         for (World world : gameUniverse.getWorlds()) {
             if (world.shouldUpdate()) {
                 world.update();
-                updatedWorlds++;
             }
         }
 
@@ -212,9 +210,6 @@ public class GameServer implements Runnable {
         }
 
         socketServer.tick();
-
-//        LogManager.LOGGER.info("Processed " + gameUniverse.getWorldCount() + " worlds (" + updatedWorlds +
-//                " updated)");
     }
 
     void load() {
