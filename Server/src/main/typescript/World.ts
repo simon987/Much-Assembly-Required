@@ -16,7 +16,8 @@ enum TileType {
     COPPER,
     VAULT_FLOOR,
     VAULT_WALL,
-    FLUID
+    FLUID,
+    MAGNETIC
 }
 
 class Tile extends Phaser.Plugin.Isometric.IsoSprite {
@@ -73,6 +74,8 @@ class Tile extends Phaser.Plugin.Isometric.IsoSprite {
                 return new VoidTile(x, y);
             case TileType.FLUID:
                 return new FluidTile(x, y);
+            case TileType.MAGNETIC:
+                return new MagneticTile(x, y);
             case TileType.PLAIN:
             default:
                 return new PlainTile(x, y);
@@ -164,6 +167,7 @@ class VaultFloorTile extends Tile {
 class VoidTile extends Tile {
 
     public onHover() {
+        //don't do animation
         mar.tileIndicator.tileX = this.tileX;
         mar.tileIndicator.tileY = this.tileY;
         mar.tileIndicator.tileType = this.tileType;
@@ -185,14 +189,34 @@ class FluidTile extends Tile {
     constructor(x: number, y: number) {
         super(x, y, config.plainSprite, 0);
 
-        this.baseTint = 0x0ACED6;
+        this.baseTint = config.fluidTint;
         this.tint = this.baseTint;
         this.alpha = 0.6;
         this.baseZ = -15;
         this.isoZ = this.baseZ;
 
-
         this.tileType = "fluid";
+    }
+}
+
+class MagneticTile extends Tile {
+
+    public onHover() {
+        mar.game.add.tween(this).to({isoZ: this.baseZ + 30}, 200, Phaser.Easing.Quadratic.InOut, true);
+
+        mar.tileIndicator.tileX = this.tileX;
+        mar.tileIndicator.tileY = this.tileY;
+        mar.tileIndicator.tileType = this.tileType;
+    }
+
+    constructor(x: number, y: number) {
+        super(x, y, config.magneticSprite, 0);
+
+        this.baseTint = 0xFFFFFF;
+        this.tint = this.baseTint;
+
+        this.setText("Magnetic", config.textIron);
+        this.tileType = "Magnetic tile";
     }
 }
 

@@ -269,6 +269,7 @@ var config = {
     wallTint: 0xDDDDDD,
     vaultWallTint: 0x3F2D2A,
     vaultFloorTint: 0x2B1E1C,
+    fluidTint: 0x0ACED6,
     oreTint: 0xF3F3F3,
     cubotHoverTint: 0x00FF00,
     cubotTint: 0xFFFFFF,
@@ -285,6 +286,7 @@ var config = {
     hologramStroke: "#12FFB0",
     copperFill: "#C87D38",
     plainSprite: "tiles/tile",
+    magneticSprite: "tiles/magneticTile",
     wallSprite: "tiles/bigTile",
     wallSprite2: "tiles/bigTile2",
     walkDuration: 800,
@@ -1436,6 +1438,7 @@ var TileType;
     TileType[TileType["VAULT_FLOOR"] = 4] = "VAULT_FLOOR";
     TileType[TileType["VAULT_WALL"] = 5] = "VAULT_WALL";
     TileType[TileType["FLUID"] = 6] = "FLUID";
+    TileType[TileType["MAGNETIC"] = 7] = "MAGNETIC";
 })(TileType || (TileType = {}));
 var Tile = (function (_super) {
     __extends(Tile, _super);
@@ -1463,6 +1466,8 @@ var Tile = (function (_super) {
                 return new VoidTile(x, y);
             case TileType.FLUID:
                 return new FluidTile(x, y);
+            case TileType.MAGNETIC:
+                return new MagneticTile(x, y);
             case TileType.PLAIN:
             default:
                 return new PlainTile(x, y);
@@ -1562,7 +1567,7 @@ var FluidTile = (function (_super) {
     __extends(FluidTile, _super);
     function FluidTile(x, y) {
         var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = 0x0ACED6;
+        _this.baseTint = config.fluidTint;
         _this.tint = _this.baseTint;
         _this.alpha = 0.6;
         _this.baseZ = -15;
@@ -1571,6 +1576,26 @@ var FluidTile = (function (_super) {
         return _this;
     }
     return FluidTile;
+}(Tile));
+var MagneticTile = (function (_super) {
+    __extends(MagneticTile, _super);
+
+    function MagneticTile(x, y) {
+        var _this = _super.call(this, x, y, config.magneticSprite, 0) || this;
+        _this.baseTint = 0xFFFFFF;
+        _this.tint = _this.baseTint;
+        _this.setText("Magnetic", config.textIron);
+        _this.tileType = "Magnetic tile";
+        return _this;
+    }
+
+    MagneticTile.prototype.onHover = function () {
+        mar.game.add.tween(this).to({isoZ: this.baseZ + 30}, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.tileIndicator.tileX = this.tileX;
+        mar.tileIndicator.tileY = this.tileY;
+        mar.tileIndicator.tileType = this.tileType;
+    };
+    return MagneticTile;
 }(Tile));
 var IronTile = (function (_super) {
     __extends(IronTile, _super);

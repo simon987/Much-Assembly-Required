@@ -11,6 +11,7 @@ let config = {
     wallTint: 0xDDDDDD,
     vaultWallTint: 0x3F2D2A,
     vaultFloorTint: 0x2B1E1C,
+    fluidTint: 0x0ACED6,
     oreTint: 0xF3F3F3,
     cubotHoverTint: 0x00FF00,
     cubotTint: 0xFFFFFF,
@@ -27,6 +28,7 @@ let config = {
     hologramStroke: "#12FFB0",
     copperFill: "#C87D38",
     plainSprite: "tiles/tile",
+    magneticSprite: "tiles/magneticTile",
     wallSprite: "tiles/bigTile",
     wallSprite2: "tiles/bigTile2",
     walkDuration: 800, //walk animation duration in ms
