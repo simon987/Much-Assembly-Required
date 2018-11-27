@@ -126,7 +126,7 @@ public class TileMap implements JSONSerialisable, MongoSerializable {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                terrain.add(tiles[y][x].getId());
+                terrain.add(tiles[x][y].getId());
             }
         }
 

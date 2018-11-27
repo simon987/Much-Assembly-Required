@@ -17,7 +17,7 @@ public class Portal extends Structure implements Enterable {
      */
     private Location destination;
 
-    public static final int MAP_INFO = 0x0020;
+    public static final int MAP_INFO = 0x0801;
 
     public Portal() {
         super(1, 1);

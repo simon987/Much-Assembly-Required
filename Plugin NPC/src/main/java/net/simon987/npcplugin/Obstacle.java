@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
  */
 public class Obstacle extends GameObject implements Attackable {
 
-    public static final int MAP_INFO = 0x0400;
+    public static final int MAP_INFO = 0x0701;
 
     /**
      * Style of the obstacle. Will tell the client which sprite to display

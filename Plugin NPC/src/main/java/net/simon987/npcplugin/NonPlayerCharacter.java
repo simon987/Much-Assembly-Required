@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public abstract class NonPlayerCharacter extends GameObject implements Updatable, Attackable {
 
-    private static final int MAP_INFO = 0x0040;
+    private static final char MAP_INFO = 0x0501;
 
     /**
      * Maximum distance to travel from its factory, in Worlds

@@ -8,7 +8,7 @@ import org.json.simple.JSONObject;
 
 public class BiomassBlob extends GameObject implements InventoryHolder {
 
-    private static final char MAP_INFO = 0x4000;
+    private static final char MAP_INFO = 0x0101;
 
     /**
      * Yield of the blob, in biomass units

@@ -292,7 +292,7 @@ class World {
         for (let x = 0; x < size; x++) {
             for (let y = 0; y < size; y++) {
 
-                let tile: Tile = Tile.createTile(terrain[y * size + x], x, y);
+                let tile: Tile = Tile.createTile(terrain[x * size + y], x, y);
 
                 this.tiles.push(tile);
                 mar.isoGroup.add(tile);

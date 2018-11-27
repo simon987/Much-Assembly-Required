@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class RadioTower extends Structure implements MessageReceiver, Updatable {
 
-    private static final int MAP_INFO = 0x1000;
+    private static final int MAP_INFO = 0x0901;
 
     public static final int MAX_RANGE = GameServer.INSTANCE.getConfig().getInt("radio_tower_range");
 

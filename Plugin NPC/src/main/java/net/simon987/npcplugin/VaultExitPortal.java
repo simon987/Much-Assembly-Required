@@ -29,9 +29,7 @@ public class VaultExitPortal extends Portal {
     @Override
     public boolean enter(GameObject object) {
 
-
         //TODO: Trigger vault complete event instead
-
         return super.enter(object);
     }
 }

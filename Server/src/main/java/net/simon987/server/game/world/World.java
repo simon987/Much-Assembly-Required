@@ -25,11 +25,6 @@ public class World implements MongoSerializable {
      */
     private int worldSize;
 
-    //TODO: This info should be pulled from the Tile class
-    private static final char INFO_BLOCKED = 0x8000;
-    private static final char INFO_IRON = 0x0200;
-    private static final char INFO_COPPER = 0x0100;
-
     private int x;
     private int y;
 
@@ -108,20 +103,6 @@ public class World implements MongoSerializable {
         for (GameObject obj : gameObjects.values()) {
 
             if (obj.getClass().equals(clazz)) {
-                matchingObjects.add(obj);
-            }
-        }
-
-        return matchingObjects;
-    }
-
-
-    public ArrayList<GameObject> findObjects(int mapInfo) {
-
-        ArrayList<GameObject> matchingObjects = new ArrayList<>(2);
-
-        for (GameObject obj : gameObjects.values()) {
-            if ((obj.getMapInfo() & mapInfo) == mapInfo) {
                 matchingObjects.add(obj);
             }
         }
@@ -209,11 +190,13 @@ public class World implements MongoSerializable {
     @Override
     public String toString() {
 
-        StringBuilder str = new StringBuilder("World (" + x + ", " + y + ")\n");
+        StringBuilder str = new StringBuilder(String.format("World (%04X, %04X)\n", x, y));
 
-        for (int x = 0; x < worldSize; x++) {
-            for (int y = 0; y < worldSize; y++) {
-                str.append(tileMap.getTileIdAt(x, y)).append(" ");
+        char[][] mapInfo = getMapInfo();
+
+        for (int y = 0; y < worldSize; y++) {
+            for (int x = 0; x < worldSize; x++) {
+                str.append(String.format("%04X ", (int) mapInfo[x][y]));
             }
             str.append("\n");
         }
@@ -251,40 +234,30 @@ public class World implements MongoSerializable {
      * Get a binary representation of the map as an array of 16-bit bit fields, one word for each
      * tile.
      * <p>
-     * todo Performance cache this?
+     * Each tile is represented as such: <code>OOOOOOOOTTTTTTTB</code> where O is the object,
+     * T the tile and B if the tile is blocked or not
      */
     public char[][] getMapInfo() {
 
         char[][] mapInfo = new char[worldSize][worldSize];
 
         //Tile
-        for (int y = 0; y < worldSize; y++) {
-            for (int x = 0; x < worldSize; x++) {
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
+                Tile tile = tileMap.getTileAt(x, y);
 
-                if (tileMap.getTileIdAt(x, y) == TilePlain.ID) {
-                    mapInfo[x][y] = 0;
-
-                } else if (tileMap.getTileAt(x, y).isBlocked()) {
-                    mapInfo[x][y] = INFO_BLOCKED;
-
-                    //TODO: Tiles should have their .getMapInfo() method
-                } else if (tileMap.getTileIdAt(x, y) == TileCopper.ID) {
-                    mapInfo[x][y] = INFO_COPPER;
-
-                } else if (tileMap.getTileIdAt(x, y) == TileIron.ID) {
-                    mapInfo[x][y] = INFO_IRON;
-                }
+                mapInfo[x][y] = (char) (tile.isBlocked() ? 1 : 0);
+                mapInfo[x][y] |= (char) (tile.getId() << 1);
             }
         }
 
-        //Objects
         for (GameObject obj : gameObjects.values()) {
+            //Overwrite, only the last object on a tile is considered but the blocked bit is kept
+            mapInfo[obj.getX()][obj.getY()] &= 0x00FE;
             mapInfo[obj.getX()][obj.getY()] |= obj.getMapInfo();
-
         }
 
         return mapInfo;
-
     }
 
     /**
@@ -411,31 +384,6 @@ public class World implements MongoSerializable {
 
         return neighbouringWorlds;
     }
-
-    //Unused
-//    public ArrayList<World> getNeighbouringExistingWorlds(){
-//        ArrayList<World> neighbouringWorlds = new ArrayList<>();
-//
-//        if (universe == null){
-//            return neighbouringWorlds;
-//        }
-//
-//        for (int dx=-1; dx<=+1; dx+=2){
-//            World nw = universe.getWorld(x+dx,y,false);
-//            if (nw != null){
-//                neighbouringWorlds.add(nw);
-//            }
-//        }
-//        for (int dy=-1; dy<=+1; dy+=2){
-//            World nw = universe.getWorld(x,y+dy,false);
-//            if (nw != null){
-//                neighbouringWorlds.add(nw);
-//            }
-//        }
-//
-//        return neighbouringWorlds;
-//    }
-
 
     public boolean canUnload(){
         return updatable==0;

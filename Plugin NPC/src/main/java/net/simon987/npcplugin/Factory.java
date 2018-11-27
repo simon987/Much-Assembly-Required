@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Factory extends Structure implements Updatable {
 
-    private static final int MAP_INFO = 0x0200;
+    private static final int MAP_INFO = 0x0401;
 
     /**
      * Maximum number of NonPlayerCharacters assigned to this Factory

@@ -1640,7 +1640,7 @@ var World = (function () {
         }
         for (var x = 0; x < size; x++) {
             for (var y = 0; y < size; y++) {
-                var tile = Tile.createTile(terrain[y * size + x], x, y);
+                var tile = Tile.createTile(terrain[x * size + y], x, y);
                 this.tiles.push(tile);
                 mar.isoGroup.add(tile);
             }

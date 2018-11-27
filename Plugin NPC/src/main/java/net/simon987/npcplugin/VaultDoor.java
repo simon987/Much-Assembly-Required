@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class VaultDoor extends Structure implements MessageReceiver, Enterable, Updatable {
 
-    private static final int MAP_INFO = 0x0800;
+    private static final int MAP_INFO = 0x0B00;
 
     /**
      * Password to open the vault door

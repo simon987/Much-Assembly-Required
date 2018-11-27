@@ -4,11 +4,13 @@ import net.simon987.server.game.item.Item;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ItemsContainer extends GameObject implements InventoryHolder {
 
-    private static final char MAP_INFO = 0x0240;
+    private static final char MAP_INFO = 0x0601;
 
     private final List<Item> items;
     private int containerCapacity;

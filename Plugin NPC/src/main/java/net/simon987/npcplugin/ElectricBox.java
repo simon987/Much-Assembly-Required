@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class ElectricBox extends GameObject implements Updatable, Attackable {
 
+    private static final char MAP_INFO = 0x0301;
     /**
      * Hit points
      */
@@ -98,7 +99,7 @@ public class ElectricBox extends GameObject implements Updatable, Attackable {
 
     @Override
     public char getMapInfo() {
-        return Obstacle.MAP_INFO;
+        return MAP_INFO;
     }
 
     /**

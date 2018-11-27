@@ -21,8 +21,7 @@ import java.util.*;
 public class Cubot extends GameObject implements Updatable, ControllableUnit, MessageReceiver,
         Attackable, Rechargeable, HardwareHost {
 
-    private static final char MAP_INFO = 0x0080;
-
+    private static final char MAP_INFO = 0x0200;
 
     /**
      * Hit points
