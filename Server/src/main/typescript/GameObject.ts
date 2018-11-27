@@ -326,7 +326,8 @@ class Cubot extends GameObject {
         }
 
         this.updateDirection();
-        this.updateHologram(json.holoMode, json.holoC, json.holo, json.holoStr);
+        let holoHw = json["net.simon987.cubotplugin.CubotHologram"];
+        this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
 
         //Update shield
         this.setShield(this.shield > 0)

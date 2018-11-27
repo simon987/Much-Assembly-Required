@@ -1023,7 +1023,8 @@ var Cubot = (function (_super) {
             this.makeLaserAttack();
         }
         this.updateDirection();
-        this.updateHologram(json.holoMode, json.holoC, json.holo, json.holoStr);
+        var holoHw = json["net.simon987.cubotplugin.CubotHologram"];
+        this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
         this.setShield(this.shield > 0);
     };
     Cubot.prototype.updateHologram = function (holoMode, holoColor, holoValue, holoStr) {
@@ -1579,7 +1580,6 @@ var FluidTile = (function (_super) {
 }(Tile));
 var MagneticTile = (function (_super) {
     __extends(MagneticTile, _super);
-
     function MagneticTile(x, y) {
         var _this = _super.call(this, x, y, config.magneticSprite, 0) || this;
         _this.baseTint = 0xFFFFFF;
@@ -1588,7 +1588,6 @@ var MagneticTile = (function (_super) {
         _this.tileType = "Magnetic tile";
         return _this;
     }
-
     MagneticTile.prototype.onHover = function () {
         mar.game.add.tween(this).to({isoZ: this.baseZ + 30}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.tileIndicator.tileX = this.tileX;

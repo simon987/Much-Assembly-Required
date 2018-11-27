@@ -15,39 +15,14 @@ import org.bson.Document;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class Cubot extends GameObject implements Updatable, ControllableUnit, MessageReceiver,
         Attackable, Rechargeable, HardwareHost {
 
     private static final char MAP_INFO = 0x0080;
 
-    /**
-     * Hologram value that is displayed
-     * <br>TODO: Move to CubotHologram class
-     */
-    private int hologram = 0;
-    /**
-     * Hologram string that is displayed
-     * <br>TODO: Move to CubotHologram class
-     */
-    private String hologramString = "";
-    /**
-     * Hologram mode that was set during this tick
-     * <br>TODO: Move to CubotHologram class
-     */
-    private HologramMode hologramMode = HologramMode.CLEARED;
-    /**
-     * Hologram mode at the end of the last tick
-     * <br>TODO: Move to CubotHologram class
-     */
-    private HologramMode lastHologramMode = HologramMode.CLEARED;
-    /**
-     * Hologram color code. Format is handled by the client
-     * <br>TODO: Move to CubotHologram class
-     */
-    private int hologramColor = 0;
 
     /**
      * Hit points
@@ -148,29 +123,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
      */
     private CPU cpu;
 
-    /**
-     * Display mode of the hologram hardware
-     * <br>TODO: move this inside CubotHologram class
-     */
-    public enum HologramMode {
-        /**
-         * Display nothing
-         */
-        CLEARED,
-        /**
-         * Display value as hexadecimal in format 0x0000
-         */
-        HEX,
-        /**
-         * Display string
-         */
-        STRING,
-        /**
-         * Display value as decimal
-         */
-        DEC
-    }
-
     public enum ConsoleMode {
         /**
          * Used by the ComPort hardware - clears the console screen (client-side)
@@ -247,8 +199,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         currentAction = Action.IDLE;
 
         //Same principle for hologram
-        lastHologramMode = hologramMode;
-        hologramMode = HologramMode.CLEARED;
 
         //And the console
         lastConsoleMode = consoleMode;
@@ -260,6 +210,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         //And the status..
         lastStatus = currentStatus;
         currentStatus = 0;
+
+        for (HardwareModule module : hardwareAddresses.values()) {
+            module.update();
+        }
     }
 
     @Override
@@ -272,14 +226,17 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         json.put("hp", hp);
         json.put("shield", shield);
         json.put("action", lastAction.ordinal());
-        json.put("holo", hologram);
-        json.put("holoStr", hologramString);
-        json.put("holoMode", lastHologramMode.ordinal());
-        json.put("holoC", hologramColor);
         json.put("energy", energy);
 
         if (parent != null) {
             json.put("parent", parent.getUsername()); //Only used client-side for now
+        }
+
+        for (HardwareModule module : hardwareAddresses.values()) {
+            JSONObject hwJson = module.jsonSerialise();
+            if (hwJson != null) {
+                json.put(module.getClass().getName(), hwJson);
+            }
         }
 
         return json;
@@ -293,10 +250,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         dbObject.put("hp", hp);
         dbObject.put("shield", shield);
         dbObject.put("action", lastAction.ordinal());
-        dbObject.put("holo", hologram);
-        dbObject.put("holoStr", hologramString);
-        dbObject.put("holoMode", lastHologramMode.ordinal());
-        dbObject.put("holoC", hologramColor);
         dbObject.put("energy", energy);
 
         if (parent != null) {
@@ -331,17 +284,17 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         clearKeyboardBuffer();
         consoleMessagesBuffer.clear();
         lastConsoleMessagesBuffer.clear();
-        hologramColor = 0;
         currentStatus = 0;
         lastStatus = 0;
         addStatus(CubotStatus.FACTORY_NEW);
+
+        for (HardwareModule module : hardwareAddresses.values()) {
+            module.reset();
+        }
     }
 
     @Override
     public boolean onDeadCallback() {
-        //TODO make death event instead
-//        LogManager.LOGGER.info(getParent().getUsername() + "'s Cubot died");
-
         reset();
 
         //Teleport to spawn point
@@ -399,15 +352,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
 
     public Action getCurrentAction() {
         return currentAction;
-    }
-
-    public void setHologram(int hologram) {
-        this.hologram = hologram;
-    }
-
-
-    public void setHologramString(String hologramString) {
-        this.hologramString = hologramString;
     }
 
     public int getEnergy() {
@@ -494,10 +438,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         return false;
     }
 
-    public void setHologramMode(HologramMode hologramMode) {
-        this.hologramMode = hologramMode;
-    }
-
     @Override
     public void setAction(Action action) {
         currentAction = action;
@@ -525,10 +465,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
 
     public void setConsoleMode(ConsoleMode consoleMode) {
         this.consoleMode = consoleMode;
-    }
-
-    public void setHologramColor(int hologramColor) {
-        this.hologramColor = hologramColor;
     }
 
     public void addStatus(CubotStatus status) {
