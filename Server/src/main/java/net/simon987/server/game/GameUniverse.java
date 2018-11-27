@@ -174,7 +174,7 @@ public class GameUniverse {
         return users.get(username);
     }
 
-    public User getOrCreateUser(String username, boolean makeControlledUnit) {
+    public User getOrCreateUser(String username, boolean makeControllableUnit) {
         User user = getUser(username);
 
         if (user != null) {
@@ -184,9 +184,8 @@ public class GameUniverse {
             LogManager.LOGGER.info("Creating new User: " + username);
 
             try {
-                if (makeControlledUnit) {
+                if (makeControllableUnit) {
                     user = new User();
-
 
                 } else {
                     user = new User(null);

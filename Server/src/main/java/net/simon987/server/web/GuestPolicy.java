@@ -9,8 +9,4 @@ public enum GuestPolicy {
      * Block guests completely
      */
     BLOCK,
-    /**
-     * Allow guests, can have Cubot, but it is not saved in database
-     */
-    TEMPORARY
 }
