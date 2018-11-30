@@ -19,6 +19,6 @@ public class MiscHWPlugin extends ServerPlugin {
         registry.registerHardware(RandomNumberGenerator.class);
         registry.registerHardware(Clock.class);
 
-        LogManager.LOGGER.info("Initialised Misc Hardware Plugin");
+        LogManager.LOGGER.info("(Mist HW Plugin) Initialised Misc Hardware Plugin");
     }
 }

@@ -10,6 +10,6 @@ public class RadioactiveCloudPlugin extends ServerPlugin {
     @Override
     public void init(ServerConfiguration config, GameRegistry registry) {
 
-        LogManager.LOGGER.info("Initialised Radioactive cloud plugin.");
+        LogManager.LOGGER.info("(Radioactive cloud Plugin) Initialised Radioactive cloud plugin.");
     }
 }

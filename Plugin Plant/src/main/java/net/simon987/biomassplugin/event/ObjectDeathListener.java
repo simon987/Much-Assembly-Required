@@ -19,7 +19,6 @@ public class ObjectDeathListener implements GameEventListener {
 
     public ObjectDeathListener(ServerConfiguration config) {
         biomassDropCount = config.getInt("harvester_biomass_drop_count");
-
     }
 
     @Override

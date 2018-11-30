@@ -34,6 +34,6 @@ public class CubotPlugin extends ServerPlugin {
         registry.registerHardware(CubotShield.class);
         registry.registerHardware(CubotCore.class);
 
-        LogManager.LOGGER.info("Initialised Cubot plugin");
+        LogManager.LOGGER.info("(Cubot Plugin) Initialised Cubot plugin");
     }
 }

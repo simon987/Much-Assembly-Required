@@ -44,7 +44,7 @@ public class NpcPlugin extends ServerPlugin {
 
         radioTowers = new ArrayList<>(32);
 
-        LogManager.LOGGER.info("Initialised NPC plugin");
+        LogManager.LOGGER.info("(NPC Plugin) Initialised NPC plugin");
     }
 
     public static ArrayList<RadioTower> getRadioTowers() {

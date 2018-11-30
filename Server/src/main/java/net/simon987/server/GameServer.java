@@ -24,7 +24,6 @@ import net.simon987.server.user.UserStatsHelper;
 import net.simon987.server.websocket.SocketServer;
 import org.bson.Document;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class GameServer implements Runnable {
@@ -68,8 +67,8 @@ public class GameServer implements Runnable {
 
         gameUniverse = new GameUniverse(config);
         gameUniverse.setMongo(mongo);
-        pluginManager = new PluginManager();
         gameRegistry = new GameRegistry();
+        pluginManager = new PluginManager(config, gameRegistry);
 
         maxExecutionTime = config.getInt("user_timeout");
 
@@ -84,21 +83,8 @@ public class GameServer implements Runnable {
             config.setString("secret_key", secretKey);
         }
 
-        //Load all plugins in plugins folder, if it doesn't exist, create it
-        File pluginDir = new File("plugins/");
-        File[] pluginDirListing = pluginDir.listFiles();
-
-        if (pluginDirListing != null) {
-            for (File pluginFile : pluginDirListing) {
-
-                if (pluginFile.getName().endsWith(".jar")) {
-                    pluginManager.load(pluginFile, config, gameRegistry);
-                }
-            }
-        } else {
-            if (!pluginDir.mkdir()) {
-                LogManager.LOGGER.severe("Couldn't create plugin directory");
-            }
+        if (!pluginManager.loadInFolder("plugins/")) {
+            System.exit(-1);
         }
 
         eventDispatcher = new GameEventDispatcher(pluginManager);

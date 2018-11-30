@@ -14,14 +14,10 @@ public class BiomassPlugin extends ServerPlugin {
 
     @Override
     public void init(ServerConfiguration config, GameRegistry registry) {
+
         listeners.add(new WorldCreationListener());
         listeners.add(new WorldUpdateListener(config));
-
-        if (registry.isGameObjectRegistered("net.simon987.npcplugin.HarvesterNPC")) {
-            listeners.add(new ObjectDeathListener(config));
-        } else {
-            LogManager.LOGGER.severe("(BiomassPlugin) NPC plugin is not loaded so biomass will not spawn on death of HarvesterNPC");
-        }
+        listeners.add(new ObjectDeathListener(config));
 
         registry.registerGameObject(BiomassBlob.class);
         registry.registerItem(ItemBiomass.ID, ItemBiomass.class);
