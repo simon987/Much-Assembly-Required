@@ -140,7 +140,7 @@ public class Assembler {
             try {
 
                 //Special thanks to https://stackoverflow.com/questions/1757065/
-                String[] values = line.substring(2, line.length()).split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                String[] values = line.substring(2).split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
                 for (String value : values) {
 

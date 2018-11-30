@@ -4,6 +4,8 @@ OPERAND_MEM_IMM = 1;
 OPERAND_MEM_REG = 2;
 OPERAND_IMM = 3;
 
+MALFORMED_UTF16_RE = /\\u[0-9a-fA-F]{0,3}([^0-9a-fA-F]|$)/;
+
 //Remove default syntax checker
 editor = ace.edit("editor");
 editor.session.setOption("useWorker", false);
@@ -117,12 +119,10 @@ function checkForORGInstruction(line, result, currentLine) {
 function parseDWInstruction(line, result, currentLine) {
     line = line.trim();
 
-
     if (line.substr(0, 2).toLowerCase() === "dw") {
 
 
         var values = line.substr(2, line.length).split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/, -1);
-
 
         for (var i = 0; i < values.length; i++) {
 
@@ -137,6 +137,20 @@ function parseDWInstruction(line, result, currentLine) {
 
             } else if (values[i].startsWith("\"") && values[i].endsWith("\"")) {
                 //Handle string
+                var strText = values[i].substr(1, values[i].length - 2);
+
+                if (strText.match(MALFORMED_UTF16_RE) != null) {
+
+                    result.annotations.push({
+                        row: currentLine,
+                        column: 0,
+                        text: "Malformed UTF-16 escape sequence",
+                        type: "error"
+                    });
+                    return true;
+                }
+
+                //TODO: verify other escape sequences
 
             } else if (getOperandType(values[i], result) === OPERAND_IMM) {
 

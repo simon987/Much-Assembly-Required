@@ -129,7 +129,6 @@ public class Factory extends Structure implements Updatable {
         return dbObject;
     }
 
-
     ArrayList<NonPlayerCharacter> getNpcs() {
         return npcs;
     }
