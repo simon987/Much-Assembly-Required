@@ -10,9 +10,10 @@
         <version>1.4a</version>
     </parent>
 
-    <groupId>net.simon987.pluginplant</groupId>
-    <artifactId>plugin-biomassBlob</artifactId>
+    <groupId>net.simon987.plugincontruction</groupId>
+    <artifactId>plugin-construction</artifactId>
     <version>1.4a</version>
+
 
     <dependencies>
         <dependency>
