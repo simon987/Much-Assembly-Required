@@ -55,9 +55,6 @@ public class CPU implements MongoSerializable {
      */
     private HardwareHost hardwareHost;
 
-
-    private ServerConfiguration config;
-
     private int registerSetSize;
 
     private static final char EXECUTION_COST_ADDR = 0x0050;
@@ -67,7 +64,6 @@ public class CPU implements MongoSerializable {
      * Creates a new CPU
      */
     public CPU(ServerConfiguration config, ControllableUnit unit) throws CancelledException {
-        this.config = config;
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
         codeSectionOffset = config.getInt("org_offset");

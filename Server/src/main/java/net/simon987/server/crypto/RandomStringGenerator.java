@@ -1,9 +1,3 @@
-/**
- *
- * Based on the RandomString class by erickson:
- * https://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
- *
- */
 
 package net.simon987.server.crypto;
 
@@ -12,6 +6,10 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Based on the RandomString class by erickson:
+ * https://stackoverflow.com/questions/41107/how-to-generate-a-random-alpha-numeric-string
+ */
 public class RandomStringGenerator {
 
     /**
@@ -23,9 +21,9 @@ public class RandomStringGenerator {
         return new String(buf);
     }
 
-    static final String UPPER_ALPHA_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    static final String LOWER_ALPHA_CHARSET = UPPER_ALPHA_CHARSET.toLowerCase(Locale.ROOT);
-    static final String NUMERIC_CHARSET = "0123456789";
+    private static final String UPPER_ALPHA_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String LOWER_ALPHA_CHARSET = UPPER_ALPHA_CHARSET.toLowerCase(Locale.ROOT);
+    private static final String NUMERIC_CHARSET = "0123456789";
     static final String ALPHANUMERIC_CHARSET = UPPER_ALPHA_CHARSET + LOWER_ALPHA_CHARSET + NUMERIC_CHARSET;
 
     private final Random random;

@@ -3,7 +3,7 @@ package net.simon987.server.game.world;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.GameRegistry;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 import org.json.simple.JSONArray;
@@ -16,7 +16,7 @@ import java.util.Random;
 /**
  * A 2D map of Tile objects of size width*height
  */
-public class TileMap implements JSONSerialisable, MongoSerializable {
+public class TileMap implements JSONSerializable, MongoSerializable {
 
     /**
      * The map of tile

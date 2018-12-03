@@ -10,9 +10,6 @@ import net.simon987.server.assembly.Target;
  */
 public class PopInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 20;
 
     private CPU cpu;

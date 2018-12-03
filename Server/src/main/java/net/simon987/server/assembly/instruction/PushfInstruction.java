@@ -10,9 +10,6 @@ import net.simon987.server.assembly.Status;
  */
 public class PushfInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 45;
 
     private CPU cpu;

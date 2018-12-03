@@ -71,7 +71,7 @@ public class AssemblyResult {
      * @param currentLine   Line number of the section declaration
      * @throws DuplicateSectionException when a section is defined twice
      */
-    void defineSecton(Section section, int currentLine, int currentOffset) throws DuplicateSectionException {
+    void defineSection(Section section, int currentLine, int currentOffset) throws DuplicateSectionException {
 
         if (section == Section.TEXT) {
             //Code section

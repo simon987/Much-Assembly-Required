@@ -1,7 +1,6 @@
 package net.simon987.server.user;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.crypto.RandomStringGenerator;
@@ -29,10 +28,9 @@ public class UserManager {
 
         ArrayList<User> userList = new ArrayList<>();
 
-        MongoCursor<Document> cursor = userCollection.find().iterator();
-        while (cursor.hasNext()) {
+        for (Document document : userCollection.find()) {
             try {
-                userList.add(User.deserialize(cursor.next()));
+                userList.add(User.deserialize(document));
             } catch (CancelledException e) {
                 e.printStackTrace();
             }
@@ -143,7 +141,7 @@ public class UserManager {
 
     /**
      * Validate an access token sent by the client
-     * @param token 128-char accesss token
+     * @param token 128-char access token
      * @return username of the corresponding user, null if not found
      */
     public User validateAuthToken(String token) {

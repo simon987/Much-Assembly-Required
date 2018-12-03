@@ -17,10 +17,7 @@ public class CodeUploadHandler implements MessageHandler {
 
             LogManager.LOGGER.fine("(WS) Code upload from " + user.getUser().getUsername());
 
-            if (user.getUser().isGuest()) {
-                //Ignore
-
-            } else {
+            if (!user.getUser().isGuest()) {
                 //TODO Should we wait at the end of the tick to modify the CPU ?
                 user.getUser().setUserCode((String) json.get("code"));
 

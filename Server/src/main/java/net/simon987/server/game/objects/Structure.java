@@ -15,7 +15,7 @@ public abstract class Structure extends GameObject {
     private int width;
 
     /**
-     * Lenght of the structure in tiles for the y axis
+     * Length of the structure in tiles for the y axis
      */
     private int height;
 

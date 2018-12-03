@@ -82,6 +82,7 @@ public class GameUniverse {
      *
      * @return World, null if not found and not created. 
      */
+    @SuppressWarnings("SuspiciousNameCombination")
     public World getWorld(int x, int y, boolean createNew, String dimension) {
 
         // Wrapping coordinates around cyclically
@@ -252,12 +253,12 @@ public class GameUniverse {
         int i = 1;
 
         while (i < 50000) {
-            if (getUser("guest" + String.valueOf(i)) != null) {
+            if (getUser("guest" + i) != null) {
                 i++;
                 continue;
             }
 
-            return "guest" + String.valueOf(i);
+            return "guest" + i;
         }
 
         return null;

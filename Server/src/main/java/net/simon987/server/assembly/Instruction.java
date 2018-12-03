@@ -203,8 +203,6 @@ public abstract class Instruction {
 
         //Destination bits are left blank
 
-        //System.out.println("o1: " + o1.getType());
-
         for (byte b : code.bytes()) {
             out.write(b);
         }

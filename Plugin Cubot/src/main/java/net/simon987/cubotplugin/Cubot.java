@@ -569,7 +569,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     public int hardwareQuery(int address) {
         HardwareModule hardware = hardwareAddresses.get(address);
 
-
         if (hardware != null) {
             return hardware.getId();
         } else {

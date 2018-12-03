@@ -2,7 +2,7 @@ package net.simon987.server.game.objects;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.world.World;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * An instance of an object (e.g. a Cubot, a NPC...) inside the
  * game universe
  */
-public abstract class GameObject implements JSONSerialisable, MongoSerializable {
+public abstract class GameObject implements JSONSerializable, MongoSerializable {
 
     private boolean dead;
     /**

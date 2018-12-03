@@ -54,13 +54,7 @@ public class Node implements Comparable {
     public int compareTo(Object o) {
         Node other = (Node) o;
 
-        if (fScore < other.fScore) {
-            return -1;
-        } else if (fScore > other.fScore) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return Integer.compare(fScore, other.fScore);
     }
 
     @Override

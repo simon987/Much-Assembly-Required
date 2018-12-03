@@ -20,9 +20,6 @@ import net.simon987.server.assembly.Target;
  */
 public class MovInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 1;
 
     public MovInstruction() {

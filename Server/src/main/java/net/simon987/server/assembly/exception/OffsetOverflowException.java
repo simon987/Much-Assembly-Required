@@ -13,7 +13,7 @@ public class OffsetOverflowException extends FatalAssemblyException {
     /**
      * Create a new Offset Overflow Exception
      */
-    public OffsetOverflowException(int offset, int memsiz, int line) {
-        super(message + offset + " > " + memsiz, line);
+    public OffsetOverflowException(int offset, int memSize, int line) {
+        super(message + offset + " > " + memSize, line);
     }
 }

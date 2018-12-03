@@ -84,10 +84,8 @@ class MachineCode {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-
         out.write(value >> 8);
         out.write(value);
-
 
         for (Character s : additionalWords) {
             out.write(s >> 8);

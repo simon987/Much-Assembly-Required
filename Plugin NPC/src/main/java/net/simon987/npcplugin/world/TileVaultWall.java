@@ -21,4 +21,6 @@ public class TileVaultWall extends Tile {
     public boolean isBlocked() {
         return true;
     }
+
+
 }

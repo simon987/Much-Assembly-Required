@@ -1,7 +1,7 @@
 package net.simon987.server.assembly.exception;
 
 /**
- * Class of exceptions that should stop assembly immediatly 
+ * Class of exceptions that should stop assembly immediately
  */
 public class FatalAssemblyException extends AssemblyException {
 

@@ -1,7 +1,6 @@
 package net.simon987.server.user;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import net.simon987.server.GameServer;
 import org.bson.Document;
 
@@ -36,10 +35,8 @@ public class UserStatsHelper {
         ArrayList<Map.Entry<User, Integer>> rows = new ArrayList<>();
 
         Document orderBy = new Document("$stats." + statName, -1);
-        MongoCursor<Document> cursor = users.find().sort(orderBy).limit(n).iterator();
 
-        while (cursor.hasNext()) {
-            Document dbUser = cursor.next();
+        for (Document dbUser : users.find().sort(orderBy).limit(n)) {
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
             rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getInt(statName)));
         }
@@ -66,15 +63,12 @@ public class UserStatsHelper {
         project.put("setLength", new Document("$size", new Document("$ifNull", ifNullList)));
         project.put("username", 1);
 
-
-        Iterator<Document> results = users.aggregate(Arrays.asList(
+        for (Document document : users.aggregate(Arrays.asList(
                 new Document("$project", project),
                 new Document("$sort", new Document("setLength", -1)),
                 new Document("$limit", n))
-        ).iterator();
-
-        while (results.hasNext()) {
-            User user = GameServer.INSTANCE.getGameUniverse().getUser((String) results.next().get("username"));
+        )) {
+            User user = GameServer.INSTANCE.getGameUniverse().getUser((String) document.get("username"));
             rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getSet(statName)));
         }
 

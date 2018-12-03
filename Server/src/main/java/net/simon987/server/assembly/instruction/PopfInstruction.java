@@ -10,9 +10,6 @@ import net.simon987.server.assembly.Status;
  */
 public class PopfInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 44;
 
     private CPU cpu;

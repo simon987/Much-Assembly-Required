@@ -8,7 +8,6 @@ import net.simon987.server.assembly.Target;
 /**
  * Send hardware interrupt
  * <br>Used to interact with the World using hardware
- *
  */
 public class HwiInstruction extends Instruction {
 

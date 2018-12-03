@@ -286,14 +286,14 @@ public class Assembler {
 
         if (tokens[0].toUpperCase().equals(".TEXT")) {
 
-            result.defineSecton(Section.TEXT, currentLine, currentOffset);
+            result.defineSection(Section.TEXT, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
 
         } else if (tokens[0].toUpperCase().equals(".DATA")) {
 
             LogManager.LOGGER.fine("DEBUG: .data @" + currentLine);
 
-            result.defineSecton(Section.DATA, currentLine, currentOffset);
+            result.defineSection(Section.DATA, currentLine, currentOffset);
             throw new PseudoInstructionException(currentLine);
         }
     }

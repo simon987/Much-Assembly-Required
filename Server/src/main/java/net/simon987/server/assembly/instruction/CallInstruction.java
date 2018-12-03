@@ -13,9 +13,6 @@ import net.simon987.server.assembly.Target;
  */
 public class CallInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 21;
 
     private CPU cpu;

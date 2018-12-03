@@ -4,9 +4,6 @@ import net.simon987.server.assembly.Instruction;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
-/**
- *
- */
 public class SarInstruction extends Instruction {
 
     private static final int OPCODE = 41;

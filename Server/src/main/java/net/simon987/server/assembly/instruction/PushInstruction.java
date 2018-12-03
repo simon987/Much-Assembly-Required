@@ -2,14 +2,8 @@ package net.simon987.server.assembly.instruction;
 
 import net.simon987.server.assembly.*;
 
-/**
- * Created by simon on 02/06/17.
- */
 public class PushInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 19;
 
     private CPU cpu;

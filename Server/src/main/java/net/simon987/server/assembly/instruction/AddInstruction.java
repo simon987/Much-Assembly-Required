@@ -14,9 +14,6 @@ import net.simon987.server.assembly.Util;
  */
 public class AddInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 2;
 
     public AddInstruction() {

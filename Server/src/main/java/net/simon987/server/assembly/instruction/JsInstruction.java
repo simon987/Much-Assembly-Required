@@ -7,9 +7,6 @@ import net.simon987.server.assembly.Target;
 
 public class JsInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 26;
 
     private CPU cpu;

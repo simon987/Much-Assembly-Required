@@ -10,9 +10,6 @@ import net.simon987.server.assembly.Target;
  */
 public class JgeInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 16;
 
     private CPU cpu;

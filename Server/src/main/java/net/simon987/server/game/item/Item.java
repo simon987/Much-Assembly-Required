@@ -1,12 +1,12 @@
 package net.simon987.server.game.item;
 
 import net.simon987.server.game.objects.ControllableUnit;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
-public abstract class Item implements JSONSerialisable, MongoSerializable {
+public abstract class Item implements JSONSerializable, MongoSerializable {
 
 
     public Item(Document document) {

@@ -4,9 +4,6 @@ import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.Instruction;
 import net.simon987.server.assembly.Status;
 
-/**
- * Created by simon on 02/06/17.
- */
 public class RetInstruction extends Instruction {
 
     /**

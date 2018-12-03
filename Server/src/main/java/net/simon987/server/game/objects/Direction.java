@@ -79,9 +79,9 @@ public enum Direction {
             return Direction.EAST;
         } else if (dx < 0 && dx <= dy) {
             return Direction.WEST;
-        } else if (dy > 0 && dy >= dx) {
+        } else if (dy > 0) {
             return Direction.NORTH;
-        } else if (dy < 0 && dy <= dx) {
+        } else if (dy < 0) {
             return Direction.SOUTH;
         } else {
             return null;

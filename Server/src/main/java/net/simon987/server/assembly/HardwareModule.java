@@ -2,13 +2,13 @@ package net.simon987.server.assembly;
 
 
 import net.simon987.server.game.objects.ControllableUnit;
-import net.simon987.server.io.JSONSerialisable;
+import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
 
-public abstract class HardwareModule implements MongoSerializable, JSONSerialisable {
+public abstract class HardwareModule implements MongoSerializable, JSONSerializable {
 
     private CPU cpu;
 

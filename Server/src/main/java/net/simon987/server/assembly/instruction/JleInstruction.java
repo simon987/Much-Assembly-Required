@@ -5,14 +5,8 @@ import net.simon987.server.assembly.Instruction;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
-/**
- * Created by Gilbert Fortier on 3/11/2017.
- */
 public class JleInstruction extends Instruction {
 
-    /**
-     * Opcode of the instruction
-     */
     public static final int OPCODE = 18;
 
     private CPU cpu;

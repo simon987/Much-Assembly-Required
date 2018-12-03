@@ -38,12 +38,7 @@ public class LogManager {
                 flush();
             }
         };
-        handler.setFilter(new Filter() {
-            @Override
-            public boolean isLoggable(LogRecord record) {
-                return record.getLevel().intValue() <= Level.INFO.intValue();
-            }
-        });
+        handler.setFilter(record -> record.getLevel().intValue() <= Level.INFO.intValue());
         handler.setLevel(Level.ALL);
 
         try {

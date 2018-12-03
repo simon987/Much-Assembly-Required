@@ -36,7 +36,7 @@ public class NoCypher implements Cypher {
             char c = cypherText[i];
             int c_ind = charset.indexOf(c);
             if (c_ind == -1){
-                throw new InvalidCharsetException("Cyphertext contains invalid character: " + c);
+                throw new InvalidCharsetException("CypherText contains invalid character: " + c);
             }
             plaintext[i] = c;
         }

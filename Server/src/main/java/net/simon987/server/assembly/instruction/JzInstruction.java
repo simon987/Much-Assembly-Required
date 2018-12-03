@@ -5,9 +5,6 @@ import net.simon987.server.assembly.Instruction;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.Target;
 
-/**
- * Created by Gilbert Fortier on 3/11/2017.
- */
 public class JzInstruction extends Instruction {
 
     /**

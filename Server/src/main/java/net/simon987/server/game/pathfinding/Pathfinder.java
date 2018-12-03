@@ -12,10 +12,6 @@ import java.util.Collections;
  */
 public class Pathfinder {
 
-
-    /**
-     * Create a pathfinder
-     */
     public Pathfinder() {
 
     }
@@ -113,9 +109,7 @@ public class Pathfinder {
         }
 
         //Incomplete path
-        // LogManager.LOGGER.fine("Incomplete path! " + counter);
         return null;
-
     }
 
     /**
@@ -152,5 +146,4 @@ public class Pathfinder {
 
         return neighbors;
     }
-
 }
