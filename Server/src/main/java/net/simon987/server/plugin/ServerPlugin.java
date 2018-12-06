@@ -1,8 +1,7 @@
 package net.simon987.server.plugin;
 
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEventListener;
-import net.simon987.server.game.objects.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public abstract class ServerPlugin {
     /**
      * Called when the plugin is loaded
      */
-    public abstract void init(ServerConfiguration config, GameRegistry gameRegistry);
+    public abstract void init(GameServer gameServer);
 
     public String getName() {
         return name;

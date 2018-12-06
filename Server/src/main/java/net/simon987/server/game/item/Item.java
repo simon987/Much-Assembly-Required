@@ -1,5 +1,6 @@
 package net.simon987.server.game.item;
 
+import net.simon987.server.assembly.Memory;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
@@ -24,6 +25,15 @@ public abstract class Item implements JSONSerializable, MongoSerializable {
      * Called when a controllableUnit clears this item from inventory
      */
     public void clear(ControllableUnit unit) {
+
+    }
+
+    /**
+     * Called when the item is scanned
+     *
+     * @param memory result is written here
+     */
+    public void digitize(Memory memory, int offset) {
 
     }
 

@@ -6,6 +6,7 @@ import net.simon987.npcplugin.event.VaultWorldUpdateListener;
 import net.simon987.npcplugin.event.WorldCreationListener;
 import net.simon987.npcplugin.world.TileVaultFloor;
 import net.simon987.npcplugin.world.TileVaultWall;
+import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
@@ -21,7 +22,10 @@ public class NpcPlugin extends ServerPlugin {
     private static ArrayList<RadioTower> radioTowers;
 
     @Override
-    public void init(ServerConfiguration configuration, GameRegistry registry) {
+    public void init(GameServer gameServer) {
+
+        ServerConfiguration configuration = gameServer.getConfig();
+        GameRegistry registry = gameServer.getRegistry();
 
         listeners.add(new WorldCreationListener(configuration.getInt("factory_spawn_rate")));
         listeners.add(new CpuInitialisationListener());

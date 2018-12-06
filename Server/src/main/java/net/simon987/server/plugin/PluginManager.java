@@ -1,7 +1,6 @@
 package net.simon987.server.plugin;
 
-import net.simon987.server.ServerConfiguration;
-import net.simon987.server.game.objects.GameRegistry;
+import net.simon987.server.GameServer;
 import net.simon987.server.logging.LogManager;
 
 import java.io.File;
@@ -21,12 +20,11 @@ public class PluginManager {
 
     private ArrayList<ServerPlugin> loadedPlugins;
     private ArrayList<ServerPlugin> toLoadPlugins;
-    private ServerConfiguration config;
-    private GameRegistry gameRegistry;
 
-    public PluginManager(ServerConfiguration config, GameRegistry registry) {
-        this.config = config;
-        this.gameRegistry = registry;
+    private GameServer gameServer;
+
+    public PluginManager(GameServer gameServer) {
+        this.gameServer = gameServer;
         this.toLoadPlugins = new ArrayList<>(10);
         this.loadedPlugins = new ArrayList<>(10);
     }
@@ -162,7 +160,7 @@ public class PluginManager {
 
         toLoadPlugins.remove(plugin);
         loadedPlugins.add(plugin);
-        plugin.init(config, gameRegistry);
+        plugin.init(gameServer);
     }
 
     public ArrayList<ServerPlugin> getPlugins() {

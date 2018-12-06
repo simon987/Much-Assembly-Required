@@ -28,6 +28,7 @@ public class UserInfoRequestHandler implements MessageHandler {
                 json.put("worldX", object.getWorld().getX());
                 json.put("worldY", object.getWorld().getY());
                 json.put("dimension", object.getWorld().getDimension());
+                json.put("id", object.getObjectId().toString());
 
             }
 

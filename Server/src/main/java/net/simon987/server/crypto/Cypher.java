@@ -1,6 +1,6 @@
 package net.simon987.server.crypto;
 
-interface Cypher {
+public interface Cypher {
 
 	char[] encrypt(char[] plainText, char[] key) throws CryptoException;
 

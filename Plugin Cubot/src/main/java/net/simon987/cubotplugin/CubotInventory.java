@@ -21,11 +21,13 @@ public class CubotInventory extends CubotHardwareModule {
 
     private static final int INV_CLEAR = 0;
     private static final int INV_POLL = 1;
+    private static final int INV_SEEK = 2;
+    private static final int INV_SCAN = 3;
 
-    private int inventorySize = 4;
-
+    private int inventorySize = 4; //TODO: load from config
     private Map<Integer, Item> inventory;
     private int position = 0;
+
 
     public CubotInventory(Cubot cubot) {
         super(cubot);
@@ -51,7 +53,13 @@ public class CubotInventory extends CubotHardwareModule {
         inventory.put(position, item);
     }
 
-    public Item popItem() {
+    private void scanItem() {
+        int x = getCpu().getRegisterSet().getRegister("X").getValue();
+        Item item = inventory.get(position);
+        item.digitize(cubot.getCpu().getMemory(), x);
+    }
+
+    public Item clearItem() {
         Item item = inventory.get(position);
         item.clear(cubot);
         inventory.remove(position);
@@ -92,7 +100,16 @@ public class CubotInventory extends CubotHardwareModule {
             getCpu().getRegisterSet().getRegister("B").setValue(result);
 
         } else if (a == INV_CLEAR) {
-            popItem();
+            if (cubot.spendEnergy(100)) {
+                clearItem();
+            }
+        } else if (a == INV_SEEK) {
+            setPosition(getCpu().getRegisterSet().getRegister("X").getValue());
+        } else if (a == INV_SCAN) {
+            if (cubot.spendEnergy(200)) {
+                scanItem();
+                clearItem();
+            }
         }
 
     }

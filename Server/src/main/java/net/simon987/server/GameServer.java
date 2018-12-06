@@ -68,7 +68,7 @@ public class GameServer implements Runnable {
         gameUniverse = new GameUniverse(config);
         gameUniverse.setMongo(mongo);
         gameRegistry = new GameRegistry();
-        pluginManager = new PluginManager(config, gameRegistry);
+        pluginManager = new PluginManager(this);
 
         maxExecutionTime = config.getInt("user_timeout");
 

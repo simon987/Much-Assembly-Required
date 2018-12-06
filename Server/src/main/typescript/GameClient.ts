@@ -108,6 +108,7 @@ class UserInfoListener implements MessageListener {
         mar.client.worldX = message.worldX;
         mar.client.worldY = message.worldY;
         mar.client.dimension = message.dimension;
+        Debug.SELF_ID = message.id;
 
         //Maximum Universe width
         mar.client.maxWidth = message.maxWidth;
@@ -163,7 +164,7 @@ class TerrainListener implements MessageListener {
 
             let worldSize = message.size;
             if (worldSize == undefined) {
-                worldSize = config.defaultWorldSize;
+                worldSize = config.world.defaultSize;
             }
 
 
@@ -201,7 +202,7 @@ class TerrainListener implements MessageListener {
                     console.log("[MAR] Updating World terrain");
                 }
 
-                mar.world.updateTerrain([], config.defaultWorldSize);
+                mar.world.updateTerrain([], config.world.defaultSize);
 
             } else {
 
@@ -209,7 +210,7 @@ class TerrainListener implements MessageListener {
                     console.log("[MAR] Creating new World");
                 }
 
-                mar.world = new World([], config.defaultWorldSize);
+                mar.world = new World([], config.world.defaultSize);
 
             }
             if (mar.world) {
@@ -455,7 +456,7 @@ class GameClient {
 
             let self = this;
 
-            this.keyboardBuffer = new KeyboardBuffer(config.kbBufferX, config.kbBufferY);
+            this.keyboardBuffer = new KeyboardBuffer(config.kbBuffer.x, config.kbBuffer.y);
             mar.addDebugMessage(this.keyboardBuffer);
 
 

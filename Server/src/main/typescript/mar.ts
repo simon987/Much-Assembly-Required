@@ -6,43 +6,66 @@ let RENDERER_HEIGHT = (window.innerHeight / 1.40) * window.devicePixelRatio;
 let DEBUG: boolean = true;
 
 let config = {
-    portalTint: 0xff43c8,
-    tileTint: 0xFFFFFF,
-    wallTint: 0xDDDDDD,
-    vaultWallTint: 0x3F2D2A,
-    vaultFloorTint: 0x2B1E1C,
-    fluidTint: 0x0ACED6,
-    oreTint: 0xF3F3F3,
-    cubotHoverTint: 0x00FF00,
-    cubotTint: 0xFFFFFF,
-    textFill: "#FFFFFF",
-    textStroke: "#9298a8",
-    biomassTint: 0x63B85F,
-    biomassHoverTint: 0x00FF00,
-    tileHoverTint: 0x00FF00,
-    itemIron: 0x434341,
-    textIron: "#434341",
-    itemCopper: 0xC87D38,
-    textCopper: "#C87D38",
-    hologramFill: "#0aced6",
-    hologramStroke: "#12FFB0",
-    copperFill: "#C87D38",
-    plainSprite: "tiles/tile",
-    magneticSprite: "tiles/magneticTile",
-    wallSprite: "tiles/bigTile",
-    wallSprite2: "tiles/bigTile2",
-    walkDuration: 800, //walk animation duration in ms
-    holoStyle: (fill: string) => {
-        return {
-            fontSize: 32,
-            fill: fill ? fill : config.hologramFill,
-            stroke: config.hologramStroke,
-            strokeThickness: 1,
-            font: "fixedsys"
-        }
+    kbBuffer: {
+        x: 350, ///Position of the keyboard buffer fill on screen
+        y: 35,
     },
-    kbBufferX: 350, ///Position of the keyboard buffer fill on screen
-    kbBufferY: 35,
+    cubot: {
+        tint: 0xFFFFFF,
+        hoverTint: 0x00FF00,
+        lowEnergyTint: 0xCC0000,
+        walkDuration: 800, //walk animation duration in ms
+        lowEnergy: 100, //Low energy threshold to change color
+        otherCubotAlpha: 0.6,
+    },
+    biomass: {
+        tint: 0x63B85F,
+        tintHover: 0x00FF00,
+    },
+    tile: {
+        hover: 0x00FF00,
+        vaultWall: 0x3F2D2A,
+        vaultFloor: 0x2B1E1C,
+        fluid: 0x0ACED6,
+        ore: 0xF3F3F3,
+        plain: 0xFFFFFF,
+        wall: 0xDDDDDD,
+        plainSprite: "tiles/tile",
+        magneticSprite: "tiles/magneticTile",
+        wallSprite: "tiles/bigTile",
+        wallSprite2: "tiles/bigTile2",
+    },
+    item: {
+        ironColor: 0x434341,
+        copperColor: 0xC87D38,
+        blueprintColor: 0xaced6,
+    },
+    portal: {
+        tint: 0xff43c8,
+    },
+    text: {
+        textFill: "#FFFFFF",
+        textStroke: "#9298a8",
+        textIron: "#434341",
+        textCopper: "#C87D38",
+        hologramFill: "#0aced6",
+        hologramStroke: "#12FFB0",
+        selfUsername: 0xFB4D0A, //Color of own Cubot's username.
+        bigMessageFill: "#ff803d",
+        holoStyle: (fill: string) => {
+            return {
+                fontSize: 32,
+                fill: fill ? fill : config.text.hologramFill,
+                stroke: config.text.hologramStroke,
+                strokeThickness: 1,
+                font: "fixedsys"
+            }
+        },
+    },
+    arrow: {
+        tint: 0xFFFFFF,
+        tintHover: 0x00FF00,
+    },
     arrowTextStyle: {
         fontSize: 32,
         fill: "#ffffff",
@@ -50,15 +73,9 @@ let config = {
         strokeThickness: 1,
         font: "fixedsys"
     },
-    lowEnergy: 100, //Low energy threshold to change color
-    lowEnergyTint: 0xCC0000,
-    bigMessageFill: "#ff803d",
-    arrowTint: 0xFFFFFF,
-    arrowHoverTint: 0x00FF00,
-    selfUsernameColor: 0xFB4D0A, //Color of own Cubot's username.
-    otherCubotAlpha: 0.6,
-    defaultWorldSize: 16 //Will fallback to this when server does not provide world width
-
+    world: {
+        defaultSize: 16 //Will fallback to this when server does not provide world width
+    }
 };
 
 
@@ -102,17 +119,20 @@ class Util {
 
         switch (item) {
             case 1:
-                return config.biomassTint;
+                return config.biomass.tint;
             case 3:
-                return config.itemIron;
+                return config.item.ironColor;
             case 4:
-                return config.itemCopper;
-
+                return config.item.copperColor;
+            case 5:
+                return config.item.blueprintColor;
         }
     }
 }
 
 class Debug {
+
+    public static SELF_ID = "";
 
     public static setTileAt(x, y, newTile) {
         mar.client.sendDebugCommand({

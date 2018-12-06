@@ -84,7 +84,7 @@ class Tile extends Phaser.Plugin.Isometric.IsoSprite {
     }
 
     public onHover() {
-        this.tint = config.tileHoverTint;
+        this.tint = config.tile.hover;
         mar.game.add.tween(this).to({isoZ: this.baseZ + 8}, 200, Phaser.Easing.Quadratic.InOut, true);
 
         mar.tileIndicator.tileX = this.tileX;
@@ -121,9 +121,9 @@ class Tile extends Phaser.Plugin.Isometric.IsoSprite {
 class PlainTile extends Tile {
 
     constructor(x: number, y: number) {
-        super(x, y, config.plainSprite, 0);
+        super(x, y, config.tile.plainSprite, 0);
 
-        this.baseTint = config.tileTint;
+        this.baseTint = config.tile.plain;
         this.tint = this.baseTint;
         this.tileType = "plain";
     }
@@ -132,9 +132,9 @@ class PlainTile extends Tile {
 class WallTile extends Tile {
 
     constructor(x: number, y: number) {
-        super(x, y, config.wallSprite, 0.2);
+        super(x, y, config.tile.wallSprite, 0.2);
 
-        this.baseTint = config.wallTint;
+        this.baseTint = config.tile.wall;
         this.tint = this.baseTint;
         this.tileType = "wall";
 
@@ -144,9 +144,9 @@ class WallTile extends Tile {
 class VaultWallTile extends Tile {
 
     constructor(x: number, y: number) {
-        super(x, y, config.wallSprite2, 0.29);
+        super(x, y, config.tile.wallSprite2, 0.29);
 
-        this.baseTint = config.vaultWallTint;
+        this.baseTint = config.tile.vaultWall;
         this.tint = this.baseTint;
         this.tileType = "vault wall";
 
@@ -156,9 +156,9 @@ class VaultWallTile extends Tile {
 class VaultFloorTile extends Tile {
 
     constructor(x: number, y: number) {
-        super(x, y, config.plainSprite, 0);
+        super(x, y, config.tile.plainSprite, 0);
 
-        this.baseTint = config.vaultFloorTint;
+        this.baseTint = config.tile.vaultFloor;
         this.tint = this.baseTint;
         this.tileType = "vault floor";
     }
@@ -177,9 +177,9 @@ class VoidTile extends Tile {
     }
 
     constructor(x: number, y: number) {
-        super(x, y, config.plainSprite, 0);
+        super(x, y, config.tile.plainSprite, 0);
 
-        this.baseTint = config.vaultFloorTint;
+        this.baseTint = config.tile.vaultFloor;
         this.tileType = "void";
         this.alpha = 0;
     }
@@ -187,9 +187,9 @@ class VoidTile extends Tile {
 
 class FluidTile extends Tile {
     constructor(x: number, y: number) {
-        super(x, y, config.plainSprite, 0);
+        super(x, y, config.tile.plainSprite, 0);
 
-        this.baseTint = config.fluidTint;
+        this.baseTint = config.tile.fluid;
         this.tint = this.baseTint;
         this.alpha = 0.6;
         this.baseZ = -15;
@@ -210,12 +210,12 @@ class MagneticTile extends Tile {
     }
 
     constructor(x: number, y: number) {
-        super(x, y, config.magneticSprite, 0);
+        super(x, y, config.tile.magneticSprite, 0);
 
         this.baseTint = 0xFFFFFF;
         this.tint = this.baseTint;
 
-        this.setText("Magnetic", config.textIron);
+        this.setText("Magnetic", config.text.textIron);
         this.tileType = "Magnetic tile";
     }
 }
@@ -223,12 +223,12 @@ class MagneticTile extends Tile {
 class IronTile extends Tile {
 
     constructor(x: number, y: number) {
-        super(x, y, config.plainSprite, 0);
+        super(x, y, config.tile.plainSprite, 0);
 
-        this.baseTint = config.oreTint;
+        this.baseTint = config.tile.ore;
         this.tint = this.baseTint;
 
-        this.setText("Iron", config.textIron);
+        this.setText("Iron", config.text.textIron);
         this.tileType = "iron";
     }
 }
@@ -237,12 +237,12 @@ class IronTile extends Tile {
 class CopperTile extends Tile {
 
     constructor(x: number, y: number) {
-        super(x, y, config.plainSprite, 0);
+        super(x, y, config.tile.plainSprite, 0);
 
-        this.baseTint = config.oreTint;
+        this.baseTint = config.tile.ore;
         this.tint = this.baseTint;
 
-        this.setText("Copper", config.textCopper);
+        this.setText("Copper", config.text.textCopper);
         this.tileType = "copper";
     }
 }
@@ -321,8 +321,8 @@ class World {
     public setBigMessage(msg: string) {
         this.bigMessage = mar.game.add.text(908, 450, msg, {
             fontSize: 46,
-            fill: config.bigMessageFill,
-            stroke: config.textStroke,
+            fill: config.text.bigMessageFill,
+            stroke: config.text.textStroke,
             strokeThickness: 2,
             font: "fixedsys"
         }, mar.textGroup);
@@ -465,13 +465,13 @@ class WorldArrow extends Phaser.Plugin.Isometric.IsoSprite {
         });
 
         this.events.onInputOver.add(function () {
-            self.tint = config.arrowHoverTint;
+            self.tint = config.arrow.tintHover;
             self.hoverText.visible = true;
             document.body.style.cursor = "pointer";
         });
 
         this.events.onInputOut.add(function () {
-            self.tint = config.arrowTint;
+            self.tint = config.arrow.tint;
             self.hoverText.visible = false;
             document.body.style.cursor = "default";
         });

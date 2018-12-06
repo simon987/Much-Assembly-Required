@@ -32,7 +32,7 @@ public class DebugCommandEvent extends GameEvent {
     }
 
     public ObjectId getObjectId(String key) {
-        return (ObjectId) command.get(key);
+        return new ObjectId((String) command.get(key));
     }
 
     /**

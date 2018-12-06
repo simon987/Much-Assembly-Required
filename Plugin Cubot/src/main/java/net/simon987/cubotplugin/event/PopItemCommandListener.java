@@ -20,7 +20,7 @@ public class PopItemCommandListener implements GameEventListener {
 
         DebugCommandEvent e = (DebugCommandEvent) event;
 
-        if (e.getName().equals("popItem")) {
+        if (e.getName().equals("clearItem")) {
 
             GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getObjectId("objectId"));
 
@@ -30,7 +30,7 @@ public class PopItemCommandListener implements GameEventListener {
 
                     CubotInventory inventory = (CubotInventory) ((Cubot) object).getHardware(CubotInventory.class);
 
-                    e.reply("Removed item from inventory: " + inventory.popItem());
+                    e.reply("Removed item from inventory: " + inventory.clearItem());
                 } else {
                     e.reply("Object is not a Cubot");
                 }

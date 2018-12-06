@@ -264,43 +264,66 @@ var RENDERER_WIDTH = document.getElementById("game").clientWidth * window.device
 var RENDERER_HEIGHT = (window.innerHeight / 1.40) * window.devicePixelRatio;
 var DEBUG = true;
 var config = {
-    portalTint: 0xff43c8,
-    tileTint: 0xFFFFFF,
-    wallTint: 0xDDDDDD,
-    vaultWallTint: 0x3F2D2A,
-    vaultFloorTint: 0x2B1E1C,
-    fluidTint: 0x0ACED6,
-    oreTint: 0xF3F3F3,
-    cubotHoverTint: 0x00FF00,
-    cubotTint: 0xFFFFFF,
-    textFill: "#FFFFFF",
-    textStroke: "#9298a8",
-    biomassTint: 0x63B85F,
-    biomassHoverTint: 0x00FF00,
-    tileHoverTint: 0x00FF00,
-    itemIron: 0x434341,
-    textIron: "#434341",
-    itemCopper: 0xC87D38,
-    textCopper: "#C87D38",
-    hologramFill: "#0aced6",
-    hologramStroke: "#12FFB0",
-    copperFill: "#C87D38",
-    plainSprite: "tiles/tile",
-    magneticSprite: "tiles/magneticTile",
-    wallSprite: "tiles/bigTile",
-    wallSprite2: "tiles/bigTile2",
-    walkDuration: 800,
-    holoStyle: function (fill) {
-        return {
-            fontSize: 32,
-            fill: fill ? fill : config.hologramFill,
-            stroke: config.hologramStroke,
-            strokeThickness: 1,
-            font: "fixedsys"
-        };
+    kbBuffer: {
+        x: 350,
+        y: 35,
     },
-    kbBufferX: 350,
-    kbBufferY: 35,
+    cubot: {
+        tint: 0xFFFFFF,
+        hoverTint: 0x00FF00,
+        lowEnergyTint: 0xCC0000,
+        walkDuration: 800,
+        lowEnergy: 100,
+        otherCubotAlpha: 0.6,
+    },
+    biomass: {
+        tint: 0x63B85F,
+        tintHover: 0x00FF00,
+    },
+    tile: {
+        hover: 0x00FF00,
+        vaultWall: 0x3F2D2A,
+        vaultFloor: 0x2B1E1C,
+        fluid: 0x0ACED6,
+        ore: 0xF3F3F3,
+        plain: 0xFFFFFF,
+        wall: 0xDDDDDD,
+        plainSprite: "tiles/tile",
+        magneticSprite: "tiles/magneticTile",
+        wallSprite: "tiles/bigTile",
+        wallSprite2: "tiles/bigTile2",
+    },
+    item: {
+        ironColor: 0x434341,
+        copperColor: 0xC87D38,
+        blueprintColor: 0xaced6,
+    },
+    portal: {
+        tint: 0xff43c8,
+    },
+    text: {
+        textFill: "#FFFFFF",
+        textStroke: "#9298a8",
+        textIron: "#434341",
+        textCopper: "#C87D38",
+        hologramFill: "#0aced6",
+        hologramStroke: "#12FFB0",
+        selfUsername: 0xFB4D0A,
+        bigMessageFill: "#ff803d",
+        holoStyle: function (fill) {
+            return {
+                fontSize: 32,
+                fill: fill ? fill : config.text.hologramFill,
+                stroke: config.text.hologramStroke,
+                strokeThickness: 1,
+                font: "fixedsys"
+            };
+        },
+    },
+    arrow: {
+        tint: 0xFFFFFF,
+        tintHover: 0x00FF00,
+    },
     arrowTextStyle: {
         fontSize: 32,
         fill: "#ffffff",
@@ -308,14 +331,9 @@ var config = {
         strokeThickness: 1,
         font: "fixedsys"
     },
-    lowEnergy: 100,
-    lowEnergyTint: 0xCC0000,
-    bigMessageFill: "#ff803d",
-    arrowTint: 0xFFFFFF,
-    arrowHoverTint: 0x00FF00,
-    selfUsernameColor: 0xFB4D0A,
-    otherCubotAlpha: 0.6,
-    defaultWorldSize: 16
+    world: {
+        defaultSize: 16
+    }
 };
 var Util = (function () {
     function Util() {
@@ -351,11 +369,13 @@ var Util = (function () {
     Util.itemColor = function (item) {
         switch (item) {
             case 1:
-                return config.biomassTint;
+                return config.biomass.tint;
             case 3:
-                return config.itemIron;
+                return config.item.ironColor;
             case 4:
-                return config.itemCopper;
+                return config.item.copperColor;
+            case 5:
+                return config.item.blueprintColor;
         }
     };
     return Util;
@@ -463,6 +483,7 @@ var Debug = (function () {
             position: position
         });
     };
+    Debug.SELF_ID = "";
     return Debug;
 }());
 DEBUG = false;
@@ -537,6 +558,7 @@ var UserInfoListener = (function () {
         mar.client.worldX = message.worldX;
         mar.client.worldY = message.worldY;
         mar.client.dimension = message.dimension;
+        Debug.SELF_ID = message.id;
         mar.client.maxWidth = message.maxWidth;
         mar.client.requestTerrain();
     };
@@ -581,7 +603,7 @@ var TerrainListener = (function () {
         if (message.ok) {
             var worldSize = message.size;
             if (worldSize == undefined) {
-                worldSize = config.defaultWorldSize;
+                worldSize = config.world.defaultSize;
             }
             if (DEBUG) {
                 console.log("[MAR] World is available");
@@ -607,13 +629,13 @@ var TerrainListener = (function () {
                 if (DEBUG) {
                     console.log("[MAR] Updating World terrain");
                 }
-                mar.world.updateTerrain([], config.defaultWorldSize);
+                mar.world.updateTerrain([], config.world.defaultSize);
             }
             else {
                 if (DEBUG) {
                     console.log("[MAR] Creating new World");
                 }
-                mar.world = new World([], config.defaultWorldSize);
+                mar.world = new World([], config.world.defaultSize);
             }
             if (mar.world) {
                 mar.world.setBigMessage("[Uncharted World]");
@@ -772,7 +794,7 @@ var GameClient = (function () {
     GameClient.prototype.initGame = function () {
         if (this.username != "guest") {
             var self_1 = this;
-            this.keyboardBuffer = new KeyboardBuffer(config.kbBufferX, config.kbBufferY);
+            this.keyboardBuffer = new KeyboardBuffer(config.kbBuffer.x, config.kbBuffer.y);
             mar.addDebugMessage(this.keyboardBuffer);
             mar.game.input.keyboard.onDownCallback = function (event) {
                 if (document.activeElement === document.getElementById("game")) {
@@ -858,8 +880,8 @@ var GameObject = (function (_super) {
     GameObject.prototype.setText = function (text) {
         this.text = mar.game.make.text(0, 0, text, {
             fontSize: 22,
-            fill: config.textFill,
-            stroke: config.textStroke,
+            fill: config.text.textFill,
+            stroke: config.text.textStroke,
             strokeThickness: 2,
             font: "fixedsys"
         });
@@ -934,7 +956,7 @@ var Cubot = (function (_super) {
     Cubot.prototype.onTileHover = function () {
         mar.game.add.tween(this).to({ isoZ: 45 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.2, y: 1.2 }, 200, Phaser.Easing.Linear.None, true);
-        this.cubotSprite.tint = config.cubotHoverTint;
+        this.cubotSprite.tint = config.cubot.hoverTint;
         if (this.text !== undefined) {
             this.text.visible = true;
         }
@@ -974,15 +996,15 @@ var Cubot = (function (_super) {
     };
     Cubot.prototype.getTint = function () {
         if (!this.hovered) {
-            if (this.energy <= config.lowEnergy) {
-                return config.lowEnergyTint;
+            if (this.energy <= config.cubot.lowEnergy) {
+                return config.cubot.lowEnergyTint;
             }
             else {
-                return config.cubotTint;
+                return config.cubot.tint;
             }
         }
         else {
-            return config.cubotHoverTint;
+            return config.cubot.hoverTint;
         }
     };
     Cubot.prototype.updateObject = function (json) {
@@ -1034,10 +1056,10 @@ var Cubot = (function (_super) {
             this.hologram = mar.game.make.text(0, 32, "");
             this.hologram.anchor.set(0.5, 0);
             this.addChild(this.hologram);
-            this.hologram.setStyle(config.holoStyle(fillColor));
+            this.hologram.setStyle(config.text.holoStyle(fillColor));
         }
         else {
-            this.hologram.setStyle(config.holoStyle(fillColor));
+            this.hologram.setStyle(config.text.holoStyle(fillColor));
         }
         switch (holoMode) {
             case HologramMode.CLEARED:
@@ -1095,7 +1117,7 @@ var Cubot = (function (_super) {
                 self.isoY = Util.getIsoY(self.tileY);
                 self.onTileExit();
                 for (var i = 0; i < self.queuedAnimations.length; i++) {
-                    self.queuedAnimations[i](config.walkDuration / 2);
+                    self.queuedAnimations[i](config.cubot.walkDuration / 2);
                     self.queuedAnimations.splice(i, 1);
                 }
             });
@@ -1104,24 +1126,24 @@ var Cubot = (function (_super) {
             this.queuedAnimations.push(walkAnimation);
         }
         else {
-            walkAnimation(config.walkDuration);
+            walkAnimation(config.cubot.walkDuration);
         }
     };
     Cubot.prototype.createUsername = function () {
         var username = mar.game.make.text(0, -24, this.username, {
             fontSize: 22,
-            fill: config.textFill,
-            stroke: config.textStroke,
+            fill: config.text.textFill,
+            stroke: config.text.textStroke,
             strokeThickness: 2,
             font: "fixedsys"
         });
         username.alpha = 0.85;
         username.anchor.set(0.5, 0);
         if (this.username === mar.client.username) {
-            username.tint = config.selfUsernameColor;
+            username.tint = config.text.selfUsername;
         }
         else {
-            this.alpha = config.otherCubotAlpha;
+            this.alpha = config.cubot.otherCubotAlpha;
         }
         this.addChild(username);
     };
@@ -1167,7 +1189,7 @@ var HarvesterNPC = (function (_super) {
         return _this;
     }
     HarvesterNPC.prototype.getTint = function () {
-        return config.cubotTint;
+        return config.cubot.tint;
     };
     HarvesterNPC.prototype.updateDirection = function () {
         switch (this.direction) {
@@ -1215,7 +1237,7 @@ var BiomassBlob = (function (_super) {
         _this.id = json.i;
         _this.tileX = json.x;
         _this.tileY = json.y;
-        _this.tint = config.biomassTint;
+        _this.tint = config.biomass.tint;
         _this.animations.add("idle", mar.animationFrames.biomassIdle);
         _this.animations.play("idle", 45, true);
         _this.setText("Biomass");
@@ -1225,7 +1247,7 @@ var BiomassBlob = (function (_super) {
     BiomassBlob.prototype.onTileHover = function () {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 45 }, 200, Phaser.Easing.Quadratic.InOut, true);
-        this.tint = config.biomassHoverTint;
+        this.tint = config.biomass.tintHover;
         mar.game.add.tween(this.scale).to({ x: 1.2, y: 1.2 }, 200, Phaser.Easing.Linear.None, true);
         this.text.visible = true;
     };
@@ -1233,7 +1255,7 @@ var BiomassBlob = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.biomassTint;
+        this.tint = config.biomass.tintHover;
         this.text.visible = false;
     };
     BiomassBlob.prototype.updateObject = function (json) {
@@ -1259,14 +1281,14 @@ var Factory = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 25 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.06, y: 1.06 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
         this.text.visible = true;
     };
     Factory.prototype.onTileExit = function () {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
         this.text.visible = false;
     };
     Factory.prototype.updateObject = function (json) {
@@ -1293,14 +1315,14 @@ var RadioTower = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 25 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.06, y: 1.06 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
         this.text.visible = true;
     };
     RadioTower.prototype.onTileExit = function () {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
         this.text.visible = false;
     };
     RadioTower.prototype.updateObject = function (json) {
@@ -1333,7 +1355,7 @@ var VaultDoor = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.06, y: 1.06 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
         this.text.visible = true;
         document.body.style.cursor = 'pointer';
         document.body.setAttribute("title", "Click to visit Vault");
@@ -1342,7 +1364,7 @@ var VaultDoor = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 0 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
         this.text.visible = false;
         document.body.style.cursor = 'default';
         document.body.setAttribute("title", "");
@@ -1374,14 +1396,14 @@ var ElectricBox = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 25 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.06, y: 1.06 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
         this.text.visible = true;
     };
     ElectricBox.prototype.onTileExit = function () {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
         this.text.visible = false;
     };
     ElectricBox.prototype.makeSparks = function (self) {
@@ -1397,7 +1419,7 @@ var Portal = (function (_super) {
     function Portal(json) {
         var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/Portal") || this;
         _this.anchor.set(0.5, 0.3);
-        _this.tint = config.portalTint;
+        _this.tint = config.portal.tint;
         _this.setText("Portal");
         _this.text.visible = false;
         _this.id = json.i;
@@ -1409,14 +1431,14 @@ var Portal = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 25 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.06, y: 1.06 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
         this.text.visible = true;
     };
     Portal.prototype.onTileExit = function () {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.portalTint;
+        this.tint = config.portal.tint;
         this.text.visible = false;
     };
     Portal.prototype.updateObject = function (json) {
@@ -1475,7 +1497,7 @@ var Tile = (function (_super) {
         }
     };
     Tile.prototype.onHover = function () {
-        this.tint = config.tileHoverTint;
+        this.tint = config.tile.hover;
         mar.game.add.tween(this).to({ isoZ: this.baseZ + 8 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.tileIndicator.tileX = this.tileX;
         mar.tileIndicator.tileY = this.tileY;
@@ -1505,8 +1527,8 @@ var Tile = (function (_super) {
 var PlainTile = (function (_super) {
     __extends(PlainTile, _super);
     function PlainTile(x, y) {
-        var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = config.tileTint;
+        var _this = _super.call(this, x, y, config.tile.plainSprite, 0) || this;
+        _this.baseTint = config.tile.plain;
         _this.tint = _this.baseTint;
         _this.tileType = "plain";
         return _this;
@@ -1516,8 +1538,8 @@ var PlainTile = (function (_super) {
 var WallTile = (function (_super) {
     __extends(WallTile, _super);
     function WallTile(x, y) {
-        var _this = _super.call(this, x, y, config.wallSprite, 0.2) || this;
-        _this.baseTint = config.wallTint;
+        var _this = _super.call(this, x, y, config.tile.wallSprite, 0.2) || this;
+        _this.baseTint = config.tile.wall;
         _this.tint = _this.baseTint;
         _this.tileType = "wall";
         return _this;
@@ -1527,8 +1549,8 @@ var WallTile = (function (_super) {
 var VaultWallTile = (function (_super) {
     __extends(VaultWallTile, _super);
     function VaultWallTile(x, y) {
-        var _this = _super.call(this, x, y, config.wallSprite2, 0.29) || this;
-        _this.baseTint = config.vaultWallTint;
+        var _this = _super.call(this, x, y, config.tile.wallSprite2, 0.29) || this;
+        _this.baseTint = config.tile.vaultWall;
         _this.tint = _this.baseTint;
         _this.tileType = "vault wall";
         return _this;
@@ -1538,8 +1560,8 @@ var VaultWallTile = (function (_super) {
 var VaultFloorTile = (function (_super) {
     __extends(VaultFloorTile, _super);
     function VaultFloorTile(x, y) {
-        var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = config.vaultFloorTint;
+        var _this = _super.call(this, x, y, config.tile.plainSprite, 0) || this;
+        _this.baseTint = config.tile.vaultFloor;
         _this.tint = _this.baseTint;
         _this.tileType = "vault floor";
         return _this;
@@ -1549,8 +1571,8 @@ var VaultFloorTile = (function (_super) {
 var VoidTile = (function (_super) {
     __extends(VoidTile, _super);
     function VoidTile(x, y) {
-        var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = config.vaultFloorTint;
+        var _this = _super.call(this, x, y, config.tile.plainSprite, 0) || this;
+        _this.baseTint = config.tile.vaultFloor;
         _this.tileType = "void";
         _this.alpha = 0;
         return _this;
@@ -1567,8 +1589,8 @@ var VoidTile = (function (_super) {
 var FluidTile = (function (_super) {
     __extends(FluidTile, _super);
     function FluidTile(x, y) {
-        var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = config.fluidTint;
+        var _this = _super.call(this, x, y, config.tile.plainSprite, 0) || this;
+        _this.baseTint = config.tile.fluid;
         _this.tint = _this.baseTint;
         _this.alpha = 0.6;
         _this.baseZ = -15;
@@ -1581,10 +1603,10 @@ var FluidTile = (function (_super) {
 var MagneticTile = (function (_super) {
     __extends(MagneticTile, _super);
     function MagneticTile(x, y) {
-        var _this = _super.call(this, x, y, config.magneticSprite, 0) || this;
+        var _this = _super.call(this, x, y, config.tile.magneticSprite, 0) || this;
         _this.baseTint = 0xFFFFFF;
         _this.tint = _this.baseTint;
-        _this.setText("Magnetic", config.textIron);
+        _this.setText("Magnetic", config.text.textIron);
         _this.tileType = "Magnetic tile";
         return _this;
     }
@@ -1599,10 +1621,10 @@ var MagneticTile = (function (_super) {
 var IronTile = (function (_super) {
     __extends(IronTile, _super);
     function IronTile(x, y) {
-        var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = config.oreTint;
+        var _this = _super.call(this, x, y, config.tile.plainSprite, 0) || this;
+        _this.baseTint = config.tile.ore;
         _this.tint = _this.baseTint;
-        _this.setText("Iron", config.textIron);
+        _this.setText("Iron", config.text.textIron);
         _this.tileType = "iron";
         return _this;
     }
@@ -1611,10 +1633,10 @@ var IronTile = (function (_super) {
 var CopperTile = (function (_super) {
     __extends(CopperTile, _super);
     function CopperTile(x, y) {
-        var _this = _super.call(this, x, y, config.plainSprite, 0) || this;
-        _this.baseTint = config.oreTint;
+        var _this = _super.call(this, x, y, config.tile.plainSprite, 0) || this;
+        _this.baseTint = config.tile.ore;
         _this.tint = _this.baseTint;
-        _this.setText("Copper", config.textCopper);
+        _this.setText("Copper", config.text.textCopper);
         _this.tileType = "copper";
         return _this;
     }
@@ -1659,8 +1681,8 @@ var World = (function () {
     World.prototype.setBigMessage = function (msg) {
         this.bigMessage = mar.game.add.text(908, 450, msg, {
             fontSize: 46,
-            fill: config.bigMessageFill,
-            stroke: config.textStroke,
+            fill: config.text.bigMessageFill,
+            stroke: config.text.textStroke,
             strokeThickness: 2,
             font: "fixedsys"
         }, mar.textGroup);
@@ -1752,12 +1774,12 @@ var WorldArrow = (function (_super) {
             mar.client.requestTerrain();
         });
         _this.events.onInputOver.add(function () {
-            self.tint = config.arrowHoverTint;
+            self.tint = config.arrow.tintHover;
             self.hoverText.visible = true;
             document.body.style.cursor = "pointer";
         });
         _this.events.onInputOut.add(function () {
-            self.tint = config.arrowTint;
+            self.tint = config.arrow.tint;
             self.hoverText.visible = false;
             document.body.style.cursor = "default";
         });

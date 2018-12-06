@@ -88,8 +88,8 @@ abstract class GameObject extends Phaser.Plugin.Isometric.IsoSprite {
     protected setText(text: string): void {
         this.text = mar.game.make.text(0, 0, text, {
             fontSize: 22,
-            fill: config.textFill,
-            stroke: config.textStroke,
+            fill: config.text.textFill,
+            stroke: config.text.textStroke,
             strokeThickness: 2,
             font: "fixedsys"
         });
@@ -207,7 +207,7 @@ class Cubot extends GameObject {
         mar.game.add.tween(this).to({isoZ: 45}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Linear.None, true);
 
-        this.cubotSprite.tint = config.cubotHoverTint;
+        this.cubotSprite.tint = config.cubot.hoverTint;
 
         if (this.text !== undefined) {
             this.text.visible = true;
@@ -260,13 +260,13 @@ class Cubot extends GameObject {
 
     public getTint(): number {
         if (!this.hovered) {
-            if (this.energy <= config.lowEnergy) {
-                return config.lowEnergyTint;
+            if (this.energy <= config.cubot.lowEnergy) {
+                return config.cubot.lowEnergyTint;
             } else {
-                return config.cubotTint;
+                return config.cubot.tint;
             }
         } else {
-            return config.cubotHoverTint;
+            return config.cubot.hoverTint;
         }
     }
 
@@ -343,9 +343,9 @@ class Cubot extends GameObject {
             this.hologram = mar.game.make.text(0, 32, "");
             this.hologram.anchor.set(0.5, 0);
             this.addChild(this.hologram);
-            this.hologram.setStyle(config.holoStyle(fillColor));
+            this.hologram.setStyle(config.text.holoStyle(fillColor));
         } else {
-            this.hologram.setStyle(config.holoStyle(fillColor));
+            this.hologram.setStyle(config.text.holoStyle(fillColor));
         }
 
         switch (holoMode) {
@@ -430,7 +430,7 @@ class Cubot extends GameObject {
 
                 //Execute all the queued walk animations at a faster pace
                 for (let i = 0; i < self.queuedAnimations.length; i++) {
-                    self.queuedAnimations[i](config.walkDuration / 2);
+                    self.queuedAnimations[i](config.cubot.walkDuration / 2);
                     self.queuedAnimations.splice(i, 1)
                 }
             });
@@ -442,7 +442,7 @@ class Cubot extends GameObject {
             this.queuedAnimations.push(walkAnimation);
 
         } else {
-            walkAnimation(config.walkDuration);
+            walkAnimation(config.cubot.walkDuration);
         }
 
 
@@ -456,8 +456,8 @@ class Cubot extends GameObject {
     public createUsername() {
         let username = mar.game.make.text(0, -24, this.username, {
             fontSize: 22,
-            fill: config.textFill,
-            stroke: config.textStroke,
+            fill: config.text.textFill,
+            stroke: config.text.textStroke,
             strokeThickness: 2,
             font: "fixedsys"
         });
@@ -466,9 +466,9 @@ class Cubot extends GameObject {
 
         //Color own username
         if (this.username === mar.client.username) {
-            username.tint = config.selfUsernameColor;
+            username.tint = config.text.selfUsername;
         } else {
-            this.alpha = config.otherCubotAlpha;
+            this.alpha = config.cubot.otherCubotAlpha;
         }
         this.addChild(username);
     }
@@ -528,7 +528,7 @@ class HarvesterNPC extends Cubot {
      * Needs to be overridden because Cubot() calls getTint() when initialised
      */
     public getTint() {
-        return config.cubotTint;
+        return config.cubot.tint;
     }
 
     public updateDirection() {
@@ -585,7 +585,7 @@ class BiomassBlob extends GameObject {
     onTileHover() {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 45}, 200, Phaser.Easing.Quadratic.InOut, true);
-        this.tint = config.biomassHoverTint;
+        this.tint = config.biomass.tintHover;
         mar.game.add.tween(this.scale).to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Linear.None, true);
 
         this.text.visible = true;
@@ -595,7 +595,7 @@ class BiomassBlob extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.biomassTint;
+        this.tint = config.biomass.tintHover;
 
         this.text.visible = false;
     }
@@ -618,7 +618,7 @@ class BiomassBlob extends GameObject {
         this.tileX = json.x;
         this.tileY = json.y;
 
-        this.tint = config.biomassTint;
+        this.tint = config.biomass.tint;
 
         this.animations.add("idle", mar.animationFrames.biomassIdle);
         this.animations.play("idle", 45, true);
@@ -635,7 +635,7 @@ class Factory extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.06, y: 1.06}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
 
         this.text.visible = true;
     }
@@ -644,7 +644,7 @@ class Factory extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
 
         this.text.visible = false;
     }
@@ -678,7 +678,7 @@ class RadioTower extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.06, y: 1.06}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
 
         this.text.visible = true;
     }
@@ -687,7 +687,7 @@ class RadioTower extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
 
         this.text.visible = false;
     }
@@ -715,7 +715,7 @@ class VaultDoor extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.06, y: 1.06}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
 
         this.text.visible = true;
 
@@ -727,7 +727,7 @@ class VaultDoor extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 0}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
 
         this.text.visible = false;
         document.body.style.cursor = 'default';
@@ -773,7 +773,7 @@ class ElectricBox extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.06, y: 1.06}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
 
         this.text.visible = true;
     }
@@ -782,7 +782,7 @@ class ElectricBox extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotTint;
+        this.tint = config.cubot.tint;
 
         this.text.visible = false;
     }
@@ -827,7 +827,7 @@ class Portal extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.06, y: 1.06}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.cubotHoverTint;
+        this.tint = config.cubot.hoverTint;
 
         this.text.visible = true;
     }
@@ -836,7 +836,7 @@ class Portal extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.portalTint;
+        this.tint = config.portal.tint;
 
         this.text.visible = false;
     }
@@ -848,7 +848,7 @@ class Portal extends GameObject {
     constructor(json) {
         super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/Portal");
         this.anchor.set(0.5, 0.3);
-        this.tint = config.portalTint;
+        this.tint = config.portal.tint;
 
         this.setText("Portal");
         this.text.visible = false;

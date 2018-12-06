@@ -3,6 +3,7 @@ package net.simon987.biomassplugin;
 import net.simon987.biomassplugin.event.ObjectDeathListener;
 import net.simon987.biomassplugin.event.WorldCreationListener;
 import net.simon987.biomassplugin.event.WorldUpdateListener;
+import net.simon987.server.GameServer;
 import net.simon987.server.ServerConfiguration;
 import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
@@ -13,7 +14,10 @@ public class BiomassPlugin extends ServerPlugin {
 
 
     @Override
-    public void init(ServerConfiguration config, GameRegistry registry) {
+    public void init(GameServer gameServer) {
+
+        ServerConfiguration config = gameServer.getConfig();
+        GameRegistry registry = gameServer.getRegistry();
 
         listeners.add(new WorldCreationListener());
         listeners.add(new WorldUpdateListener(config));
