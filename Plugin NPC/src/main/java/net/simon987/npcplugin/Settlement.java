@@ -123,7 +123,7 @@ public class Settlement implements MongoSerializable {
         p = world.getRandomPassableTile();
         if (p != null) {
 
-            VaultDoor vaultDoor = new VaultDoor(0); //todo cypherId ?
+            VaultDoor vaultDoor = new VaultDoor();
             vaultDoor.setWorld(world);
 
             int counter = 700;
@@ -215,5 +215,9 @@ public class Settlement implements MongoSerializable {
 
     public List<NonPlayerCharacter> getNpcs() {
         return npcs;
+    }
+
+    public char[] getPassword() {
+        return password;
     }
 }

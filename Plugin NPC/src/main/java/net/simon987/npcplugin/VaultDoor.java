@@ -1,7 +1,6 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.crypto.RandomStringGenerator;
 import net.simon987.server.game.objects.*;
 import net.simon987.server.game.world.World;
 import net.simon987.server.logging.LogManager;
@@ -13,13 +12,6 @@ import java.util.Arrays;
 public class VaultDoor extends Structure implements MessageReceiver, Enterable, Updatable {
 
     private static final int MAP_INFO = 0x0B00;
-
-    /**
-     * Password to open the vault door
-     */
-    private char[] password;
-
-    private RandomStringGenerator randomStringGenerator;
 
     /**
      * Whether or not the vault door is opened
@@ -37,16 +29,9 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
     private int OPEN_TIME = GameServer.INSTANCE.getConfig().getInt("vault_door_open_time");
 
     private int openedTimer = 0;
-    private int cypherId;
 
-    public VaultDoor(int cypherId) {
+    public VaultDoor() {
         super(1, 1);
-
-        this.cypherId = cypherId;
-
-        this.randomStringGenerator = new RandomStringGenerator();
-
-        this.password = "12345678".toCharArray();
     }
 
     public VaultDoor(Document document) {
@@ -60,8 +45,6 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
             homeX = document.getInteger("homeX");
             homeY = document.getInteger("homeY");
         }
-
-        password = document.getString("password").toCharArray();
     }
 
 
@@ -69,8 +52,7 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
     public void update() {
         if (open){
             if (openedTimer <= 0) {
-                //Door was open for OPEN_TIME, close it and regen password
-                //password = GameServer.INSTANCE.getConfig().getRandomPassword();
+                //Door was open for OPEN_TIME, close it
                 open = false;
                 openedTimer = 0;
                 LogManager.LOGGER.fine("Closed Vault door ID: " + getObjectId());
@@ -84,10 +66,12 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
     @Override
     public boolean sendMessage(char[] message) {
 
-        System.out.println("message: " + new String(message));
-        System.out.println("password: " + new String(password));
+        Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
-        if (Arrays.equals(message, password)) {
+        System.out.println("message: " + new String(message));
+        System.out.println("password: " + new String(settlement.getPassword()));
+
+        if (Arrays.equals(message, settlement.getPassword())) {
             if (!open) {
                 openVault();
             } else {
@@ -144,7 +128,6 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
 
         dbObject.put("homeX", getHomeX());
         dbObject.put("homeY", getHomeY());
-        dbObject.put("password", new String(password));
 
         return dbObject;
     }
