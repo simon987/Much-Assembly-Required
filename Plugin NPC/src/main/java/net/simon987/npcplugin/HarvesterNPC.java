@@ -33,7 +33,7 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
         super.update();
 
-        if (getFactory() != null) {
+        if (getSettlement() != null) {
             if (getTask().checkCompleted()) {
 
                 setTask(new HarvestTask());
@@ -54,8 +54,8 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
         getWorld().decUpdatable();
 
-        if (getFactory() != null && getFactory().getNpcs() != null) {
-            getFactory().getNpcs().remove(this);
+        if (getSettlement() != null && getSettlement().getNpcs() != null) {
+            getSettlement().getNpcs().remove(this);
         }
 
         GameServer.INSTANCE.getEventDispatcher().dispatch(new ObjectDeathEvent(this));

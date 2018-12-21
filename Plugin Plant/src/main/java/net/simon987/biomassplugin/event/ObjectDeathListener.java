@@ -7,7 +7,6 @@ import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.ObjectDeathEvent;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.world.World;
-import net.simon987.server.logging.LogManager;
 import org.bson.types.ObjectId;
 
 /**
@@ -41,8 +40,6 @@ public class ObjectDeathListener implements GameEventListener {
                         dyingHarvesterNPC.getX(), dyingHarvesterNPC.getY(), dyingHarvesterNPC.getWorld());
                 //Add it to the world game objects
                 dyingHarvesterNPC.getWorld().addObject(newBiomassBlob);
-                LogManager.LOGGER.fine("Spawned biomass at (" + newBiomassBlob.getX() +
-                        ", " + newBiomassBlob.getY() + ")");
             }
         }
     }

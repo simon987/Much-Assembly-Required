@@ -67,7 +67,7 @@ public class CubotComPort extends CubotHardwareModule {
 
         } else if (a == COMPORT_FRONT_PORT_OUT) {
 
-            if (cubot.spendEnergy(20)) {
+            if (cubot.spendEnergy(5)) {
                 //Get object directly in front of the Cubot
                 Point frontTile = cubot.getFrontTile();
                 //Todo will have to add getGameObjectsBlockingAt to enable Factory

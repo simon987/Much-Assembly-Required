@@ -76,7 +76,7 @@ public class World implements MongoSerializable {
      * @return long
      */
     public static String idFromCoordinates(int x, int y, String dimension) {
-        return dimension + "0x" + Integer.toHexString(x) + "-" + "0x" + Integer.toHexString(y);
+        return dimension + "-0x" + Integer.toHexString(x) + "-" + "0x" + Integer.toHexString(y);
     }
 
     /**
@@ -425,28 +425,28 @@ public class World implements MongoSerializable {
             if (rTile != null) {
                 int adjacentTiles = 0;
 
-                if (!isTileBlocked(rTile.x, rTile.y - 1)) {
+                if (tileMap.isInBounds(rTile.x, rTile.y - 1) && !isTileBlocked(rTile.x, rTile.y - 1)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x + 1, rTile.y)) {
+                if (tileMap.isInBounds(rTile.x + 1, rTile.y) && !isTileBlocked(rTile.x + 1, rTile.y)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x, rTile.y + 1)) {
+                if (tileMap.isInBounds(rTile.x, rTile.y + 1) && !isTileBlocked(rTile.x, rTile.y + 1)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x - 1, rTile.y)) {
+                if (tileMap.isInBounds(rTile.x - 1, rTile.y) && !isTileBlocked(rTile.x - 1, rTile.y)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x + 1, rTile.y + 1)) {
+                if (tileMap.isInBounds(rTile.x + 1, rTile.y + 1) && !isTileBlocked(rTile.x + 1, rTile.y + 1)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x - 1, rTile.y + 1)) {
+                if (tileMap.isInBounds(rTile.x - 1, rTile.y + 1) && !isTileBlocked(rTile.x - 1, rTile.y + 1)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x + 1, rTile.y - 1)) {
+                if (tileMap.isInBounds(rTile.x + 1, rTile.y - 1) && !isTileBlocked(rTile.x + 1, rTile.y - 1)) {
                     adjacentTiles++;
                 }
-                if (!isTileBlocked(rTile.x - 1, rTile.y - 1)) {
+                if (tileMap.isInBounds(rTile.x - 1, rTile.y - 1) && !isTileBlocked(rTile.x - 1, rTile.y - 1)) {
                     adjacentTiles++;
                 }
 

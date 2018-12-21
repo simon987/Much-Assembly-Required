@@ -115,6 +115,14 @@ public class GameUniverse {
         }
     }
 
+    public World getWorld(String id, boolean createNew) {
+
+        String[] tokens = id.split("-");
+
+        return getWorld(Integer.decode(tokens[1]), Integer.decode(tokens[2]),
+                createNew, tokens[0]);
+    }
+
     public World getLoadedWorld(int x, int y, String dimension) {
         // Wrapping coordinates around cyclically
         x %= maxWidth;

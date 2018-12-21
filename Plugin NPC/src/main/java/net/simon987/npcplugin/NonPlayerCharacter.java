@@ -41,10 +41,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
      */
     private Action lastAction = Action.IDLE;
 
-    /**
-     * Factory that created this NPC
-     */
-    private Factory factory;
+    private Settlement settlement;
 
     /**
      * If set to true, the NPC will be destroyed next tick if it is
@@ -93,8 +90,8 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
         age++;
 
-        //Destroy NPCs that are not linked with a Factory
-        if (factory == null) {
+        //Destroy NPCs that are not linked with a Settlement
+        if (settlement == null) {
             if (selfDestroyNextTick) {
                 setDead(true);
             }
@@ -147,7 +144,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
         if (direction == Direction.NORTH) {
 
-            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+            if (Util.manhattanDist(settlement.getWorld().getX(), settlement.getWorld().getY(),
                     getWorld().getX(), getWorld().getY() - 1) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(8, 0, 0)) {
                     setDirection(Direction.NORTH);
@@ -159,7 +156,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
             }
 
         } else if (direction == Direction.EAST) {
-            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+            if (Util.manhattanDist(settlement.getWorld().getX(), settlement.getWorld().getY(),
                     getWorld().getX() + 1, getWorld().getY()) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(15, 7, 0)) {
                     setDirection(Direction.EAST);
@@ -170,7 +167,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                 return false;
             }
         } else if (direction == Direction.SOUTH) {
-            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+            if (Util.manhattanDist(settlement.getWorld().getX(), settlement.getWorld().getY(),
                     getWorld().getX(), getWorld().getY() + 1) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(8, 15, 0)) {
                     setDirection(Direction.SOUTH);
@@ -181,7 +178,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
                 return false;
             }
         } else if (direction == Direction.WEST) {
-            if (Util.manhattanDist(factory.getWorld().getX(), factory.getWorld().getY(),
+            if (Util.manhattanDist(settlement.getWorld().getX(), settlement.getWorld().getY(),
                     getWorld().getX() - 1, getWorld().getY()) <= MAX_FACTORY_DISTANCE) {
                 if (!moveTo(0, 7, 0)) {
                     setDirection(Direction.WEST);
@@ -254,16 +251,15 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
         return lastAction;
     }
 
-    public Factory getFactory() {
-        return factory;
-    }
-
-    public void setFactory(Factory factory) {
-        this.factory = factory;
-    }
-
     public int getAge() {
         return age;
     }
 
+    public Settlement getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(Settlement settlement) {
+        this.settlement = settlement;
+    }
 }

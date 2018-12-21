@@ -18,6 +18,7 @@ import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.game.world.*;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.PluginManager;
+import net.simon987.server.plugin.ServerPlugin;
 import net.simon987.server.user.User;
 import net.simon987.server.user.UserManager;
 import net.simon987.server.user.UserStatsHelper;
@@ -221,11 +222,18 @@ public class GameServer implements Runnable {
             universe.addUser(user);
         }
 
-        //Load misc server info
+        //Load server & plugin data
         cursor = server.find().iterator();
         if (cursor.hasNext()) {
             Document serverObj = cursor.next();
             gameUniverse.setTime((long) serverObj.get("time"));
+
+            Document plugins = (Document) serverObj.get("plugins");
+
+            for (String pluginName : plugins.keySet()) {
+                ServerPlugin plugin = pluginManager.getPluginByName(pluginName);
+                plugin.load((Document) plugins.get(pluginName));
+            }
         }
 
         LogManager.LOGGER.info("Done loading! W:" + GameServer.INSTANCE.getGameUniverse().getWorldCount() +
@@ -267,6 +275,13 @@ public class GameServer implements Runnable {
 
             Document serverObj = new Document();
             serverObj.put("time", gameUniverse.getTime());
+
+            Document plugins = new Document();
+            for (ServerPlugin plugin : pluginManager.getPlugins()) {
+                plugins.put(plugin.getName(), plugin.mongoSerialise());
+            }
+            serverObj.put("plugins", plugins);
+
             //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
             server.replaceOne(new Document("_id", "serverinfo"), serverObj, updateOptions);
 

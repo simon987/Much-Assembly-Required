@@ -7,8 +7,6 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Game objects that regularly creates NonPlayerCharacters
@@ -28,25 +26,9 @@ public class Factory extends Structure implements Updatable {
     private static final int NPC_CREATION_COOLDOWN = NonPlayerCharacter.LIFETIME / MAX_NPC_COUNT;
 
     /**
-     * List of associated NonPlayerCharacters
-     */
-    private ArrayList<NonPlayerCharacter> npcs = new ArrayList<>();
-
-    /**
      * Number of ticks to wait until the Factory can spawn a new NPC
      */
     private int cooldown = 0;
-
-    /**
-     * Temporary NPC objectId array. The Factory links the NPCs to itself when initialised,
-     * at the first call of update().
-     */
-    private Object[] tmpNpcArray = new Object[0];
-
-    /**
-     * Factory are uninitialised until the first update() call
-     */
-    private boolean initialised = false;
 
     public Factory() {
         super(2, 2);
@@ -54,8 +36,6 @@ public class Factory extends Structure implements Updatable {
 
     public Factory(Document document) {
         super(document, 2, 2);
-
-        tmpNpcArray = ((ArrayList) document.get("npcs")).toArray();
     }
 
     @Override
@@ -70,66 +50,29 @@ public class Factory extends Structure implements Updatable {
     @Override
     public void update() {
 
-        if (!initialised) {
+        Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
-            initialised = true;
+        if (cooldown == 0) {
+            if (settlement.getNpcs().size() < MAX_NPC_COUNT) {
+                Point p = getAdjacentTile();
 
-            for (Object id : tmpNpcArray) {
+                if (p != null) {
+                    NonPlayerCharacter npc = new HarvesterNPC();
+                    npc.setWorld(getWorld());
+                    npc.setObjectId(new ObjectId());
+                    npc.setX(p.x);
+                    npc.setY(p.y);
+                    getWorld().addObject(npc);
+                    getWorld().incUpdatable();
 
-                NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((ObjectId) id);
-
-                if (npc != null) {
-                    npc.setFactory(this);
-                    npcs.add(npc);
+                    settlement.addNpc(npc);
                 }
             }
 
-            tmpNpcArray = null;
+            cooldown += NPC_CREATION_COOLDOWN;
 
         } else {
-
-            if (cooldown == 0) {
-                if (npcs.size() < MAX_NPC_COUNT) {
-                    Point p = getAdjacentTile();
-
-                    if (p != null) {
-                        NonPlayerCharacter npc = new HarvesterNPC();
-                        npc.setWorld(getWorld());
-                        npc.setObjectId(new ObjectId());
-                        npc.setX(p.x);
-                        npc.setY(p.y);
-                        getWorld().addObject(npc);
-                        getWorld().incUpdatable();
-                        npc.setFactory(this);
-
-                        npcs.add(npc);
-                    }
-                }
-
-                cooldown += NPC_CREATION_COOLDOWN;
-
-            } else {
-                cooldown--;
-            }
+            cooldown--;
         }
-    }
-
-    @Override
-    public Document mongoSerialise() {
-        Document dbObject = super.mongoSerialise();
-
-        List<ObjectId> tmpNpcArray = new ArrayList<>(npcs.size());
-
-        for (NonPlayerCharacter npc : npcs) {
-            tmpNpcArray.add(npc.getObjectId());
-        }
-
-        dbObject.put("npcs", tmpNpcArray);
-
-        return dbObject;
-    }
-
-    ArrayList<NonPlayerCharacter> getNpcs() {
-        return npcs;
     }
 }

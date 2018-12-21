@@ -2,11 +2,14 @@ package net.simon987.server.plugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.event.GameEventListener;
+import net.simon987.server.io.MongoSerializable;
+import net.simon987.server.logging.LogManager;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ServerPlugin {
+public abstract class ServerPlugin implements MongoSerializable {
 
     /**
      * Name of the plugin
@@ -48,5 +51,23 @@ public abstract class ServerPlugin {
 
     public List<GameEventListener> getListeners() {
         return listeners;
+    }
+
+    @Override
+    public Document mongoSerialise() {
+        Document document = new Document();
+
+        document.put("version", version);
+
+        return document;
+    }
+
+    public void load(Document document) {
+
+        LogManager.LOGGER.fine(String.format("(%s) Loading from database", name));
+        if (!version.equals(document.getString("version"))) {
+            LogManager.LOGGER.warning(String.format("(%s) Version mismatch with database!" +
+                    " This could cause problems. %s!=%s", name, version, document.getString("version")));
+        }
     }
 }
