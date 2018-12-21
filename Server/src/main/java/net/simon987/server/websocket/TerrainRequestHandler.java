@@ -19,7 +19,7 @@ public class TerrainRequestHandler implements MessageHandler {
             try {
                 world = GameServer.INSTANCE.getGameUniverse().getWorld(
                         Long.valueOf((long) json.get("x")).intValue(),
-                        Long.valueOf((long) json.get("y")).intValue(), false,
+                        Long.valueOf((long) json.get("y")).intValue(), true,
                         (String) json.get("dimension"));
             } catch (NullPointerException e) {
                 LogManager.LOGGER.severe("FIXME: handle TerrainRequestHandler");

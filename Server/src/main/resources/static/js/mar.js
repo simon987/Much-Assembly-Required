@@ -1593,7 +1593,7 @@ var FluidTile = (function (_super) {
         _this.baseTint = config.tile.fluid;
         _this.tint = _this.baseTint;
         _this.alpha = 0.6;
-        _this.baseZ = -15;
+        _this.baseZ = -10;
         _this.isoZ = _this.baseZ;
         _this.tileType = "fluid";
         return _this;

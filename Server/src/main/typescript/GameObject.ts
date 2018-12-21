@@ -565,7 +565,6 @@ class HarvesterNPC extends Cubot {
                 this.tileY = json.y;
 
                 this.walk();
-
             }
         }
 

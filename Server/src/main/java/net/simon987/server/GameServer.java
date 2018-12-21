@@ -113,6 +113,7 @@ public class GameServer implements Runnable {
         gameRegistry.registerTile(TileWall.ID, TileWall.class);
         gameRegistry.registerTile(TileCopper.ID, TileCopper.class);
         gameRegistry.registerTile(TileIron.ID, TileIron.class);
+        gameRegistry.registerTile(TileFluid.ID, TileFluid.class);
     }
 
     public GameUniverse getGameUniverse() {

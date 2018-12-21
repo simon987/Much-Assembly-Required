@@ -192,7 +192,7 @@ class FluidTile extends Tile {
         this.baseTint = config.tile.fluid;
         this.tint = this.baseTint;
         this.alpha = 0.6;
-        this.baseZ = -15;
+        this.baseZ = -10;
         this.isoZ = this.baseZ;
 
         this.tileType = "fluid";

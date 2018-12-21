@@ -1,6 +1,7 @@
 package net.simon987.server.game.objects;
 
 import net.simon987.server.GameServer;
+import net.simon987.server.game.world.Tile;
 import net.simon987.server.game.world.World;
 import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
@@ -102,10 +103,15 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
             }
 
             //Check collision
-            if (!world.isTileBlocked(newX, newY)) { //Check for collision
-                //Tile is passable
-                x = newX;
-                y = newY;
+            if (this.world.getGameObjectsBlockingAt(newX, newY).size() > 0) {
+                return false;
+            }
+
+            Tile tile = world.getTileMap().getTileAt(newX, newY);
+            if (tile.walk(this)) {
+
+                this.setX(newX);
+                this.setY(newY);
                 return true;
             } else {
                 return false;
