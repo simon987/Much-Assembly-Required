@@ -1368,7 +1368,7 @@ var VaultDoor = (function (_super) {
         _this.anchor.set(0.55, 0.55);
         _this.inputEnabled = true;
         _this.events.onInputDown.add(function (self) {
-            Debug.goToHex("7FFF", "7FFF", "v" + self.id + "-");
+            Debug.goToHex("7FFF", "7FFF", "v" + self.id);
             document.body.style.cursor = 'default';
             document.body.setAttribute("title", "");
         }, _this);
@@ -1449,7 +1449,7 @@ var ElectricBox = (function (_super) {
 var Portal = (function (_super) {
     __extends(Portal, _super);
     function Portal(json) {
-        var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/Portal") || this;
+        var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/portal") || this;
         _this.anchor.set(0.5, 0.3);
         _this.tint = config.portal.tint;
         _this.setText("Portal");

@@ -37,7 +37,8 @@ public class WorldCreationListener implements GameEventListener {
             World world = (World) event.getSource();
 
             try {
-                NpcPlugin.settlementMap.put(world.getId(), new Settlement(world));
+                Settlement settlement = new Settlement(world);
+                NpcPlugin.settlementMap.put(world.getId(), settlement);
             } catch (WorldGenerationException e) {
                 LogManager.LOGGER.fine(String.format("Exception during settlement generation: %s.",
                         e.getMessage()));

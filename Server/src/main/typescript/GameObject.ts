@@ -771,7 +771,7 @@ class VaultDoor extends GameObject {
 
         this.inputEnabled = true;
         this.events.onInputDown.add(function (self: VaultDoor) {
-            Debug.goToHex("7FFF", "7FFF", "v" + self.id + "-");
+            Debug.goToHex("7FFF", "7FFF", "v" + self.id);
             document.body.style.cursor = 'default';
             document.body.setAttribute("title", "")
         }, this);
@@ -873,7 +873,7 @@ class Portal extends GameObject {
     }
 
     constructor(json) {
-        super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/Portal");
+        super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/portal");
         this.anchor.set(0.5, 0.3);
         this.tint = config.portal.tint;
 

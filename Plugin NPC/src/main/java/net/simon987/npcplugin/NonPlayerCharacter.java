@@ -44,12 +44,6 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
     private Settlement settlement;
 
     /**
-     * If set to true, the NPC will be destroyed next tick if it is
-     * not linked to a Factory
-     */
-    private boolean selfDestroyNextTick = false;
-
-    /**
      * Age of the npc, in ticks
      */
     private int age = 0;
@@ -92,11 +86,7 @@ public abstract class NonPlayerCharacter extends GameObject implements Updatable
 
         //Destroy NPCs that are not linked with a Settlement
         if (settlement == null) {
-            if (selfDestroyNextTick) {
-                setDead(true);
-            }
-
-            selfDestroyNextTick = true;
+            setDead(true);
         }
 
         //Heal the NPC

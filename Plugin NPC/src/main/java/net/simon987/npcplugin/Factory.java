@@ -65,6 +65,13 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
 
         Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
+        if (settlement == null) {
+            //Only happens when server is killed during save function
+            getWorld().decUpdatable();
+            setDead(true);
+            return;
+        }
+
         if (cooldown == 0) {
             if (settlement.getNpcs().size() < MAX_NPC_COUNT) {
                 Point p = getAdjacentTile();
@@ -72,6 +79,9 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
                 if (p != null) {
                     NonPlayerCharacter npc = spawnNPC(p);
                     settlement.addNpc(npc);
+
+                    getWorld().addObject(npc);
+                    getWorld().incUpdatable();
                 }
             }
 
@@ -102,8 +112,6 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
         npc.setObjectId(new ObjectId());
         npc.setX(p.x);
         npc.setY(p.y);
-        getWorld().addObject(npc);
-        getWorld().incUpdatable();
         return npc;
     }
 
@@ -114,8 +122,6 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
         npc.setObjectId(new ObjectId());
         npc.setX(p.x);
         npc.setY(p.y);
-        getWorld().addObject(npc);
-        getWorld().incUpdatable();
 
         this.locked = true;
         this.programIndex = 0;
@@ -126,8 +132,6 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
     @Override
     public boolean sendMessage(char[] message) {
 
-        String strMessage = String.valueOf(message);
-
         if (locked) {
             Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
@@ -136,10 +140,10 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
 
                 return true;
             }
-        } else if (programIndex <= 2048) { //todo config
+        } else if (programIndex <= PROGRAM_SIZE) {
 
             if (programIndex == 0) {
-                program = new char[2048];
+                program = new char[PROGRAM_SIZE];
             }
 
             System.arraycopy(message, 0, program, programIndex, message.length);

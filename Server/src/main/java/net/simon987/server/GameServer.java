@@ -1,9 +1,7 @@
 package net.simon987.server;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.MongoClientException;
+import com.mongodb.client.*;
 import com.mongodb.client.model.ReplaceOptions;
 import net.simon987.server.crypto.CryptoProvider;
 import net.simon987.server.crypto.SecretKeyGenerator;
@@ -58,7 +56,9 @@ public class GameServer implements Runnable {
     public GameServer() {
         this.config = new ServerConfiguration("config.properties");
 
-        mongo = new MongoClient(config.getString("mongo_address"), config.getInt("mongo_port"));
+        String connString = String.format("mongodb://%s:%d",
+                config.getString("mongo_address"), config.getInt("mongo_port"));
+        mongo = MongoClients.create(connString);
         MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
 
         MongoCollection<Document> userCollection = db.getCollection("user");
@@ -243,7 +243,16 @@ public class GameServer implements Runnable {
     public void save() {
 
         LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
+
+        ClientSession session = null;
         try {
+            try {
+                session = mongo.startSession();
+                session.startTransaction();
+            } catch (MongoClientException e) {
+                LogManager.LOGGER.fine("Could not create mongoDB session, will not start a transaction.");
+            }
+
             MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
             ReplaceOptions updateOptions = new ReplaceOptions();
             updateOptions.upsert(true);
@@ -284,11 +293,18 @@ public class GameServer implements Runnable {
 
             //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
             server.replaceOne(new Document("_id", "serverinfo"), serverObj, updateOptions);
+            if (session != null) {
+                session.commitTransaction();
+            }
 
             LogManager.LOGGER.info("" + insertedWorlds + " worlds saved, " + unloaded_worlds + " unloaded");
         } catch (Exception e) {
             LogManager.LOGGER.severe("Problem happened during save function");
             e.printStackTrace();
+
+            if (session != null) {
+                session.commitTransaction();
+            }
         }
     }
 

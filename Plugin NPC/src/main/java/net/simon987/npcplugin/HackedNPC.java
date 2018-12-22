@@ -2,6 +2,7 @@ package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.*;
+import net.simon987.server.event.ObjectDeathEvent;
 import net.simon987.server.game.item.Item;
 import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.Action;
@@ -85,6 +86,11 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit {
 
         for (HardwareModule module : hardwareAddresses.values()) {
             module.update();
+        }
+
+        //Self-destroy when age limit is reached
+        if (getAge() >= NonPlayerCharacter.LIFETIME) {
+            setDead(true);
         }
 
         //Don't bother calling checkCompleted()
@@ -310,6 +316,20 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit {
         json.put("action", lastAction.ordinal());
 
         return json;
+    }
+
+    @Override
+    public boolean onDeadCallback() {
+
+        getWorld().decUpdatable();
+
+        if (getSettlement() != null && getSettlement().getNpcs() != null) {
+            getSettlement().getNpcs().remove(this);
+        }
+
+        GameServer.INSTANCE.getEventDispatcher().dispatch(new ObjectDeathEvent(this));
+
+        return false;
     }
 
     @Override
