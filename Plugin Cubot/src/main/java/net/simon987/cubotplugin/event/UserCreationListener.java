@@ -50,13 +50,6 @@ public class UserCreationListener implements GameEventListener {
         cubot.getWorld().addObject(cubot);
         cubot.getWorld().incUpdatable();
 
-        cubot.setEnergy(config.getInt("battery_max_energy"));
-        cubot.setMaxEnergy(config.getInt("battery_max_energy"));
-
-        cubot.setHp(config.getInt("cubot_max_hp"));
-        cubot.setMaxHp(config.getInt("cubot_max_hp"));
-        cubot.setMaxShield(config.getInt("cubot_max_shield"));
-
         cubot.setParent(user);
         user.setControlledUnit(cubot);
 
@@ -80,6 +73,10 @@ public class UserCreationListener implements GameEventListener {
         } catch (CancelledException e) {
             e.printStackTrace();
         }
+
+        cubot.setHp(config.getInt("cubot_max_hp"));
+        cubot.setMaxHp(config.getInt("cubot_max_hp"));
+        cubot.setMaxShield(config.getInt("cubot_max_shield"));
 
         LogManager.LOGGER.fine("(Plugin) Handled User creation event (Cubot Plugin)");
     }

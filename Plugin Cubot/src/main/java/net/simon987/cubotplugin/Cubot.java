@@ -92,24 +92,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     private User parent;
 
     /**
-     * Energy units in kJ
-     */
-    private int energy;
-
-    /**
-     * Maximum energy units in kJ
-     */
-    private int maxEnergy;
-
-    /**
-     * Solar panel multiplier
-     * <br>TODO: Set this constant in dimension
-     */
-    private static final float SOLAR_PANEL_MULTIPLIER = 1;
-    /**
      * Maximum size of the console buffer (also called 'internal buffer')
      */
-    private static final int CONSOLE_BUFFER_MAX_SIZE = 40;
+    public static final int CONSOLE_BUFFER_MAX_SIZE = 40;
 
     /**
      * List of attached hardware, 'modules'
@@ -143,10 +128,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         hp = document.getInteger("hp");
         shield = document.getInteger("shield");
         setDirection(Direction.getDirection(document.getInteger("direction")));
-        energy = document.getInteger("energy");
 
         ServerConfiguration config = GameServer.INSTANCE.getConfig();
-        maxEnergy = config.getInt("battery_max_energy");
         maxHp = config.getInt("cubot_max_hp");
         maxShield = config.getInt("cubot_max_shield");
 
@@ -175,8 +158,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
      */
     @Override
     public void update() {
-
-        storeEnergy((int) (SOLAR_PANEL_MULTIPLIER * GameServer.INSTANCE.getDayNightCycle().getSunIntensity()));
 
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
@@ -225,7 +206,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         json.put("hp", hp);
         json.put("shield", shield);
         json.put("action", lastAction.ordinal());
-        json.put("energy", energy);
 
         if (parent != null) {
             json.put("parent", parent.getUsername()); //Only used client-side for now
@@ -249,7 +229,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         dbObject.put("hp", hp);
         dbObject.put("shield", shield);
         dbObject.put("action", lastAction.ordinal());
-        dbObject.put("energy", energy);
 
         if (parent != null) {
             dbObject.put("parent", parent.getUsername()); //Only used client-side for now
@@ -279,7 +258,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         setDead(false);
         setHp(maxHp);
         setShield(0);
-        setEnergy(maxEnergy);
+        setEnergy(((CubotBattery) getHardware(CubotBattery.class)).getMaxEnergy());
         clearKeyboardBuffer();
         consoleMessagesBuffer.clear();
         lastConsoleMessagesBuffer.clear();
@@ -354,34 +333,41 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     }
 
     public int getEnergy() {
-        return energy;
+        CubotBattery battery = (CubotBattery) getHardware(CubotBattery.class);
+        return battery.getEnergy();
     }
 
     public void setEnergy(int energy) {
-        this.energy = energy;
+        CubotBattery battery = (CubotBattery) getHardware(CubotBattery.class);
+        battery.setEnergy(energy);
     }
 
     public boolean spendEnergy(int amount) {
 
-        if (energy - amount < 0) {
+        CubotBattery battery = (CubotBattery) getHardware(CubotBattery.class);
+
+        if (battery.getEnergy() - amount < 0) {
             return false;
         } else {
-            energy -= amount;
+            battery.setEnergy(battery.getEnergy() - amount);
             return true;
         }
     }
 
     public void storeEnergy(int amount) {
 
-        energy = Math.min(energy + amount, maxEnergy);
+        CubotBattery battery = (CubotBattery) getHardware(CubotBattery.class);
+        battery.setEnergy(Math.min(battery.getEnergy() + amount, battery.getMaxEnergy()));
     }
 
     public void setMaxEnergy(int maxEnergy) {
-        this.maxEnergy = maxEnergy;
+        CubotBattery battery = (CubotBattery) getHardware(CubotBattery.class);
+        battery.setMaxEnergy(maxEnergy);
     }
 
     public int getMaxEnergy() {
-        return maxEnergy;
+        CubotBattery battery = (CubotBattery) getHardware(CubotBattery.class);
+        return battery.getMaxEnergy();
     }
 
     public int getShield() {
@@ -422,8 +408,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     @Override
     public Memory getFloppyData() {
 
-        //TODO change DEFAULT_ADDRESS to getHW(class) to allow mutable addresses
-        CubotFloppyDrive drive = ((CubotFloppyDrive) getHardware(CubotFloppyDrive.DEFAULT_ADDRESS));
+        CubotFloppyDrive drive = (CubotFloppyDrive) getHardware(CubotFloppyDrive.class);
 
         if (drive.getFloppy() != null) {
             return drive.getFloppy().getMemory();
@@ -515,6 +500,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     public void setMaxShield(int maxShield) {
         this.maxShield = maxShield;
     }
+
     @Override
     public void heal(int amount) {
         hp += amount;
@@ -538,11 +524,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         }
     }
 
+    @Override
     public void attachHardware(HardwareModule hardware, int address) {
         hardwareAddresses.put(address, hardware);
         hardwareModules.put(hardware.getClass(), address);
     }
 
+    @Override
     public void detachHardware(int address) {
         hardwareAddresses.remove(address);
 
@@ -555,6 +543,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         hardwareModules.remove(toRemove);
     }
 
+    @Override
     public boolean hardwareInterrupt(int address, Status status) {
         HardwareModule hardware = hardwareAddresses.get(address);
 
@@ -566,6 +555,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         }
     }
 
+    @Override
     public int hardwareQuery(int address) {
         HardwareModule hardware = hardwareAddresses.get(address);
 

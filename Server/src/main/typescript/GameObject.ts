@@ -7,7 +7,8 @@ enum ObjectType {
     VAULT_DOOR = "net.simon987.npcplugin.VaultDoor",
     OBSTACLE = "net.simon987.npcplugin.Obstacle",
     ELECTRIC_BOX = "net.simon987.npcplugin.ElectricBox",
-    PORTAL = "net.simon987.npcplugin.Portal"
+    PORTAL = "net.simon987.npcplugin.Portal",
+    HACKED_NPC = "net.simon987.npcplugin.HackedNPC"
 }
 
 enum ItemType {
@@ -59,7 +60,6 @@ abstract class GameObject extends Phaser.Plugin.Isometric.IsoSprite {
         switch (json.t) {
             case ObjectType.CUBOT:
                 return new Cubot(json);
-
             case ObjectType.BIOMASS:
                 return new BiomassBlob(json);
             case ObjectType.HARVESTER_NPC:
@@ -76,6 +76,8 @@ abstract class GameObject extends Phaser.Plugin.Isometric.IsoSprite {
                 return new ElectricBox(json);
             case ObjectType.PORTAL:
                 return new Portal(json);
+            case ObjectType.HACKED_NPC:
+                return new HackedNPC(json);
 
             default:
                 return null;
@@ -155,7 +157,7 @@ class Cubot extends GameObject {
         this.heldItem = json.heldItem;
         this.direction = json.direction;
         this.action = json.action;
-        this.energy = json.energy;
+        this.energy = this.getEnergy(json);
 
         this.cubotSprite = mar.game.make.sprite(0, 0, "sheet", null);
         this.cubotSprite.anchor.set(0.5, 0);
@@ -195,6 +197,10 @@ class Cubot extends GameObject {
         this.addChild(this.shieldFrontSprite);
 
         this.setShield(false);
+    }
+
+    protected getEnergy(json): number {
+        return json["net.simon987.cubotplugin.CubotBattery"].energy
     }
 
     public setShield(shield: boolean) {
@@ -277,7 +283,7 @@ class Cubot extends GameObject {
         }
 
         this.action = json.action;
-        this.energy = json.energy;
+        this.energy = this.getEnergy(json);
         this.direction = json.direction;
         this.shield = json.shield;
 
@@ -333,7 +339,7 @@ class Cubot extends GameObject {
         this.setShield(this.shield > 0)
     }
 
-    private updateHologram(holoMode: HologramMode, holoColor: number, holoValue: number, holoStr: string): void {
+    protected updateHologram(holoMode: HologramMode, holoColor: number, holoValue: number, holoStr: string): void {
 
         let fillColor: string = (holoColor & 0xFFFFFF).toString(16);
         fillColor = "#" + ("000000".substr(fillColor.length) + fillColor);
@@ -548,6 +554,14 @@ class HarvesterNPC extends Cubot {
         }
     }
 
+    protected getEnergy(json): number {
+        if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
+            return json["net.simon987.npcplugin.NpcBattery"].energy;
+        } else {
+            return 0;
+        }
+    }
+
     updateObject(json) {
         if (DEBUG) {
             console.log("Updating Harvester NPC object")
@@ -574,6 +588,30 @@ class HarvesterNPC extends Cubot {
 
     public createUsername() {
         //No-op
+    }
+
+}
+
+class HackedNPC extends HarvesterNPC {
+
+    constructor(json) {
+        super(json);
+
+        this.updateDirection();
+        this.setText("Hacked NPC");
+        this.text.visible = false;
+        this.tint = 0xE040FB;
+    }
+
+    updateObject(json) {
+        super.updateObject(json);
+
+        let holoHw = json["net.simon987.cubotplugin.CubotHologram"];
+        this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
+    }
+
+    protected getEnergy(json): number {
+        return json["net.simon987.npcplugin.NpcBattery"].energy
     }
 
 }

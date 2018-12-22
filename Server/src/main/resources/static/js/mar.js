@@ -830,6 +830,7 @@ var ObjectType;
     ObjectType["OBSTACLE"] = "net.simon987.npcplugin.Obstacle";
     ObjectType["ELECTRIC_BOX"] = "net.simon987.npcplugin.ElectricBox";
     ObjectType["PORTAL"] = "net.simon987.npcplugin.Portal";
+    ObjectType["HACKED_NPC"] = "net.simon987.npcplugin.HackedNPC";
 })(ObjectType || (ObjectType = {}));
 var ItemType;
 (function (ItemType) {
@@ -873,6 +874,8 @@ var GameObject = (function (_super) {
                 return new ElectricBox(json);
             case ObjectType.PORTAL:
                 return new Portal(json);
+            case ObjectType.HACKED_NPC:
+                return new HackedNPC(json);
             default:
                 return null;
         }
@@ -917,7 +920,7 @@ var Cubot = (function (_super) {
         _this.heldItem = json.heldItem;
         _this.direction = json.direction;
         _this.action = json.action;
-        _this.energy = json.energy;
+        _this.energy = _this.getEnergy(json);
         _this.cubotSprite = mar.game.make.sprite(0, 0, "sheet", null);
         _this.cubotSprite.anchor.set(0.5, 0);
         _this.addChild(_this.cubotSprite);
@@ -949,6 +952,10 @@ var Cubot = (function (_super) {
         _this.setShield(false);
         return _this;
     }
+
+    Cubot.prototype.getEnergy = function (json) {
+        return json["net.simon987.cubotplugin.CubotBattery"].energy;
+    };
     Cubot.prototype.setShield = function (shield) {
         this.shieldBackSprite.visible = shield;
         this.shieldFrontSprite.visible = shield;
@@ -1012,7 +1019,7 @@ var Cubot = (function (_super) {
             console.log("Updating Cubot object");
         }
         this.action = json.action;
-        this.energy = json.energy;
+        this.energy = this.getEnergy(json);
         this.direction = json.direction;
         this.shield = json.shield;
         this.createInventory([json.heldItem]);
@@ -1207,6 +1214,13 @@ var HarvesterNPC = (function (_super) {
                 break;
         }
     };
+    HarvesterNPC.prototype.getEnergy = function (json) {
+        if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
+            return json["net.simon987.npcplugin.NpcBattery"].energy;
+        } else {
+            return 0;
+        }
+    };
     HarvesterNPC.prototype.updateObject = function (json) {
         if (DEBUG) {
             console.log("Updating Harvester NPC object");
@@ -1226,6 +1240,28 @@ var HarvesterNPC = (function (_super) {
     };
     return HarvesterNPC;
 }(Cubot));
+var HackedNPC = (function (_super) {
+    __extends(HackedNPC, _super);
+
+    function HackedNPC(json) {
+        var _this = _super.call(this, json) || this;
+        _this.updateDirection();
+        _this.setText("Hacked NPC");
+        _this.text.visible = false;
+        _this.tint = 0xE040FB;
+        return _this;
+    }
+
+    HackedNPC.prototype.updateObject = function (json) {
+        _super.prototype.updateObject.call(this, json);
+        var holoHw = json["net.simon987.cubotplugin.CubotHologram"];
+        this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
+    };
+    HackedNPC.prototype.getEnergy = function (json) {
+        return json["net.simon987.npcplugin.NpcBattery"].energy;
+    };
+    return HackedNPC;
+}(HarvesterNPC));
 var BiomassBlob = (function (_super) {
     __extends(BiomassBlob, _super);
     function BiomassBlob(json) {

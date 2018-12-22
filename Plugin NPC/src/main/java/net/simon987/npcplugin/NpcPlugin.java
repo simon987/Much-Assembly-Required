@@ -13,12 +13,16 @@ import net.simon987.server.logging.LogManager;
 import net.simon987.server.plugin.ServerPlugin;
 import org.bson.Document;
 
+import java.io.InputStream;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NpcPlugin extends ServerPlugin {
 
     public static Map<String, Settlement> settlementMap;
+
+    public static Document DEFAULT_HACKED_NPC;
 
     @Override
     public void init(GameServer gameServer) {
@@ -39,13 +43,21 @@ public class NpcPlugin extends ServerPlugin {
         registry.registerGameObject(ElectricBox.class);
         registry.registerGameObject(Portal.class);
         registry.registerGameObject(VaultExitPortal.class);
+        registry.registerGameObject(HackedNPC.class);
 
         registry.registerHardware(RadioReceiverHardware.class);
+        registry.registerHardware(NpcBattery.class);
+        registry.registerHardware(NpcInventory.class);
 
         registry.registerTile(TileVaultFloor.ID, TileVaultFloor.class);
         registry.registerTile(TileVaultWall.ID, TileVaultWall.class);
 
         settlementMap = new ConcurrentHashMap<>();
+
+        InputStream is = getClass().getClassLoader().getResourceAsStream("defaultHackedCubotHardware.json");
+        Scanner scanner = new Scanner(is).useDelimiter("\\A");
+        String json = scanner.next();
+        DEFAULT_HACKED_NPC = Document.parse(json);
 
         LogManager.LOGGER.info("(NPC Plugin) Initialised NPC plugin");
     }

@@ -1,11 +1,12 @@
 package net.simon987.cubotplugin;
 
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
-public class CubotHologram extends CubotHardwareModule {
+public class CubotHologram extends HardwareModule {
 
     /**
      * Hardware ID (Should be unique)
@@ -31,8 +32,8 @@ public class CubotHologram extends CubotHardwareModule {
      */
     private int displayColor = 0;
 
-    public CubotHologram(Cubot cubot) {
-        super(cubot);
+    public CubotHologram(ControllableUnit unit) {
+        super(null, unit);
     }
 
     public CubotHologram(Document document, ControllableUnit cubot) {
@@ -80,7 +81,7 @@ public class CubotHologram extends CubotHardwareModule {
 
         } else if (a == HOLO_DISPLAY_COLOR) {
 
-            if (cubot.spendEnergy(4)) {
+            if (unit.spendEnergy(4)) {
                 int b = getCpu().getRegisterSet().getRegister("B").getValue();
                 int c = getCpu().getRegisterSet().getRegister("C").getValue();
 

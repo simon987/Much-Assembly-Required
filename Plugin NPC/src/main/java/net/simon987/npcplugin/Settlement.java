@@ -59,6 +59,7 @@ public class Settlement implements MongoSerializable {
 
         this.world = world;
         this.difficultyLevel = DifficultyLevel.NORMAL; //TODO randomize ?
+        this.password = "12345678".toCharArray();
 
         outerLoopFactory:
         for (int x = 2; x < 12; x++) {
@@ -175,7 +176,7 @@ public class Settlement implements MongoSerializable {
         }
         document.put("factory", factory.getObjectId());
         document.put("difficulty_level", difficultyLevel.ordinal());
-        document.put("password", "1234567"); //todo
+        document.put("password", String.valueOf(password));
 
 
         List<ObjectId> npcArray = new ArrayList<>(npcs.size());
