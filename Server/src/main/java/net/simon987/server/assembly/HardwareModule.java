@@ -11,13 +11,14 @@ import org.json.simple.JSONObject;
 public abstract class HardwareModule implements MongoSerializable, JSONSerializable {
 
     private CPU cpu;
+    protected ControllableUnit unit;
 
     public HardwareModule() {
 
     }
 
     public HardwareModule(Document document, ControllableUnit unit) {
-
+        this.unit = unit;
     }
 
     /**
@@ -57,5 +58,13 @@ public abstract class HardwareModule implements MongoSerializable, JSONSerializa
     @Override
     public JSONObject debugJsonSerialise() {
         return null;
+    }
+
+    @Override
+    public Document mongoSerialise() {
+        Document document = new Document();
+
+        document.put("type", getClass().getCanonicalName());
+        return document;
     }
 }

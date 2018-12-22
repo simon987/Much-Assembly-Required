@@ -118,11 +118,7 @@
 
     #parse("footer.vm")
 
-##Console
-<style>
-</style>
-
-<div class="bottom-panel">
+<div class="bottom-panel" style="height: 0">
     <div class="splitter-horizontal"></div>
     <div class="console-wrapper">
         <div class="console-side-bar">
@@ -151,7 +147,6 @@
                     <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(4)">64 chars</button>
                 </div>
             </div>
-            </p>
             <p>
                 <button id="resetButton" class="btn btn-danger btn-shadow" style="margin-left: 0"
                         data-container="body" data-toggle="popover" data-trigger="hover"
@@ -163,9 +158,7 @@
             <div class="piece scanlines noclick"></div>
             <div class="piece glow noclick"></div>
         </div>
-
     </div>
-
 </div>
 
 <script>

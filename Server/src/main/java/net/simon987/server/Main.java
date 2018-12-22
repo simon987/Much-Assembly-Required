@@ -8,6 +8,7 @@ import spark.Spark;
 public class Main {
     public static void main(String[] args) {
 
+
         ServerConfiguration config = new ServerConfiguration("config.properties");
         LogManager.initialize(config);
 

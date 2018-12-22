@@ -7,7 +7,8 @@ enum ObjectType {
     VAULT_DOOR = "net.simon987.npcplugin.VaultDoor",
     OBSTACLE = "net.simon987.npcplugin.Obstacle",
     ELECTRIC_BOX = "net.simon987.npcplugin.ElectricBox",
-    PORTAL = "net.simon987.npcplugin.Portal"
+    PORTAL = "net.simon987.npcplugin.Portal",
+    HACKED_NPC = "net.simon987.npcplugin.HackedNPC"
 }
 
 enum ItemType {
@@ -59,7 +60,6 @@ abstract class GameObject extends Phaser.Plugin.Isometric.IsoSprite {
         switch (json.t) {
             case ObjectType.CUBOT:
                 return new Cubot(json);
-
             case ObjectType.BIOMASS:
                 return new BiomassBlob(json);
             case ObjectType.HARVESTER_NPC:
@@ -76,6 +76,8 @@ abstract class GameObject extends Phaser.Plugin.Isometric.IsoSprite {
                 return new ElectricBox(json);
             case ObjectType.PORTAL:
                 return new Portal(json);
+            case ObjectType.HACKED_NPC:
+                return new HackedNPC(json);
 
             default:
                 return null;
@@ -136,6 +138,7 @@ class Cubot extends GameObject {
     protected cubotSprite: Phaser.Sprite;
     private shieldBackSprite: Phaser.Sprite;
     private shieldFrontSprite: Phaser.Sprite;
+    protected baseTint: number;
 
     constructor(json) {
         //workaround for topological sort, needs sprite dimensions
@@ -155,7 +158,8 @@ class Cubot extends GameObject {
         this.heldItem = json.heldItem;
         this.direction = json.direction;
         this.action = json.action;
-        this.energy = json.energy;
+        this.energy = this.getEnergy(json);
+        this.baseTint = config.cubot.tint;
 
         this.cubotSprite = mar.game.make.sprite(0, 0, "sheet", null);
         this.cubotSprite.anchor.set(0.5, 0);
@@ -197,6 +201,10 @@ class Cubot extends GameObject {
         this.setShield(false);
     }
 
+    protected getEnergy(json): number {
+        return json["net.simon987.cubotplugin.CubotBattery"].energy
+    }
+
     public setShield(shield: boolean) {
         this.shieldBackSprite.visible = shield;
         this.shieldFrontSprite.visible = shield;
@@ -207,13 +215,12 @@ class Cubot extends GameObject {
         mar.game.add.tween(this).to({isoZ: 45}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Linear.None, true);
 
-        this.cubotSprite.tint = config.cubot.hoverTint;
-
         if (this.text !== undefined) {
             this.text.visible = true;
         }
 
         this.hovered = true;
+        this.cubotSprite.tint = this.getTint();
     }
 
 
@@ -263,7 +270,7 @@ class Cubot extends GameObject {
             if (this.energy <= config.cubot.lowEnergy) {
                 return config.cubot.lowEnergyTint;
             } else {
-                return config.cubot.tint;
+                return this.baseTint;
             }
         } else {
             return config.cubot.hoverTint;
@@ -277,7 +284,7 @@ class Cubot extends GameObject {
         }
 
         this.action = json.action;
-        this.energy = json.energy;
+        this.energy = this.getEnergy(json);
         this.direction = json.direction;
         this.shield = json.shield;
 
@@ -333,7 +340,7 @@ class Cubot extends GameObject {
         this.setShield(this.shield > 0)
     }
 
-    private updateHologram(holoMode: HologramMode, holoColor: number, holoValue: number, holoStr: string): void {
+    protected updateHologram(holoMode: HologramMode, holoColor: number, holoValue: number, holoStr: string): void {
 
         let fillColor: string = (holoColor & 0xFFFFFF).toString(16);
         fillColor = "#" + ("000000".substr(fillColor.length) + fillColor);
@@ -524,13 +531,6 @@ class HarvesterNPC extends Cubot {
         this.text.visible = false;
     }
 
-    /**
-     * Needs to be overridden because Cubot() calls getTint() when initialised
-     */
-    public getTint() {
-        return config.cubot.tint;
-    }
-
     public updateDirection() {
         switch (this.direction) {
             case Direction.NORTH:
@@ -545,6 +545,14 @@ class HarvesterNPC extends Cubot {
             case Direction.WEST:
                 this.cubotSprite.animations.frameName = "harvester/walk_w/0001";
                 break;
+        }
+    }
+
+    protected getEnergy(json): number {
+        if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
+            return json["net.simon987.npcplugin.NpcBattery"].energy;
+        } else {
+            return 1000; //arbitrary number so that the lowEnergy color thresh doesn't trigger
         }
     }
 
@@ -576,6 +584,26 @@ class HarvesterNPC extends Cubot {
         //No-op
     }
 
+}
+
+class HackedNPC extends HarvesterNPC {
+
+    constructor(json) {
+        super(json);
+
+        this.updateDirection();
+        this.setText("Hacked NPC");
+        this.text.visible = false;
+        this.baseTint = config.hackedNpc.tint;
+        this.cubotSprite.tint = this.baseTint;
+    }
+
+    updateObject(json) {
+        super.updateObject(json);
+
+        let holoHw = json["net.simon987.cubotplugin.CubotHologram"];
+        this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
+    }
 }
 
 
@@ -743,7 +771,7 @@ class VaultDoor extends GameObject {
 
         this.inputEnabled = true;
         this.events.onInputDown.add(function (self: VaultDoor) {
-            Debug.goToHex("7FFF", "7FFF", "v" + self.id + "-");
+            Debug.goToHex("7FFF", "7FFF", "v" + self.id);
             document.body.style.cursor = 'default';
             document.body.setAttribute("title", "")
         }, this);
@@ -845,7 +873,7 @@ class Portal extends GameObject {
     }
 
     constructor(json) {
-        super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/Portal");
+        super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/portal");
         this.anchor.set(0.5, 0.3);
         this.tint = config.portal.tint;
 

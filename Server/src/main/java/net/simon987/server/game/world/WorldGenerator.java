@@ -38,6 +38,8 @@ public class WorldGenerator {
     private int minCopperCount;
     private int maxCopperCount;
 
+    private String dimension;
+
     private static final int DEFAULT_WORLD_SIZE = 16;
 
     /**
@@ -47,6 +49,8 @@ public class WorldGenerator {
 
 
     public WorldGenerator(ServerConfiguration config) {
+
+        dimension = config.getString("new_user_dimension");
 
         centerPointCountMin = config.getInt("wg_centerPointCountMin");
         centerPointCountMax = config.getInt("wg_centerPointCountMax");
@@ -88,9 +92,9 @@ public class WorldGenerator {
     /**
      * Generates an empty World
      */
-    private static World generateEmptyWorld(int locX, int locY) {
+    private static World generateEmptyWorld(int locX, int locY, String dimension) {
 
-        return new World(locX, locY, new TileMap(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE), "w-");
+        return new World(locX, locY, new TileMap(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE), dimension);
     }
 
     /**
@@ -99,7 +103,7 @@ public class WorldGenerator {
     public World generateWorld(int locX, int locY) throws CancelledException {
         Random random = new Random();
 
-        World world = generateEmptyWorld(locX, locY);
+        World world = generateEmptyWorld(locX, locY, dimension);
 
         centerPointsMap = new HashMap<>(16);
 

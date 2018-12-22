@@ -159,30 +159,30 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
 
         int count = 0;
 
-        if (!getWorld().isTileBlocked(getX() + 1, getY())) {
+        if (getWorld().getTileMap().isInBounds(x + 1, y) && !getWorld().isTileBlocked(x + 1, y)) {
             count++;
         }
-        if (!getWorld().isTileBlocked(getX(), getY() + 1)) {
+        if (getWorld().getTileMap().isInBounds(x, y + 1) && !getWorld().isTileBlocked(x, y + 1)) {
             count++;
         }
-        if (!getWorld().isTileBlocked(getX() - 1, getY())) {
+        if (getWorld().getTileMap().isInBounds(x - 1, y) && !getWorld().isTileBlocked(x - 1, y)) {
             count++;
         }
-        if (!getWorld().isTileBlocked(getX(), getY() - 1)) {
+        if (getWorld().getTileMap().isInBounds(x, y - 1) && !getWorld().isTileBlocked(x, y - 1)) {
             count++;
         }
 
         if (diagonals) {
-            if (!getWorld().isTileBlocked(getX() + 1, getY() + 1)) {
+            if (getWorld().getTileMap().isInBounds(x + 1, y + 1) && !getWorld().isTileBlocked(x + 1, y + 1)) {
                 count++;
             }
-            if (!getWorld().isTileBlocked(getX() - 1, getY() + 1)) {
+            if (getWorld().getTileMap().isInBounds(x - 1, y + 1) && !getWorld().isTileBlocked(x - 1, y + 1)) {
                 count++;
             }
-            if (!getWorld().isTileBlocked(getX() + 1, getY() - 1)) {
+            if (getWorld().getTileMap().isInBounds(x + 1, y - 1) && !getWorld().isTileBlocked(x + 1, y - 1)) {
                 count++;
             }
-            if (!getWorld().isTileBlocked(getX() - 1, getY() - 1)) {
+            if (getWorld().getTileMap().isInBounds(x - 1, y - 1) && !getWorld().isTileBlocked(x - 1, y - 1)) {
                 count++;
             }
         }

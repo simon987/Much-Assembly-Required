@@ -1,5 +1,6 @@
 package net.simon987.cubotplugin;
 
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
@@ -9,7 +10,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 
-public class CubotLidar extends CubotHardwareModule {
+public class CubotLidar extends HardwareModule {
 
     /**
      * Hardware ID (Should be unique)
@@ -24,12 +25,12 @@ public class CubotLidar extends CubotHardwareModule {
     private static final int LIDAR_GET_WORLD_POS = 4;
     private static final int LIDAR_GET_WORLD_SIZE = 5;
 
-    public CubotLidar(Cubot cubot) {
-        super(cubot);
+    public CubotLidar(ControllableUnit unit) {
+        super(null, unit);
     }
 
-    public CubotLidar(Document document, ControllableUnit cubot) {
-        super(document, cubot);
+    public CubotLidar(Document document, ControllableUnit unit) {
+        super(document, unit);
     }
 
     @Override
@@ -44,18 +45,18 @@ public class CubotLidar extends CubotHardwareModule {
 
         switch (a) {
             case LIDAR_GET_POS:
-                getCpu().getRegisterSet().getRegister("X").setValue(cubot.getX());
-                getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getY());
+                getCpu().getRegisterSet().getRegister("X").setValue(unit.getX());
+                getCpu().getRegisterSet().getRegister("Y").setValue(unit.getY());
                 break;
             case LIDAR_GET_PATH:
-                if (cubot.spendEnergy(50)) {
+                if (unit.spendEnergy(50)) {
                     int c = getCpu().getRegisterSet().getRegister("C").getValue();
                     int b = getCpu().getRegisterSet().getRegister("B").getValue();
                     int destX = getCpu().getRegisterSet().getRegister("X").getValue();
                     int destY = getCpu().getRegisterSet().getRegister("Y").getValue();
 
                     //Get path
-                    ArrayList<Node> nodes = Pathfinder.findPath(cubot.getWorld(), cubot.getX(), cubot.getY(),
+                    ArrayList<Node> nodes = Pathfinder.findPath(unit.getWorld(), unit.getX(), unit.getY(),
                             destX, destY, b);
 
                     //Write to memory
@@ -102,13 +103,13 @@ public class CubotLidar extends CubotHardwareModule {
                 break;
 
             case LIDAR_GET_MAP:
-                if (cubot.spendEnergy(10)) {
-                    char[][] mapInfo = cubot.getWorld().getMapInfo();
+                if (unit.spendEnergy(10)) {
+                    char[][] mapInfo = unit.getWorld().getMapInfo();
 
                     //Write map data to the location specified by register X
                     int i = getCpu().getRegisterSet().getRegister("X").getValue();
-                    for (int x = 0; x < cubot.getWorld().getWorldSize(); x++) {
-                        for (int y = 0; y < cubot.getWorld().getWorldSize(); y++) {
+                    for (int x = 0; x < unit.getWorld().getWorldSize(); x++) {
+                        for (int y = 0; y < unit.getWorld().getWorldSize(); y++) {
                             getCpu().getMemory().set(i++, mapInfo[x][y]);
                         }
                     }
@@ -116,13 +117,13 @@ public class CubotLidar extends CubotHardwareModule {
                 break;
 
             case LIDAR_GET_WORLD_SIZE:
-                getCpu().getRegisterSet().getRegister("X").setValue(cubot.getWorld().getWorldSize());
-                getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getWorld().getWorldSize());
+                getCpu().getRegisterSet().getRegister("X").setValue(unit.getWorld().getWorldSize());
+                getCpu().getRegisterSet().getRegister("Y").setValue(unit.getWorld().getWorldSize());
                 break;
 
             case LIDAR_GET_WORLD_POS:
-                getCpu().getRegisterSet().getRegister("X").setValue(cubot.getWorld().getX());
-                getCpu().getRegisterSet().getRegister("Y").setValue(cubot.getWorld().getY());
+                getCpu().getRegisterSet().getRegister("X").setValue(unit.getWorld().getX());
+                getCpu().getRegisterSet().getRegister("Y").setValue(unit.getWorld().getY());
                 break;
 
         }

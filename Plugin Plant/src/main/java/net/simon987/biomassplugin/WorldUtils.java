@@ -73,9 +73,6 @@ public class WorldUtils {
             }
         }
 
-//        LogManager.LOGGER.info("Generated " + biomassBlobs.size() + " biomassBlobs for World (" + world.getX() + ',' +
-//                world.getY() + ')');
-
         return biomassBlobs;
     }
 }

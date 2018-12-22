@@ -18,6 +18,9 @@ let config = {
         lowEnergy: 100, //Low energy threshold to change color
         otherCubotAlpha: 0.6,
     },
+    hackedNpc: {
+        tint: 0xE040FB,
+    },
     biomass: {
         tint: 0x63B85F,
         tintHover: 0x00FF00,

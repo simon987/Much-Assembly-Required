@@ -5,6 +5,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.io.JSONSerializable;
 import net.simon987.server.io.MongoSerializable;
+import net.simon987.server.logging.LogManager;
 import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -87,7 +88,8 @@ public class TileMap implements JSONSerializable, MongoSerializable {
      */
     public int getTileIdAt(int x, int y) {
         try {
-            return tiles[x][y].getId();
+            Tile tile = tiles[x][y];
+            return tile == null ? -1 : tile.getId();
         } catch (ArrayIndexOutOfBoundsException e) {
             return -1;
         }
@@ -101,13 +103,18 @@ public class TileMap implements JSONSerializable, MongoSerializable {
      * @return the tile id at the specified position, null if out of bounds
      */
     public Tile getTileAt(int x, int y) {
-        try {
+        if (isInBounds(x, y)) {
             return tiles[x][y];
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } else {
+            LogManager.LOGGER.warning(String.format("ArrayIndexOutOfBoundsException in TileMap::getTileAt(%d, %d)", x, y));
+            Thread.dumpStack();
             return null;
         }
     }
 
+    public boolean isInBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < width;
+    }
 
     public int getWidth() {
 

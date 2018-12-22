@@ -1,12 +1,13 @@
 package net.simon987.cubotplugin;
 
+import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.Action;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.Direction;
 import org.bson.Document;
 
-public class CubotLeg extends CubotHardwareModule {
+public class CubotLeg extends HardwareModule {
 
     public static final int DEFAULT_ADDRESS = 1;
 
@@ -18,12 +19,12 @@ public class CubotLeg extends CubotHardwareModule {
      */
     static final char HWID = 0x0001;
 
-    public CubotLeg(Cubot cubot) {
-        super(cubot);
+    public CubotLeg(ControllableUnit unit) {
+        super(null, unit);
     }
 
-    public CubotLeg(Document document, ControllableUnit cubot) {
-        super(document, cubot);
+    public CubotLeg(Document document, ControllableUnit unit) {
+        super(document, unit);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class CubotLeg extends CubotHardwareModule {
     @Override
     public void handleInterrupt(Status status) {
 
-        if (cubot.getCurrentAction() == Action.IDLE) {
+        if (unit.getCurrentAction() == Action.IDLE) {
             int a = getCpu().getRegisterSet().getRegister("A").getValue();
             int b = getCpu().getRegisterSet().getRegister("B").getValue();
 
@@ -44,8 +45,8 @@ public class CubotLeg extends CubotHardwareModule {
                 Direction dir = Direction.getDirection(b);
 
                 if (dir != null) {
-                    if (cubot.spendEnergy(20)) {
-                        cubot.setDirection(Direction.getDirection(b));
+                    if (unit.spendEnergy(20)) {
+                        unit.setDirection(Direction.getDirection(b));
                         status.setErrorFlag(false);
                     }
                 } else {
@@ -55,17 +56,17 @@ public class CubotLeg extends CubotHardwareModule {
 
             } else if (a == LEGS_SET_DIR_AND_WALK) {
 
-                if (cubot.getMaxEnergy() >= 100) {
+                if (unit.getMaxEnergy() >= 100) {
                     Direction dir = Direction.getDirection(b);
 
                     if (dir != null) {
-                        cubot.setDirection(Direction.getDirection(b));
+                        unit.setDirection(Direction.getDirection(b));
                         status.setErrorFlag(false);
                     } else {
                         status.setErrorFlag(true);
                     }
 
-                    cubot.setCurrentAction(Action.WALKING);
+                    unit.setCurrentAction(Action.WALKING);
                 }
             }
         }

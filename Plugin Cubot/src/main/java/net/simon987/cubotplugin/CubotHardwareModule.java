@@ -16,11 +16,4 @@ public abstract class CubotHardwareModule extends HardwareModule {
         this.cubot = cubot;
     }
 
-    @Override
-    public Document mongoSerialise() {
-        Document document = new Document();
-
-        document.put("type", getClass().getCanonicalName());
-        return document;
-    }
 }

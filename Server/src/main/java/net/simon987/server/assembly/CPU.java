@@ -60,6 +60,41 @@ public class CPU implements MongoSerializable {
     private static final char EXECUTION_COST_ADDR = 0x0050;
     private static final char EXECUTED_INS_ADDR = 0x0051;
 
+    public CPU() {
+        instructionSet = new DefaultInstructionSet();
+        registerSet = new DefaultRegisterSet();
+        codeSectionOffset = 0;
+
+        instructionSet.add(new JmpInstruction(this));
+        instructionSet.add(new JnzInstruction(this));
+        instructionSet.add(new JzInstruction(this));
+        instructionSet.add(new JgInstruction(this));
+        instructionSet.add(new JgeInstruction(this));
+        instructionSet.add(new JleInstruction(this));
+        instructionSet.add(new JlInstruction(this));
+        instructionSet.add(new PushInstruction(this));
+        instructionSet.add(new PopInstruction(this));
+        instructionSet.add(new CallInstruction(this));
+        instructionSet.add(new RetInstruction(this));
+        instructionSet.add(new MulInstruction(this));
+        instructionSet.add(new DivInstruction(this));
+        instructionSet.add(new JnsInstruction(this));
+        instructionSet.add(new JsInstruction(this));
+        instructionSet.add(new HwiInstruction(this));
+        instructionSet.add(new HwqInstruction(this));
+        instructionSet.add(new XchgInstruction(this));
+        instructionSet.add(new JcInstruction(this));
+        instructionSet.add(new JncInstruction(this));
+        instructionSet.add(new JnoInstruction(this));
+        instructionSet.add(new JoInstruction(this));
+        instructionSet.add(new PushfInstruction(this));
+        instructionSet.add(new PopfInstruction(this));
+        instructionSet.add(new JnaInstruction(this));
+        instructionSet.add(new JaInstruction(this));
+
+        status = new Status();
+    }
+
     /**
      * Creates a new CPU
      */
@@ -359,7 +394,6 @@ public class CPU implements MongoSerializable {
 
         cpu.codeSectionOffset = obj.getInteger("codeSegmentOffset");
 
-
         cpu.memory = new Memory((Document) obj.get("memory"));
         cpu.registerSet = RegisterSet.deserialize((Document) obj.get("registerSet"));
 
@@ -377,6 +411,14 @@ public class CPU implements MongoSerializable {
 
     public Memory getMemory() {
         return memory;
+    }
+
+    public void setMemory(Memory memory) {
+        this.memory = memory;
+    }
+
+    public void setRegisterSet(RegisterSet registerSet) {
+        this.registerSet = registerSet;
     }
 
     public Status getStatus() {

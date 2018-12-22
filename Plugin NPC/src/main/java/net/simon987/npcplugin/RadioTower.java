@@ -24,7 +24,6 @@ public class RadioTower extends Structure implements MessageReceiver, Updatable 
 
     public RadioTower(Document document) {
         super(document, 1, 1);
-        NpcPlugin.getRadioTowers().add(this);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.simon987.server.game;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameUniverse {
 
-    //private ArrayList<World> worlds;
     private ConcurrentHashMap<String, World> worlds;
     //username:user
     private ConcurrentHashMap<String, User> users;
@@ -113,6 +112,14 @@ public class GameUniverse {
         } else {
             return null;
         }
+    }
+
+    public World getWorld(String id, boolean createNew) {
+
+        String[] tokens = id.split("-");
+
+        return getWorld(Integer.decode(tokens[1]), Integer.decode(tokens[2]),
+                createNew, tokens[0]);
     }
 
     public World getLoadedWorld(int x, int y, String dimension) {
@@ -225,6 +232,7 @@ public class GameUniverse {
         }
 
         LogManager.LOGGER.severe("Couldn't find object: " + id);
+        Thread.dumpStack();
         return null;
     }
 

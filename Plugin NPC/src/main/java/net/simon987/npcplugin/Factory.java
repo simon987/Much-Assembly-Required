@@ -1,19 +1,19 @@
 package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
+import net.simon987.server.game.objects.MessageReceiver;
 import net.simon987.server.game.objects.Structure;
 import net.simon987.server.game.objects.Updatable;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Game objects that regularly creates NonPlayerCharacters
  */
-public class Factory extends Structure implements Updatable {
+public class Factory extends Structure implements Updatable, MessageReceiver {
 
     private static final int MAP_INFO = 0x0401;
 
@@ -28,25 +28,20 @@ public class Factory extends Structure implements Updatable {
     private static final int NPC_CREATION_COOLDOWN = NonPlayerCharacter.LIFETIME / MAX_NPC_COUNT;
 
     /**
-     * List of associated NonPlayerCharacters
-     */
-    private ArrayList<NonPlayerCharacter> npcs = new ArrayList<>();
-
-    /**
      * Number of ticks to wait until the Factory can spawn a new NPC
      */
     private int cooldown = 0;
 
-    /**
-     * Temporary NPC objectId array. The Factory links the NPCs to itself when initialised,
-     * at the first call of update().
-     */
-    private Object[] tmpNpcArray = new Object[0];
+    private boolean locked = true;
 
     /**
-     * Factory are uninitialised until the first update() call
+     * If non-null, the next spawned NPC will be a HackedNPC and the program will be
+     * injected in its memory
      */
-    private boolean initialised = false;
+    private char[] program;
+    private int programIndex = 0;
+
+    private static final int PROGRAM_SIZE = GameServer.INSTANCE.getConfig().getInt("factory_program_size");
 
     public Factory() {
         super(2, 2);
@@ -54,8 +49,6 @@ public class Factory extends Structure implements Updatable {
 
     public Factory(Document document) {
         super(document, 2, 2);
-
-        tmpNpcArray = ((ArrayList) document.get("npcs")).toArray();
     }
 
     @Override
@@ -70,66 +63,95 @@ public class Factory extends Structure implements Updatable {
     @Override
     public void update() {
 
-        if (!initialised) {
+        Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
-            initialised = true;
+        if (settlement == null) {
+            //Only happens when server is killed during save function
+            getWorld().decUpdatable();
+            setDead(true);
+            return;
+        }
 
-            for (Object id : tmpNpcArray) {
+        if (cooldown == 0) {
+            if (settlement.getNpcs().size() < MAX_NPC_COUNT) {
+                Point p = getAdjacentTile();
 
-                NonPlayerCharacter npc = (NonPlayerCharacter) GameServer.INSTANCE.getGameUniverse().getObject((ObjectId) id);
+                if (p != null) {
+                    NonPlayerCharacter npc = spawnNPC(p);
+                    settlement.addNpc(npc);
 
-                if (npc != null) {
-                    npc.setFactory(this);
-                    npcs.add(npc);
+                    getWorld().addObject(npc);
+                    getWorld().incUpdatable();
                 }
             }
 
-            tmpNpcArray = null;
+            cooldown += NPC_CREATION_COOLDOWN;
 
         } else {
-
-            if (cooldown == 0) {
-                if (npcs.size() < MAX_NPC_COUNT) {
-                    Point p = getAdjacentTile();
-
-                    if (p != null) {
-                        NonPlayerCharacter npc = new HarvesterNPC();
-                        npc.setWorld(getWorld());
-                        npc.setObjectId(new ObjectId());
-                        npc.setX(p.x);
-                        npc.setY(p.y);
-                        getWorld().addObject(npc);
-                        getWorld().incUpdatable();
-                        npc.setFactory(this);
-
-                        npcs.add(npc);
-                    }
-                }
-
-                cooldown += NPC_CREATION_COOLDOWN;
-
-            } else {
-                cooldown--;
-            }
+            cooldown--;
         }
+    }
+
+    private NonPlayerCharacter spawnNPC(Point p) {
+
+        NonPlayerCharacter npc;
+
+        if (programIndex == 0) {
+            npc = spawnRandomNpc(p);
+        } else {
+            npc = spawnHackedNpc(p);
+        }
+
+        return npc;
+    }
+
+    private NonPlayerCharacter spawnRandomNpc(Point p) {
+        NonPlayerCharacter npc;
+        npc = new HarvesterNPC();
+        npc.setWorld(getWorld());
+        npc.setObjectId(new ObjectId());
+        npc.setX(p.x);
+        npc.setY(p.y);
+        return npc;
+    }
+
+    private NonPlayerCharacter spawnHackedNpc(Point p) {
+        NonPlayerCharacter npc;
+        npc = new HackedNPC(program);
+        npc.setWorld(getWorld());
+        npc.setObjectId(new ObjectId());
+        npc.setX(p.x);
+        npc.setY(p.y);
+
+        this.locked = true;
+        this.programIndex = 0;
+
+        return npc;
     }
 
     @Override
-    public Document mongoSerialise() {
-        Document dbObject = super.mongoSerialise();
+    public boolean sendMessage(char[] message) {
 
-        List<ObjectId> tmpNpcArray = new ArrayList<>(npcs.size());
+        if (locked) {
+            Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
-        for (NonPlayerCharacter npc : npcs) {
-            tmpNpcArray.add(npc.getObjectId());
+            if (Arrays.equals(settlement.getPassword(), message)) {
+                this.locked = false;
+
+                return true;
+            }
+        } else if (programIndex <= PROGRAM_SIZE) {
+
+            if (programIndex == 0) {
+                program = new char[PROGRAM_SIZE];
+            }
+
+            System.arraycopy(message, 0, program, programIndex, message.length);
+            programIndex += message.length;
+
+            return true;
         }
 
-        dbObject.put("npcs", tmpNpcArray);
-
-        return dbObject;
-    }
-
-    ArrayList<NonPlayerCharacter> getNpcs() {
-        return npcs;
+        return true;
     }
 }

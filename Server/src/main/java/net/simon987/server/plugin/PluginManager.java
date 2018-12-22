@@ -152,6 +152,10 @@ public class PluginManager {
         return null;
     }
 
+    public ServerPlugin getPluginByName(String name) {
+        return PluginManager.getPluginByName(name, loadedPlugins);
+    }
+
     private boolean isLoaded(String name) {
         return getPluginByName(name, loadedPlugins) != null;
     }

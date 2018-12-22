@@ -29,7 +29,7 @@ public class VaultDimension {
 
     public VaultDimension(VaultDoor vaultDoor) {
 
-        name = "v" + vaultDoor.getObjectId() + "-";
+        name = "v" + vaultDoor.getObjectId();
 
         /*
          * Creates a group of vault worlds and pieces them together with openings.

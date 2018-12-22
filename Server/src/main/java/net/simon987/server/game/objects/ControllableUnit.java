@@ -7,9 +7,10 @@ import net.simon987.server.game.world.World;
 import net.simon987.server.user.User;
 import org.bson.types.ObjectId;
 
+import java.awt.*;
 import java.util.ArrayList;
 
-public interface ControllableUnit {
+public interface ControllableUnit extends MessageReceiver, Rechargeable, Attackable, HardwareHost {
 
     ObjectId getObjectId();
 
@@ -31,7 +32,11 @@ public interface ControllableUnit {
 
     int getY();
 
-    void setAction(Action listening);
+    void setAction(Action action);
+
+    void setCurrentAction(Action action);
+
+    Action getCurrentAction();
 
     World getWorld();
 
@@ -42,4 +47,9 @@ public interface ControllableUnit {
     CPU getCpu();
 
     void giveItem(Item item);
+
+    Point getFrontTile();
+
+    void setDirection(Direction direction);
 }
+

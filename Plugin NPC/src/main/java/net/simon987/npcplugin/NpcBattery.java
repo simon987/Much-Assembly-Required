@@ -1,4 +1,4 @@
-package net.simon987.cubotplugin;
+package net.simon987.npcplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.HardwareModule;
@@ -7,19 +7,14 @@ import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
-public class CubotBattery extends HardwareModule {
+public class NpcBattery extends HardwareModule {
 
-    public static final int DEFAULT_ADDRESS = 0x000A;
+    public static final int DEFAULT_ADDRESS = 0x010A;
 
     /**
      * Hardware ID (Should be unique)
      */
-    public static final char HWID = 0x000A;
-    /**
-     * Solar panel multiplier
-     * <br>TODO: Set this constant in dimension
-     */
-    private static final float SOLAR_PANEL_MULTIPLIER = 1;
+    public static final char HWID = 0x010A;
 
     /**
      * Energy units in kJ
@@ -35,14 +30,14 @@ public class CubotBattery extends HardwareModule {
     private static final int BATTERY_POLL = 1;
     private static final int BATTERY_GET_MAX_CAPACITY = 2;
 
-    public CubotBattery(ControllableUnit unit) {
+    public NpcBattery(ControllableUnit unit) {
         super(null, unit);
 
         energy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
         maxEnergy = GameServer.INSTANCE.getConfig().getInt("battery_max_energy");
     }
 
-    public CubotBattery(Document document, ControllableUnit cubot) {
+    public NpcBattery(Document document, ControllableUnit cubot) {
         super(document, cubot);
 
         energy = document.getInteger("energy");
@@ -55,10 +50,10 @@ public class CubotBattery extends HardwareModule {
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
 
         if (a == BATTERY_POLL) {
-            getCpu().getRegisterSet().getRegister("B").setValue(energy);
+            getCpu().getRegisterSet().getRegister("B").setValue(unit.getEnergy());
 
         } else if (a == BATTERY_GET_MAX_CAPACITY) {
-            getCpu().getRegisterSet().getRegister("B").setValue(maxEnergy);
+            getCpu().getRegisterSet().getRegister("B").setValue(unit.getMaxEnergy());
 
         }
     }
@@ -110,11 +105,5 @@ public class CubotBattery extends HardwareModule {
 
     public void setMaxEnergy(int maxEnergy) {
         this.maxEnergy = maxEnergy;
-    }
-
-    @Override
-    public void update() {
-        energy = Math.min(maxEnergy,
-                energy + (int) (SOLAR_PANEL_MULTIPLIER * GameServer.INSTANCE.getDayNightCycle().getSunIntensity()));
     }
 }

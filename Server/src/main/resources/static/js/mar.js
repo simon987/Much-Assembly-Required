@@ -276,6 +276,9 @@ var config = {
         lowEnergy: 100,
         otherCubotAlpha: 0.6,
     },
+    hackedNpc: {
+        tint: 0xE040FB,
+    },
     biomass: {
         tint: 0x63B85F,
         tintHover: 0x00FF00,
@@ -537,9 +540,9 @@ var TickListener = (function () {
             mar.client.keyboardBuffer.keys = message.keys;
         }
         if (message.c != undefined) {
-            mar.client.consoleScreen.handleConsoleBufferUpdate(message.c, message.cm);
+            mar.client.consoleScreen.handleConsoleBufferUpdate(message.console_message_buffer, message.console_mode);
             if (DEBUG) {
-                console.log("[MAR] Received " + message.c.length + " console message(s)");
+                console.log("[MAR] Received " + message.console_message_buffer.length + " console message(s)");
             }
         }
     };
@@ -830,6 +833,7 @@ var ObjectType;
     ObjectType["OBSTACLE"] = "net.simon987.npcplugin.Obstacle";
     ObjectType["ELECTRIC_BOX"] = "net.simon987.npcplugin.ElectricBox";
     ObjectType["PORTAL"] = "net.simon987.npcplugin.Portal";
+    ObjectType["HACKED_NPC"] = "net.simon987.npcplugin.HackedNPC";
 })(ObjectType || (ObjectType = {}));
 var ItemType;
 (function (ItemType) {
@@ -873,6 +877,8 @@ var GameObject = (function (_super) {
                 return new ElectricBox(json);
             case ObjectType.PORTAL:
                 return new Portal(json);
+            case ObjectType.HACKED_NPC:
+                return new HackedNPC(json);
             default:
                 return null;
         }
@@ -917,7 +923,8 @@ var Cubot = (function (_super) {
         _this.heldItem = json.heldItem;
         _this.direction = json.direction;
         _this.action = json.action;
-        _this.energy = json.energy;
+        _this.energy = _this.getEnergy(json);
+        _this.baseTint = config.cubot.tint;
         _this.cubotSprite = mar.game.make.sprite(0, 0, "sheet", null);
         _this.cubotSprite.anchor.set(0.5, 0);
         _this.addChild(_this.cubotSprite);
@@ -949,6 +956,9 @@ var Cubot = (function (_super) {
         _this.setShield(false);
         return _this;
     }
+    Cubot.prototype.getEnergy = function (json) {
+        return json["net.simon987.cubotplugin.CubotBattery"].energy;
+    };
     Cubot.prototype.setShield = function (shield) {
         this.shieldBackSprite.visible = shield;
         this.shieldFrontSprite.visible = shield;
@@ -956,11 +966,11 @@ var Cubot = (function (_super) {
     Cubot.prototype.onTileHover = function () {
         mar.game.add.tween(this).to({ isoZ: 45 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.2, y: 1.2 }, 200, Phaser.Easing.Linear.None, true);
-        this.cubotSprite.tint = config.cubot.hoverTint;
         if (this.text !== undefined) {
             this.text.visible = true;
         }
         this.hovered = true;
+        this.cubotSprite.tint = this.getTint();
     };
     Cubot.prototype.onTileExit = function () {
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
@@ -1000,7 +1010,7 @@ var Cubot = (function (_super) {
                 return config.cubot.lowEnergyTint;
             }
             else {
-                return config.cubot.tint;
+                return this.baseTint;
             }
         }
         else {
@@ -1012,7 +1022,7 @@ var Cubot = (function (_super) {
             console.log("Updating Cubot object");
         }
         this.action = json.action;
-        this.energy = json.energy;
+        this.energy = this.getEnergy(json);
         this.direction = json.direction;
         this.shield = json.shield;
         this.createInventory([json.heldItem]);
@@ -1188,9 +1198,6 @@ var HarvesterNPC = (function (_super) {
         _this.text.visible = false;
         return _this;
     }
-    HarvesterNPC.prototype.getTint = function () {
-        return config.cubot.tint;
-    };
     HarvesterNPC.prototype.updateDirection = function () {
         switch (this.direction) {
             case Direction.NORTH:
@@ -1205,6 +1212,13 @@ var HarvesterNPC = (function (_super) {
             case Direction.WEST:
                 this.cubotSprite.animations.frameName = "harvester/walk_w/0001";
                 break;
+        }
+    };
+    HarvesterNPC.prototype.getEnergy = function (json) {
+        if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
+            return json["net.simon987.npcplugin.NpcBattery"].energy;
+        } else {
+            return 1000;
         }
     };
     HarvesterNPC.prototype.updateObject = function (json) {
@@ -1226,6 +1240,24 @@ var HarvesterNPC = (function (_super) {
     };
     return HarvesterNPC;
 }(Cubot));
+var HackedNPC = (function (_super) {
+    __extends(HackedNPC, _super);
+    function HackedNPC(json) {
+        var _this = _super.call(this, json) || this;
+        _this.updateDirection();
+        _this.setText("Hacked NPC");
+        _this.text.visible = false;
+        _this.baseTint = config.hackedNpc.tint;
+        _this.cubotSprite.tint = _this.baseTint;
+        return _this;
+    }
+    HackedNPC.prototype.updateObject = function (json) {
+        _super.prototype.updateObject.call(this, json);
+        var holoHw = json["net.simon987.cubotplugin.CubotHologram"];
+        this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
+    };
+    return HackedNPC;
+}(HarvesterNPC));
 var BiomassBlob = (function (_super) {
     __extends(BiomassBlob, _super);
     function BiomassBlob(json) {
@@ -1336,7 +1368,7 @@ var VaultDoor = (function (_super) {
         _this.anchor.set(0.55, 0.55);
         _this.inputEnabled = true;
         _this.events.onInputDown.add(function (self) {
-            Debug.goToHex("7FFF", "7FFF", "v" + self.id + "-");
+            Debug.goToHex("7FFF", "7FFF", "v" + self.id);
             document.body.style.cursor = 'default';
             document.body.setAttribute("title", "");
         }, _this);
@@ -1417,7 +1449,7 @@ var ElectricBox = (function (_super) {
 var Portal = (function (_super) {
     __extends(Portal, _super);
     function Portal(json) {
-        var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/Portal") || this;
+        var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/portal") || this;
         _this.anchor.set(0.5, 0.3);
         _this.tint = config.portal.tint;
         _this.setText("Portal");

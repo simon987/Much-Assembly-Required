@@ -138,9 +138,9 @@ public class SocketServer {
                 } else {
                     ControllableUnit unit = user.getUser().getControlledUnit();
 
-                    json.put("c", charArraysToJSON(unit.getConsoleMessagesBuffer()));
+                    json.put("console_message_buffer", charArraysToJSON(unit.getConsoleMessagesBuffer()));
                     json.put("keys", intListToJSON(unit.getKeyboardBuffer()));
-                    json.put("cm", unit.getConsoleMode());
+                    json.put("console_mode", unit.getConsoleMode());
 
                     sendJSONObject(user, json);
                 }
