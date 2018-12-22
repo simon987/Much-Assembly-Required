@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
 import java.awt.*;
 import java.util.ArrayList;
 
-public interface ControllableUnit extends MessageReceiver, Rechargeable, Attackable {
+public interface ControllableUnit extends MessageReceiver, Rechargeable, Attackable, HardwareHost {
 
     ObjectId getObjectId();
 

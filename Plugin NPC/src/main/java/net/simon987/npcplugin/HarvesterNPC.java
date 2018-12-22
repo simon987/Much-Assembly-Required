@@ -30,7 +30,6 @@ public class HarvesterNPC extends NonPlayerCharacter {
 
     @Override
     public void update() {
-
         super.update();
 
         if (getSettlement() != null) {

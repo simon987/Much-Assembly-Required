@@ -30,7 +30,7 @@ public class NpcPlugin extends ServerPlugin {
         ServerConfiguration configuration = gameServer.getConfig();
         GameRegistry registry = gameServer.getRegistry();
 
-        listeners.add(new WorldCreationListener(configuration.getInt("factory_spawn_rate")));
+        listeners.add(new WorldCreationListener(configuration.getInt("settlement_spawn_rate")));
         listeners.add(new CpuInitialisationListener());
         listeners.add(new VaultWorldUpdateListener(configuration));
         listeners.add(new VaultCompleteListener());
@@ -54,6 +54,8 @@ public class NpcPlugin extends ServerPlugin {
 
         settlementMap = new ConcurrentHashMap<>();
 
+        LogManager.LOGGER.fine("(NPC Plugin) Loading default HackedNPC settings from" +
+                " defaultHackedCubotHardware.json");
         InputStream is = getClass().getClassLoader().getResourceAsStream("defaultHackedCubotHardware.json");
         Scanner scanner = new Scanner(is).useDelimiter("\\A");
         String json = scanner.next();

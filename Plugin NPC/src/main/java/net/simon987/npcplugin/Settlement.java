@@ -55,8 +55,6 @@ public class Settlement implements MongoSerializable {
 
     public Settlement(World world) throws WorldGenerationException {
 
-        System.out.println("SETTLING");
-
         this.world = world;
         this.difficultyLevel = DifficultyLevel.NORMAL; //TODO randomize ?
         this.password = "12345678".toCharArray();

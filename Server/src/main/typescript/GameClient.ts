@@ -85,10 +85,12 @@ class TickListener implements MessageListener {
 
         //Update console screen
         if (message.c != undefined) {
-            mar.client.consoleScreen.handleConsoleBufferUpdate(message.c, message.cm as ConsoleMode);
+            mar.client.consoleScreen.handleConsoleBufferUpdate(
+                message.console_message_buffer,
+                message.console_mode as ConsoleMode);
 
             if (DEBUG) {
-                console.log("[MAR] Received " + message.c.length + " console message(s)")
+                console.log("[MAR] Received " + message.console_message_buffer.length + " console message(s)")
             }
         }
     }

@@ -7,7 +7,7 @@ import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.Action;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.Direction;
-import net.simon987.server.game.objects.HardwareHost;
+import net.simon987.server.logging.LogManager;
 import net.simon987.server.user.User;
 import org.bson.Document;
 import org.json.simple.JSONObject;
@@ -17,9 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, HardwareHost {
+public class HackedNPC extends NonPlayerCharacter implements ControllableUnit {
 
     private static final int MEM_SIZE = GameServer.INSTANCE.getConfig().getInt("hacked_npc_mem_size");
+    private static final boolean DIE_ON_NO_ENERGY = GameServer.INSTANCE.getConfig().getInt("hacked_npc_die_on_no_energy") != 0;
 
     private CPU cpu;
     /**
@@ -39,15 +40,15 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, H
 
         cpu.setMemory(new Memory(MEM_SIZE));
         cpu.setHardwareHost(this);
-        //Write program
-        boolean write = cpu.getMemory().write(0, program, 0, program.length);
-        System.out.println("Write " + write);
+        cpu.getMemory().write(0, program, 0, program.length);
 
         for (Object serialisedHw : (List) NpcPlugin.DEFAULT_HACKED_NPC.get("hardware")) {
             HardwareModule hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw, this);
             hardware.setCpu(cpu);
             attachHardware(hardware, ((Document) serialisedHw).getInteger("address"));
         }
+
+        setTask(new ExecuteCpuTask());
     }
 
     public HackedNPC(Document document) {
@@ -68,37 +69,14 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, H
             hardware.setCpu(cpu);
             attachHardware(hardware, ((Document) serialisedHw).getInteger("address"));
         }
+
+        setTask(new ExecuteCpuTask());
     }
 
     @Override
     public void update() {
+        super.update();
 
-
-        System.out.println(Util.toHex(cpu.getMemory().getBytes()));
-
-        //Execute code
-        System.out.println("HACKED NPC " + this.getObjectId());
-        int timeout = Math.min(getEnergy(), 30); //todo get from config
-        cpu.reset();
-        int cost = cpu.execute(timeout);
-        spendEnergy(cost);
-
-        if (currentAction == Action.WALKING) {
-            if (spendEnergy(100)) {
-                if (!incrementLocation()) {
-                    //Couldn't walk
-                    currentAction = Action.IDLE;
-                }
-            } else {
-                currentAction = Action.IDLE;
-            }
-        }
-
-        /*
-         * CurrentAction is set during the code execution and this function is called right after
-         * If no action as been set, the action sent to the client is the action in currentAction that
-         * was set last tick (IDLE)
-         */
         lastAction = currentAction;
         currentAction = Action.IDLE;
 
@@ -108,31 +86,48 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, H
         for (HardwareModule module : hardwareAddresses.values()) {
             module.update();
         }
+
+        //Don't bother calling checkCompleted()
+        getTask().tick(this);
     }
 
     @Override
     public void setKeyboardBuffer(ArrayList<Integer> kbBuffer) {
+        LogManager.LOGGER.warning("Something went wrong here: Hacked NPC has no keyboard module" +
+                "@HackedNPC::setKeyBoardBuffer()");
+        Thread.dumpStack();
     }
 
     @Override
     public void setParent(User user) {
+        LogManager.LOGGER.warning("Something went wrong here: Hacked NPC has no parent" +
+                "@HackedNPC::setParent()");
+        Thread.dumpStack();
     }
 
     @Override
     public User getParent() {
+        LogManager.LOGGER.warning("Something went wrong here: Hacked NPC has no parent" +
+                "@HackedNPC::getParent()");
+        Thread.dumpStack();
         return null;
     }
 
     @Override
     public ArrayList<Integer> getKeyboardBuffer() {
+        LogManager.LOGGER.warning("Something went wrong here: Hacked NPC has no keyboard module" +
+                "@HackedNPC::getKeyBoardBuffer()");
+        Thread.dumpStack();
         return null;
     }
 
     @Override
     public Memory getFloppyData() {
+        LogManager.LOGGER.warning("Something went wrong here: Hacked NPC has floppy data." +
+                "@HackedNPC::getFloppyData()");
+        Thread.dumpStack();
         return null;
     }
-
 
     @Override
     public void setAction(Action action) {
@@ -141,11 +136,14 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, H
 
     @Override
     public ArrayList<char[]> getConsoleMessagesBuffer() {
-        return null;
+        return lastConsoleMessagesBuffer;
     }
 
     @Override
     public int getConsoleMode() {
+        LogManager.LOGGER.warning("Something went wrong here: Hacked NPC has no console UI." +
+                "@HackedNPC::getConsoleMode()");
+        Thread.dumpStack();
         return 0;
     }
 
@@ -210,6 +208,10 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, H
     public void setEnergy(int energy) {
         NpcBattery battery = (NpcBattery) getHardware(NpcBattery.class);
         battery.setEnergy(energy);
+
+        if (energy == 0 && DIE_ON_NO_ENERGY) {
+            setDead(true);
+        }
     }
 
     public boolean spendEnergy(int amount) {
@@ -217,6 +219,9 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit, H
         NpcBattery battery = (NpcBattery) getHardware(NpcBattery.class);
 
         if (battery.getEnergy() - amount < 0) {
+            if (DIE_ON_NO_ENERGY) {
+                setDead(true);
+            }
             return false;
         } else {
             battery.setEnergy(battery.getEnergy() - amount);

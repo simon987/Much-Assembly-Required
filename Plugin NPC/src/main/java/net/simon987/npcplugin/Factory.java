@@ -41,6 +41,8 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
     private char[] program;
     private int programIndex = 0;
 
+    private static final int PROGRAM_SIZE = GameServer.INSTANCE.getConfig().getInt("factory_program_size");
+
     public Factory() {
         super(2, 2);
     }
@@ -83,27 +85,40 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
     private NonPlayerCharacter spawnNPC(Point p) {
 
         NonPlayerCharacter npc;
+
         if (programIndex == 0) {
-            npc = new HarvesterNPC();
-            npc.setWorld(getWorld());
-            npc.setObjectId(new ObjectId());
-            npc.setX(p.x);
-            npc.setY(p.y);
-            getWorld().addObject(npc);
-            getWorld().incUpdatable();
+            npc = spawnRandomNpc(p);
         } else {
-
-            npc = new HackedNPC(program);
-            npc.setWorld(getWorld());
-            npc.setObjectId(new ObjectId());
-            npc.setX(p.x);
-            npc.setY(p.y);
-            getWorld().addObject(npc);
-            getWorld().incUpdatable();
-
-            System.out.println("NEW HACKED NPC");
-            this.locked = true;
+            npc = spawnHackedNpc(p);
         }
+
+        return npc;
+    }
+
+    private NonPlayerCharacter spawnRandomNpc(Point p) {
+        NonPlayerCharacter npc;
+        npc = new HarvesterNPC();
+        npc.setWorld(getWorld());
+        npc.setObjectId(new ObjectId());
+        npc.setX(p.x);
+        npc.setY(p.y);
+        getWorld().addObject(npc);
+        getWorld().incUpdatable();
+        return npc;
+    }
+
+    private NonPlayerCharacter spawnHackedNpc(Point p) {
+        NonPlayerCharacter npc;
+        npc = new HackedNPC(program);
+        npc.setWorld(getWorld());
+        npc.setObjectId(new ObjectId());
+        npc.setX(p.x);
+        npc.setY(p.y);
+        getWorld().addObject(npc);
+        getWorld().incUpdatable();
+
+        this.locked = true;
+        this.programIndex = 0;
 
         return npc;
     }
@@ -113,17 +128,14 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
 
         String strMessage = String.valueOf(message);
 
-        System.out.println("Received message " + strMessage);
         if (locked) {
             Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
 
             if (Arrays.equals(settlement.getPassword(), message)) {
-                System.out.println("Factory unlock");
                 this.locked = false;
 
                 return true;
             }
-            System.out.println("Wrong password, " + strMessage + "!=" + String.valueOf(settlement.getPassword()));
         } else if (programIndex <= 2048) { //todo config
 
             if (programIndex == 0) {
@@ -131,13 +143,11 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
             }
 
             System.arraycopy(message, 0, program, programIndex, message.length);
-            System.out.println("Factory append code: " + strMessage);
-            System.out.println("Wrote " + message.length + " chars");
             programIndex += message.length;
 
             return true;
         }
 
-        return false;
+        return true;
     }
 }

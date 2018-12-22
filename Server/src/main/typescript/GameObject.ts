@@ -138,6 +138,7 @@ class Cubot extends GameObject {
     protected cubotSprite: Phaser.Sprite;
     private shieldBackSprite: Phaser.Sprite;
     private shieldFrontSprite: Phaser.Sprite;
+    protected baseTint: number;
 
     constructor(json) {
         //workaround for topological sort, needs sprite dimensions
@@ -158,6 +159,7 @@ class Cubot extends GameObject {
         this.direction = json.direction;
         this.action = json.action;
         this.energy = this.getEnergy(json);
+        this.baseTint = config.cubot.tint;
 
         this.cubotSprite = mar.game.make.sprite(0, 0, "sheet", null);
         this.cubotSprite.anchor.set(0.5, 0);
@@ -213,13 +215,12 @@ class Cubot extends GameObject {
         mar.game.add.tween(this).to({isoZ: 45}, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({x: 1.2, y: 1.2}, 200, Phaser.Easing.Linear.None, true);
 
-        this.cubotSprite.tint = config.cubot.hoverTint;
-
         if (this.text !== undefined) {
             this.text.visible = true;
         }
 
         this.hovered = true;
+        this.cubotSprite.tint = this.getTint();
     }
 
 
@@ -269,7 +270,7 @@ class Cubot extends GameObject {
             if (this.energy <= config.cubot.lowEnergy) {
                 return config.cubot.lowEnergyTint;
             } else {
-                return config.cubot.tint;
+                return this.baseTint;
             }
         } else {
             return config.cubot.hoverTint;
@@ -530,13 +531,6 @@ class HarvesterNPC extends Cubot {
         this.text.visible = false;
     }
 
-    /**
-     * Needs to be overridden because Cubot() calls getTint() when initialised
-     */
-    public getTint() {
-        return config.cubot.tint;
-    }
-
     public updateDirection() {
         switch (this.direction) {
             case Direction.NORTH:
@@ -558,7 +552,7 @@ class HarvesterNPC extends Cubot {
         if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
             return json["net.simon987.npcplugin.NpcBattery"].energy;
         } else {
-            return 0;
+            return 1000; //arbitrary number so that the lowEnergy color thresh doesn't trigger
         }
     }
 
@@ -600,7 +594,8 @@ class HackedNPC extends HarvesterNPC {
         this.updateDirection();
         this.setText("Hacked NPC");
         this.text.visible = false;
-        this.tint = 0xE040FB;
+        this.baseTint = config.hackedNpc.tint;
+        this.cubotSprite.tint = this.baseTint;
     }
 
     updateObject(json) {
@@ -609,11 +604,6 @@ class HackedNPC extends HarvesterNPC {
         let holoHw = json["net.simon987.cubotplugin.CubotHologram"];
         this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
     }
-
-    protected getEnergy(json): number {
-        return json["net.simon987.npcplugin.NpcBattery"].energy
-    }
-
 }
 
 

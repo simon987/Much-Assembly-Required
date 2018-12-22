@@ -276,6 +276,9 @@ var config = {
         lowEnergy: 100,
         otherCubotAlpha: 0.6,
     },
+    hackedNpc: {
+        tint: 0xE040FB,
+    },
     biomass: {
         tint: 0x63B85F,
         tintHover: 0x00FF00,
@@ -537,9 +540,9 @@ var TickListener = (function () {
             mar.client.keyboardBuffer.keys = message.keys;
         }
         if (message.c != undefined) {
-            mar.client.consoleScreen.handleConsoleBufferUpdate(message.c, message.cm);
+            mar.client.consoleScreen.handleConsoleBufferUpdate(message.console_message_buffer, message.console_mode);
             if (DEBUG) {
-                console.log("[MAR] Received " + message.c.length + " console message(s)");
+                console.log("[MAR] Received " + message.console_message_buffer.length + " console message(s)");
             }
         }
     };
@@ -921,6 +924,7 @@ var Cubot = (function (_super) {
         _this.direction = json.direction;
         _this.action = json.action;
         _this.energy = _this.getEnergy(json);
+        _this.baseTint = config.cubot.tint;
         _this.cubotSprite = mar.game.make.sprite(0, 0, "sheet", null);
         _this.cubotSprite.anchor.set(0.5, 0);
         _this.addChild(_this.cubotSprite);
@@ -952,7 +956,6 @@ var Cubot = (function (_super) {
         _this.setShield(false);
         return _this;
     }
-
     Cubot.prototype.getEnergy = function (json) {
         return json["net.simon987.cubotplugin.CubotBattery"].energy;
     };
@@ -963,11 +966,11 @@ var Cubot = (function (_super) {
     Cubot.prototype.onTileHover = function () {
         mar.game.add.tween(this).to({ isoZ: 45 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.game.add.tween(this.scale).to({ x: 1.2, y: 1.2 }, 200, Phaser.Easing.Linear.None, true);
-        this.cubotSprite.tint = config.cubot.hoverTint;
         if (this.text !== undefined) {
             this.text.visible = true;
         }
         this.hovered = true;
+        this.cubotSprite.tint = this.getTint();
     };
     Cubot.prototype.onTileExit = function () {
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
@@ -1007,7 +1010,7 @@ var Cubot = (function (_super) {
                 return config.cubot.lowEnergyTint;
             }
             else {
-                return config.cubot.tint;
+                return this.baseTint;
             }
         }
         else {
@@ -1195,9 +1198,6 @@ var HarvesterNPC = (function (_super) {
         _this.text.visible = false;
         return _this;
     }
-    HarvesterNPC.prototype.getTint = function () {
-        return config.cubot.tint;
-    };
     HarvesterNPC.prototype.updateDirection = function () {
         switch (this.direction) {
             case Direction.NORTH:
@@ -1218,7 +1218,7 @@ var HarvesterNPC = (function (_super) {
         if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
             return json["net.simon987.npcplugin.NpcBattery"].energy;
         } else {
-            return 0;
+            return 1000;
         }
     };
     HarvesterNPC.prototype.updateObject = function (json) {
@@ -1242,23 +1242,19 @@ var HarvesterNPC = (function (_super) {
 }(Cubot));
 var HackedNPC = (function (_super) {
     __extends(HackedNPC, _super);
-
     function HackedNPC(json) {
         var _this = _super.call(this, json) || this;
         _this.updateDirection();
         _this.setText("Hacked NPC");
         _this.text.visible = false;
-        _this.tint = 0xE040FB;
+        _this.baseTint = config.hackedNpc.tint;
+        _this.cubotSprite.tint = _this.baseTint;
         return _this;
     }
-
     HackedNPC.prototype.updateObject = function (json) {
         _super.prototype.updateObject.call(this, json);
         var holoHw = json["net.simon987.cubotplugin.CubotHologram"];
         this.updateHologram(holoHw.mode, holoHw.color, holoHw.value, holoHw.string);
-    };
-    HackedNPC.prototype.getEnergy = function (json) {
-        return json["net.simon987.npcplugin.NpcBattery"].energy;
     };
     return HackedNPC;
 }(HarvesterNPC));
