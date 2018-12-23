@@ -108,8 +108,8 @@ public class CubotLidar extends HardwareModule {
 
                     //Write map data to the location specified by register X
                     int i = getCpu().getRegisterSet().getRegister("X").getValue();
-                    for (int x = 0; x < unit.getWorld().getWorldSize(); x++) {
-                        for (int y = 0; y < unit.getWorld().getWorldSize(); y++) {
+                    for (int y = 0; y < unit.getWorld().getWorldSize(); y++) {
+                        for (int x = 0; x < unit.getWorld().getWorldSize(); x++) {
                             getCpu().getMemory().set(i++, mapInfo[x][y]);
                         }
                     }
