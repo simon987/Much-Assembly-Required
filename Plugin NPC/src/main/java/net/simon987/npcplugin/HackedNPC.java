@@ -41,7 +41,7 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit {
 
         cpu.setMemory(new Memory(MEM_SIZE));
         cpu.setHardwareHost(this);
-        cpu.getMemory().write(0, program, 0, program.length);
+        cpu.getMemory().write(cpu.getCodeSectionOffset(), program, 0, program.length);
 
         for (Object serialisedHw : (List) NpcPlugin.DEFAULT_HACKED_NPC.get("hardware")) {
             HardwareModule hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw, this);

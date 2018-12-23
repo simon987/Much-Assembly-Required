@@ -433,6 +433,10 @@ public class CPU implements MongoSerializable {
         this.ip = ip;
     }
 
+    public int getCodeSectionOffset() {
+        return codeSectionOffset;
+    }
+
     public void setCodeSectionOffset(int codeSectionOffset) {
         this.codeSectionOffset = codeSectionOffset;
     }
