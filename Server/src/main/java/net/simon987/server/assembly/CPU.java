@@ -63,7 +63,7 @@ public class CPU implements MongoSerializable {
     public CPU() {
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
-        codeSectionOffset = 0;
+        codeSectionOffset = GameServer.INSTANCE.getConfig().getInt("org_offset");
 
         instructionSet.add(new JmpInstruction(this));
         instructionSet.add(new JnzInstruction(this));
