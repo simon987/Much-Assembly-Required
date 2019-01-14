@@ -7,7 +7,7 @@ import net.simon987.server.assembly.Util;
 
 public class DecInstruction extends Instruction {
 
-    public static final int OPCODE = 0x2B;
+    public static final int OPCODE = 43;
 
     public DecInstruction() {
         super("dec", OPCODE);

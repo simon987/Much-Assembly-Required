@@ -8,7 +8,9 @@ import net.simon987.server.assembly.Instruction;
  */
 public class NopInstruction extends Instruction {
 
+    public static final int OPCODE = 63;
+
     public NopInstruction() {
-        super("nop", 63);
+        super("nop", OPCODE);
     }
 }
