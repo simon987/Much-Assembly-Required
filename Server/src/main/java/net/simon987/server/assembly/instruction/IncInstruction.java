@@ -7,7 +7,7 @@ import net.simon987.server.assembly.Util;
 
 public class IncInstruction extends Instruction {
 
-    public static final int OPCODE = 43;
+    public static final int OPCODE = 42;
 
     public IncInstruction() {
         super("inc", OPCODE);
