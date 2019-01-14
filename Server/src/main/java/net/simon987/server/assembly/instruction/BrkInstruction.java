@@ -9,8 +9,10 @@ import net.simon987.server.assembly.Status;
  */
 public class BrkInstruction extends Instruction {
 
+    public static final int OPCODE = 0;
+
     public BrkInstruction() {
-        super("brk", 0);
+        super("brk", OPCODE);
     }
 
     @Override
