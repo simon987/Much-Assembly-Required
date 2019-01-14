@@ -95,9 +95,7 @@ public class DefaultInstructionSet implements InstructionSet {
         if (instructionMap.containsKey(instruction.getOpCode())) {
             LogManager.LOGGER.fine(instruction.getMnemonic() + " instruction is an alias for " +
                     instructionMap.get(instruction.getOpCode()).getMnemonic());
-        } else {
-            instructionMap.put(instruction.getOpCode(), instruction);
-
         }
+        instructionMap.put(instruction.getOpCode(), instruction);
     }
 }
