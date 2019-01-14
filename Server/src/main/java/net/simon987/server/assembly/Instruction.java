@@ -133,7 +133,7 @@ public abstract class Instruction {
      *
      * @param out encoded bytes will be written here
      */
-    void encode(ByteArrayOutputStream out, int currentLine) throws IllegalOperandException {
+    public void encode(ByteArrayOutputStream out, int currentLine) throws IllegalOperandException {
 
         if (!noOperandsValid()) {
             throw new IllegalOperandException("This instruction must have operand(s)!", currentLine);
@@ -147,7 +147,7 @@ public abstract class Instruction {
         }
     }
 
-    void encode(ByteArrayOutputStream out, Operand o1, Operand o2, int currentLine)
+    public void encode(ByteArrayOutputStream out, Operand o1, Operand o2, int currentLine)
             throws IllegalOperandException {
         MachineCode code = new MachineCode();
         code.writeOpcode(opCode);
@@ -182,7 +182,7 @@ public abstract class Instruction {
         }
     }
 
-    void encode(ByteArrayOutputStream out, Operand o1, int currentLine)
+    public void encode(ByteArrayOutputStream out, Operand o1, int currentLine)
             throws IllegalOperandException {
         MachineCode code = new MachineCode();
         code.writeOpcode(opCode);
