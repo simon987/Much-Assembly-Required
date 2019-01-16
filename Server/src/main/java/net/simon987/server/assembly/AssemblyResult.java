@@ -1,6 +1,6 @@
 package net.simon987.server.assembly;
 
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.exception.AssemblyException;
 import net.simon987.server.assembly.exception.DuplicateSectionException;
 import net.simon987.server.logging.LogManager;
@@ -59,7 +59,7 @@ public class AssemblyResult {
      */
     private boolean dataSectionSet = false;
 
-    AssemblyResult(ServerConfiguration config) {
+    AssemblyResult(IServerConfiguration config) {
         origin = config.getInt("org_offset");
     }
 

@@ -9,10 +9,14 @@ import java.util.Properties;
 /**
  * Wrapper for Java Properties class
  */
-public class ServerConfiguration {
+public class ServerConfiguration implements IServerConfiguration {
 
     private Properties properties;
     private String fileName;
+
+    public ServerConfiguration() {
+        this.properties = new Properties();
+    }
 
     public ServerConfiguration(String fileName) {
 

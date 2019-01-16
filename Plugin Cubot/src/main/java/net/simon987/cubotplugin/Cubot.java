@@ -1,7 +1,7 @@
 package net.simon987.cubotplugin;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.CPU;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Memory;
@@ -128,7 +128,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         shield = document.getInteger("shield");
         setDirection(Direction.getDirection(document.getInteger("direction")));
 
-        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        IServerConfiguration config = GameServer.INSTANCE.getConfig();
         maxHp = config.getInt("cubot_max_hp");
         maxShield = config.getInt("cubot_max_shield");
 
@@ -278,7 +278,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         this.getWorld().removeObject(this);
         this.getWorld().decUpdatable();
 
-        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        IServerConfiguration config = GameServer.INSTANCE.getConfig();
         Random random = new Random();
 
         int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);

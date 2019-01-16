@@ -3,7 +3,7 @@ package net.simon987.npcplugin.event;
 import net.simon987.npcplugin.ElectricBox;
 import net.simon987.npcplugin.VaultWorldUtils;
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldUpdateEvent;
@@ -36,7 +36,7 @@ public class VaultWorldUpdateListener implements GameEventListener {
      */
     private static int electricBoxThreshold;
 
-    public VaultWorldUpdateListener(ServerConfiguration config) {
+    public VaultWorldUpdateListener(IServerConfiguration config) {
 
         minElectricBoxCount = config.getInt("min_electric_box_respawn_count");
         maxElectricBoxCount = config.getInt("max_electric_box_respawn_count");

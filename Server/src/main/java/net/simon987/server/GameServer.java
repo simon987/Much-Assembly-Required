@@ -33,7 +33,7 @@ public class GameServer implements Runnable {
     private GameEventDispatcher eventDispatcher;
     private PluginManager pluginManager;
 
-    private ServerConfiguration config;
+    private IServerConfiguration config;
 
     private SocketServer socketServer;
 
@@ -308,7 +308,7 @@ public class GameServer implements Runnable {
         }
     }
 
-    public ServerConfiguration getConfig() {
+    public IServerConfiguration getConfig() {
         return config;
     }
 

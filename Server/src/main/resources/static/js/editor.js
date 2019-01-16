@@ -28,7 +28,7 @@ function checkForLabel(line, result) {
     line = removeComment(line);
 
     var match;
-    if ((match = /\b\w*\b:/.exec(line)) !== null) {
+    if ((match = /^[a-zA-Z_]\w*:/.exec(line)) !== null) {
 
         result.labels.push(match[0].substring(0, match[0].length - 1));
     }

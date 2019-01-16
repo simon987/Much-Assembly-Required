@@ -1,7 +1,7 @@
 package net.simon987.biomassplugin.event;
 
 import net.simon987.biomassplugin.BiomassBlob;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.ObjectDeathEvent;
@@ -16,7 +16,7 @@ public class ObjectDeathListener implements GameEventListener {
 
     private int biomassDropCount;
 
-    public ObjectDeathListener(ServerConfiguration config) {
+    public ObjectDeathListener(IServerConfiguration config) {
         biomassDropCount = config.getInt("harvester_biomass_drop_count");
     }
 

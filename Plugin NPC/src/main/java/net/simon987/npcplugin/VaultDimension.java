@@ -2,7 +2,7 @@ package net.simon987.npcplugin;
 
 import net.simon987.npcplugin.world.TileVaultFloor;
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.game.objects.Direction;
 import net.simon987.server.game.world.Location;
 import net.simon987.server.game.world.World;
@@ -49,7 +49,7 @@ public class VaultDimension {
          * as a set of coordinates + a list of opening directions, then they are actually generated
          */
 
-        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        IServerConfiguration config = GameServer.INSTANCE.getConfig();
 
         int minLayerCount = config.getInt("vault_wg_min_layer_count");
         int maxLayerCount = config.getInt("vault_wg_max_layer_count");

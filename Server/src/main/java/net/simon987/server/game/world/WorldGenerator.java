@@ -1,7 +1,7 @@
 package net.simon987.server.game.world;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.WorldGenerationEvent;
@@ -48,7 +48,7 @@ public class WorldGenerator {
     private HashMap<Point, Integer> centerPointsMap;
 
 
-    public WorldGenerator(ServerConfiguration config) {
+    public WorldGenerator(IServerConfiguration config) {
 
         dimension = config.getString("new_user_dimension");
 
