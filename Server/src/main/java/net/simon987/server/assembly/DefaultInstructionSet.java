@@ -4,7 +4,7 @@ import net.simon987.server.assembly.instruction.*;
 import net.simon987.server.logging.LogManager;
 
 import java.util.HashMap;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Default instruction set for the CPU
@@ -14,12 +14,12 @@ public class DefaultInstructionSet implements InstructionSet {
     /**
      * Map of instructions, stored in opcode : Instruction format
      */
-    private HashMap<Integer, Instruction> instructionMap = new HashMap<>(32);
+    private Map<Integer, Instruction> instructionMap = new HashMap<>(32);
 
     /**
      * Map of aliasses, stored in mnemonic : Instruction format
      */
-    private HashMap<String, Instruction> aliasesMap = new HashMap<>(16);
+    private Map<String, Instruction> aliasesMap = new HashMap<>(16);
 
     private Instruction defaultInstruction;
 
