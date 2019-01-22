@@ -50,9 +50,11 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new SarInstruction());
         add(new IncInstruction());
         add(new DecInstruction());
+        add(new SetccInstruction());
 
         // aliases
         add(new SalInstruction());
+        add(new SetzInstruction());
     }
 
     /**
