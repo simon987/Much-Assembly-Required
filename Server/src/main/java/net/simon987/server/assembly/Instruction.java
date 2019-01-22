@@ -102,7 +102,7 @@ public abstract class Instruction {
      * @param o2 Source operand
      * @return true if valid
      */
-    private static boolean operandsValid(Operand o1, Operand o2) throws IllegalOperandException {
+    public static boolean operandsValid(Operand o1, Operand o2) throws IllegalOperandException {
         return o1.getType() != OperandType.IMMEDIATE16;
     }
 
@@ -112,7 +112,7 @@ public abstract class Instruction {
      * @param o1 source operand
      * @return true if the specified operand can be used with this instruction
      */
-    private static boolean operandValid(Operand o1) {
+    public static boolean operandValid(Operand o1) {
         return true;
     }
 
