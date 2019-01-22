@@ -1,7 +1,6 @@
 package net.simon987.server.assembly;
 
 import net.simon987.server.assembly.instruction.*;
-import net.simon987.server.logging.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,7 +106,7 @@ public class DefaultInstructionSet implements InstructionSet {
     public void add(Instruction instruction) {
         Instruction aliasedInstruction = instructionMap.get(instruction.getOpCode());
         if (aliasedInstruction != null) {
-            aliasesMap.put(instruction.getMnemonic(), aliasedInstruction);
+            aliasesMap.put(instruction.getMnemonic(), instruction);
         } else {
             instructionMap.put(instruction.getOpCode(), instruction);
         }

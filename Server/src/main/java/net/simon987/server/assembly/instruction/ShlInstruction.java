@@ -13,6 +13,10 @@ public class ShlInstruction extends Instruction {
         super("shl", OPCODE);
     }
 
+    public ShlInstruction(String alias) {
+        super(alias, OPCODE);
+    }
+
     @Override
     public Status execute(Target dst, int dstIndex, Target src, int srcIndex, Status status) {
 
