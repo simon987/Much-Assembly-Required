@@ -1,7 +1,6 @@
 package net.simon987.server.assembly;
 
-import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.exception.*;
 import net.simon987.server.logging.LogManager;
 import org.apache.commons.text.StringEscapeUtils;
@@ -19,18 +18,22 @@ import java.util.regex.Pattern;
  */
 public class Assembler {
 
-    private ServerConfiguration config;
+    private IServerConfiguration config;
 
     private InstructionSet instructionSet;
 
     private RegisterSet registerSet;
 
-    private static final int MEM_SIZE = GameServer.INSTANCE.getConfig().getInt("memory_size");
+    private static int MEM_SIZE;
+    private static String labelPattern = "^\\s*[a-zA-Z_]\\w*:";
+    private static Pattern commentPattern = Pattern.compile("\"[^\"]*\"|(;)");
 
-    public Assembler(InstructionSet instructionSet, RegisterSet registerSet, ServerConfiguration config) {
+    public Assembler(InstructionSet instructionSet, RegisterSet registerSet, IServerConfiguration config) {
         this.instructionSet = instructionSet;
         this.registerSet = registerSet;
         this.config = config;
+
+        Assembler.MEM_SIZE = config.getInt("memory_size");
     }
 
     /**
@@ -40,11 +43,17 @@ public class Assembler {
      * @return The line without its comment part
      */
     private static String removeComment(String line) {
-        if (line.indexOf(';') != -1) {
-            return line.substring(0, line.indexOf(';'));
-        } else {
-            return line;
+
+        Matcher m = commentPattern.matcher(line);
+
+        while (m.find()) {
+            try {
+                return line.substring(0, m.start(1));
+            } catch (IndexOutOfBoundsException ignored) {
+            }
         }
+
+        return line;
     }
 
     /**
@@ -55,8 +64,7 @@ public class Assembler {
      */
     private static String removeLabel(String line) {
 
-        return line.replaceAll("^\\s*\\b\\w*\\b:", "");
-
+        return line.replaceAll(labelPattern, "");
     }
 
     /**
@@ -98,7 +106,7 @@ public class Assembler {
         line = removeComment(line);
 
         //Check for labels
-        Pattern pattern = Pattern.compile("^\\s*\\b\\w*\\b:");
+        Pattern pattern = Pattern.compile(labelPattern);
         Matcher matcher = pattern.matcher(line);
 
         if (matcher.find()) {
@@ -161,7 +169,7 @@ public class Assembler {
                             string = StringEscapeUtils.unescapeJava(string);
                         } catch (IllegalArgumentException e) {
                             throw new InvalidOperandException(
-                                "Invalid string operand \"" + string + "\": " + e.getMessage(), 
+                                    "Invalid string operand \"" + string + "\": " + e.getMessage(),
                                 currentLine);
                         }
 

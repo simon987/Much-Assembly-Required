@@ -1,7 +1,7 @@
 package net.simon987.server.assembly;
 
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.assembly.instruction.*;
 import net.simon987.server.event.CpuInitialisationEvent;
@@ -98,7 +98,7 @@ public class CPU implements MongoSerializable {
     /**
      * Creates a new CPU
      */
-    public CPU(ServerConfiguration config, ControllableUnit unit) throws CancelledException {
+    public CPU(IServerConfiguration config, ControllableUnit unit) throws CancelledException {
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
         codeSectionOffset = config.getInt("org_offset");

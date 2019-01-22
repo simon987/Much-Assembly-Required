@@ -5,7 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.game.world.World;
@@ -32,7 +32,7 @@ public class GameUniverse {
 
     private int maxWidth = 0xFFFF;
 
-    public GameUniverse(ServerConfiguration config) {
+    public GameUniverse(IServerConfiguration config) {
 
         worlds = new ConcurrentHashMap<>(256);
         users = new ConcurrentHashMap<>(16);

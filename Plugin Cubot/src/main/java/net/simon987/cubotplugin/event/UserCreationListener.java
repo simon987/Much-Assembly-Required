@@ -3,7 +3,7 @@ package net.simon987.cubotplugin.event;
 import net.simon987.cubotplugin.Cubot;
 import net.simon987.cubotplugin.CubotStatus;
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.Assembler;
 import net.simon987.server.assembly.AssemblyResult;
 import net.simon987.server.assembly.CPU;
@@ -33,7 +33,7 @@ public class UserCreationListener implements GameEventListener {
         Cubot cubot = new Cubot();
         cubot.addStatus(CubotStatus.FACTORY_NEW);
         cubot.setObjectId(new ObjectId());
-        ServerConfiguration config = GameServer.INSTANCE.getConfig();
+        IServerConfiguration config = GameServer.INSTANCE.getConfig();
 
         Point point = null;
         while (point == null || cubot.getWorld() == null) {

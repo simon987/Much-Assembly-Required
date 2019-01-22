@@ -4,6 +4,7 @@ import net.simon987.server.assembly.instruction.*;
 import net.simon987.server.logging.LogManager;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Default instruction set for the CPU
@@ -13,7 +14,12 @@ public class DefaultInstructionSet implements InstructionSet {
     /**
      * Map of instructions, stored in opcode : Instruction format
      */
-    private HashMap<Integer, Instruction> instructionMap = new HashMap<>(32);
+    private Map<Integer, Instruction> instructionMap = new HashMap<>(32);
+
+    /**
+     * Map of aliasses, stored in mnemonic : Instruction format
+     */
+    private Map<String, Instruction> aliasesMap = new HashMap<>(16);
 
     private Instruction defaultInstruction;
 
@@ -32,7 +38,6 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new AndInstruction());
         add(new OrInstruction());
         add(new ShlInstruction());
-        add(new SalInstruction()); //Alias is added
         add(new ShrInstruction());
         add(new XorInstruction());
         add(new TestInstruction());
@@ -46,6 +51,9 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new SarInstruction());
         add(new IncInstruction());
         add(new DecInstruction());
+
+        // aliases
+        add(new SalInstruction());
     }
 
     /**
@@ -86,16 +94,22 @@ public class DefaultInstructionSet implements InstructionSet {
             }
         }
 
+        Instruction aliasedInstruction = aliasesMap.get(mnemonic.toLowerCase());
+        if (aliasedInstruction != null) {
+            return aliasedInstruction;
+        }
+
         return null;
     }
 
 
     @Override
     public void add(Instruction instruction) {
-        if (instructionMap.containsKey(instruction.getOpCode())) {
-            LogManager.LOGGER.fine(instruction.getMnemonic() + " instruction is an alias for " +
-                    instructionMap.get(instruction.getOpCode()).getMnemonic());
+        Instruction aliasedInstruction = instructionMap.get(instruction.getOpCode());
+        if (aliasedInstruction != null) {
+            aliasesMap.put(instruction.getMnemonic(), aliasedInstruction);
+        } else {
+            instructionMap.put(instruction.getOpCode(), instruction);
         }
-        instructionMap.put(instruction.getOpCode(), instruction);
     }
 }

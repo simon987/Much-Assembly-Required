@@ -3,7 +3,7 @@ package net.simon987.biomassplugin.event;
 import net.simon987.biomassplugin.BiomassBlob;
 import net.simon987.biomassplugin.WorldUtils;
 import net.simon987.server.GameServer;
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.event.WorldUpdateEvent;
@@ -23,7 +23,7 @@ public class WorldUpdateListener implements GameEventListener {
     private static int waitTime;
     private static int blobThreshold;
 
-    public WorldUpdateListener(ServerConfiguration config) {
+    public WorldUpdateListener(IServerConfiguration config) {
 
         minBlobCount = config.getInt("minBiomassRespawnCount");
         maxBlobCount = config.getInt("maxBiomassRespawnCount");

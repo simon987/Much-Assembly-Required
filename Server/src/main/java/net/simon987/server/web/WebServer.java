@@ -1,6 +1,6 @@
 package net.simon987.server.web;
 
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.IServerConfiguration;
 import net.simon987.server.logging.LogManager;
 import net.simon987.server.websocket.SocketServer;
 import org.apache.velocity.app.VelocityEngine;
@@ -14,7 +14,7 @@ public class WebServer {
     private SocketServer socketServer;
     private GuestPolicy guestPolicy;
 
-    public WebServer(ServerConfiguration config) {
+    public WebServer(IServerConfiguration config) {
 
         //Velocity config
         Properties properties = new Properties();
@@ -63,7 +63,7 @@ public class WebServer {
      * Load guest policy from config.
      * If no valid policy is specified in the config, the default <code>GuestPolicy.ALLOW</code> is used
      */
-    private void initGuestPolicy(ServerConfiguration config) {
+    private void initGuestPolicy(IServerConfiguration config) {
         String guestPolicyStr = config.getString("guest_policy");
         try {
             this.guestPolicy = GuestPolicy.valueOf(guestPolicyStr);
