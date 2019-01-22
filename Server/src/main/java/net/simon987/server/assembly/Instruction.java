@@ -124,7 +124,7 @@ public abstract class Instruction {
         return false;
     }
 
-    String getMnemonic() {
+    public String getMnemonic() {
         return mnemonic;
     }
 
@@ -208,7 +208,7 @@ public abstract class Instruction {
         }
     }
 
-    int getOpCode() {
+    public int getOpCode() {
         return opCode;
     }
 }
