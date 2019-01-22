@@ -1,6 +1,6 @@
 package net.simon987.server.assembly;
 
-
+import net.simon987.server.assembly.exception.AssemblyException;
 import net.simon987.server.assembly.exception.IllegalOperandException;
 
 import java.io.ByteArrayOutputStream;
@@ -133,7 +133,7 @@ public abstract class Instruction {
      *
      * @param out encoded bytes will be written here
      */
-    public void encode(ByteArrayOutputStream out, int currentLine) throws IllegalOperandException {
+    public void encode(ByteArrayOutputStream out, int currentLine) throws AssemblyException {
 
         if (!noOperandsValid()) {
             throw new IllegalOperandException("This instruction must have operand(s)!", currentLine);
@@ -148,7 +148,7 @@ public abstract class Instruction {
     }
 
     public void encode(ByteArrayOutputStream out, Operand o1, Operand o2, int currentLine)
-            throws IllegalOperandException {
+            throws AssemblyException {
         MachineCode code = new MachineCode();
         code.writeOpcode(opCode);
 
@@ -183,7 +183,7 @@ public abstract class Instruction {
     }
 
     public void encode(ByteArrayOutputStream out, Operand o1, int currentLine)
-            throws IllegalOperandException {
+            throws AssemblyException {
         MachineCode code = new MachineCode();
         code.writeOpcode(opCode);
 
