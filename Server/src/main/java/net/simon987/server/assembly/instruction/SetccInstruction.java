@@ -10,7 +10,6 @@ import net.simon987.server.assembly.MachineCode;
 import net.simon987.server.assembly.exception.AssemblyException;
 import net.simon987.server.assembly.exception.IllegalOperandException;
 import net.simon987.server.assembly.exception.InvalidMnemonicException;
-import net.simon987.server.logging.LogManager;
 
 import java.io.ByteArrayOutputStream;
 
@@ -154,6 +153,11 @@ public class SetccInstruction extends Instruction {
     @Override
     public boolean operandsValid(Operand o1, Operand o2) {
         return false;
+    }
+
+    @Override
+    public boolean operandValid(Operand o1) {
+        return o1.getType() != OperandType.IMMEDIATE16;
     }
 
     /**
