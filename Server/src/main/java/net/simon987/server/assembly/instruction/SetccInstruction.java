@@ -167,9 +167,6 @@ public class SetccInstruction extends Instruction {
         String mnemonic = getMnemonic().toLowerCase();
         Character familyOpCode = mnemnoicFamilyOpCodeMap.get(mnemonic);
         
-        LogManager.LOGGER.info("received mnemonic: " + mnemonic);
-        LogManager.LOGGER.info("family opcode: " + (int)(char) familyOpCode);
-
         // This will catch the off case that someone uses the mnemonic 'setcc'
         // as far as the assembler knows this is a valid instruction, but we know it isn't
         if (familyOpCode == null) {
