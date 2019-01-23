@@ -25,38 +25,54 @@ import java.util.HashMap;
 public class SetccInstruction extends Instruction {
 
     public static final int OPCODE = 50;
+
+    public static final int SETA = 0x01;
+    public static final int SETAE = 0x02;
+    public static final int SETBE = 0x03;
+    public static final int SETB = 0x04;
+    public static final int SETE = 0x05;
+    public static final int SETNE = 0x06;
+    public static final int SETG = 0x07;
+    public static final int SETGE = 0x08;
+    public static final int SETLE = 0x09;
+    public static final int SETL = 0x0A;
+    public static final int SETO = 0x0B;
+    public static final int SETNO = 0x0C;
+    public static final int SETS = 0x0D;
+    public static final int SETNS = 0x0E;
+
     /**
      * Map of mnemonics, stored in mnemonic : family op code
      * This map includes aliases
      */
     private static final Map<String, Character> mnemnoicFamilyOpCodeMap = new HashMap<>(26);
     static {
-        mnemnoicFamilyOpCodeMap.put("seta",   (char) 0x01);
-        mnemnoicFamilyOpCodeMap.put("setnbe", (char) 0x01);
-        mnemnoicFamilyOpCodeMap.put("setae",  (char) 0x02);
-        mnemnoicFamilyOpCodeMap.put("setnb",  (char) 0x02);
-        mnemnoicFamilyOpCodeMap.put("setnc",  (char) 0x02);
-        mnemnoicFamilyOpCodeMap.put("setbe",  (char) 0x03);
-        mnemnoicFamilyOpCodeMap.put("setna",  (char) 0x03);
-        mnemnoicFamilyOpCodeMap.put("setb",   (char) 0x04);
-        mnemnoicFamilyOpCodeMap.put("setc",   (char) 0x04);
-        mnemnoicFamilyOpCodeMap.put("setnae", (char) 0x04);
-        mnemnoicFamilyOpCodeMap.put("sete",   (char) 0x05);
-        mnemnoicFamilyOpCodeMap.put("setz",   (char) 0x05);
-        mnemnoicFamilyOpCodeMap.put("setne",  (char) 0x06);
-        mnemnoicFamilyOpCodeMap.put("setnz",  (char) 0x06);
-        mnemnoicFamilyOpCodeMap.put("setg",   (char) 0x07);
-        mnemnoicFamilyOpCodeMap.put("setnle", (char) 0x07);
-        mnemnoicFamilyOpCodeMap.put("setge",  (char) 0x08);
-        mnemnoicFamilyOpCodeMap.put("setnl",  (char) 0x08);
-        mnemnoicFamilyOpCodeMap.put("setle",  (char) 0x09);
-        mnemnoicFamilyOpCodeMap.put("setng",  (char) 0x09);
-        mnemnoicFamilyOpCodeMap.put("setl",   (char) 0x0A);
-        mnemnoicFamilyOpCodeMap.put("setnge", (char) 0x0A);
-        mnemnoicFamilyOpCodeMap.put("seto",   (char) 0x0B);
-        mnemnoicFamilyOpCodeMap.put("setno",  (char) 0x0C);
-        mnemnoicFamilyOpCodeMap.put("sets",   (char) 0x0D);
-        mnemnoicFamilyOpCodeMap.put("setns",  (char) 0x0E);
+        mnemnoicFamilyOpCodeMap.put("seta",   (char) SETA);
+        mnemnoicFamilyOpCodeMap.put("setnbe", (char) SETA);
+        mnemnoicFamilyOpCodeMap.put("setae",  (char) SETAE);
+        mnemnoicFamilyOpCodeMap.put("setnb",  (char) SETAE);
+        mnemnoicFamilyOpCodeMap.put("setnc",  (char) SETAE);
+        mnemnoicFamilyOpCodeMap.put("setbe",  (char) SETBE);
+        mnemnoicFamilyOpCodeMap.put("setna",  (char) SETBE);
+        mnemnoicFamilyOpCodeMap.put("setb",   (char) SETB);
+        mnemnoicFamilyOpCodeMap.put("setc",   (char) SETB);
+        mnemnoicFamilyOpCodeMap.put("setnae", (char) SETB);
+        mnemnoicFamilyOpCodeMap.put("sete",   (char) SETE);
+        mnemnoicFamilyOpCodeMap.put("setz",   (char) SETE);
+        mnemnoicFamilyOpCodeMap.put("setne",  (char) SETNE);
+        mnemnoicFamilyOpCodeMap.put("setnz",  (char) SETNE);
+        mnemnoicFamilyOpCodeMap.put("setg",   (char) SETG);
+        mnemnoicFamilyOpCodeMap.put("setnle", (char) SETG);
+        mnemnoicFamilyOpCodeMap.put("setge",  (char) SETGE);
+        mnemnoicFamilyOpCodeMap.put("setnl",  (char) SETGE);
+        mnemnoicFamilyOpCodeMap.put("setle",  (char) SETLE);
+        mnemnoicFamilyOpCodeMap.put("setng",  (char) SETLE);
+        mnemnoicFamilyOpCodeMap.put("setl",   (char) SETL);
+        mnemnoicFamilyOpCodeMap.put("setnge", (char) SETL);
+        mnemnoicFamilyOpCodeMap.put("seto",   (char) SETO);
+        mnemnoicFamilyOpCodeMap.put("setno",  (char) SETNO);
+        mnemnoicFamilyOpCodeMap.put("sets",   (char) SETS);
+        mnemnoicFamilyOpCodeMap.put("setns",  (char) SETNS);
     }
 
     public SetccInstruction() {
@@ -89,33 +105,33 @@ public class SetccInstruction extends Instruction {
      */
     private static Status setcc(Target dst, int dstIndex, int familyOpCode, Status status) {
         switch (familyOpCode) {
-            case 0x01:
+            case SETA:
                 return seta(dst, dstIndex, status);
-            case 0x02:
+            case SETAE:
                 return setae(dst, dstIndex, status);
-            case 0x03:
+            case SETBE:
                 return setbe(dst, dstIndex, status);
-            case 0x04:
+            case SETB:
                 return setb(dst, dstIndex, status);
-            case 0x05:
+            case SETE:
                 return sete(dst, dstIndex, status);
-            case 0x06:
+            case SETNE:
                 return setne(dst, dstIndex, status);
-            case 0x07:
+            case SETG:
                 return setg(dst, dstIndex, status);
-            case 0x08:
+            case SETGE:
                 return setge(dst, dstIndex, status);
-            case 0x09:
+            case SETLE:
                 return setle(dst, dstIndex, status);
-            case 0x0A:
+            case SETL:
                 return setl(dst, dstIndex, status);
-            case 0x0B:
+            case SETO:
                 return seto(dst, dstIndex, status);
-            case 0x0C:
+            case SETNO:
                 return setno(dst, dstIndex, status);
-            case 0x0D:
+            case SETS:
                 return sets(dst, dstIndex, status);
-            case 0x0E:
+            case SETNS:
                 return setns(dst, dstIndex, status);
             default:
                 return status;
