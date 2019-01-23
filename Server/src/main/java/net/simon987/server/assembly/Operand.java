@@ -36,6 +36,16 @@ public class Operand {
      */
     private int data = 0;
 
+    public Operand(OperandType type, int value) {
+        this.type = type;
+        this.value = value;
+    }
+
+    public Operand(OperandType type, int value, int data) {
+        this(type, value);
+        this.data = data;
+    }
+
     /**
      * Create an Operand from text. It assumes that the numerical values that can't be
      * parsed are labels that are not defined yet.
