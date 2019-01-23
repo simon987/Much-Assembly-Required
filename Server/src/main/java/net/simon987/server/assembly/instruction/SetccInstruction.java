@@ -21,9 +21,6 @@ import java.util.HashMap;
  * Implementation of the SETcc family of instructions
  * http://www.ousob.com/ng/iapx86/ng22d84.php
  * 
- * 
- * Stuff to consider
- * - move the implementation of each instruction to its own class that extends this class
  */
 public class SetccInstruction extends Instruction {
 
@@ -71,7 +68,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     * The SET instructions set the 8-bit destination to 1 if the
+     * The SET instructions set the 16-bit destination to 1 if the
      * specified condition is true, otherwise destination is set to 0.
      * 
      *   FamilyOpcode   Instruction        SET to 1 if ... else to 0            Flags
@@ -145,7 +142,7 @@ public class SetccInstruction extends Instruction {
 
     /**
      * Encodes the instruction. Writes the result in the outputStream.
-     * Needs one operand of OperandType.REGISTER or OperandType.
+     * Needs one operand of OperandType.REGISTER or OperandType.MEMORY_REG16
      * 
      * @param out encoded bytes will be written here
      */
