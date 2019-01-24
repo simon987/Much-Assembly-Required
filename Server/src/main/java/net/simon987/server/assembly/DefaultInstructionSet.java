@@ -50,10 +50,39 @@ public class DefaultInstructionSet implements InstructionSet {
         add(new SarInstruction());
         add(new IncInstruction());
         add(new DecInstruction());
+
+        // 'abstract' instruction
         add(new SetccInstruction());
 
         // aliases
         add(new SalInstruction());
+
+        // Setcc family
+        add(new SetaeInstruction());
+        add(new SetaInstruction());
+        add(new SetbeInstruction());
+        add(new SetbInstruction());
+        add(new SetcInstruction());
+        add(new SeteInstruction());
+        add(new SetgeInstruction());
+        add(new SetgInstruction());
+        add(new SetleInstruction());
+        add(new SetlInstruction());
+        add(new SetnaeInstruction());
+        add(new SetnaInstruction());
+        add(new SetnbeInstruction());
+        add(new SetnbInstruction());
+        add(new SetncInstruction());
+        add(new SetneInstruction());
+        add(new SetngeInstruction());
+        add(new SetngInstruction());
+        add(new SetnleInstruction());
+        add(new SetnlInstruction());
+        add(new SetnoInstruction());
+        add(new SetnsInstruction());
+        add(new SetnzInstruction());
+        add(new SetoInstruction());
+        add(new SetsInstruction());
         add(new SetzInstruction());
     }
 
