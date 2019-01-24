@@ -19,7 +19,6 @@ import java.util.HashMap;
 /**
  * Implementation of the SETcc family of instructions
  * http://www.ousob.com/ng/iapx86/ng22d84.php
- * 
  */
 public class SetccInstruction extends Instruction {
 
@@ -44,34 +43,35 @@ public class SetccInstruction extends Instruction {
      * Map of mnemonics, stored in mnemonic : family op code
      * This map includes aliases
      */
-    private static final Map<String, Character> mnemnoicFamilyOpCodeMap = new HashMap<>(26);
+    private static final Map<String, Character> mnemonicFamilyOpCodeMap = new HashMap<>(26);
+
     static {
-        mnemnoicFamilyOpCodeMap.put("seta",   (char) SETA);
-        mnemnoicFamilyOpCodeMap.put("setnbe", (char) SETA);
-        mnemnoicFamilyOpCodeMap.put("setae",  (char) SETAE);
-        mnemnoicFamilyOpCodeMap.put("setnb",  (char) SETAE);
-        mnemnoicFamilyOpCodeMap.put("setnc",  (char) SETAE);
-        mnemnoicFamilyOpCodeMap.put("setbe",  (char) SETBE);
-        mnemnoicFamilyOpCodeMap.put("setna",  (char) SETBE);
-        mnemnoicFamilyOpCodeMap.put("setb",   (char) SETB);
-        mnemnoicFamilyOpCodeMap.put("setc",   (char) SETB);
-        mnemnoicFamilyOpCodeMap.put("setnae", (char) SETB);
-        mnemnoicFamilyOpCodeMap.put("sete",   (char) SETE);
-        mnemnoicFamilyOpCodeMap.put("setz",   (char) SETE);
-        mnemnoicFamilyOpCodeMap.put("setne",  (char) SETNE);
-        mnemnoicFamilyOpCodeMap.put("setnz",  (char) SETNE);
-        mnemnoicFamilyOpCodeMap.put("setg",   (char) SETG);
-        mnemnoicFamilyOpCodeMap.put("setnle", (char) SETG);
-        mnemnoicFamilyOpCodeMap.put("setge",  (char) SETGE);
-        mnemnoicFamilyOpCodeMap.put("setnl",  (char) SETGE);
-        mnemnoicFamilyOpCodeMap.put("setle",  (char) SETLE);
-        mnemnoicFamilyOpCodeMap.put("setng",  (char) SETLE);
-        mnemnoicFamilyOpCodeMap.put("setl",   (char) SETL);
-        mnemnoicFamilyOpCodeMap.put("setnge", (char) SETL);
-        mnemnoicFamilyOpCodeMap.put("seto",   (char) SETO);
-        mnemnoicFamilyOpCodeMap.put("setno",  (char) SETNO);
-        mnemnoicFamilyOpCodeMap.put("sets",   (char) SETS);
-        mnemnoicFamilyOpCodeMap.put("setns",  (char) SETNS);
+        mnemonicFamilyOpCodeMap.put("seta", (char) SETA);
+        mnemonicFamilyOpCodeMap.put("setnbe", (char) SETA);
+        mnemonicFamilyOpCodeMap.put("setae", (char) SETAE);
+        mnemonicFamilyOpCodeMap.put("setnb", (char) SETAE);
+        mnemonicFamilyOpCodeMap.put("setnc", (char) SETAE);
+        mnemonicFamilyOpCodeMap.put("setbe", (char) SETBE);
+        mnemonicFamilyOpCodeMap.put("setna", (char) SETBE);
+        mnemonicFamilyOpCodeMap.put("setb", (char) SETB);
+        mnemonicFamilyOpCodeMap.put("setc", (char) SETB);
+        mnemonicFamilyOpCodeMap.put("setnae", (char) SETB);
+        mnemonicFamilyOpCodeMap.put("sete", (char) SETE);
+        mnemonicFamilyOpCodeMap.put("setz", (char) SETE);
+        mnemonicFamilyOpCodeMap.put("setne", (char) SETNE);
+        mnemonicFamilyOpCodeMap.put("setnz", (char) SETNE);
+        mnemonicFamilyOpCodeMap.put("setg", (char) SETG);
+        mnemonicFamilyOpCodeMap.put("setnle", (char) SETG);
+        mnemonicFamilyOpCodeMap.put("setge", (char) SETGE);
+        mnemonicFamilyOpCodeMap.put("setnl", (char) SETGE);
+        mnemonicFamilyOpCodeMap.put("setle", (char) SETLE);
+        mnemonicFamilyOpCodeMap.put("setng", (char) SETLE);
+        mnemonicFamilyOpCodeMap.put("setl", (char) SETL);
+        mnemonicFamilyOpCodeMap.put("setnge", (char) SETL);
+        mnemonicFamilyOpCodeMap.put("seto", (char) SETO);
+        mnemonicFamilyOpCodeMap.put("setno", (char) SETNO);
+        mnemonicFamilyOpCodeMap.put("sets", (char) SETS);
+        mnemonicFamilyOpCodeMap.put("setns", (char) SETNS);
     }
 
     public SetccInstruction() {
@@ -85,22 +85,22 @@ public class SetccInstruction extends Instruction {
     /**
      * The SET instructions set the 16-bit destination to 1 if the
      * specified condition is true, otherwise destination is set to 0.
-     * 
-     *   FamilyOpcode   Instruction        SET to 1 if ... else to 0            Flags
-     *   0x01           SETA, SETNBE       Above, Not Below or Equal            CF=0 AND ZF=0
-     *   0x02           SETAE,SETNB,SETNC  Above or Equal, Not Below, No Carry  CF=0
-     *   0x03           SETBE, SETNA       Below or Equal, Not Above            CF=1 OR ZF=1
-     *   0x04           SETB, SETC,SETNAE  Below, Carry, Not Above or Equal     CF=1
-     *   0x05           SETE, SETZ         Equal, Zero                          ZF=1
-     *   0x06           SETNE, SETNZ       Not Equal, Not Zero                  ZF=0
-     *   0x07           SETG, SETNLE       Greater, Not Less or Equal           SF=OF AND ZF=0
-     *   0x08           SETGE, SETNL       Greater or Equal, Not Less           SF=OF
-     *   0x09           SETLE, SETNG       Less or Equal, Not Greater           SF<>OF OR ZF=1
-     *   0x0A           SETL, SETNGE       Less, Not Greater or Equal           SF<>OF
-     *   0x0B           SETO               Overflow                             OF=1
-     *   0x0C           SETNO              No Overflow                          OF=0
-     *   0x0D           SETS               Sign (negative)                      SF=1
-     *   0x0E           SETNS              No Sign (positive)                   SF=0
+     * <p>
+     * FamilyOpcode   Instruction        SET to 1 if ... else to 0            Flags
+     * 0x01           SETA, SETNBE       Above, Not Below or Equal            CF=0 AND ZF=0
+     * 0x02           SETAE,SETNB,SETNC  Above or Equal, Not Below, No Carry  CF=0
+     * 0x03           SETBE, SETNA       Below or Equal, Not Above            CF=1 OR ZF=1
+     * 0x04           SETB, SETC,SETNAE  Below, Carry, Not Above or Equal     CF=1
+     * 0x05           SETE, SETZ         Equal, Zero                          ZF=1
+     * 0x06           SETNE, SETNZ       Not Equal, Not Zero                  ZF=0
+     * 0x07           SETG, SETNLE       Greater, Not Less or Equal           SF=OF AND ZF=0
+     * 0x08           SETGE, SETNL       Greater or Equal, Not Less           SF=OF
+     * 0x09           SETLE, SETNG       Less or Equal, Not Greater           SF<>OF OR ZF=1
+     * 0x0A           SETL, SETNGE       Less, Not Greater or Equal           SF<>OF
+     * 0x0B           SETO               Overflow                             OF=1
+     * 0x0C           SETNO              No Overflow                          OF=0
+     * 0x0D           SETS               Sign (negative)                      SF=1
+     * 0x0E           SETNS              No Sign (positive)                   SF=0
      */
     private static Status setcc(Target dst, int dstIndex, int familyOpCode, Status status) {
         switch (familyOpCode) {
@@ -163,24 +163,24 @@ public class SetccInstruction extends Instruction {
     /**
      * Encodes the instruction. Writes the result in the outputStream.
      * Needs one operand of OperandType.REGISTER or OperandType.MEMORY_REG16
-     * 
+     *
      * @param out encoded bytes will be written here
      */
     @Override
     public void encode(ByteArrayOutputStream out, Operand o1, int currentLine) throws AssemblyException {
         String mnemonic = getMnemonic().toLowerCase();
-        Character familyOpCode = mnemnoicFamilyOpCodeMap.get(mnemonic);
-        
+        Character familyOpCode = mnemonicFamilyOpCodeMap.get(mnemonic);
+
         // This will catch the off case that someone uses the mnemonic 'setcc'
         // as far as the assembler knows this is a valid instruction, but we know it isn't
         if (familyOpCode == null) {
             throw new InvalidMnemonicException(getMnemonic(), currentLine);
         }
-        
+
         if (!operandValid(o1)) {
             throw new IllegalOperandException("Illegal operand combination: " + o1.getType() + " (none)", currentLine);
         }
-        
+
         MachineCode code = new MachineCode();
         code.writeOpcode(getOpCode());
 
@@ -200,7 +200,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETA, SETNBE   Above, Not Below or Equal   CF=0 AND ZF=0
+     * SETA, SETNBE   Above, Not Below or Equal   CF=0 AND ZF=0
      */
     private static Status seta(Target dst, int dstIndex, Status status) {
         boolean condition = !status.isCarryFlag() && !status.isZeroFlag();
@@ -210,7 +210,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETAE,SETNB,SETNC  Above or Equal, Not Below, No Carry  CF=0
+     * SETAE,SETNB,SETNC  Above or Equal, Not Below, No Carry  CF=0
      */
     private static Status setae(Target dst, int dstIndex, Status status) {
         boolean condition = !status.isCarryFlag();
@@ -220,7 +220,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETBE, SETNA       Below or Equal, Not Above            CF=1 OR ZF=1
+     * SETBE, SETNA       Below or Equal, Not Above            CF=1 OR ZF=1
      */
     private static Status setbe(Target dst, int dstIndex, Status status) {
         boolean condition = status.isCarryFlag() || status.isZeroFlag();
@@ -230,7 +230,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETB, SETC,SETNAE  Below, Carry, Not Above or Equal     CF=1
+     * SETB, SETC,SETNAE  Below, Carry, Not Above or Equal     CF=1
      */
     private static Status setb(Target dst, int dstIndex, Status status) {
         boolean condition = status.isCarryFlag();
@@ -240,7 +240,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETE, SETZ         Equal, Zero                          ZF=1
+     * SETE, SETZ         Equal, Zero                          ZF=1
      */
     private static Status sete(Target dst, int dstIndex, Status status) {
         boolean condition = status.isZeroFlag();
@@ -250,7 +250,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETNE, SETNZ       Not Equal, Not Zero                  ZF=0
+     * SETNE, SETNZ       Not Equal, Not Zero                  ZF=0
      */
     private static Status setne(Target dst, int dstIndex, Status status) {
         boolean condition = !status.isZeroFlag();
@@ -258,9 +258,9 @@ public class SetccInstruction extends Instruction {
         dst.set(dstIndex, value);
         return status;
     }
-    
+
     /**
-     *   SETG, SETNLE       Greater, Not Less or Equal           SF=OF AND ZF=0
+     * SETG, SETNLE       Greater, Not Less or Equal           SF=OF AND ZF=0
      */
     private static Status setg(Target dst, int dstIndex, Status status) {
         boolean condition = (status.isSignFlag() == status.isOverflowFlag()) && !status.isZeroFlag();
@@ -270,7 +270,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETGE, SETNL       Greater or Equal, Not Less           SF=OF
+     * SETGE, SETNL       Greater or Equal, Not Less           SF=OF
      */
     private static Status setge(Target dst, int dstIndex, Status status) {
         boolean condition = status.isSignFlag() == status.isOverflowFlag();
@@ -280,7 +280,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETLE, SETNG       Less or Equal, Not Greater           SF<>OF OR ZF=1
+     * SETLE, SETNG       Less or Equal, Not Greater           SF<>OF OR ZF=1
      */
     private static Status setle(Target dst, int dstIndex, Status status) {
         boolean condition = (status.isSignFlag() != status.isOverflowFlag()) || status.isZeroFlag();
@@ -300,7 +300,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETO               Overflow                             OF=1
+     * SETO               Overflow                             OF=1
      */
     private static Status seto(Target dst, int dstIndex, Status status) {
         boolean condition = status.isOverflowFlag();
@@ -310,7 +310,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETNO              No Overflow                          OF=0
+     * SETNO              No Overflow                          OF=0
      */
     private static Status setno(Target dst, int dstIndex, Status status) {
         boolean condition = !status.isOverflowFlag();
@@ -320,7 +320,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETS               Sign (negative)                      SF=1
+     * SETS               Sign (negative)                      SF=1
      */
     private static Status sets(Target dst, int dstIndex, Status status) {
         boolean condition = status.isSignFlag();
@@ -330,7 +330,7 @@ public class SetccInstruction extends Instruction {
     }
 
     /**
-     *   SETNS              No Sign (positive)                   SF=0
+     * SETNS              No Sign (positive)                   SF=0
      */
     private static Status setns(Target dst, int dstIndex, Status status) {
         boolean condition = !status.isSignFlag();
