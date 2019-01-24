@@ -1,6 +1,6 @@
 package net.simon987.server.assembly;
 
-
+import net.simon987.server.assembly.exception.AssemblyException;
 import net.simon987.server.assembly.exception.IllegalOperandException;
 
 import java.io.ByteArrayOutputStream;
@@ -102,7 +102,7 @@ public abstract class Instruction {
      * @param o2 Source operand
      * @return true if valid
      */
-    private static boolean operandsValid(Operand o1, Operand o2) throws IllegalOperandException {
+    public boolean operandsValid(Operand o1, Operand o2) {
         return o1.getType() != OperandType.IMMEDIATE16;
     }
 
@@ -112,7 +112,7 @@ public abstract class Instruction {
      * @param o1 source operand
      * @return true if the specified operand can be used with this instruction
      */
-    private static boolean operandValid(Operand o1) {
+    public boolean operandValid(Operand o1) {
         return true;
     }
 
@@ -124,7 +124,7 @@ public abstract class Instruction {
         return false;
     }
 
-    String getMnemonic() {
+    public String getMnemonic() {
         return mnemonic;
     }
 
@@ -133,7 +133,7 @@ public abstract class Instruction {
      *
      * @param out encoded bytes will be written here
      */
-    public void encode(ByteArrayOutputStream out, int currentLine) throws IllegalOperandException {
+    public void encode(ByteArrayOutputStream out, int currentLine) throws AssemblyException {
 
         if (!noOperandsValid()) {
             throw new IllegalOperandException("This instruction must have operand(s)!", currentLine);
@@ -148,7 +148,7 @@ public abstract class Instruction {
     }
 
     public void encode(ByteArrayOutputStream out, Operand o1, Operand o2, int currentLine)
-            throws IllegalOperandException {
+            throws AssemblyException {
         MachineCode code = new MachineCode();
         code.writeOpcode(opCode);
 
@@ -183,7 +183,7 @@ public abstract class Instruction {
     }
 
     public void encode(ByteArrayOutputStream out, Operand o1, int currentLine)
-            throws IllegalOperandException {
+            throws AssemblyException {
         MachineCode code = new MachineCode();
         code.writeOpcode(opCode);
 
@@ -208,7 +208,7 @@ public abstract class Instruction {
         }
     }
 
-    int getOpCode() {
+    public int getOpCode() {
         return opCode;
     }
 }

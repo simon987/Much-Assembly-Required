@@ -10,9 +10,9 @@ import java.util.HashMap;
  */
 public class Operand {
 
-    static final int IMMEDIATE_VALUE = 0b11111; //1 1111
+    public static final int IMMEDIATE_VALUE = 0b11111; //1 1111
 
-    static final int IMMEDIATE_VALUE_MEM = 0b11110; //1 1110
+    public static final int IMMEDIATE_VALUE_MEM = 0b11110; //1 1110
 
     /**
      * The actual text of the operand (e.g. "[AX]")
@@ -35,6 +35,16 @@ public class Operand {
      * For example, "[AX+3]" value={index of AX] + {number of registers}, Data=3
      */
     private int data = 0;
+
+    public Operand(OperandType type, int value) {
+        this.type = type;
+        this.value = value;
+    }
+
+    public Operand(OperandType type, int value, int data) {
+        this(type, value);
+        this.data = data;
+    }
 
     /**
      * Create an Operand from text. It assumes that the numerical values that can't be
@@ -252,7 +262,7 @@ public class Operand {
         }
     }
 
-    OperandType getType() {
+    public OperandType getType() {
         return type;
     }
 
@@ -260,7 +270,7 @@ public class Operand {
         return value;
     }
 
-    int getData() {
+    public int getData() {
         return data;
     }
 }

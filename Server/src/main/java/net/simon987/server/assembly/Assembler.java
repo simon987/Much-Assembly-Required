@@ -544,7 +544,6 @@ public class Assembler {
 
         if (instructionSet.get(mnemonic) == null) {
             throw new InvalidMnemonicException(mnemonic, currentLine);
-
         }
 
         //Check operands and encode instruction

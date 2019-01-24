@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Represents an encoded instruction. this class is used to easily
  * write to an 16bit value.
  */
-class MachineCode {
+public class MachineCode {
 
     /**
      * Value of the initial 2-byte instruction
@@ -27,7 +27,7 @@ class MachineCode {
      *
      * @param opCode signed 6-bit integer (value 0-63)
      */
-    void writeOpcode(int opCode) {
+    public void writeOpcode(int opCode) {
 
         if (opCode < 0 || opCode > 63) {
             LogManager.LOGGER.severe("Couldn't write the opCode for instruction :" + opCode);
@@ -44,7 +44,7 @@ class MachineCode {
      *
      * @param src signed 5-bit integer (value 0-31)
      */
-    void writeSourceOperand(int src) {
+    public void writeSourceOperand(int src) {
 
         if (src < 0 || src > 31) {
             LogManager.LOGGER.severe("Couldn't write the scr operand for instruction :" + src);
@@ -62,7 +62,7 @@ class MachineCode {
      *
      * @param dst signed 5-bit integer (value 0-31)
      */
-    void writeDestinationOperand(int dst) {
+    public void writeDestinationOperand(int dst) {
         if (dst < 0 || dst > 31) {
             LogManager.LOGGER.severe("Couldn't write the dst operand for instruction :" + dst);
         } else {
@@ -73,14 +73,14 @@ class MachineCode {
         }
     }
 
-    void appendWord(char word) {
+    public void appendWord(char word) {
         additionalWords.add(word);
     }
 
     /**
      * Get the bytes of the code
      */
-    byte[] bytes() {
+    public byte[] bytes() {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 

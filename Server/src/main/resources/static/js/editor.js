@@ -275,6 +275,7 @@ function parseInstruction(line, result, currentLine) {
     if (!parseDWInstruction(line, result, currentLine)) {
 
         if (new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|hwi|hwq|nop|neg|' +
+            'seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns|' +
             'call|ret|jmp|jnz|jg|jl|jge|jle|int|jz|js|jns|brk|not|jc|jnc|ror|rol|sal|sar|jo|jno|inc|dec|rcl|xchg|rcr|pushf|popf|ja|jna)\\b').test(mnemonic.toLowerCase())) {
 
 
@@ -333,7 +334,7 @@ function parseInstruction(line, result, currentLine) {
                 strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
 
                 //Validate operand number
-                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna)\\b').test(mnemonic.toLowerCase())) {
+                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
                     result.annotations.push({
                         row: currentLine,
                         column: 0,
@@ -353,6 +354,16 @@ function parseInstruction(line, result, currentLine) {
                     });
                 }
 
+                if (new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
+                    if (getOperandType(strO1, result) === OPERAND_IMM) {
+                        result.annotations.push({
+                            row: currentLine,
+                            column: 0,
+                            text: "Invalid operand type: " + strO1,
+                            type: "error"
+                        });
+                    }
+                }
 
             } else {
                 //No operand

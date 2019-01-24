@@ -52,7 +52,7 @@ define("ace/mode/mar_rules", ["require", "exports", "module", "ace/lib/oop", "ac
                 },
                     {
                         token: 'keyword.operator.assembly',
-                        regex: '\\b(?:call|ret|jmp|jnz|jg|jl|jge|jle|hwi|jz|js|jns|jc|jnc|jo|jno|ja|jna)\\b',
+                        regex: '\\b(?:call|ret|jmp|jnz|jg|jl|jge|jle|hwi|jz|js|jns|jc|jnc|jo|jno|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b',
                         caseInsensitive: true
                     },
                     {
