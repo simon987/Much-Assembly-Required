@@ -43,6 +43,14 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
      * Current World of the object
      */
     private World world;
+    /**
+     * Counter for user stats
+    */
+    private int counter;
+    /**
+     * Execution Time
+     */
+    private double time;
 
     public GameObject() {
 
@@ -62,6 +70,9 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
 
         int newX = getX() + direction.dX;
         int newY = getY() + direction.dY;
+
+        counter = 0;
+        time = 0;
 
         if (newX < 0 || newY < 0 || newX >= world.getWorldSize() || newY >= world.getWorldSize()) {
             //Next tile is out of world bounds, move to next world
@@ -228,6 +239,22 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
 
     public void setWorld(World world) {
         this.world = world;
+    }
+
+    public void setCounter(int c){
+        counter=c;
+    }
+
+    public int getCounter(){
+        return counter;
+    }
+
+    public void setTime(double t){
+        time=t;
+    }
+
+    public double getTime(){
+        return time;
     }
 
     @Override

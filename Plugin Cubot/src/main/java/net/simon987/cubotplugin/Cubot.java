@@ -11,6 +11,8 @@ import net.simon987.server.game.item.Item;
 import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.*;
 import net.simon987.server.user.User;
+import net.simon987.server.event.GameEvent;
+import net.simon987.cubotplugin.event.*;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
@@ -22,6 +24,14 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
 
     private static final char MAP_INFO = 0x0200;
 
+    /**
+     * Walk Distance
+    */
+    private int walkDistance;
+    /**
+     * Death Count
+    */
+    private int deathCount;
     /**
      * Hit points
      */
@@ -126,6 +136,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
 
         hp = document.getInteger("hp");
         shield = document.getInteger("shield");
+        deathCount = 0;
+        walkDistance = 0;
         setDirection(Direction.getDirection(document.getInteger("direction")));
 
         IServerConfiguration config = GameServer.INSTANCE.getConfig();
@@ -164,6 +176,9 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
                     //Couldn't walk
                     currentAction = Action.IDLE;
                 }
+                walkDistance++;
+                GameEvent event = new WalkDistanceEvent(this,walkDistance);
+                GameServer.INSTANCE.getEventDispatcher().dispatch(event);
             } else {
                 currentAction = Action.IDLE;
             }
@@ -263,6 +278,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         lastConsoleMessagesBuffer.clear();
         currentStatus = 0;
         lastStatus = 0;
+        walkDistance = 0;
         addStatus(CubotStatus.FACTORY_NEW);
 
         for (HardwareModule module : hardwareAddresses.values()) {
@@ -272,6 +288,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
 
     @Override
     public boolean onDeadCallback() {
+        deathCount++;
+        GameEvent event = new DeathCountEvent(this,deathCount);
+        GameServer.INSTANCE.getEventDispatcher().dispatch(event);
+
         reset();
 
         //Teleport to spawn point
