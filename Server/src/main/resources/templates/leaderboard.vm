@@ -26,9 +26,9 @@
                     <tr>
                         <td>$row.getKey().getUsername()</td>
                         <td>$row.getValue().size()</td>
-                        <td>$row.getValue().size()</td>
-                        <td>$row.getValue().size()</td>
-                        <td>$row.getValue().size()</td>
+                        <td>$row.getValue()</td>
+                        <td>$row.getValue()</td>
+                        <td>$row.getValue()</td>
                     </tr>
                     #end
                 </tbody>

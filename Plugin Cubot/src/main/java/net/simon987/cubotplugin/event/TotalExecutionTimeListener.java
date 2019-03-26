@@ -7,6 +7,9 @@ import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.logging.LogManager;
 
 public class TotalExecutionTimeListener implements GameEventListener {
+
+    private int count;
+
     @Override
     public Class getListenedEventType() {
         return TotalExecutionTimeEvent.class;
@@ -17,11 +20,13 @@ public class TotalExecutionTimeListener implements GameEventListener {
         TotalExecutionTimeEvent TotalExecutionTimeEvent = (TotalExecutionTimeEvent) event;
         GameObject object = TotalExecutionTimeEvent.getSource();
         if (object instanceof ControllableUnit) {
+            count = ((ControllableUnit) object).getParent().getStats().getInt("totalExecutionTime");
+            count++;
             LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Death Count " +
-                    Double.toString(object.getTime()));
+                    Integer.toString(count));
 
-            ((ControllableUnit) object).getParent().getStats().setDouble("totalExecutionTime",
-                    TotalExecutionTimeEvent.getTime());
+            ((ControllableUnit) object).getParent().getStats().setInt("totalExecutionTime",
+                    count);
         }
     }
 }

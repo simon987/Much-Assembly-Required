@@ -7,6 +7,9 @@ import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.logging.LogManager;
 
 public class WalkDistanceListener implements GameEventListener {
+
+    private int count;
+
     @Override
     public Class getListenedEventType() {
         return WalkDistanceEvent.class;
@@ -17,11 +20,13 @@ public class WalkDistanceListener implements GameEventListener {
         WalkDistanceEvent WalkDistanceEvent = (WalkDistanceEvent) event;
         GameObject object = WalkDistanceEvent.getSource();
         if (object instanceof ControllableUnit) {
+            count = ((ControllableUnit) object).getParent().getStats().getInt("walkDistance");
+            count++;
             LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Death Count " +
-                    Integer.toString(object.getCounter()));
+                    count);
 
             ((ControllableUnit) object).getParent().getStats().setInt("walkDistance",
-                    WalkDistanceEvent.getCounter());
+                    count);
         }
     }
 }

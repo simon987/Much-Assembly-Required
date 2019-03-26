@@ -5,19 +5,8 @@ import net.simon987.server.game.objects.GameObject;
 
 public class WalkDistanceEvent extends GameEvent {
 
-    private int count;
-
-    public WalkDistanceEvent(){
-
-    }
-
-    public WalkDistanceEvent(GameObject object, int c) {
+    public WalkDistanceEvent(GameObject object) {
         setSource(object);
-        if(c>=0){
-            object.setCounter(c);
-        }else{
-            object.setCounter(0);
-        }
     }
 
     @Override
@@ -25,7 +14,4 @@ public class WalkDistanceEvent extends GameEvent {
         return (GameObject) super.getSource();
     }
 
-    public int getCounter() {
-        return (int) getSource().getCounter();
-    }
 }
