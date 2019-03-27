@@ -25,10 +25,10 @@
                     #foreach($row in $stats)
                     <tr>
                         <td>$row.getKey().getUsername()</td>
-                        <td>$row.getValue().size()</td>
-                        <td>$row.getValue()</td>
-                        <td>$row.getValue()</td>
-                        <td>$row.getValue()</td>
+                        <td>$row.getValue().get("completedVaults")</td>
+                        <td>$row.getValue().get("deathCount")</td>
+                        <td>$row.getValue().get("executionTime")</td>
+                        <td>$row.getValue().get("walkDistance")</td>
                     </tr>
                     #end
                 </tbody>
