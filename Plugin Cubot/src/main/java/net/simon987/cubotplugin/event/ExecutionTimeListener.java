@@ -6,26 +6,26 @@ import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.GameObject;
 import net.simon987.server.logging.LogManager;
 
-public class TotalExecutionTimeListener implements GameEventListener {
+public class ExecutionTimeListener implements GameEventListener {
 
-    private int count;
+    private int count = 0;
 
     @Override
     public Class getListenedEventType() {
-        return TotalExecutionTimeEvent.class;
+        return ExecutionTimeEvent.class;
     }
 
     @Override
     public void handle(GameEvent event) {
-        TotalExecutionTimeEvent TotalExecutionTimeEvent = (TotalExecutionTimeEvent) event;
-        GameObject object = TotalExecutionTimeEvent.getSource();
+        ExecutionTimeEvent executionTimeEvent = (ExecutionTimeEvent) event;
+        GameObject object = executionTimeEvent.getSource();
         if (object instanceof ControllableUnit) {
-            count = ((ControllableUnit) object).getParent().getStats().getInt("totalExecutionTime");
+            count = ((ControllableUnit) object).getParent().getStats().getInt("executionTime");
             count++;
             LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " execution time " +
                     Integer.toString(count));
 
-            ((ControllableUnit) object).getParent().getStats().setInt("totalExecutionTime",
+            ((ControllableUnit) object).getParent().getStats().setInt("executionTime",
                     count);
         }
     }

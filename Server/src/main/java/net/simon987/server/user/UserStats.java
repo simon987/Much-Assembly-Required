@@ -58,7 +58,7 @@ public class UserStats implements MongoSerializable {
      * @return The value of the stat. Returns 0 if not found
      */
     public int getInt(String name) {
-        return stats.getInteger(name, 0);
+            return stats.getInteger(name, 0);
     }
 
         /**

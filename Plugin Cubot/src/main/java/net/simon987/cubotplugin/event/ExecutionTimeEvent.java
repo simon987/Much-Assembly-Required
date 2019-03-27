@@ -3,9 +3,9 @@ package net.simon987.cubotplugin.event;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.game.objects.GameObject;
 
-public class TotalExecutionTimeEvent extends GameEvent {
+public class ExecutionTimeEvent extends GameEvent {
 
-    public TotalExecutionTimeEvent(GameObject object) {
+    public ExecutionTimeEvent(GameObject object) {
         setSource(object);
     }
 

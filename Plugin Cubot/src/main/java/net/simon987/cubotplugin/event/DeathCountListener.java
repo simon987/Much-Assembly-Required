@@ -8,7 +8,7 @@ import net.simon987.server.logging.LogManager;
 
 public class DeathCountListener implements GameEventListener {
 
-    private int count;
+    private int count = 0;
 
     @Override
     public Class getListenedEventType() {

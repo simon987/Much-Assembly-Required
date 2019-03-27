@@ -1,0 +1,2470 @@
+[33mcommit e082d9c96ea0a0acf23a72aa8ecdeb204659f8c8[m[33m ([m[1;36mHEAD -> [m[1;32missue-182[m[33m, [m[1;31morigin/issue-182[m[33m)[m
+Author: Woosle Park <wwpark@myseneca.ca>
+Date:   Wed Mar 27 13:21:15 2019 -0400
+
+    changes 3.1
+
+[33mcommit 138c4714d5a166b325685f3773b242eb886d83a1[m
+Author: Woosle Park <wwpark@myseneca.ca>
+Date:   Wed Mar 27 04:47:48 2019 -0400
+
+    changes 2
+
+[33mcommit f2c11cc7f864bc176884cc72bdb026529ff84da3[m
+Author: Woosle Park <wwpark@myseneca.ca>
+Date:   Tue Mar 26 14:01:03 2019 -0400
+
+    changes 1
+
+[33mcommit 5b019b3e63fe58e472ac56b2ce6d9c8b18956639[m
+Author: Woosle Park <wwpark@myseneca.ca>
+Date:   Mon Mar 25 22:39:21 2019 -0400
+
+    Testing
+
+[33mcommit c50cc8c364195249238f6da5024a94e3da0c678d[m[33m ([m[1;31mupstream/master[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 75410cc bf9cdc7
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Jan 24 19:06:23 2019 -0500
+
+    Merge pull request #192 from kevinramharak/implement-SETcc-instructions#184
+    
+    actually add the implemented instrutions to instruction set :)
+
+[33mcommit bf9cdc7b29ac8a0a2d9989e0032ebe89c1f20265[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Thu Jan 24 19:17:01 2019 +0100
+
+    actually add the implemented instrutions to instruction set :)
+
+[33mcommit 75410cc0db077c9c8b7802f476d51ebac4bc887e[m
+Merge: a768cf0 e0ed1e0
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Jan 23 19:23:22 2019 -0500
+
+    Merge pull request #191 from kevinramharak/implement-SETcc-instructions#184
+    
+    Implement setcc instructions#184
+
+[33mcommit e0ed1e0e6f1bc05ab573917056c81b1bdeba33f6[m
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Wed Jan 23 19:19:57 2019 -0500
+
+    reformat code
+
+[33mcommit 0fbd1d1a6b80603d5f12063d10265c55e87f4321[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 17:21:52 2019 +0100
+
+    add setcc instruction to editor lexer
+
+[33mcommit 8018fb3e3087f3b9aacb81ce848a3c0a78a5d69b[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 17:18:29 2019 +0100
+
+    update syntax highlighting
+
+[33mcommit fb8fdac9c3bb180966cca2107200ea2a2f5fbb96[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 14:25:58 2019 +0100
+
+    add tests for all SETcc instructions
+
+[33mcommit a3253e8e3af4b8f0aa3b9d84b0f02389cc716973[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 14:08:40 2019 +0100
+
+    fix setg
+
+[33mcommit 9ee754e5bea7dd68096f14c547612caeef824b56[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 13:47:42 2019 +0100
+
+    add forgoten alias
+
+[33mcommit e72e8b45c57f1018ec9d7584b132038a842e3cae[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 10:08:30 2019 +0100
+
+    implement setcc tests
+
+[33mcommit 311889bc93a5bb3a309b0c82272514c1de175b32[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 10:08:15 2019 +0100
+
+    fix operandValid check; remove unused import;
+
+[33mcommit 9cb2c29f0f58a8cde87ba03ee3da9d165a9da1ef[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 09:48:43 2019 +0100
+
+    remove logs; 1 log might cause a null ref;
+
+[33mcommit f3ae97c0607be0ef5f8da45354dd5c672da62c0b[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 09:43:33 2019 +0100
+
+    fix typo
+
+[33mcommit e8033f32919db86c69f5c995486c450df28ebbd4[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 09:39:44 2019 +0100
+
+    add operand constructors for easier testing
+
+[33mcommit b19eb0568d54cab6631d88febdb85bc68fe5f2d0[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 09:31:49 2019 +0100
+
+    remove magic numbers
+
+[33mcommit 9aa876df62ff0c4e7e96370867204f86aef09ca5[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 09:16:56 2019 +0100
+
+    implement all aliases as instructions
+
+[33mcommit b1da29d7fbc23e5022d69a05ab6231cb56809a5e[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Wed Jan 23 09:16:44 2019 +0100
+
+    fix feedback
+
+[33mcommit 12f20d178a9fe94c30e0a54392caf0abf37c4ef4[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 22:13:25 2019 +0100
+
+    example implementation of setcc and first cc setz
+
+[33mcommit a030e9fc5da1dd467776935572ddf0c5d0d81d4e[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 22:12:34 2019 +0100
+
+    slightly rework aliases to work with inheritance
+
+[33mcommit 439547102fab103fdeefbf6a6531822a91d5cb2e[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 20:54:59 2019 +0100
+
+    remove package private attributes
+
+[33mcommit d5ddb8e439c197990a4a1cb0b71d84157497b384[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 20:54:26 2019 +0100
+
+    allow operand validation methods to be overriden
+
+[33mcommit 4f4cecf60c6c3ded4eef7672b175f8f663f9547a[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 20:17:26 2019 +0100
+
+    allow operand checks to be overriden
+
+[33mcommit a1136f90569f41b62bd8965096f2bc32c66f9c06[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 20:15:36 2019 +0100
+
+    make MachineCode publicly visible
+
+[33mcommit d2e708435443b70609bdaefa84858adf8b15dfa1[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 19:20:07 2019 +0100
+
+    update encode throw signature
+
+[33mcommit 1157bd5df5a42a5ceb8aae8e0bca79ae4402c507[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 19:19:42 2019 +0100
+
+    remove random newline
+
+[33mcommit 0ff671713c10399473655ab67bc30e43e9849dd7[m
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 18:48:49 2019 +0100
+
+    allow inherited classes to get its own opcode and mnemonic
+
+[33mcommit 2590e8ec64818fbce19c09fda918281e1c688f4b[m
+Merge: f8eec65 a768cf0
+Author: Kevin Ramharak <kevin@ramharak.nl>
+Date:   Tue Jan 22 18:40:32 2019 +0100
+
+    Merge branch 'master' into implement-SETcc-instructions#184
+
+[33mcommit a768cf0f4b065a07a12c2f63a0d2bd150aefb997[m
+Merge: 762bad7 7b3839f
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 21 19:55:17 2019 -0500
+
+    Merge pull request #189 from KevinRamharak/possible-implementation-aliases
+    
+    add implementation for instruction aliases
+
+[33mcommit 7b3839f04650202c9596d61a976cd826c14e050f[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Sun Jan 20 19:17:43 2019 +0100
+
+    change types to map interface, remove unused import
+
+[33mcommit 4958c3d9a0a02c9104db6b4d0c1d9598a683757c[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Sun Jan 20 13:32:48 2019 +0100
+
+    add implementation for instruction aliases
+
+[33mcommit f8eec652ae5c502dc3a9edadbc2b045f75a39b96[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Sun Jan 20 13:10:06 2019 +0100
+
+    basic skeleton
+
+[33mcommit 762bad758ba449842b55d0039168d7962e8df642[m
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Tue Jan 15 21:02:25 2019 -0500
+
+    Fixes #188 #187
+
+[33mcommit 3e2422775e6d968903a25dde508f6b12bc145292[m
+Merge: 78a9f78 9938386
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Tue Jan 15 19:32:19 2019 +0100
+
+    Merge branch 'master' into implement-SETcc-instructions#184
+
+[33mcommit 993838651f9465627026b3208a64d9454db0ed9b[m
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Mon Jan 14 18:24:34 2019 -0500
+
+    Fixes #185
+
+[33mcommit ce8c5375ee9e1f4badabd4557c2852967f2eba0a[m
+Merge: d113f63 91ebb51
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Mon Jan 14 18:16:45 2019 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 91ebb51389a139523487a655bb91ea3d78b12f71[m
+Merge: 7ba46ec 4f8eb27
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 14 18:16:42 2019 -0500
+
+    Merge pull request #186 from KevinRamharak/master
+    
+    This will allow for easier search / grep's to figure out what opcodes are used
+
+[33mcommit d113f635a14a713cd4d45dc4098755fe8bdfdc87[m
+Merge: 63cdfb2 7ba46ec
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Mon Jan 14 18:14:44 2019 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 78a9f78a545f6527b0fd35b49a460eed11e005b1[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Mon Jan 14 18:46:23 2019 +0100
+
+    fix merge conflict
+
+[33mcommit 4f8eb2725e9e11ffb05a3e3ea100708ebd0e939f[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Mon Jan 14 18:37:42 2019 +0100
+
+    fix typo
+
+[33mcommit ff4f6c23eb04ee3ebeee4ef9eb482e9d42164011[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Mon Jan 14 18:32:27 2019 +0100
+
+    adjust source code so all instructions use the same patterns
+
+[33mcommit c5a34c7a3fa18748904d8ff1be631002ca96f51e[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Mon Jan 14 18:32:27 2019 +0100
+
+    adjust source code so all instructions use the same patterns
+
+[33mcommit 1d3d44199658af3f809e4a1ed005a6954b247f83[m
+Author: Kevin Ramharak <kevin.ramharak@infocaster.net>
+Date:   Mon Jan 14 17:48:49 2019 +0100
+
+    allow instructions to override the encode method
+
+[33mcommit 7ba46ec36e1aca7d6771f96579216a30bf1d908c[m
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Wed Jan 9 18:36:33 2019 -0500
+
+    Updated dependencies
+
+[33mcommit 63cdfb22ac535282139aea7e0e0305bf6d508ee1[m
+Merge: f9898f5 2548242
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Wed Jan 9 18:47:01 2019 -0500
+
+    Merge branch 'master' of https://github.com/simon987/Much-Assembly-Required
+
+[33mcommit f9898f57f4a0b1ec61ab07fcc9f16cd08ebeecc3[m
+Author: simon987 <fortier.simon@protonmail.com>
+Date:   Wed Jan 9 18:36:33 2019 -0500
+
+    Updated dependencies
+
+[33mcommit 2548242da8412a6f3f081aa13db484a8871f5b86[m
+Author: Data Archivist <data.archivist.weekly@gmail.com>
+Date:   Wed Jan 9 18:36:33 2019 -0500
+
+    Updated dependencies
+
+[33mcommit 46d5c9b51ee1973ea8d71291e41c072dc2531d12[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Tue Jan 1 10:16:54 2019 -0500
+
+    HackedNPC code section offset same as Cubot (for real this time)
+
+[33mcommit 7fd1c35f7ae91c31879855580445aed95372370b[m
+Merge: 0dbec1d 45d3b84
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sun Dec 23 12:47:38 2018 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 0dbec1d2585c5a91504b9610ae1a31b8d7800081[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sun Dec 23 12:47:32 2018 -0500
+
+    HackedNPC code section offset same as Cubot
+
+[33mcommit 45d3b84dd0a271a2f189ba229c8dbd681a8c4f53[m
+Merge: 0973548 af4ddbd
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 23 11:56:24 2018 -0500
+
+    Merge pull request #181 from simon987/blueprints
+    
+    Oops I pushed to the wrong branch
+
+[33mcommit af4ddbdd8974d67a2b61d6224b84169c6c8c064c[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sun Dec 23 11:54:47 2018 -0500
+
+    Increased HackedNPC specs & reverted accidental change
+
+[33mcommit 84ca3acb52497e6f38304dca2b2593b015348341[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sat Dec 22 18:17:53 2018 -0500
+
+    revert debug values
+
+[33mcommit 0973548b7162d6ed60a33d46b59e64b21d0f539b[m
+Merge: 70eeb14 5f95c17
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sat Dec 22 17:55:12 2018 -0500
+
+    Merge pull request #179 from simon987/factory-rewrite
+    
+    NPCPlugin refactor, Added HackedNPC
+
+[33mcommit 5f95c17aed15a624ea4e067f7669cca5e5d60788[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sat Dec 22 17:48:29 2018 -0500
+
+    More refactoring, updated mongodb driver + transactions on supported clusters
+
+[33mcommit b361f87154fa5c5582616f68466acd7bf96b942c[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sat Dec 22 15:29:58 2018 -0500
+
+    NPC Plugin refactoring
+
+[33mcommit e4a06e79d43259ccad9182d17c8305820b47bb44[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Sat Dec 22 11:26:34 2018 -0500
+
+    Hacked NPC minimum viable
+
+[33mcommit 955d61ce99ffdd08d01cf3f499b6080622d1ffee[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Fri Dec 21 14:04:42 2018 -0500
+
+    Password moved from vault door to settlement
+
+[33mcommit 201d83f8d8b10b1f3d5098d35a4df8768e972be6[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Fri Dec 21 14:00:47 2018 -0500
+
+    Bump version
+
+[33mcommit 94b8ef53958559a8a725f297cffae53446a9e093[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Fri Dec 21 14:00:18 2018 -0500
+
+    NPC Plugin rewrite.
+    Plugin-level data can be stored in DB
+
+[33mcommit 70eeb1442d0ad451eef249fe57da759fe6696b93[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Fri Dec 21 10:47:46 2018 -0500
+
+    Added Fluid Tile
+
+[33mcommit bbaa338469455ce86b28962efbff08e8cb088865[m
+Author: simon <fortier.simon@protonmail.com>
+Date:   Fri Dec 21 10:23:03 2018 -0500
+
+    Fix 500 internal error when autologin option is not specified in the config
+
+[33mcommit 5de909cd9c8b6c380d0dcf9f86f72142a4d00b5e[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu Dec 6 11:13:06 2018 -0500
+
+    Fixed some debug commands. Added blueprint item deserialization, Added inventory SCAN and SEEK actions
+
+[33mcommit 71e88afdc91820118082ec9245efc10340cd4968[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Sun Dec 2 20:04:45 2018 -0500
+
+    Fixed typos & cleaned comments. Added autologin debug option. Added construction site base
+
+[33mcommit ae41bd9cb9e434df03d3d5b5fac3f2cf255c17bf[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Fri Nov 30 21:51:34 2018 -0500
+
+    Added construction plugin module
+
+[33mcommit de45eb1827d7a50e9fd467459f6a87052f406d4b[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Fri Nov 30 16:35:58 2018 -0500
+
+    Fixes #160
+
+[33mcommit 6c7a2f0a7361b286caaf6a4026d6d7b621b6d309[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Fri Nov 30 15:11:24 2018 -0500
+
+    Fixes #169
+
+[33mcommit 3776070689a258121ac1dbd3eb02e16852ec70d7[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 16:02:21 2018 -0500
+
+    Fixes #170, #155
+
+[33mcommit 54ed05b86cd8850b68c318111c4095b9c55351a3[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 14:38:33 2018 -0500
+
+    Move hologram-related fields to proper class. Breaks existing database saves!
+
+[33mcommit b3615832527c0479dbd15169f81e535cfd86416f[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 13:52:00 2018 -0500
+
+    Added memory location option for LiDAR GET_PATH. Fixes #140
+
+[33mcommit 04c837d6929e0761da2481a1df1d56c7aa60a4ba[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 13:35:42 2018 -0500
+
+    Removed TEMPORARY guest policy. Fixes #25
+
+[33mcommit aaeb18068d4e79ca28444398803bd79d9a11215e[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 13:26:20 2018 -0500
+
+    Removed useless argument
+
+[33mcommit e848fd8b8a0612d4fe04d94ae163d809d16a4147[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 12:50:18 2018 -0500
+
+    Updated Phaser to 2.11, Added magnetic tile sprite
+
+[33mcommit 1435d31d363444d1785046a14929fda4db362e41[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 10:25:21 2018 -0500
+
+    Implemented guest BLOCK and ALLOW options #25
+
+[33mcommit 950f6b6b4bb26e976a71544e6ee05f8d0afebeff[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Tue Nov 27 09:30:03 2018 -0500
+
+    Minor cleanup
+
+[33mcommit 6a9cfb3acbe35d3c256cd6ff04e2612edd305258[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu Nov 15 12:24:37 2018 -0500
+
+    Cubot drill module now functional
+
+[33mcommit 4be1bf2e8a4e3c09fbda3181e80209f09bf696aa[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu Nov 15 12:08:44 2018 -0500
+
+    TileMap now uses Tile instances instead of ints. No changes in the way it is stored in the database
+
+[33mcommit e50bcdeab7e911771c180359f0459b409199a598[m
+Merge: 0845438 c821423
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Oct 28 13:17:17 2018 -0400
+
+    Merge pull request #177 from Wiewiogr/148-secret-key
+    
+    Add secret key generator #148
+
+[33mcommit c8214236ab196c50eb1b65d3546c6b4037eaca42[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sun Oct 28 18:13:56 2018 +0100
+
+    update properties on secret key change
+
+[33mcommit 37b7bbff9810e117c2adf1132c461ae62472dc13[m
+Merge: 2f80205 be7304a
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sun Oct 28 18:12:37 2018 +0100
+
+    Merge pull request #2 from Wiewiogr/master
+    
+    merge
+
+[33mcommit be7304aa0be0bcdc222141b70d8652fd87051acf[m
+Merge: 9a73b7b 0845438
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sun Oct 28 17:50:01 2018 +0100
+
+    Merge pull request #1 from simon987/master
+    
+    merge
+
+[33mcommit 0845438297d742379f5054daf9d5e6dc8f1ce2e2[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Sun Oct 28 09:45:36 2018 -0400
+
+    Fixed potential error in ServerConfiguration and added ability to programmatically modify server configuration
+
+[33mcommit 564a692c2ed5c583cac3fea52ca3d67f1427346b[m
+Merge: 9a73b7b a40a071
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Oct 28 09:43:17 2018 -0400
+
+    Merge pull request #176 from Wiewiogr/138-add-items-container
+    
+    Added Container object #138
+
+[33mcommit a40a0712f02e5d2434428a575a92660deeaad9aa[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 18:26:24 2018 +0200
+
+    changed fields names
+
+[33mcommit f89c39c7561f248abf53723134e2a91411844724[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 18:13:43 2018 +0200
+
+    changed implementation to list
+
+[33mcommit a6f0ce1dfbebbb05ee31a3256815aaac69f43a35[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 18:11:56 2018 +0200
+
+    moved test to correct folder
+
+[33mcommit 2f80205b2a9277469cc4ce625adf9804015f6407[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 17:23:07 2018 +0200
+
+    added secret_key property to config.properties
+
+[33mcommit 71f96f27d11e3b0cf0000aa318311c414914488f[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 17:22:20 2018 +0200
+
+    add secretKey field to GameServer
+
+[33mcommit 98402dd45b00235f8b3a4c4a742b132d89c4bebf[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 17:21:12 2018 +0200
+
+    Added SecretKeyGenerator class
+
+[33mcommit 548d756e904784cc79c549e17587225530518189[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 15:51:21 2018 +0200
+
+    Added tests for ItemsContainer
+
+[33mcommit 1a2332bc32aa74def106950bf8b4dd3cb74444a0[m
+Author: Wiewiogr <wiewiora.tomasz1@gmail.com>
+Date:   Sat Oct 27 15:49:39 2018 +0200
+
+    Create ItemsContainer.java
+
+[33mcommit 9a73b7b7d1153731a6627c2b82c7fc6100075b67[m
+Merge: 40e7899 d860591
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Fri Oct 12 18:49:43 2018 -0400
+
+    Merge pull request #175 from senatormailman/readme
+    
+    Added MacOS instructions
+    fixes #152
+
+[33mcommit d860591cc8e54ed6a52e17f8f5c2ec6212d6ae6c[m
+Author: Liam Hogan <liamhogan@Liams-MacBook-Pro.local>
+Date:   Fri Oct 12 17:45:38 2018 -0400
+
+    Minor formatting fixes following simon987's suggestion.
+
+[33mcommit 268acda773b9b0de5b48d1297b1e223d60ae1fa3[m
+Author: Liam Hogan <liamhogan@Liams-MacBook-Pro.local>
+Date:   Fri Oct 12 15:35:30 2018 -0400
+
+    Minor formatting fix.
+
+[33mcommit 6d66e19dc5865b0952c975d27401ea68a9199601[m
+Author: Liam Hogan <liamhogan@Liams-MacBook-Pro.local>
+Date:   Fri Oct 12 15:30:34 2018 -0400
+
+    Added installation instructions for macOS. Pulled some of the formatting from Anarcroth's Linux instructions.
+
+[33mcommit 40e7899cf696df9823295f8dc6e4561ff96e3934[m
+Merge: becf6e5 abb92bf
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Oct 3 21:47:27 2018 -0400
+
+    Merge pull request #174 from Anarcroth/add-arch-install-instructions
+    
+    Added Arch Linux installation instructions in README.md
+
+[33mcommit abb92bfc75161a313ce24dd4b20c12e5833b05b7[m
+Author: Martin Nestorov <mdinestorov@gmail.com>
+Date:   Wed Oct 3 19:46:49 2018 +0300
+
+    Added Arch Linux installation instructions
+
+[33mcommit becf6e5feb455409ca4f2926f10cca54adc401ed[m
+Merge: 205845d 8af6524
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Sep 6 15:56:07 2018 -0400
+
+    Merge pull request #173 from bobbyjudd/issue-172
+    
+    Fixes issue 172
+
+[33mcommit 8af652482dcd03112bedbdf09715f51e2ad90e86[m
+Author: Bobby Judd <bobbymjudd@gmail.com>
+Date:   Wed Sep 5 21:11:11 2018 -0700
+
+    Fixed memory displacement when subtracting labels, and added corresponding test
+
+[33mcommit 205845d6af63e5f3fadd35463347bae88d78358c[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Sep 3 17:04:29 2018 -0400
+
+    Changed the way port configuration is done
+
+[33mcommit 64193ecf7a1203d5a42e109c47de87132fe7ab16[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Sep 3 16:12:22 2018 -0400
+
+    Should fix user creation problem
+
+[33mcommit a1cf279b6f6aa28f48702cd8a42f0ba96ce08cad[m
+Merge: a0aaee7 6074238
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Aug 30 17:24:32 2018 -0400
+
+    Merge pull request #171 from Francessco121/bug/unicode-string-crash
+    
+    Fix assembler crash when invalid Unicode string escape sequences are used
+
+[33mcommit 607423813146fbe97f5fd284ae537af2790e25be[m
+Author: Ethan Lafrenais <elafrenais12@gmail.com>
+Date:   Wed Aug 29 23:15:06 2018 -0400
+
+    Catch string unescape exceptions when parsing DW string operands
+
+[33mcommit fa62c49fa812ab81166082c88a8a4475f054b280[m
+Author: Ethan Lafrenais <elafrenais12@gmail.com>
+Date:   Wed Aug 29 23:13:08 2018 -0400
+
+    Add the Visual Studio Code workspace directory to .gitignore
+
+[33mcommit a0aaee7ee7b0e55b9b27c8f1305a9396f05b7410[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Aug 13 15:59:46 2018 -0400
+
+    Added find cubot button
+
+[33mcommit 96fc3ed68cfa05f70d0be80b3fae0aabd8c8313b[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Aug 13 15:43:41 2018 -0400
+
+    Should fix server crash problem when harvesting biomass
+
+[33mcommit e69111ff3caeeba0ae7924660c06777b6c225c8e[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Aug 13 15:41:08 2018 -0400
+
+    Should fix user creation problem
+
+[33mcommit e7e9a3e6fbff6e04a21bd5ad3baa9919f5a73d65[m
+Merge: c389bbc a73aa7c
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Fri Jun 8 12:09:36 2018 -0400
+
+    Merge pull request #168 from Mozzi20/master
+    
+    Added radioactive obstacle
+
+[33mcommit a73aa7c3a5108ef175adb67a6602237623c3f5f4[m
+Author: Unknown <movitz.sunar@gmail.com>
+Date:   Fri Jun 8 09:58:52 2018 +0200
+
+    Moved radioactive obstacle.
+
+[33mcommit e8543082ce34087d81b5418f26283435402daaa8[m
+Author: Unknown <movitz.sunar@gmail.com>
+Date:   Thu Jun 7 23:24:49 2018 +0200
+
+    Fixed radioactive obstacle.
+    
+    Added "radioactive obstacle curruption block size" in config.properties and removed its getter and setter.
+
+[33mcommit 4b7ebd7ad6d18b807c9b345d3b97e08d765623eb[m
+Author: Unknown <movitz.sunar@gmail.com>
+Date:   Thu Jun 7 21:40:59 2018 +0200
+
+    Added radioactive obstacle.
+
+[33mcommit c389bbc92ead465744d302c6ab93600c633afe54[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 18:06:31 2018 -0400
+
+    Refactored SocketServer.tick() method
+
+[33mcommit 78f98c822747245525b010ffdaf250955575f3aa[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 17:07:20 2018 -0400
+
+    JSONSerialisable objects now have a debug function #156
+
+[33mcommit 92008e553a399b0832a4c2d2142d4d8346e9f7d8[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 17:06:11 2018 -0400
+
+    ServerPlugin no longer implements JSONSerialisable (this feature was unused)
+
+[33mcommit 45d34c37ad856fdf1cce7dd78929578388d6d5ca[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 16:44:32 2018 -0400
+
+    Commented out some debug messages & fix for #161
+
+[33mcommit a9cc9662f4981fc66ac986da05f06f05a4749662[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 14:53:20 2018 -0400
+
+    Changed unreliable sequential integer object id to BSON ObjectId #162
+
+[33mcommit df9c46682799eaac8978f33602a476973756b3c3[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 12:18:21 2018 -0400
+
+    Avoid thread safety issues with objectIds #162
+
+[33mcommit b65c57ceba292d6c27c47e9e8ff4d922db86f5af[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 11:46:31 2018 -0400
+
+    Fixed exception showing when tick-based broadcast happens exactly when a user is connected but not authenticated pt.2
+
+[33mcommit 2f74dd45fcc827d465a3bebd566a8d46bafa2956[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 10:49:34 2018 -0400
+
+    Reformat + Should fix #159
+
+[33mcommit 07160138aafb833ff87992806b1b323fc21ecff6[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Mon Jun 4 10:46:55 2018 -0400
+
+    Fixed exception showing when tick-based broadcast happens exactly when a user is connected but not authenticated
+
+[33mcommit b6a206f3c7aa3dcec306459f38ef4acbb39cdc43[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu May 31 22:33:56 2018 -0400
+
+    Added basic Cubot.toString() and fixed account page debug info
+
+[33mcommit ed1c4cff0b66dbacfd9167c428a0402967a9563c[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu May 31 22:28:35 2018 -0400
+
+    Fixed bug that prevents RadioReceiverHardware from being correctly loaded from database
+
+[33mcommit a005e2b163f64483bc5aa1bc67bedae7e3681288[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu May 31 22:21:33 2018 -0400
+
+    Reverted accidental change caused by search and replace
+
+[33mcommit a7bdbd2513e36b7fd798314c0cd515675d3119ab[m
+Author: Simon <fortier.simon@hotmail.com>
+Date:   Thu May 31 22:13:07 2018 -0400
+
+    I broke everything pt. 1: Moved helditem into CubotInventory, added debug commands for CubotInventory, Added vault complete GameEvent, moved CPU to Cubot, renamed CpuHardware to HardwareModule, moved HardwareModule to Cubot & added HardwareHost interface, removed getParent() in ControllableUnit, moved items to the Item class, started moving tiles to Tile classes, renamed Programmable to MessageReceiver
+
+[33mcommit ee9eeeef55a061ca2f95b5fa0d288cbefe7e481e[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat May 12 20:33:41 2018 -0400
+
+    Reverted value of factory_spawn_rate that was accidentally changed
+
+[33mcommit 4b67798180b28ccdeb697c482d1595d242443873[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat May 12 20:32:10 2018 -0400
+
+    Added structure class #145 and moved many constants to config.properties
+
+[33mcommit be8dd14d36d53f1abf14900844aef382be4c8460[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat May 12 19:09:00 2018 -0400
+
+    Added method to find objects of particular type in a world
+
+[33mcommit 80f45f1eb0d44bcdf168333998bcfd37efaac905[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat May 12 19:07:55 2018 -0400
+
+    Added catch clause to prevent crash when socket is not opened
+
+[33mcommit 3368268924ed4b2f17a7a86307d7a02bc6688808[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat May 12 16:16:24 2018 -0400
+
+    Cubot object id is no longer stored inside every CpuHardware in the database. Renamed some fields in the database to make them more readable
+
+[33mcommit 4cd58c86a51e2d76791f990392661e9e3b95eb44[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat May 12 15:32:41 2018 -0400
+
+    Refactor: changed the way game objects and cpu hardware are saved/loaded from the database #151
+
+[33mcommit 8d029cf621b255591be90b0faad77cf0355c9bb2[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 21:23:41 2018 -0400
+
+    Added vagrant instructions in readme #152
+
+[33mcommit 10f088cb666b2cf9177f1af6eaf43c578d84743d[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 21:19:36 2018 -0400
+
+    Updated gitattributes (again)
+
+[33mcommit 159c217d59fdd5cdfbcb9c31d13d8b288a08ba04[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 21:18:25 2018 -0400
+
+    Updated gitattributes
+
+[33mcommit c5cb5df335f50660595585b2ae7ce8df2d2b6d9f[m
+Merge: 3c5bfdb 854863e
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Fri May 11 21:13:01 2018 -0400
+
+    Merge pull request #153 from simon987/spark
+    
+    Moved frontend to main server application
+
+[33mcommit 854863ede9a228d8b3d5d703528567aee4a24e80[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 21:06:18 2018 -0400
+
+    Updated mongodb driver to 3.7.0
+
+[33mcommit e98575b23f7fb6a28357ef4cae73864f8b13406e[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 21:04:00 2018 -0400
+
+    Added vagrant support
+
+[33mcommit 1a5d12a19fb7202ac366e97fa922cdf230ec0524[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 16:42:03 2018 -0400
+
+    updated Docker support
+
+[33mcommit 1678be25c558cd40353b64b96af1b2a26018c16f[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 13:16:34 2018 -0400
+
+    Added UserStats and updated leaderboard page
+
+[33mcommit 9c41c160793269ccef1b5bec1256b62c4c16a70a[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri May 11 10:25:40 2018 -0400
+
+    Added debug command to save the game
+
+[33mcommit e97ecbe380cdcd4b71630cdffc821c36da595c1e[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Tue May 1 15:41:51 2018 -0400
+
+    Added javadocs
+
+[33mcommit 083af31b84134de7ee1f3f2976a36babb7c1b59c[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sun Apr 29 17:00:42 2018 -0400
+
+    Fixed websocket problem by upgrading spark version. Also fixed z-index problem with console
+
+[33mcommit 2c856aae803468f0f7060221bc0fbd9a761262df[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sun Apr 29 14:00:50 2018 -0400
+
+    Editor upload & reload buttons are now working. Floppy upload & download working.
+
+[33mcommit 315e33055ec5007187ec007a40379a3eeddff3d0[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sun Apr 29 11:17:54 2018 -0400
+
+    Reorganised css files, some work on the home page design, console screen is now in a resizable panel
+
+[33mcommit e025b6d2da87c61863e980d80e1271221296bdc9[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Sat Apr 28 12:06:55 2018 -0400
+
+    SSL now working and reorganised web server
+
+[33mcommit e3a650a4fc37c9f89487aaf59e6739235032da3a[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri Apr 27 21:59:07 2018 -0400
+
+    Reorganised debug info in account page and extracted user loading to UserManager
+
+[33mcommit 113aa50d87d5c64208df004f6aeadf151c6e5c41[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri Apr 27 21:28:46 2018 -0400
+
+    Websocket auth up and running
+
+[33mcommit dc034d14370485f54c4de1d42634860ed72fb572[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri Apr 27 20:39:14 2018 -0400
+
+    Users can change their password
+
+[33mcommit 3492e133e1802a9455bf9f1453600d2ccbb008ed[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri Apr 27 19:42:53 2018 -0400
+
+    login/register working and Websocket partially implemented
+
+[33mcommit bd5f8573e8e802b72b6bd652c4af5ac9f139e2b6[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Fri Apr 27 16:58:50 2018 -0400
+
+    Added web server and partly integrated frontend
+
+[33mcommit 3c5bfdb30ba96946ba67c2f8fc30c66e8c5eaa6d[m
+Author: simon <fortier.simon@hotmail.com>
+Date:   Tue Apr 24 08:09:42 2018 -0400
+
+    Fixed build errors
+
+[33mcommit 9349ae108b84b95503614264585dcde752d2236b[m
+Author: simon987 <fortier.simon@hotmail.com>
+Date:   Mon Apr 2 10:58:24 2018 -0400
+
+    Removed some unnecessary unit tests
+
+[33mcommit 292adb54835e5c83aa8bf2db5142ee94d3461928[m
+Author: simon987 <fortier.simon@hotmail.com>
+Date:   Mon Apr 2 10:52:36 2018 -0400
+
+    Updated maven version numbers. Removed .iml files
+
+[33mcommit e479d89375dea9a06cac9b77ef1a38f8267272f9[m
+Author: simon987 <fortier.simon@hotmail.com>
+Date:   Mon Apr 2 10:41:37 2018 -0400
+
+    Added Radioactive cloud plugin
+
+[33mcommit 41d674d74a9c1010ce212e01bc73d849e81b3dce[m
+Author: simon987 <fortier.simon@hotmail.com>
+Date:   Mon Apr 2 10:06:44 2018 -0400
+
+    Removed unused constant
+
+[33mcommit 227f7ce5aadbcb3df8920f54bef3366ea540ed9e[m
+Merge: f1b8f3d a091071
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Apr 1 22:18:15 2018 -0400
+
+    Merge pull request #144 from mlaga97/ram-corruption
+    
+    Implement RAM corruption effect
+
+[33mcommit a091071d55aaaeeb49eeaff120895cdf5cce047c[m
+Author: Luc Lagarde <mlaga97@gmail.com>
+Date:   Sat Mar 31 17:50:51 2018 -0500
+
+    Implement RAM corruption effect
+
+[33mcommit f1b8f3dc6dbc01d6f4d8f2fabd4057a739cd023c[m
+Merge: ff61433 e62a51e
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Mar 29 20:10:44 2018 -0400
+
+    Merge pull request #143 from mlaga97/lidar-vault-fix
+    
+    Make LiDAR work in Vaults (fixes #140)
+
+[33mcommit e62a51ee2e9f73561cdf351f51f14da37bffd6d3[m
+Author: Luc Lagarde <mlaga97@gmail.com>
+Date:   Wed Mar 28 23:37:05 2018 -0500
+
+    Modify LIDAR_GET_MAP to write to a given memory address
+
+[33mcommit 217c997788a799a4541061239176b85fe07fb680[m
+Author: Luc Lagarde <mlaga97@gmail.com>
+Date:   Wed Mar 28 23:34:23 2018 -0500
+
+    Add action to get world size from LiDAR
+
+[33mcommit ff61433c4b0c8ac06bed94fb7d8d14a63cfd2b97[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Mar 11 16:09:28 2018 -0400
+
+    Fixed typo
+
+[33mcommit cbde2450fafe1736e927f303b07c361a3b3962b9[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Mar 11 16:06:15 2018 -0400
+
+    Bug fixes: maxShield is now set on user creation and vault objectId is set on world generation
+
+[33mcommit 1d780f7d9b8c81fab5a71195a136ebd898e4f5ca[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Mar 11 13:34:10 2018 -0400
+
+    Minor refactor
+
+[33mcommit cbb07891fcdcd5ae5e35cdf21fd475e30c1aed98[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Mar 10 15:22:11 2018 -0500
+
+    Cubot respawns on death. ElectricBox damages near objects
+
+[33mcommit 2565d3338ccf7ddd28b03a4f204dc269e3e44ece[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Mar 10 13:54:43 2018 -0500
+
+    Implemented shield hardware. Added heal, damage and charge shield debug commands.
+
+[33mcommit e4269b83c46f799ddf76b281957dc6e6892429b6[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Mar 10 11:51:31 2018 -0500
+
+    Fixed hardware deserialization issues
+
+[33mcommit 9cac6651017105120723bf844bbde1665651f36a[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Mar 10 11:24:29 2018 -0500
+
+    Debug commands are easier to add. Added comPortMsg command
+
+[33mcommit dc19176dc823cd72db6b075828a38bd01879a0e8[m
+Merge: f8c5dac 8ed192f
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Mar 10 09:53:55 2018 -0500
+
+    Merge branch 'master' into vaults
+    
+    # Conflicts:
+    #       Server/src/main/java/net/simon987/server/game/GameObject.java
+    #       Server/src/main/java/net/simon987/server/game/World.java
+    #       Server/src/main/java/net/simon987/server/webserver/TerrainRequestHandler.java
+
+[33mcommit 8ed192f8d02e0d222fa29c514739e5cd8f829ba1[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Mar 10 09:49:34 2018 -0500
+
+    Cubot implements Attackable (untested)
+
+[33mcommit d1a3cf9307cfd8a80c9ca0735eb090837eadc412[m
+Merge: 156deb8 1da8949
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Mar 5 22:18:44 2018 -0500
+
+    Merge pull request #110 from djsheehy/shield-hardware
+    
+    Added Shield hardware
+
+[33mcommit f8c5dac969547543168959fcb89903e0da581910[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Mar 5 21:47:28 2018 -0500
+
+    Added logging of vault clears for display in the leaderboard
+
+[33mcommit 0a75cb557dbe3a54a1a64cbebd5abacb5c1b8dfb[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Mar 4 15:51:30 2018 -0500
+
+    Added objective vault world & its exit portal
+
+[33mcommit f35e6c5a9a7022a8ecd347d9eca3c0d80b0822b5[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Mar 4 14:56:02 2018 -0500
+
+    Objects can enter & leave vaults
+
+[33mcommit 0ada6c29d4fcb956a56e2dabe19a6d8ea6db1e7d[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Mar 1 10:42:24 2018 -0500
+
+    More work on vaults
+
+[33mcommit 156deb8f4eb4cdf8180fcebce1e4094029bdc114[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Feb 27 16:51:18 2018 -0500
+
+    NPCs decrement World.updatable on death. Fixes problem making Worlds stay loaded forever in RAM
+
+[33mcommit 039088ac005d202ed2c2814257c674647da47f56[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Feb 27 16:49:32 2018 -0500
+
+    Added electric boxes, debug command to teleport objects across Worlds.
+
+[33mcommit f530dafdee0f60b68e9e9c91ed11d78b8e7adc65[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Feb 26 17:17:40 2018 -0500
+
+    Basic world generation for entire Vault dimension
+
+[33mcommit 817dbcc6c40ee67104d1d1bbb99f89760f9e0243[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Feb 26 13:29:08 2018 -0500
+
+    Basic world generation for single Vault world
+
+[33mcommit 62f1403cb3897e7c1cc910715ce42287050358f7[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Feb 26 10:04:06 2018 -0500
+
+    Started working on Vault worlds generation
+
+[33mcommit 8c6e580ea928e3229b9ac09730e5b89340eec197[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Feb 25 14:15:03 2018 -0500
+
+    Added support for multiple dimensions
+
+[33mcommit 6a1519d97d39a71c8a762b26faaf6337064b6648[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Feb 25 11:55:53 2018 -0500
+
+    Added many debug commands
+
+[33mcommit a7d1a00ae814dd46ddd6158e4f3521b4181b98f2[m[33m ([m[1;33mtag: v1.4a[m[33m)[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Feb 25 08:51:03 2018 -0500
+
+    Fixes #27
+
+[33mcommit 95a14ad1ab3258649342ece8a6656aefd64f7abf[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Feb 17 10:05:53 2018 -0500
+
+    Added basic functionality for debug commands
+
+[33mcommit 8d961ce57232fde2ea59e35900329c188a9fbf1a[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Jan 20 14:18:44 2018 -0500
+
+    Added JA and JNA Instructions
+
+[33mcommit c772abe0bf6c423586a9895e02dee550663c0be4[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Jan 20 12:33:01 2018 -0500
+
+    Fixed opcode clash for PUSHF instruction
+
+[33mcommit 187a828c792c8116fe37a3c767460e701154bbbc[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Jan 20 09:40:23 2018 -0500
+
+    Fixed opcode clash for PUSHF instruction
+
+[33mcommit ffca185fe50fbbdcb85760433366a315e63583b8[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 17 22:01:59 2018 -0500
+
+    Vault Door generation
+
+[33mcommit 815f3de23403141d39254e5c0fda930bb396e337[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 17 21:11:16 2018 -0500
+
+    Changed the walking function to enable interaction with Enterable objects
+
+[33mcommit 3505a466bbb3717d5e1719995f376fe55e84b4d2[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 17 20:31:35 2018 -0500
+
+    Fixed compilation errors
+
+[33mcommit 3d10e4306bfbf9446440ff427bdecbcb8051a8de[m
+Merge: a285b31 210e579
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 17 20:29:37 2018 -0500
+
+    Merge branch 'master' into vaults
+    
+    # Conflicts:
+    #       Server/src/main/java/net/simon987/server/GameServer.java
+    #       Server/src/main/java/net/simon987/server/game/World.java
+
+[33mcommit 210e579995ce820e59f2c9812ed9bb23365962df[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 17 19:02:36 2018 -0500
+
+    Number of assembly errors is also sent on code upload
+
+[33mcommit a285b3104e17b3503f50eb1964862ac9090ec35f[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 14 13:33:40 2018 -0500
+
+    Moved Vault Door code to NPC Plugin. Fixed code styling. Fixed compilation errors
+
+[33mcommit 947deea7841c733cfe54d13f70d2a1501de3ff16[m
+Merge: 4293fc0 f1c1f8f
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 14 12:04:04 2018 -0500
+
+    Merge remote-tracking branch 'origin/vaults' into vaults
+
+[33mcommit 4293fc0315f64d5abd776e7b6c42f4f2c70b2c0c[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 14 12:02:32 2018 -0500
+
+    Support for variable World size
+
+[33mcommit 33955d96395eb085e6c3687192675653d12b72df[m
+Merge: 6b91251 6953414
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 14 11:01:23 2018 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 6b91251b4e67e6b0de0670a834f5623e741327a4[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 14 11:01:13 2018 -0500
+
+    Should fix #125
+
+[33mcommit 695341428a69a5821994a2c96e920d25fdd56d3c[m
+Merge: 54b72e8 c610929
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Jan 11 22:09:51 2018 -0500
+
+    Merge pull request #126 from mlaga97/patch-2
+    
+    Fix maven build error
+
+[33mcommit c610929809533111bb77cb57dfddb3ef5621e8b9[m
+Author: Luc Lagarde <mlaga97@gmail.com>
+Date:   Thu Jan 11 21:00:26 2018 -0600
+
+    Fix maven build error
+    
+    Removes a reference to com.sun.istack.internal.Nullable and an associated annotation, which causes the maven build to fail.
+
+[33mcommit 54b72e89b35d7cbd48e07c0f45cce103057b2841[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Jan 9 22:10:55 2018 -0500
+
+    Fixes #121 + Saner thread safety
+
+[33mcommit 59fd620e4a4204ad8a860d07f60a33b8a369fdbf[m
+Merge: 2fbc55d d65660b
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Tue Jan 9 20:35:41 2018 -0500
+
+    Merge pull request #118 from sg495/master
+    
+    Implemented selective loading/unloading of worlds.
+
+[33mcommit 2fbc55d0ddef73241de26fa1b31141904e85121e[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Jan 9 20:09:46 2018 -0500
+
+    Fixed potential NullPointerException on server loading
+
+[33mcommit e1dfb08635ca05861c6197fc7ac616aae6f52f39[m
+Merge: 6fc583d 7cbfb82
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Tue Jan 9 19:25:30 2018 -0500
+
+    Merge pull request #123 from Jaggernaut555/feature/logging
+    
+    Only severe are directed to stderr
+
+[33mcommit f1c1f8f807cc94788d17426029b42be42a5ace1c[m
+Merge: 9bb0dc9 a04207b
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Tue Jan 9 19:22:42 2018 -0500
+
+    Merge pull request #120 from sg495/vaults
+    
+    New additional code for Vault doors
+
+[33mcommit 7cbfb822b8727d8b08e6740a39f444e5c03232bf[m
+Author: Jaggernaut555 <jay_jag6@hotmail.com>
+Date:   Tue Jan 9 14:00:36 2018 -0800
+
+    Updated LogManager
+
+[33mcommit a04207b5e0e90ad2ac2b592da7cabc8d0394d06a[m
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Tue Jan 9 17:14:31 2018 +0100
+
+    Added some cyphers for use in vault doors.
+    
+    1. Created net.simon987.server.crypto package and moved RandomStringGenerator there.
+    2. Created CryptoProvider class, added a global instance to GameServer for use by game entities.
+    3. Created interface for cyphers, abstract class for shift substitution cyphers, classes for no cypher, Caesar cypher, Vigenere cypher and autokey cypher.
+    4. Created some Crypto exceptions.
+    5. Removed static encryption/decryption methods from VaultDoor, and moved getRandomPassword() to the global CryptoProvider instance.
+
+[33mcommit 6fc583d6f034e16e2d70448a0ba215610ea38b73[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Jan 8 19:12:39 2018 -0500
+
+    Registers are cleared on code upload
+
+[33mcommit 46483b2bf81d7c1acc43bac99e3fe1f91ae2c59c[m
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Mon Jan 8 20:40:50 2018 +0100
+
+    Added a RandomString class from stackoverflow, to generate random alphanumeric strings (to be used as passwords).
+    Added some code to VaultDoor, including random password generation and code to encrypt/decrypt under a Vernam-like cypher.
+    Modified door opening policy to include the possibility of keeping the door open.
+
+[33mcommit d65660b5e9b2af5d1f3404f2186abbf59b370631[m
+Merge: 593be76 a14853b
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Mon Jan 8 18:28:37 2018 +0100
+
+    Merge branch 'master' of https://github.com/simon987/Much-Assembly-Required
+    
+    # Conflicts:
+    #       Server/src/main/java/net/simon987/server/GameServer.java
+
+[33mcommit 593be7624e553ffab85a265cdad7368a154c3c14[m
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Mon Jan 8 18:23:10 2018 +0100
+
+    Implemented selective loading/unloading of worlds. Summary of changes:
+    
+    1. Database is now iteratively updated, rather than dropped and recreated every time the universe is saved.
+    2. A single connection to the database is opened at server creation time, and used throughout.
+    3. Worlds, users and server information are now stored with appropriate IDs, so that they can be suitably updated. The world ID can be computed from world coordinates alone.
+    4. After saving, a world is unloaded from memory if it doesn't contain any updatable objects, and if all of its neighbours are either:  (i) uncharted; (ii) not loaded in memory; (iii) without any updatable objects. This ensures that world unloading/reloading cannot be spammed by a single bot repeatedly transitioning in/out of an otherwise empty world.
+    5. The instance method GameUniverse.getWorld(int,int,boolean) first checks the world with given coordinates is in memory, then tries to load it from database, and only then creates a new one (if required by the boolean flag).
+    6. Worlds are now stored in a Hashtable indexed by world ID, for faster retrieval.
+
+[33mcommit a14853b12c7d8de16cb8374f586c62a3e1ca4914[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 7 14:04:24 2018 -0500
+
+    Changed working directory for tests (temporary fix?)
+
+[33mcommit 735a2317676b977eecd8ba3ecfc2b6b0e0026742[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 7 13:55:42 2018 -0500
+
+    Moved tests to appropriate directory
+
+[33mcommit 1131e4d512b35e639a5e633b269de5f884e48a58[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 7 13:29:42 2018 -0500
+
+    Fixes #112 (Part two)
+
+[33mcommit cfb02869bbf099bd8427728684236325d973d334[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 7 13:02:49 2018 -0500
+
+    Fixes #112
+
+[33mcommit cde03af8af8fc63256428401d17551f8c6c5e91b[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Jan 7 12:57:06 2018 -0500
+
+    Fixes #113
+
+[33mcommit ff9370fed586755fd215db4f6f06ff4fd81d190d[m
+Merge: f68027b eaef30e
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Jan 7 12:44:27 2018 -0500
+
+    Merge pull request #117 from ChartreuseK/feature-26
+    
+    Added Inc and Dec Instructions
+
+[33mcommit eaef30eb49148e3a2415a7b8dd1d0fc13c7175ca[m
+Author: Hayden Kroepfl <perlpowers@gmail.com>
+Date:   Sat Jan 6 18:53:35 2018 -0700
+
+    Added Inc and Dec instructions based off Add code
+
+[33mcommit f68027bb4df2ba106dfff209358ddf159ac3f6c8[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Jan 6 14:04:31 2018 -0500
+
+    Fixes tabs problem with equ
+
+[33mcommit 24d81d194eedb8c5659e70a915968118feb1657e[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 22:08:53 2018 -0500
+
+    Fixes #107
+
+[33mcommit c7b9df0690d20254396cf77a9b298e0de1f3adde[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 21:51:47 2018 -0500
+
+    Fixes #91
+
+[33mcommit a8beb8c3e27ed1ccc61ff9b7129504bb76e8b6ba[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 21:38:07 2018 -0500
+
+    Fixes #115
+
+[33mcommit 0bd25df9777a56a35d91d8d4b57aa745d7d0b3e5[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 21:35:35 2018 -0500
+
+    Fixes #114
+
+[33mcommit 9bb0dc9034e1f00da330b56bb203c1a0dfbc03a0[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 20:42:24 2018 -0500
+
+    Boilerplate code for Vault Door
+
+[33mcommit 8b0460f5f1be7be1aa1113e1d2833d76c81239da[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 20:14:38 2018 -0500
+
+    Fixed typos and code cleanup
+
+[33mcommit ce0584a49fc524224efa3e91a11095197617dc94[m
+Merge: 0dc4ddc 811a443
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 19:46:01 2018 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 0dc4ddca0fd5ae4933298fcc71541460be58a476[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Jan 5 19:45:51 2018 -0500
+
+    Fixes de-syncing problem with Factory and their NPCs
+
+[33mcommit 1da894959e16cebe21207012455e9d7508942154[m
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Fri Jan 5 11:20:52 2018 -0600
+
+    fixed serialization code for CubotShield
+
+[33mcommit 7e773699b6ee240997b40799116f5eb5acfe3b82[m
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Fri Jan 5 11:04:05 2018 -0600
+
+    Created Shield hardware
+
+[33mcommit bc29c36204c7290899b53daefbe73f98b294bfcf[m
+Merge: eb3deba 811a443
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Fri Jan 5 09:14:18 2018 -0600
+
+    Merge remote-tracking branch 'upstream/master'
+
+[33mcommit 811a443a4ec4c0ab293716fcdb5ceaa5743b9ba9[m
+Merge: 1a39cf8 1735916
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Jan 4 17:17:10 2018 -0500
+
+    Merge pull request #106 from meet-mrmaker/master
+    
+    Removed gather_slow. Fixes #10
+
+[33mcommit 17359161fd10f082de4922fe5fdefea6b2701f6a[m
+Author: Josh <joshwright93@gmail.com>
+Date:   Thu Jan 4 17:49:02 2018 +1100
+
+    Update for issue #10
+    
+    Removes slow and fast gather and retains gather for 1 tick.
+
+[33mcommit afbbce215e903bf62c651cbb8c7fa3f6b19c20ef[m
+Merge: 65ec6a2 1a39cf8
+Author: Josh <joshwright93@gmail.com>
+Date:   Thu Jan 4 12:14:03 2018 +1100
+
+    Merge pull request #2 from simon987/master
+    
+    Update
+
+[33mcommit 1a39cf845483e5601fb22ff8882045e7fd9b20a0[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Jan 3 20:07:48 2018 -0500
+
+    Create CONTRIBUTING.md
+
+[33mcommit 9bc3cbf4ceabe47bcfe46ab58d83e1d4609efbce[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 3 19:22:45 2018 -0500
+
+    Remove NPC reference to Factory on death
+
+[33mcommit 9b908a5310045336bdcd810d98a3324aca4f496f[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Jan 3 19:19:19 2018 -0500
+
+    Biomass count on NPC death is loaded from config
+
+[33mcommit 8ceeca564a8822c0a928ba19ed2d77413c1815c8[m
+Merge: d4fcf22 3ded64c
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Jan 3 19:00:55 2018 -0500
+
+    Merge pull request #66 from jtara1/master
+    
+    HarvesterNPC should spawn a biomass in-place after they die. Fixes #33
+
+[33mcommit d4fcf225503448328e7f243d7cb9815b8b2f6b8b[m
+Merge: d25d425 58a378d
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Jan 3 17:09:23 2018 -0500
+
+    Merge pull request #105 from sg495/master
+    
+    Windows instructions added
+
+[33mcommit d25d42534ade6124ae90d43513523da374d32697[m
+Merge: 415500f 7bb5f68
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Jan 3 17:08:10 2018 -0500
+
+    Merge pull request #104 from meet-mrmaker/meet-mrmaker-patch-1
+    
+    Update to address issue #101
+
+[33mcommit 58a378d77fcd5099ad83d049b0870ae39e9132ad[m
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Wed Jan 3 20:14:31 2018 +0100
+
+    Updated instructions for Windows installation and running.
+
+[33mcommit cfaf46ad5212de2e20798371b8c7c0fa8e343fe0[m
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Wed Jan 3 17:59:46 2018 +0100
+
+    Added installation instructions for Windows (tested on Windows 10).
+
+[33mcommit eb3deba5442ad5da3f7530040e11489b2836ba2f[m
+Merge: c7da764 415500f
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Wed Jan 3 07:03:56 2018 -0600
+
+    Merge branch 'master' of https://github.com/simon987/Much-Assembly-Required
+
+[33mcommit ba53212986df45b9554ca32f5feeb40de844876d[m
+Merge: 2a5d6b5 415500f
+Author: sg495 <sg495@users.noreply.github.com>
+Date:   Wed Jan 3 13:04:59 2018 +0100
+
+    Merge pull request #1 from simon987/master
+    
+    getting up to date
+
+[33mcommit 7bb5f68ff24c18653a68f4c52e64f90605e0cbd2[m
+Author: Josh <joshwright93@gmail.com>
+Date:   Wed Jan 3 22:24:32 2018 +1100
+
+    Edited for style conformance
+
+[33mcommit 65ec6a210237d785ecd5de11fe7ff610796572a3[m
+Merge: 415500f 5a994fe
+Author: Josh <joshwright93@gmail.com>
+Date:   Wed Jan 3 18:36:52 2018 +1100
+
+    Merge pull request #1 from meet-mrmaker/meet-mrmaker-patch-1
+    
+    Update to address issue #101
+
+[33mcommit 5a994fe43715c1cfcbffac4a8baf41cb68b31fe3[m
+Author: Josh <joshwright93@gmail.com>
+Date:   Wed Jan 3 18:36:18 2018 +1100
+
+    Update to address issue #101
+
+[33mcommit 415500faa952980cc2f3b374270ce7884a1dca65[m
+Merge: 2a5d6b5 1a0291d
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Tue Jan 2 20:36:29 2018 -0500
+
+    Merge pull request #103 from simon987/mongo
+    
+     Loading & Saving support for MongoDB
+
+[33mcommit 3ded64cb16e6b2f6684002b09561a8614765d4ea[m
+Author: James T <jtara@tuta.io>
+Date:   Tue Jan 2 15:29:14 2018 -0800
+
+    Update #66: add newest Server/Server.iml file
+
+[33mcommit 1a0291d517796dab29a4d4e7cc5bd00664200520[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Jan 2 18:11:24 2018 -0500
+
+    New players are now scattered around the spawn point
+
+[33mcommit 4e76d57ef94a6b81d689880d1566428914574736[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Jan 2 17:45:58 2018 -0500
+
+    Loading & Saving support for MongoDB
+
+[33mcommit c7da764505c5109e71c6f762304b7c375eec7583[m
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Tue Jan 2 07:04:14 2018 -0600
+
+    Added entries to .gitignore to ignore files that vscode's java extension generates
+
+[33mcommit 2a5d6b5a13e417fa65295ae32564e23014b1eacc[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 1 16:12:42 2018 -0500
+
+    Fixes #99
+
+[33mcommit e2763faeee2b186e678a3f71410c3440c8e061fa[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Jan 1 15:58:42 2018 -0500
+
+    Fixes #97
+
+[33mcommit 2a8658c5984d55867cc95fd596bb69d3b9b24857[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Jan 1 15:28:12 2018 -0500
+
+    Fixes #90
+
+[33mcommit 85548ec3cbbaadc939b92fa947bc2a23eba3aeae[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Jan 1 15:21:39 2018 -0500
+
+    CHanged default energy value for biomass to 4000 + code styling
+
+[33mcommit 0f7b40f3aea69d4331880b73b078b7d719e71eff[m
+Merge: ee60216 cd8d883
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 1 15:19:50 2018 -0500
+
+    Merge pull request #95 from djsheehy/master
+    
+    Inventory hardware: clearing a biomass yields energy. Fixes #94
+
+[33mcommit ee60216784573895fcad5590cbd4fe0eafd0355d[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Jan 1 15:17:24 2018 -0500
+
+    Small adjustments for laser hw, Improved OffsetOverFlow handling, Increased maximum guest count
+
+[33mcommit c3a0d1bd4d554f976a3330487a97587ed8bbad49[m
+Merge: c7946a6 e47e573
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 1 15:12:01 2018 -0500
+
+    Merge pull request #93 from ChartreuseK/bug-80
+    
+    Added handling of offset overflow and DUP factor overflow
+
+[33mcommit cd8d883134c5304e7cc6e1f3463268a6cd91ca31[m
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Mon Jan 1 13:39:57 2018 -0600
+
+    Charging energy from biomass now looks up value in config.properties
+
+[33mcommit c7946a63561c972f9aa148459e1a17c1cddcf9b6[m
+Merge: 1e26c63 3417801
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 1 14:36:38 2018 -0500
+
+    Merge pull request #87 from ChartreuseK/bug-81
+    
+    Added minimum length check to 'DW' parsing
+
+[33mcommit 7ee361b0bc3acd28f1073ed24110f8ad36cde6ac[m
+Author: Dylan Sheehy <dylan.sheehy@gmail.com>
+Date:   Mon Jan 1 13:15:14 2018 -0600
+
+    Inventory hardware: Now clearing a biomass gains 4000 kJ.
+
+[33mcommit 1e26c633580cad3d89678adec62910085894e620[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Jan 1 12:03:36 2018 -0500
+
+    Boolean result of ComPort actions are stored in B register
+
+[33mcommit d832f65535f72c1725873ad2e9c719669266ae62[m
+Merge: 93786d9 b31c187
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 1 11:07:04 2018 -0500
+
+    Merge pull request #84 from mlaga97/npc-combat
+    
+    Allow ability to damage NPCs with Laser. Fixes #34
+
+[33mcommit e47e573b6199481119d351f9234633a876910885[m
+Author: Hayden Kroepfl <perlpowers@gmail.com>
+Date:   Mon Jan 1 08:30:39 2018 -0700
+
+    Added handling of offset overflow and DUP factor overflow, added new exception type.
+
+[33mcommit 93786d92cb5608377c9388e199bea31d38897688[m
+Merge: b21e336 deb3859
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Mon Jan 1 10:20:27 2018 -0500
+
+    Merge pull request #83 from Francessco121/feature/pushf-popf
+    
+    Add PUSHF and POPF instructions
+
+[33mcommit 34178016b1380dc176ede6b12ddd7f0366966133[m
+Author: Hayden Kroepfl <perlpowers@gmail.com>
+Date:   Mon Jan 1 05:17:37 2018 -0700
+
+    Added minimum length check to 'DW' parseing, fixes indexoutofboundsexception
+
+[33mcommit b31c187ad5048077fdc48e835f25d2b84918e2bb[m
+Author: Luc Lagarde <matieu.lagarde@usm.edu>
+Date:   Sun Dec 31 18:26:44 2017 -0600
+
+    Allow NPCs to be damaged and killed
+
+[33mcommit deb3859dffce1c82b858b31787adecabc29954df[m
+Author: Ethan Lafrenais <elafrenais12@gmail.com>
+Date:   Sun Dec 31 18:25:46 2017 -0500
+
+    Add PUSHF and POPF instructions
+
+[33mcommit b21e33601ed3b541eb0f4aa0854011b5e752f524[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 31 11:44:09 2017 -0500
+
+    Added links to VS code extensions
+
+[33mcommit b2474494cce878597139e512b67d1e6870c87052[m
+Merge: 347dc2b 6b2e3c1
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 31 09:56:07 2017 -0500
+
+    Merge pull request #75 from sgerrand/dockerize
+    
+    Add a Docker image definition for the application and a Docker Compose configuration file
+
+[33mcommit 6b2e3c17ed0b1cb11927d36f1372b240024953a6[m
+Merge: 079a63e 347dc2b
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 31 09:54:41 2017 -0500
+
+    Merge branch 'master' into dockerize
+
+[33mcommit 079a63e39c820f0d8c992f88b8b3d9063829ec60[m
+Merge: 4a6ee4c 347dc2b
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 31 09:52:45 2017 -0500
+
+    Merge branch 'master' into dockerize
+
+[33mcommit 347dc2bce03f289ef33b42d681b89e9f7bb1b5bf[m
+Merge: 90ad8e8 04374e6
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 31 09:42:20 2017 -0500
+
+    Merge pull request #76 from arthurpaulino/renaming-action-labels
+    
+    Aligning action labels with documented examples
+
+[33mcommit 90ad8e82eb1f62f7aeaca28f4ba3ca3aa020a674[m
+Merge: cca68ba 93bea49
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Dec 31 09:38:39 2017 -0500
+
+    Merge pull request #74 from mlaga97/patch-1
+    
+    Add Linux build instructions to README.md
+
+[33mcommit 04374e6e0a57fd9428ed966a87cc4867058267b7[m
+Author: Arthur Paulino <arthurleonardo.ap@gmail.com>
+Date:   Sun Dec 31 09:34:43 2017 -0300
+
+    aligning action labels with documented examples
+
+[33mcommit 4a6ee4cce6154b05f9bde771723b9bb6d64b5eec[m
+Author: Sasha Gerrand <github-simon987-much-assembly-required@sgerrand.com>
+Date:   Sun Dec 31 08:45:11 2017 +0000
+
+    :open_book: Add installation and running documentation
+
+[33mcommit 37e40d03294a78ea8d506a3f8b66e28919e4f3c6[m
+Author: Sasha Gerrand <github-simon987-much-assembly-required@sgerrand.com>
+Date:   Sun Dec 31 08:37:31 2017 +0000
+
+    :scissors: Remove extraneous whitespace
+
+[33mcommit 99cefba24517c7c1911702fed2cb025e124d71d4[m
+Author: Sasha Gerrand <github-simon987-much-assembly-required@sgerrand.com>
+Date:   Sun Dec 31 08:35:02 2017 +0000
+
+    :fork_and_knife: Orchestrate server and dependencies using containers
+
+[33mcommit 7821d428e226e584402df5ef707e71bf6e3ceb35[m
+Author: Sasha Gerrand <github-simon987-much-assembly-required@sgerrand.com>
+Date:   Sun Dec 31 08:34:17 2017 +0000
+
+    :whale: Add Dockerfile
+
+[33mcommit 93bea49a3ee9473692596b69d8c3666da1a2c713[m
+Author: Luc Lagarde <mlaga97@gmail.com>
+Date:   Sat Dec 30 23:47:08 2017 -0600
+
+    Add Linux build instructions to README.md
+
+[33mcommit cca68ba139eddd2a60c7f2147f2d310cf0e7bd38[m
+Merge: 83f05ef ea3b06c
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sat Dec 30 20:00:25 2017 -0500
+
+    Merge pull request #69 from renpnal/patch-2
+    
+    Fix typos
+
+[33mcommit 83f05efff66d9720bc15de4dc85c3661d4948d4d[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 19:58:47 2017 -0500
+
+    Support for color in hologram. Renamed classes: fixes #72
+
+[33mcommit ea3b06c54c639cb0a01e4afba7c768d5d8462a18[m
+Author: Jesse Nieminen <renpnal@gmail.com>
+Date:   Sat Dec 30 23:52:06 2017 +0200
+
+    Fix typos
+    
+    Fixed typos in comments.
+
+[33mcommit 1ed9e9e4db4fb209aa692a2b096b8507351cfbf0[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 16:41:14 2017 -0500
+
+    Fixed bug that sent console buffer to random players for real this time
+
+[33mcommit 08f1aa868667fce55c0678ab685dcad1e591526d[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 16:29:39 2017 -0500
+
+    Fixed bug that sent console buffer to random players.
+
+[33mcommit 55d4c19fe1c3e14fd6e4733e2b283fff22d6e2cb[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 15:30:44 2017 -0500
+
+    Added Console output, Cubots can receive data from ComPort, Fixed BOM being added to string literals, Fixed legs changing direction for free when energy < 100, Changed some log levels.
+
+[33mcommit 2398219fab31e860aab5b7214824abac84ddc438[m
+Author: James T <jtara@tuta.io>
+Date:   Sat Dec 30 11:08:43 2017 -0800
+
+    Update #66: rm npc plugin dependency from plant.event plugin
+
+[33mcommit 81767ed5cf6703b2a239b805421352ba295d8e3f[m
+Author: James T <jtara@tuta.io>
+Date:   Sat Dec 30 09:01:58 2017 -0800
+
+    Updates for #66: reorganize and relocate some methods and calls
+
+[33mcommit 2ef6f492c474cb12b2cd535c6ca69be993dcbf95[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 11:14:45 2017 -0500
+
+    Fixes #64
+
+[33mcommit 70a55dce59802b8acb6874a2f6dd34ffb3ac33f0[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 11:03:09 2017 -0500
+
+    Added features to Hologram hardware - Fixes #63 and #67
+
+[33mcommit fe0be03ab83e761037e138b864b478495f42dd3e[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 10:35:56 2017 -0500
+
+    Fixes #68 & Reformatted code
+
+[33mcommit fd73a477968274f7c92485a068677be7bbe64a65[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 30 10:30:18 2017 -0500
+
+    Fixes #65
+
+[33mcommit eea9420192127437eb36ea97c128ce8ba03515b3[m
+Author: James T <jtara@tuta.io>
+Date:   Fri Dec 29 22:35:02 2017 -0800
+
+    HarvesterNPC should spawn a biomass in-place after they die (#33)
+
+[33mcommit 9e402fe8a12b2cd175ccef463732d2e88b64e271[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 22:36:52 2017 -0500
+
+    Fixed Radio Tower range
+
+[33mcommit b3d88b2813134d44d6f0b9b2473a70922960d93c[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 22:32:39 2017 -0500
+
+    Fixed Radio Tower range
+
+[33mcommit ef7f573256c65ab37b63783a60c84a1b3fe4ffd3[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 21:49:42 2017 -0500
+
+    Added basic Radio Tower functionality #32
+    Keypress buffer is cleared on code upload
+
+[33mcommit 5afa767b4a52f1e4886546e1cd1c0a9477445d78[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 17:09:30 2017 -0500
+
+    Fixed OF and CF flags being always set to false in the other function
+
+[33mcommit a9e580f2ce25fde327e8a0bb2804abf743437939[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 17:06:28 2017 -0500
+
+    Fixed OF and CF flags being always set to false
+
+[33mcommit c4caf4ab0b545ef579b384bef34bbbc05d424155[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 16:16:28 2017 -0500
+
+    Changed CLEAR action for the inventory to 0 for consistency
+
+[33mcommit 0c06d0bf09d3b87b1361df87ede99efdee2617ac[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 15:53:29 2017 -0500
+
+    Fixes #62
+
+[33mcommit 017b89f97f894747d82c4a282811218db4e8902c[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 14:35:26 2017 -0500
+
+    Characters can be escaped in string literals
+
+[33mcommit bd276e0a93c5beabdf7256059d85ef9ea778357e[m
+Merge: 72d43fc bbcadbf
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Fri Dec 29 13:48:56 2017 -0500
+
+    Merge pull request #60 from ScarySpider/More-Maven-fixes
+    
+    More maven fixes
+
+[33mcommit 72d43fccf72dd287fd7d898492b73dbfbf3b4925[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 13:39:13 2017 -0500
+
+    Fixes #58
+
+[33mcommit 18aaf919918df5a661df87ce76ff2dd28d23f74f[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 13:09:47 2017 -0500
+
+    Fixed RET instruction that wouldn't assemble without any parameter
+
+[33mcommit bbcadbf253265b0debe473660e399e5fe748b30b[m
+Merge: b43cf9a 3d60f9a
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Fri Dec 29 11:26:12 2017 -0600
+
+    Merge branch 'master' into More-Maven-fixes
+
+[33mcommit 3d60f9a67c371e5cd43736228928b7a4c7feedd6[m
+Merge: fcd339c 293795b
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Fri Dec 29 11:25:55 2017 -0600
+
+    Merge remote-tracking branch 'upstream/master'
+
+[33mcommit b43cf9ac333787e50e666a79ed14e06062cf270a[m
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Fri Dec 29 11:25:31 2017 -0600
+
+    Moved config file and fixed some warnings
+
+[33mcommit 293795b215aa7ce96c6ed7e23d294f2becfa8c89[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 11:06:48 2017 -0500
+
+    Fixes #55 and commas & semicolon can be inserted in string literals
+
+[33mcommit fde79ed97ee650dfa2f569067790d84d72cc4266[m
+Merge: 59e3e94 fcd339c
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Fri Dec 29 10:06:44 2017 -0600
+
+    Merge branch 'master' into More-Maven-fixes
+
+[33mcommit fcd339c315cdce0b005a483df61cb8d3228aae9b[m
+Merge: 96cce84 45ec719
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Fri Dec 29 10:06:20 2017 -0600
+
+    Merge remote-tracking branch 'upstream/master'
+
+[33mcommit 59e3e9430e0982a6eb85291b8a0e9ae79ff971d8[m
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Fri Dec 29 10:00:19 2017 -0600
+
+    Maven and file access
+    
+    - Server config file is now accessed through the class loader
+    - Maven outputs server.jar, moves dependencys to adjacent /libs, and plugins to adjacent /plugins
+
+[33mcommit 45ec7191b4cc5d7528d786fdfd4e04b8e20a6c55[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Fri Dec 29 08:28:04 2017 -0500
+
+    Added string literals support for the assembler
+
+[33mcommit d9732557fc1b936415dd0980b1130cb6b82bea4c[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 23:08:05 2017 -0500
+
+    Removed unused files
+
+[33mcommit eced45a358d9b7f5f22962082ea099295b0ff454[m
+Merge: 0fee35b 729debb
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 22:39:22 2017 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 0fee35baec45706a5e44bd63e882b4dbd8668573[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 22:35:49 2017 -0500
+
+    Fixes #53
+
+[33mcommit 729debb1a3b25b79defc37739a669defd3cc7b70[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Dec 28 20:41:02 2017 -0500
+
+    Fixes #56
+
+[33mcommit 2fb7d2f73e3756dfd7fc302f96ac2e6edc2ff72e[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 20:33:57 2017 -0500
+
+    Fixes #54
+
+[33mcommit dab5cab602cec099f64abe47138179bdf5a76b38[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 19:29:48 2017 -0500
+
+    Updated incorrect documentation
+
+[33mcommit c23ee0dc867169dcf623b98322565604e849a890[m
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Thu Dec 28 17:02:41 2017 -0600
+
+    stuff
+
+[33mcommit 96cce8478e791b7a55623390d5775a6d79b4424f[m
+Merge: 9d184cb e1d0833
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Thu Dec 28 16:44:03 2017 -0600
+
+    Merge remote-tracking branch 'upstream/master'
+
+[33mcommit 9d184cb51538191eee09edfff26f956d1dd244e3[m
+Merge: 09e00fd 8a980fe
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Thu Dec 28 16:41:05 2017 -0600
+
+    Merge remote-tracking branch 'upstream/master'
+
+[33mcommit 09e00fd032e35a179186c9bcbb8ee30db9ae947e[m
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Thu Dec 28 16:40:53 2017 -0600
+
+    maven work
+
+[33mcommit e1d0833c3a11185377ec406622b8c9c37323b4e0[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 17:40:05 2017 -0500
+
+    Recovering accidentally deleted file
+
+[33mcommit 8a980fec6a504c768f41c0c7533ef578d8895478[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 16:51:03 2017 -0500
+
+    Very small modifications for keyboard hardware
+
+[33mcommit e96b7982c8bbeed83af8ba885dff75b6fc70ab21[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 15:33:28 2017 -0500
+
+    Fixed Biomass pickup problem
+
+[33mcommit 21ec4ae704eb3960963c19746d0df8ff2222c39f[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 13:34:11 2017 -0500
+
+    Cubot are now passable + Bug fixes
+
+[33mcommit 690b7e8d3184679e7d81a1036105c28a4f953401[m
+Merge: d28ca38 556f443
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Dec 28 09:57:03 2017 -0500
+
+    Merge pull request #47 from ScarySpider/Basic-Maven-fixes
+    
+    Basic maven fixes
+
+[33mcommit d28ca387d0b3058bb7cb5fa7ea2ecdd379ac535c[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 09:17:31 2017 -0500
+
+    Fixes ConcurrentModificationException errors
+
+[33mcommit f2b6387cc9f7704916f8784e3c89ddd0db1c020e[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 09:15:19 2017 -0500
+
+    Fixes #50
+
+[33mcommit f3b20b3a2d61ab8ff541b4c2ff31af6b90b4f030[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Dec 28 08:43:13 2017 -0500
+
+    Fixes #51
+
+[33mcommit f4fd3866eb71b20ab9911ce3f6c5cce14612cc08[m
+Merge: 1b6927c 965ca91
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Dec 27 19:20:42 2017 -0500
+
+    Merge pull request #48 from cooprocks123e/bugfix
+    
+    Modified "RET imm" to add imm + 1 to the SP instead of imm
+
+[33mcommit 965ca91cb68dc493ffb20e79a5b7d9098eddc684[m
+Author: Cooper Harasyn <coop.rocks.123e@gmail.com>
+Date:   Wed Dec 27 19:18:10 2017 -0500
+
+    Modified "RET imm" to add imm + 1 to the SP instead of imm
+
+[33mcommit 556f443ec29768f3d211f418b364e7618532f842[m
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Wed Dec 27 17:52:40 2017 -0600
+
+    Now outputs .jar files to /target
+    
+    -Server jar outputs to /target/
+    -All other jars output to /target/plugins
+
+[33mcommit 3158dd75ea32845a5165c54e1aa3dfe6f0fc30b7[m
+Author: Jacob Swehla <30414349+JacobSwehla@users.noreply.github.com>
+Date:   Wed Dec 27 15:36:08 2017 -0600
+
+    Fixed Maven
+    
+    Maven now builds correctly, may need further refinement.
+
+[33mcommit 1b6927c575828bf938d920ccdab7c1d75a66a4fc[m
+Merge: 2e9248e 3bd34bf
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Wed Dec 27 15:55:30 2017 -0500
+
+    Merge pull request #41 from cooprocks123e/bugfix
+    
+    Fixed typo in SubInstruction
+
+[33mcommit 3bd34bfcba0739bb54d2c333ae390ac3fc8929f6[m
+Author: Cooper Harasyn <coop.rocks.123e@gmail.com>
+Date:   Wed Dec 27 15:52:00 2017 -0500
+
+    Fixed typo in SubInstruction
+
+[33mcommit 2e9248ea2e2db19ff103f8b3e688e68b4bd408fe[m[33m ([m[1;33mtag: v1.3a[m[33m)[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Dec 24 14:26:19 2017 -0500
+
+    Factory Integration, NPC improvements. #19 & #31.
+
+[33mcommit 4f1342593f0eb02b9231acbb8c167bc43e9b0613[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 23 12:17:36 2017 -0500
+
+    Added Factory object #31
+
+[33mcommit 3548928218181d281b273df9741d90035e1989ee[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 16 15:40:03 2017 -0500
+
+    Improved World update performance. Decreased save file size. Added Harvester NPC #19.
+
+[33mcommit cd41db9e58a6180a62f4abf5b269463ab268b159[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 16 11:35:04 2017 -0500
+
+    Added Passive energy source for Cubots #14
+
+[33mcommit 597118bd0711f20f945ca51b0897d24ad4cdf8a2[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 9 10:52:13 2017 -0500
+
+    Removed files that I accidentally added
+
+[33mcommit 9dd9b45d2d7ff64e3a89a874f6323dbcd6843d7b[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 9 10:50:37 2017 -0500
+
+    Added Day/Night Cycle #14
+
+[33mcommit 9597a80edf55a3506d7cdf0ecc016192c0a96e2e[m
+Merge: be45979 d24363f
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Fri Dec 8 18:31:16 2017 -0500
+
+    Merge pull request #30 from StevenBerdak/master
+    
+    Keep backup of old saved files #8
+
+[33mcommit d24363fd82df949e2b2ad33dd29ac43d9e73897f[m
+Author: Steven Robert Berdak <stevenberdak@gmail.com>
+Date:   Mon Dec 4 17:25:55 2017 -0800
+
+    Added file management
+    
+    .
+
+[33mcommit be45979ed0b41336d39e74a100fb9258b513d434[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Dec 2 10:26:59 2017 -0500
+
+    Added biomass respawn feature #22
+
+[33mcommit 29cac77e794ed84d3953941c18e670c3db8661e7[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Nov 22 17:05:50 2017 -0500
+
+    Changed maven artifactID names
+
+[33mcommit 6be2a496c6bf343a79bb41eab1ce1ee6922e28fb[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Nov 21 20:22:10 2017 -0500
+
+    Added maven framework support. Started working on NPCs #19
+
+[33mcommit 12db25e726bae373dc2eec3870120912ec50688f[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 18 22:23:32 2017 -0500
+
+    Changed byte array in Memory to char array (+60% performance improvement)
+
+[33mcommit d004386b7ba83883608e39376892ee2a28d0727f[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 18 22:21:14 2017 -0500
+
+    Bug fixes for various operands
+
+[33mcommit e09d2c1b16ca36dd4fe0c2bc6e310ead01408de6[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Nov 16 18:41:57 2017 -0500
+
+    Bug fix with [reg] as source operand
+
+[33mcommit c703dec3cf7a114430156dc618f82c4799ae9f94[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Wed Nov 15 12:24:01 2017 -0500
+
+    CPU execution time costs energy #16
+
+[33mcommit 8701007ad9c6ac7c19c3eadf0ff3b69fe7769389[m[33m ([m[1;33mtag: v1.2a[m[33m)[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Nov 14 20:58:07 2017 -0500
+
+    Bug fixes related to floppy drive
+
+[33mcommit cfb8050cee2c00e9e5b7c0a95ca9aa32cf8f9b7d[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Tue Nov 14 17:25:12 2017 -0500
+
+    Added basic floppy drives #3.
+
+[33mcommit da7d050661252f729d75d6e2711f26d70ef602a1[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Nov 13 22:45:19 2017 -0500
+
+    Universe warp around and maximum size #9
+
+[33mcommit 3ee9b4be95816fc16686fe7c9ed3d1ef7e6c319a[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Nov 13 21:39:16 2017 -0500
+
+    Added SAR Instructions #7.
+
+[33mcommit 42421b7710c0897baa44e696144165fb9e9880d3[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Nov 13 20:08:07 2017 -0500
+
+    Added RCR/RCL Instructions #7.
+
+[33mcommit 9979986c6a52d93586e1213f3a59f1cabd180c90[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Nov 13 17:51:16 2017 -0500
+
+    Added SAL Instruction #6. Added ROL/ROR Instructions #7.
+
+[33mcommit c5abe2efc5f3ae0c481cd817087c0721ce3be769[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Mon Nov 13 11:28:06 2017 -0500
+
+    Added ROL/ROR Instructions #7 as well as JC/JNC and JO/JNO instructions
+
+[33mcommit fdfa568e079aac0af69a965499b76d6526a6b2de[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Nov 12 13:07:39 2017 -0500
+
+    Update README.md
+
+[33mcommit 1bf1682cb38b44474d9e663da8cc362e2da997a5[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Nov 12 13:05:39 2017 -0500
+
+    Updated readme
+
+[33mcommit a3fa3c4c09a774eb6faebf3bbaeae18e95219b4c[m[33m ([m[1;33mtag: v1.1a[m[33m)[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Nov 12 10:27:07 2017 -0500
+
+    Added Battery Hardware. #2
+
+[33mcommit f7ea14275c7cec5da4efee8e9c8fba710190c160[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Sun Nov 12 09:32:08 2017 -0500
+
+    Create LICENSE
+
+[33mcommit 04d51e1f1fd7f1e0f12674a543b06c1cc9352ea7[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 20:14:13 2017 -0500
+
+    Added XCHG Instruction #5. Placeholder class for LEA #1
+
+[33mcommit 8c5dcd0fba0a5ddfb8a061b68e7f669493b1a23c[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 19:43:06 2017 -0500
+
+    Added Hologram Projector Hardware. Added GET_WORLD_POS in LiDAR. Fixed Drill.
+
+[33mcommit 1a6f92a29dd303790b07471218ab6c256a3784ca[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 15:27:06 2017 -0500
+
+    Added NOT Instruction
+
+[33mcommit 3d9bfb2a429e9ad6be061308d5033af4198279a0[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 15:07:28 2017 -0500
+
+    Added Clock
+
+[33mcommit e2ed744479eca76e9968cac9b82d58c18c1d3303[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 14:34:33 2017 -0500
+
+    Added Random number generator
+
+[33mcommit f98e0701eb7470523b4ed67e5677154951deb579[m[33m ([m[1;33mtag: v1.0a[m[33m)[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 10:28:07 2017 -0500
+
+    Updated readme & config
+
+[33mcommit c56f672b9dda9523170f61baade42d23c3e6a222[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 11 10:24:51 2017 -0500
+
+    Added secure WebSocket, Bug fixes, code cleanup
+
+[33mcommit 98b0c480b990fcab6a3ed67809c6008b1cb5cdc4[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Nov 5 14:13:53 2017 -0500
+
+    Various bug fixes
+
+[33mcommit 626c55bcce45bf1e8f288d0ee428c5d7f8b608d3[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sun Nov 5 10:20:38 2017 -0500
+
+    Logs cleanup
+
+[33mcommit 41b981f3abd84f605613fbe3f8f2c31d96ccd759[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 4 15:35:56 2017 -0400
+
+    Confirmation on code upload
+
+[33mcommit 8f117c5e27d18d9e13e377da95b935218067883d[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 4 15:02:59 2017 -0400
+
+    Fixed bugs related to guest users
+
+[33mcommit 36d433fdce235d3b859d2ca469a337420e83a952[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 4 14:37:33 2017 -0400
+
+    Unregistered users can login on the game server (read-only)
+
+[33mcommit cdfdab09f83cf55f73e87aceab3e2078d00a36eb[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Sat Nov 4 10:41:57 2017 -0400
+
+    Newly registered users can now login on the game server,
+
+[33mcommit 56c0bee586122567da44ee5cbf3dc094dc5616ef[m
+Author: Simon Fortier <simon987@users.noreply.github.com>
+Date:   Thu Nov 2 21:54:03 2017 -0400
+
+    Create readme
+
+[33mcommit b76a1adea209e5de6da4a1c180fde12888536eb3[m
+Author: simon <Anise5-humid5-Allow-5Lulu-Honk>
+Date:   Thu Nov 2 21:51:22 2017 -0400
+
+    Initial commit
