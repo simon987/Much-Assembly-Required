@@ -58,8 +58,8 @@ public class UserStatsHelper {
         ArrayList<Map.Entry<User, Integer>>  deaths = new ArrayList<>(this.getTopN("deathCount", n));
         ArrayList<Map.Entry<User, Integer>>  time = new ArrayList<>(this.getTopN("executionTime", n));
         ArrayList<Map.Entry<User, Integer>>  distance = new ArrayList<>(this.getTopN("walkDistance", n));
-
-        for (int i = 0; i < n ; i++) {
+        
+        for (int i = 0; i < vaults.size() ; i++) {
             User user = vaults.get(i).getKey();
             Map<String, Integer> allStats = new HashMap();
             allStats.put("completedVaults", vaults.get(i).getValue().size());

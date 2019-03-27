@@ -7,7 +7,6 @@ public class DeathCountEvent extends GameEvent {
 
     public DeathCountEvent(GameObject object) {
         setSource(object);
-        
     }
 
     @Override

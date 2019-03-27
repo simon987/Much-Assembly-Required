@@ -22,7 +22,7 @@ public class TotalExecutionTimeListener implements GameEventListener {
         if (object instanceof ControllableUnit) {
             count = ((ControllableUnit) object).getParent().getStats().getInt("totalExecutionTime");
             count++;
-            LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " Death Count " +
+            LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " execution time " +
                     Integer.toString(count));
 
             ((ControllableUnit) object).getParent().getStats().setInt("totalExecutionTime",
