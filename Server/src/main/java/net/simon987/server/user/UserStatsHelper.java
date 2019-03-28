@@ -38,8 +38,10 @@ public class UserStatsHelper {
 
         for (Document dbUser : users.find().sort(orderBy).limit(n)) {
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
-            //rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getInt(statName)));
-            rows.add(new AbstractMap.SimpleEntry<>(user, 999));
+            int val = 0;
+            if(user.getStats().getInt(statName) > 0)
+                val = user.getStats().getInt(statName);
+            rows.add(new AbstractMap.SimpleEntry<>(user, val));
         }
 
         return rows;
