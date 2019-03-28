@@ -22,8 +22,6 @@ public class ExecutionTimeListener implements GameEventListener {
         if (object instanceof ControllableUnit) {
             count = ((ControllableUnit) object).getParent().getStats().getInt("executionTime");
             count++;
-            LogManager.LOGGER.info(((ControllableUnit) object).getParent().getUsername() + " execution time " +
-                    Integer.toString(count));
 
             ((ControllableUnit) object).getParent().getStats().setInt("executionTime",
                     count);
