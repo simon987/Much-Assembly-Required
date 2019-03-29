@@ -173,13 +173,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
      */
     @Override
     public void update() {
-        int executionTime = timer.getTime();
-        if(executionTime > time && currentAction != Action.IDLE){
-            GameEvent event1 = new ExecutionTimeEvent(this, executionTime - time);
-            GameServer.INSTANCE.getEventDispatcher().dispatch(event1);
-        }
-        time = executionTime;
-
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
                 if (!incrementLocation()) {
@@ -193,6 +186,13 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
                 currentAction = Action.IDLE;
             }
         }
+        
+        int executionTime = timer.getTime();
+        if(executionTime > time && currentAction != Action.IDLE){
+            GameEvent event1 = new ExecutionTimeEvent(this, executionTime - time);
+            GameServer.INSTANCE.getEventDispatcher().dispatch(event1);
+        }
+        time = executionTime;
 
         /*
          * CurrentAction is set during the code execution and this function is called right after
