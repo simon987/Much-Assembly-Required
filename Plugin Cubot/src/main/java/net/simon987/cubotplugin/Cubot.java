@@ -104,6 +104,16 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     private Map<Class<? extends HardwareModule>, Integer> hardwareModules = new HashMap<>();
 
     /**
+    *  In game timer
+    */
+    private int time;
+    
+    /**
+    * Real Life Timer for getting execution time
+    */
+    private RealLifeTimer timer;
+
+    /**
      * Cubot's brain box
      */
     private CPU cpu;
@@ -129,6 +139,10 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         hp = document.getInteger("hp");
         shield = document.getInteger("shield");
         setDirection(Direction.getDirection(document.getInteger("direction")));
+
+        timer = new RealLifeTimer();
+        timer.run();
+        time = timer.getTime();
 
         IServerConfiguration config = GameServer.INSTANCE.getConfig();
         maxHp = config.getInt("cubot_max_hp");
@@ -159,6 +173,12 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
      */
     @Override
     public void update() {
+        int executionTime = timer.getTime();
+        if(executionTime > time && currentAction != Action.IDLE){
+            GameEvent event1 = new ExecutionTimeEvent(this, executionTime - time);
+            GameServer.INSTANCE.getEventDispatcher().dispatch(event1);
+        }
+        time = executionTime;
 
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
@@ -166,8 +186,8 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
                     //Couldn't walk
                     currentAction = Action.IDLE;
                 }else{
-                    GameEvent event = new WalkDistanceEvent(this);
-                    GameServer.INSTANCE.getEventDispatcher().dispatch(event);
+                    GameEvent event2 = new WalkDistanceEvent(this);
+                    GameServer.INSTANCE.getEventDispatcher().dispatch(event2);
                 }
             } else {
                 currentAction = Action.IDLE;
@@ -269,6 +289,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         currentStatus = 0;
         lastStatus = 0;
         addStatus(CubotStatus.FACTORY_NEW);
+        time = timer.getTime();
 
         for (HardwareModule module : hardwareAddresses.values()) {
             module.reset();
