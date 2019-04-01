@@ -11376,120 +11376,24 @@
         "y": 0.5
       }
     },
-    "objects/GOURD_PLANT": {
+    "objects/obstacle": {
       "frame": {
         "x": 768,
         "y": 1050,
-        "w": 32,
-        "h": 32
+        "w": 128,
+        "h": 114
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 32
+        "w": 128,
+        "h": 114
       },
       "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "objects/kiln": {
-      "frame": {
-        "x": 800,
-        "y": 1050,
-        "w": 116,
-        "h": 117
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 116,
-        "h": 117
-      },
-      "sourceSize": {
-        "w": 116,
-        "h": 117
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "objects/kiln_s": {
-      "frame": {
-        "x": 916,
-        "y": 1050,
-        "w": 116,
-        "h": 117
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 116,
-        "h": 117
-      },
-      "sourceSize": {
-        "w": 116,
-        "h": 117
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "objects/plant1": {
-      "frame": {
-        "x": 1032,
-        "y": 1050,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "objects/plant1_s": {
-      "frame": {
-        "x": 1096,
-        "y": 1050,
-        "w": 64,
-        "h": 64
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
-      },
-      "sourceSize": {
-        "w": 64,
-        "h": 64
+        "w": 128,
+        "h": 114
       },
       "pivot": {
         "x": 0.5,
@@ -11498,7 +11402,7 @@
     },
     "objects/portal": {
       "frame": {
-        "x": 1160,
+        "x": 896,
         "y": 1050,
         "w": 128,
         "h": 110
@@ -11522,7 +11426,7 @@
     },
     "objects/RadioTower": {
       "frame": {
-        "x": 1288,
+        "x": 1024,
         "y": 1050,
         "w": 168,
         "h": 237
@@ -11546,7 +11450,7 @@
     },
     "objects/rocket": {
       "frame": {
-        "x": 1456,
+        "x": 1192,
         "y": 1050,
         "w": 135,
         "h": 189
@@ -11570,7 +11474,7 @@
     },
     "objects/shieldBack": {
       "frame": {
-        "x": 1591,
+        "x": 1327,
         "y": 1050,
         "w": 128,
         "h": 70
@@ -11594,7 +11498,7 @@
     },
     "objects/shieldFront": {
       "frame": {
-        "x": 1719,
+        "x": 1455,
         "y": 1050,
         "w": 128,
         "h": 70
@@ -11618,7 +11522,7 @@
     },
     "objects/VaultDoor": {
       "frame": {
-        "x": 1847,
+        "x": 1583,
         "y": 1050,
         "w": 213,
         "h": 170
@@ -11642,7 +11546,7 @@
     },
     "objects/VaultDoor1": {
       "frame": {
-        "x": 2060,
+        "x": 1796,
         "y": 1050,
         "w": 139,
         "h": 150
@@ -11666,7 +11570,7 @@
     },
     "objects/VaultDoorCrop": {
       "frame": {
-        "x": 2199,
+        "x": 1935,
         "y": 1050,
         "w": 137,
         "h": 150
@@ -11690,7 +11594,7 @@
     },
     "objects/VaultDoorScreen/1": {
       "frame": {
-        "x": 2336,
+        "x": 2072,
         "y": 1050,
         "w": 20,
         "h": 18
@@ -11714,7 +11618,7 @@
     },
     "objects/VaultDoorScreen/2": {
       "frame": {
-        "x": 2356,
+        "x": 2092,
         "y": 1050,
         "w": 20,
         "h": 18
@@ -11738,7 +11642,7 @@
     },
     "objects/VaultDoorScreen/3": {
       "frame": {
-        "x": 2376,
+        "x": 2112,
         "y": 1050,
         "w": 20,
         "h": 18
@@ -11762,7 +11666,7 @@
     },
     "objects/VaultDoorScreen/4": {
       "frame": {
-        "x": 2396,
+        "x": 2132,
         "y": 1050,
         "w": 20,
         "h": 18
@@ -11786,7 +11690,7 @@
     },
     "objects/VaultDoorScreen/5": {
       "frame": {
-        "x": 2416,
+        "x": 2152,
         "y": 1050,
         "w": 20,
         "h": 18
@@ -11810,7 +11714,7 @@
     },
     "objects/VaultDoorScreen/6": {
       "frame": {
-        "x": 2436,
+        "x": 2172,
         "y": 1050,
         "w": 20,
         "h": 18
@@ -11834,7 +11738,7 @@
     },
     "tiles/bigTile": {
       "frame": {
-        "x": 2456,
+        "x": 2192,
         "y": 1050,
         "w": 128,
         "h": 140
@@ -11858,7 +11762,7 @@
     },
     "tiles/bigTile2": {
       "frame": {
-        "x": 2584,
+        "x": 2320,
         "y": 1050,
         "w": 128,
         "h": 153
@@ -11882,7 +11786,7 @@
     },
     "tiles/magneticTile": {
       "frame": {
-        "x": 2712,
+        "x": 2448,
         "y": 1050,
         "w": 128,
         "h": 114
@@ -11906,7 +11810,7 @@
     },
     "tiles/tile": {
       "frame": {
-        "x": 2840,
+        "x": 2576,
         "y": 1050,
         "w": 128,
         "h": 114
@@ -11930,7 +11834,7 @@
     },
     "ui/arrow_east": {
       "frame": {
-        "x": 2968,
+        "x": 2704,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -11954,7 +11858,7 @@
     },
     "ui/arrow_east_s": {
       "frame": {
-        "x": 3070,
+        "x": 2806,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -11978,7 +11882,7 @@
     },
     "ui/arrow_north": {
       "frame": {
-        "x": 3172,
+        "x": 2908,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -12002,7 +11906,7 @@
     },
     "ui/arrow_north_s": {
       "frame": {
-        "x": 3274,
+        "x": 3010,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -12026,7 +11930,7 @@
     },
     "ui/arrow_south": {
       "frame": {
-        "x": 3376,
+        "x": 3112,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -12050,7 +11954,7 @@
     },
     "ui/arrow_south_s": {
       "frame": {
-        "x": 3478,
+        "x": 3214,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -12074,7 +11978,7 @@
     },
     "ui/arrow_west": {
       "frame": {
-        "x": 3580,
+        "x": 3316,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -12098,7 +12002,7 @@
     },
     "ui/arrow_west_s": {
       "frame": {
-        "x": 3682,
+        "x": 3418,
         "y": 1050,
         "w": 102,
         "h": 51
@@ -12122,7 +12026,7 @@
     },
     "ui/compass": {
       "frame": {
-        "x": 3784,
+        "x": 3520,
         "y": 1050,
         "w": 162,
         "h": 147
@@ -12155,6 +12059,6 @@
       "h": 1287
     },
     "scale": "1",
-    "smartupdate": "$TexturePacker:SmartUpdate:73c963294f55ee095af7f9f7c60b9d3d:93610d7ee804aa39ff18e2974a508abb:1eabdf11f75e3a4fe3147baf7b5be24b$"
+    "smartupdate": "$TexturePacker:SmartUpdate:cabd9bbebff623bfa01a63c764edf16e:8b226981e250398faa4378b63606c23e:1eabdf11f75e3a4fe3147baf7b5be24b$"
   }
 }

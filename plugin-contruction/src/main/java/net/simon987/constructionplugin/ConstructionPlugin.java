@@ -1,5 +1,6 @@
 package net.simon987.constructionplugin;
 
+import net.simon987.constructionplugin.event.CpuInitialisationListener;
 import net.simon987.server.GameServer;
 import net.simon987.server.game.objects.GameRegistry;
 import net.simon987.server.logging.LogManager;
@@ -17,7 +18,11 @@ public class ConstructionPlugin extends ServerPlugin {
         gameRegistry.registerGameObject(Obstacle.class);
         gameRegistry.registerGameObject(ConstructionSite.class);
 
+        gameRegistry.registerHardware(ConstructionArmHardware.class);
+
         BluePrintRegistry.INSTANCE.registerBluePrint(ObstacleBlueprint.class);
+
+        listeners.add(new CpuInitialisationListener());
 
         LogManager.LOGGER.info("(Construction Plugin) Initialized construction plugin");
     }

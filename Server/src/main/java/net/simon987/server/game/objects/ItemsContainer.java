@@ -32,12 +32,17 @@ public class ItemsContainer extends GameObject implements InventoryHolder {
 
     @Override
     public boolean placeItem(Item item) {
-        if (items.size() < containerCapacity) {
+        if (canPlaceItem(item.getId())) {
             items.add(item);
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean canPlaceItem(int itemId) {
+        return (items.size() < containerCapacity);
     }
 
     @Override

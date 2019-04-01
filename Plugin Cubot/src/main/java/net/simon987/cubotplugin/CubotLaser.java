@@ -3,7 +3,11 @@ package net.simon987.cubotplugin;
 import net.simon987.server.GameServer;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
-import net.simon987.server.game.objects.*;
+import net.simon987.server.game.item.Item;
+import net.simon987.server.game.objects.Action;
+import net.simon987.server.game.objects.Attackable;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.InventoryHolder;
 import org.bson.Document;
 
 import java.awt.*;
@@ -24,12 +28,16 @@ public class CubotLaser extends HardwareModule {
 
     private static final int LASER_DAMAGE = 25;
 
-    public CubotLaser(ControllableUnit unit) {
+    public CubotLaser(Cubot unit) {
         super(null, unit);
     }
 
-    public CubotLaser(Document document, ControllableUnit cubot) {
+    public CubotLaser(Document document, Cubot cubot) {
         super(document, cubot);
+    }
+
+    private Cubot getCubot() {
+        return (Cubot) unit;
     }
 
     @Override
@@ -38,20 +46,18 @@ public class CubotLaser extends HardwareModule {
     }
 
     @Override
+    //TODO: Refactor this method..
     public void handleInterrupt(Status status) {
 
         int a = getCpu().getRegisterSet().getRegister("A").getValue();
         int b = getCpu().getRegisterSet().getRegister("B").getValue();
 
-
         if (a == LASER_WITHDRAW) {
-
 
             Point frontTile = unit.getFrontTile();
             ArrayList<GameObject> objects = unit.getWorld().getGameObjectsBlockingAt(frontTile.x, frontTile.y);
 
             if (unit.getCurrentAction() == Action.IDLE && objects.size() > 0) {
-                //FIXME: Problem here if more than 1 object
                 if (objects.get(0) instanceof InventoryHolder) {
 
                     if (((InventoryHolder) objects.get(0)).canTakeItem(b)) {
@@ -65,9 +71,24 @@ public class CubotLaser extends HardwareModule {
                 }
             }
 
-
         } else if (a == LASER_DEPOSIT) {
-            // TODO
+            Point frontTile = unit.getFrontTile();
+            ArrayList<GameObject> objects = unit.getWorld().getGameObjectsBlockingAt(frontTile.x, frontTile.y);
+
+            CubotInventory inv = ((CubotInventory) getCubot().getHardware(CubotInventory.class));
+            Item item = inv.getCurrentItem();
+
+            if (unit.getCurrentAction() == Action.IDLE && objects.size() > 0) {
+                if (objects.get(0) instanceof InventoryHolder) {
+                    if (((InventoryHolder) objects.get(0)).canPlaceItem(item.getId())) {
+                        if (unit.spendEnergy(30)) {
+                            //Place the item
+                            ((InventoryHolder) objects.get(0)).placeItem(inv.removeItem());
+                            unit.setCurrentAction(Action.DEPOSITING);
+                        }
+                    }
+                }
+            }
         } else if (a == LASER_ATTACK) {
 
             if (unit.getCurrentAction() == Action.IDLE) {
@@ -81,12 +102,10 @@ public class CubotLaser extends HardwareModule {
                     if (objects.size() > 0 && objects.get(0) instanceof Attackable && !(objects.get(0) instanceof Cubot)) {
                         ((Attackable) objects.get(0)).damage(LASER_DAMAGE);
                     }
-
                 }
 
                 unit.setCurrentAction(Action.ATTACKING);
             }
         }
-
     }
 }

@@ -52,7 +52,7 @@ class BluePrintUtil {
 
         char[] result = new char[ARBITRARY_STRING.length * 32];
 
-        for (int i = ARBITRARY_STRING.length - 1; i > 0; --i) {
+        for (int i = ARBITRARY_STRING.length - 1; i >= 0; --i) {
             char[] hashedBlueprint = hashMessage(ARBITRARY_STRING[i] + blueprint.getName());
             if (hashedBlueprint != null) {
                 System.arraycopy(hashedBlueprint, 0, result,

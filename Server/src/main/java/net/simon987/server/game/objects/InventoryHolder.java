@@ -20,4 +20,9 @@ public interface InventoryHolder {
      * @return true if the InventoryHolder can provide this item
      */
     boolean canTakeItem(int itemId);
+
+    /**
+     * @return true if the InventoryHolder can receive this item
+     */
+    boolean canPlaceItem(int itemId);
 }

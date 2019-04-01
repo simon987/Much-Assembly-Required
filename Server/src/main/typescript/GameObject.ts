@@ -5,10 +5,11 @@ enum ObjectType {
     FACTORY = "net.simon987.npcplugin.Factory",
     RADIO_TOWER = "net.simon987.npcplugin.RadioTower",
     VAULT_DOOR = "net.simon987.npcplugin.VaultDoor",
-    OBSTACLE = "net.simon987.npcplugin.Obstacle",
+    OBSTACLE = "net.simon987.constructionplugin.Obstacle",
     ELECTRIC_BOX = "net.simon987.npcplugin.ElectricBox",
     PORTAL = "net.simon987.npcplugin.Portal",
-    HACKED_NPC = "net.simon987.npcplugin.HackedNPC"
+    HACKED_NPC = "net.simon987.npcplugin.HackedNPC",
+    CONSTRUCTION_SITE = "net.simon987.constructionplugin.ConstructionSite"
 }
 
 enum ItemType {
@@ -71,13 +72,15 @@ abstract class GameObject extends Phaser.Plugin.Isometric.IsoSprite {
             case ObjectType.VAULT_DOOR:
                 return new VaultDoor(json);
             case ObjectType.OBSTACLE:
-                return null;
+                return new Obstacle(json);
             case ObjectType.ELECTRIC_BOX:
                 return new ElectricBox(json);
             case ObjectType.PORTAL:
                 return new Portal(json);
             case ObjectType.HACKED_NPC:
                 return new HackedNPC(json);
+            case ObjectType.CONSTRUCTION_SITE:
+                return new ConstructionSite(json);
 
             default:
                 return null;
@@ -622,7 +625,7 @@ class BiomassBlob extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.biomass.tintHover;
+        this.tint = config.biomass.tint;
 
         this.text.visible = false;
     }
@@ -848,6 +851,97 @@ class ElectricBox extends GameObject {
     }
 }
 
+class Obstacle extends GameObject {
+
+    constructor(json) {
+        super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/obstacle");
+        this.anchor.set(0.5, 0.3);
+        this.tint = config.obstacle.tint;
+
+        this.setText("Obstacle");
+        this.text.visible = false;
+
+        this.id = json.i;
+        this.tileX = json.x;
+        this.tileY = json.y;
+    }
+
+    updateObject(json): void {
+        //noop
+    }
+
+    public onTileHover() {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this.scale).to({x: 1.1, y: 1.1}, 200, Phaser.Easing.Linear.None, true);
+        this.tint = config.cubot.hoverTint;
+
+        this.text.visible = true;
+    }
+
+    public onTileExit() {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
+        mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
+        this.tint = config.portal.tint;
+
+        this.text.visible = false;
+    }
+}
+
+class ConstructionSite extends GameObject {
+
+    private static getTargetSprite(targetType: string): string {
+        switch (targetType) {
+            case ObjectType.OBSTACLE:
+                return "objects/obstacle";
+        }
+    }
+
+    constructor(json) {
+
+        super(Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", ConstructionSite.getTargetSprite(json.blueprint.target));
+        this.anchor.set(0.5, 0.31);
+        this.tint = config.constructionSite.tint;
+
+        this.setText("Construction site");
+        this.text.visible = false;
+
+        this.setUpAlphaTween();
+
+        this.id = json.i;
+        this.tileX = json.x;
+        this.tileY = json.y;
+    }
+
+    updateObject(json): void {
+        //noop
+    }
+
+    private setUpAlphaTween() {
+        let alphaTween = mar.game.add.tween(this).to({alpha: 0.5},
+            2000, Phaser.Easing.Linear.None, true, 0, -1);
+        alphaTween.yoyo(true, 3000);
+    }
+
+    public onTileHover() {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 19}, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this.scale).to({x: 1.03, y: 1.03}, 200, Phaser.Easing.Linear.None, true);
+        this.setUpAlphaTween();
+
+        this.text.visible = true;
+    }
+
+    public onTileExit() {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
+        mar.game.add.tween(this.scale).to({x: 1.03, y: 1.03}, 200, Phaser.Easing.Linear.None, true);
+        this.setUpAlphaTween();
+
+        this.text.visible = false;
+    }
+}
 
 class Portal extends GameObject {
     public onTileHover() {

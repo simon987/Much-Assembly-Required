@@ -11,7 +11,6 @@ import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.exception.CancelledException;
 import net.simon987.server.event.GameEvent;
 import net.simon987.server.game.item.Item;
-import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.*;
 import net.simon987.server.user.User;
 import org.bson.Document;
@@ -201,7 +200,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         JSONObject json = super.jsonSerialise();
         json.put("direction", getDirection().ordinal());
         CubotInventory inv = (CubotInventory) getHardware(CubotInventory.class);
-        int heldItem = inv.getInventory().getOrDefault(inv.getPosition(), new ItemVoid()).getId();
+        int heldItem = inv.getCurrentItem().getId();
         json.put("heldItem", heldItem);
         json.put("hp", hp);
         json.put("shield", shield);

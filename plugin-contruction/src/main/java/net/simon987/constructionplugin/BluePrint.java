@@ -24,17 +24,25 @@ public abstract class BluePrint implements InventoryHolder, JSONSerializable, Mo
      */
     protected Class<? extends GameObject> targetObject;
 
+    static final int DATA_LENGTH = 1024;
+
     /**
      * Set to true when all the requirements are met
      */
     private boolean completed;
 
-    public BluePrint() {
+    BluePrint() {
         requiredItems = new HashMap<>();
     }
 
     public BluePrint(Document document) {
-        requiredItems = (Map<Integer, Integer>) document.get("required_items");
+        Map<String, Integer> bsonCompatibleRequiredItems = (Map<String, Integer>) document.get("required_items");
+        requiredItems = new HashMap<>(bsonCompatibleRequiredItems.size());
+
+        for (String key : bsonCompatibleRequiredItems.keySet()) {
+            requiredItems.put(Integer.valueOf(key), bsonCompatibleRequiredItems.get(key));
+        }
+
         completed = document.getBoolean("completed");
         try {
             targetObject = Class.forName(document.getString("target")).asSubclass(GameObject.class);
@@ -57,12 +65,17 @@ public abstract class BluePrint implements InventoryHolder, JSONSerializable, Mo
     @Override
     public boolean placeItem(Item item) {
 
-        if (requiredItems.containsKey(item.getId()) && requiredItems.get(item.getId()) > 0) {
+        if (canPlaceItem(item.getId())) {
             requiredItems.put(item.getId(), requiredItems.get(item.getId()) - 1);
             checkCompleted();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean canPlaceItem(int itemId) {
+        return requiredItems.containsKey(itemId) && requiredItems.get(itemId) > 0;
     }
 
     @Override
@@ -92,7 +105,7 @@ public abstract class BluePrint implements InventoryHolder, JSONSerializable, Mo
     public JSONObject jsonSerialise() {
         JSONObject json = new JSONObject();
 
-        json.put("target", targetObject);
+        json.put("target", targetObject.getName());
         json.put("required_items", requiredItems);
 
         return json;
@@ -103,8 +116,15 @@ public abstract class BluePrint implements InventoryHolder, JSONSerializable, Mo
         Document document = new Document();
 
         document.put("completed", completed);
-        document.put("target", targetObject);
-        document.put("required_items", requiredItems);
+        document.put("target", targetObject.getName());
+        document.put("type", this.getClass().getName());
+
+        Map<String, Integer> bsonCompatibleRequiredItems = new HashMap<>();
+        for (Integer key : requiredItems.keySet()) {
+            bsonCompatibleRequiredItems.put(String.valueOf(key), requiredItems.get(key));
+        }
+
+        document.put("required_items", bsonCompatibleRequiredItems);
 
         return document;
     }

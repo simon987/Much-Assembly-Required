@@ -51,6 +51,11 @@ public class ConstructionSite extends Structure implements Updatable, InventoryH
     }
 
     @Override
+    public boolean canPlaceItem(int itemId) {
+        return bluePrint.canPlaceItem(itemId);
+    }
+
+    @Override
     public void takeItem(int itemId) {
         //NOOP
     }

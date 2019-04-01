@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
                 for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
             };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -336,6 +336,12 @@ var config = {
     },
     world: {
         defaultSize: 16
+    },
+    obstacle: {
+        tint: 0x0aced6,
+    },
+    constructionSite: {
+        tint: 0x0aced6,
     }
 };
 var Util = (function () {
@@ -822,6 +828,7 @@ var GameClient = (function () {
     };
     return GameClient;
 }());
+var game = PIXI.game;
 var ObjectType;
 (function (ObjectType) {
     ObjectType["CUBOT"] = "net.simon987.cubotplugin.Cubot";
@@ -830,10 +837,11 @@ var ObjectType;
     ObjectType["FACTORY"] = "net.simon987.npcplugin.Factory";
     ObjectType["RADIO_TOWER"] = "net.simon987.npcplugin.RadioTower";
     ObjectType["VAULT_DOOR"] = "net.simon987.npcplugin.VaultDoor";
-    ObjectType["OBSTACLE"] = "net.simon987.npcplugin.Obstacle";
+    ObjectType["OBSTACLE"] = "net.simon987.constructionplugin.Obstacle";
     ObjectType["ELECTRIC_BOX"] = "net.simon987.npcplugin.ElectricBox";
     ObjectType["PORTAL"] = "net.simon987.npcplugin.Portal";
     ObjectType["HACKED_NPC"] = "net.simon987.npcplugin.HackedNPC";
+    ObjectType["CONSTRUCTION_SITE"] = "net.simon987.constructionplugin.ConstructionSite";
 })(ObjectType || (ObjectType = {}));
 var ItemType;
 (function (ItemType) {
@@ -872,13 +880,15 @@ var GameObject = (function (_super) {
             case ObjectType.VAULT_DOOR:
                 return new VaultDoor(json);
             case ObjectType.OBSTACLE:
-                return null;
+                return new Obstacle(json);
             case ObjectType.ELECTRIC_BOX:
                 return new ElectricBox(json);
             case ObjectType.PORTAL:
                 return new Portal(json);
             case ObjectType.HACKED_NPC:
                 return new HackedNPC(json);
+            case ObjectType.CONSTRUCTION_SITE:
+                return new ConstructionSite(json);
             default:
                 return null;
         }
@@ -1287,7 +1297,7 @@ var BiomassBlob = (function (_super) {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.biomass.tintHover;
+        this.tint = config.biomass.tint;
         this.text.visible = false;
     };
     BiomassBlob.prototype.updateObject = function (json) {
@@ -1445,6 +1455,83 @@ var ElectricBox = (function (_super) {
     ElectricBox.prototype.updateObject = function (json) {
     };
     return ElectricBox;
+}(GameObject));
+var Obstacle = (function (_super) {
+    __extends(Obstacle, _super);
+
+    function Obstacle(json) {
+        var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/obstacle") || this;
+        _this.anchor.set(0.5, 0.3);
+        _this.tint = config.obstacle.tint;
+        _this.setText("Obstacle");
+        _this.text.visible = false;
+        _this.id = json.i;
+        _this.tileX = json.x;
+        _this.tileY = json.y;
+        return _this;
+    }
+
+    Obstacle.prototype.updateObject = function (json) {
+    };
+    Obstacle.prototype.onTileHover = function () {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this.scale).to({x: 1.1, y: 1.1}, 200, Phaser.Easing.Linear.None, true);
+        this.tint = config.cubot.hoverTint;
+        this.text.visible = true;
+    };
+    Obstacle.prototype.onTileExit = function () {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
+        mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
+        this.tint = config.portal.tint;
+        this.text.visible = false;
+    };
+    return Obstacle;
+}(GameObject));
+var ConstructionSite = (function (_super) {
+    __extends(ConstructionSite, _super);
+
+    function ConstructionSite(json) {
+        var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", ConstructionSite.getTargetSprite(json.blueprint.target)) || this;
+        _this.anchor.set(0.5, 0.31);
+        _this.tint = config.constructionSite.tint;
+        _this.setText("Construction site");
+        _this.text.visible = false;
+        _this.setUpAlphaTween();
+        _this.id = json.i;
+        _this.tileX = json.x;
+        _this.tileY = json.y;
+        return _this;
+    }
+
+    ConstructionSite.getTargetSprite = function (targetType) {
+        switch (targetType) {
+            case ObjectType.OBSTACLE:
+                return "objects/obstacle";
+        }
+    };
+    ConstructionSite.prototype.updateObject = function (json) {
+    };
+    ConstructionSite.prototype.setUpAlphaTween = function () {
+        var alphaTween = mar.game.add.tween(this).to({alpha: 0.5}, 2000, Phaser.Easing.Linear.None, true, 0, -1);
+        alphaTween.yoyo(true, 3000);
+    };
+    ConstructionSite.prototype.onTileHover = function () {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 19}, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this.scale).to({x: 1.03, y: 1.03}, 200, Phaser.Easing.Linear.None, true);
+        this.setUpAlphaTween();
+        this.text.visible = true;
+    };
+    ConstructionSite.prototype.onTileExit = function () {
+        mar.game.tweens.removeFrom(this);
+        mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
+        mar.game.add.tween(this.scale).to({x: 1.03, y: 1.03}, 200, Phaser.Easing.Linear.None, true);
+        this.setUpAlphaTween();
+        this.text.visible = false;
+    };
+    return ConstructionSite;
 }(GameObject));
 var Portal = (function (_super) {
     __extends(Portal, _super);

@@ -78,6 +78,12 @@ let config = {
     },
     world: {
         defaultSize: 16 //Will fallback to this when server does not provide world width
+    },
+    obstacle: {
+        tint: 0x0aced6, //todo
+    },
+    constructionSite: {
+        tint: 0x0aced6, //todo
     }
 };
 

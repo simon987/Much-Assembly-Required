@@ -95,6 +95,23 @@ public class Memory implements Target, MongoSerializable {
     }
 
     /**
+     * Read count words from the memory
+     *
+     * @return null if out of bounds
+     */
+    public char[] read(int offset, int count) {
+
+        if (offset + count > this.words.length || count < 0 || offset < 0) {
+            return null;
+        }
+
+        char[] chars = new char[count];
+        System.arraycopy(words, offset, chars, 0, count);
+
+        return chars;
+    }
+
+    /**
      * Set the value at an address
      *
      * @param address address of the value to change

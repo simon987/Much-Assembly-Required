@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class BluePrintRegistry {
 
-    public static final BluePrintRegistry INSTANCE = new BluePrintRegistry();
+    static final BluePrintRegistry INSTANCE = new BluePrintRegistry();
 
     private Map<String, Class<? extends BluePrint>> blueprints;
     private Map<String, String> digitizedBlueprints;
@@ -19,13 +19,13 @@ public class BluePrintRegistry {
         digitizedBlueprints = new HashMap<>();
     }
 
-    public void registerBluePrint(Class<? extends BluePrint> clazz) {
+    void registerBluePrint(Class<? extends BluePrint> clazz) {
         blueprints.put(clazz.getCanonicalName(), clazz);
         String bpData = new String(BluePrintUtil.bluePrintData(clazz));
         digitizedBlueprints.put(bpData, clazz.getCanonicalName());
     }
 
-    public BluePrint deserializeBlueprint(Document document) {
+    BluePrint deserializeBlueprint(Document document) {
 
         String type = document.getString("type");
 
@@ -48,7 +48,7 @@ public class BluePrintRegistry {
         }
     }
 
-    public BluePrint deserializeBluePrint(char[] chars) {
+    BluePrint deserializeBluePrint(char[] chars) {
 
         String bpData = new String(chars);
 

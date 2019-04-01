@@ -4,6 +4,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.item.Item;
+import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.ControllableUnit;
 import org.bson.Document;
 
@@ -55,11 +56,30 @@ public class CubotInventory extends HardwareModule {
     private void scanItem() {
         int x = getCpu().getRegisterSet().getRegister("X").getValue();
         Item item = inventory.get(position);
+        if (item == null) {
+            return;
+        }
         item.digitize(unit.getCpu().getMemory(), x);
+    }
+
+    public Item getCurrentItem() {
+        return inventory.getOrDefault(position, new ItemVoid());
+    }
+
+    public Item removeItem() {
+        Item item = inventory.get(position);
+        if (item == null) {
+            return new ItemVoid();
+        }
+        inventory.remove(position);
+        return item;
     }
 
     public Item clearItem() {
         Item item = inventory.get(position);
+        if (item == null) {
+            return new ItemVoid();
+        }
         item.clear(unit);
         inventory.remove(position);
 
