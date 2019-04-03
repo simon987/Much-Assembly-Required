@@ -1,0 +1,32 @@
+def remote = [:]
+remote.name = 'remote'
+remote.host = env.DEPLOY_HOST
+remote.user = env.DEPLOY_USER
+remote.identityFile = '/var/lib/jenkins/.ssh/id_rsa'
+remote.knownHosts = '/var/lib/jenkins/.ssh/known_hosts'
+remote.allowAnyHosts = true
+remote.retryCount = 3
+remote.retryWaitSec = 3
+logLevel = 'FINER'
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+			steps {
+				sh './jenkins/build.sh'
+				//stash includes: 'target/', name: 'target'
+			}
+        }
+        stage('Deploy') {
+            steps {
+				//unstash 'target'
+				sshCommand remote: remote, command: 'rm -rf mar/target mar/deploy.sh'
+				sshPut remote: remote, from: 'target', into: 'mar'
+				sshPut remote: remote, from: 'jenkins/deploy.sh', into: 'mar/deploy.sh'
+				sshCommand remote: remote, command: 'chmod +x mar/deploy.sh && ./mar/deploy.sh'
+            }
+        }
+   	}
+}
+
