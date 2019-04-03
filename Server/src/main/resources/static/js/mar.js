@@ -1328,7 +1328,7 @@ var Factory = (function (_super) {
     Factory.prototype.isAt = function (x, y) {
         return (this.tileX === x || this.tileX + 1 === x) && (this.tileY + 1 === y || this.tileY === y);
     };
-    ;
+    
     return Factory;
 }(GameObject));
 var RadioTower = (function (_super) {

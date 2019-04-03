@@ -702,7 +702,7 @@ Phaser.Plugin.Isometric.Cube.intersects = function (a, b) {
     }
     return !(a.frontX < b.x || a.frontY < b.y || a.x > b.frontX || a.y > b.frontY || a.z > b.top || a.top < b.z);
 };
-;/**
+/**
  * @class Phaser.Plugin.Isometric.IsoSprite
  *
  * @classdesc
@@ -1056,7 +1056,7 @@ Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
     this.stop();
 
 };
-;/**
+/**
  * Octree Constructor
  *
  * @class Phaser.Plugin.Isometric.Octree
@@ -1451,7 +1451,7 @@ Phaser.Utils.Debug.prototype.octree = function (octree, color) {
     this.stop();
 
 };
-;/**
+/**
  * @class Phaser.Plugin.Isometric.Point3
  *
  * @classdesc
@@ -1750,7 +1750,7 @@ Phaser.Plugin.Isometric.Point3.equals = function (a, b) {
     return (a.x === b.x && a.y === b.y && a.z === b.z);
 
 };
-;/**
+/**
  * @class Phaser.Plugin.Isometric.Projector
  *
  * @classdesc
@@ -1986,7 +1986,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.Projector.prototype, "projectionAn
     }
 
 });
-;/**
+/**
  * @class Phaser.Plugin.Isometric.Body
  *
  * @classdesc
@@ -3126,7 +3126,7 @@ Phaser.Utils.Debug.prototype.bodyInfo = (function (_super) {
     };
 
 })(Phaser.Utils.Debug.prototype.bodyInfo);
-;/**
+/**
  * IsoArcade Physics constructor.
  *
  * @class Phaser.Plugin.Isometric.Arcade
