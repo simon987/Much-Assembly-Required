@@ -252,7 +252,8 @@ public class GameServer implements Runnable {
                 session = mongo.startSession();
                 session.startTransaction();
             } catch (MongoClientException e) {
-                LogManager.LOGGER.fine("Could not create mongoDB session, will not start a transaction.");
+                LogManager.LOGGER.fine("Could not create mongoDB session, will not use transaction feature. " +
+                        "(This message can be safely ignored)");
             }
 
             MongoDatabase db = mongo.getDatabase(config.getString("mongo_dbname"));
