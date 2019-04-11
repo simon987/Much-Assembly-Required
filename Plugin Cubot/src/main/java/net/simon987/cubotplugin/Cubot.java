@@ -159,7 +159,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
      */
     @Override
     public void update() {
-
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
                 if (!incrementLocation()) {
