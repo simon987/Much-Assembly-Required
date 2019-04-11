@@ -58,7 +58,28 @@ public class UserStats implements MongoSerializable {
      * @return The value of the stat. Returns 0 if not found
      */
     public int getInt(String name) {
-        return stats.getInteger(name, 0);
+            return stats.getInteger(name, 0);
+    }
+
+        /**
+     * Set the value of a stat
+     *
+     * @param name  Name of the stat
+     * @param value new value
+     */
+    public void setDouble(String name, double value) {
+
+        stats.put(name, value);
+    }
+
+    /**
+     * Get the value of at stat
+     *
+     * @param name Name of the value
+     * @return The value of the stat. Returns 0 if not found
+     */
+    public double getDouble(String name) {
+        return stats.getDouble(name);
     }
 
     /**

@@ -18,6 +18,9 @@ public class CubotPlugin extends ServerPlugin {
         listeners.add(new SetInventoryPosition());
         listeners.add(new PutItemCommandListener());
         listeners.add(new PopItemCommandListener());
+        //Leaderboard
+        listeners.add(new DeathListener());
+        listeners.add(new WalkListener());
 
         GameRegistry registry = gameServer.getRegistry();
 

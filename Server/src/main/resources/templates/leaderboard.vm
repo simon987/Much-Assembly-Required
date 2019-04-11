@@ -16,13 +16,19 @@
                 <tr>
                     <th>Player</th>
                     <th>Completed vaults</th>
+                    <th>Death counts</th>
+                    <th>Total execution time (ms)</th>
+                    <th>Walk distance</th>
                 </tr>
                 </thead>
                 <tbody>
                     #foreach($row in $stats)
                     <tr>
                         <td>$row.getKey().getUsername()</td>
-                        <td>$row.getValue().size()</td>
+                        <td>$row.getValue().get("completedVaults")</td>
+                        <td>$row.getValue().get("death")</td>
+                        <td>$row.getValue().get("executionTime")</td>
+                        <td>$row.getValue().get("walkDistance")</td>
                     </tr>
                     #end
                 </tbody>

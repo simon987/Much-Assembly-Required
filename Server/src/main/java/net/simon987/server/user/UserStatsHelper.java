@@ -38,7 +38,35 @@ public class UserStatsHelper {
 
         for (Document dbUser : users.find().sort(orderBy).limit(n)) {
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
-            rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getInt(statName)));
+            int val = 0;
+            if (user.getStats().getInt(statName) > 0) {
+                val = user.getStats().getInt(statName);
+            }
+            rows.add(new AbstractMap.SimpleEntry<>(user, val));
+        }
+
+        return rows;
+    }
+
+    /**
+     * Get top n players along with all their stat values, in descending order of completed vaults
+     *
+     * @param n Maximum number of players
+     * @return Top n players, in User,value format, in descending order
+     */
+    public ArrayList<Map.Entry<User, Map<String, Integer>>> getLeaderboardStats(int n) {
+
+        ArrayList<Map.Entry<User, Map<String, Integer>>> rows = new ArrayList<>(n);
+
+        List<User> users = getTopNSetSize("completedVaults", n);
+
+        for (User user : users) {
+            Map<String, Integer> allStats = new HashMap<>();
+            allStats.put("completedVaults", user.getStats().getSet("completedVaults").size());
+            allStats.put("death", user.getStats().getInt("death"));
+            allStats.put("executionTime", user.getStats().getInt("executionTime"));
+            allStats.put("walkDistance", user.getStats().getInt("walkDistance"));
+            rows.add(new AbstractMap.SimpleEntry<>(user, allStats));
         }
 
         return rows;
@@ -51,9 +79,9 @@ public class UserStatsHelper {
      * @param n        Maximum number of players
      * @return Top n players, in User,set format, in descending order
      */
-    public ArrayList<Map.Entry<User, ArrayList>> getTopNSetLength(String statName, int n) {
+    private List<User> getTopNSetSize(String statName, int n) {
 
-        ArrayList<Map.Entry<User, ArrayList>> rows = new ArrayList<>();
+        ArrayList<User> rows = new ArrayList<>();
 
         List<Object> ifNullList = new ArrayList<>(2);
         ifNullList.add("$stats." + statName);
@@ -69,7 +97,7 @@ public class UserStatsHelper {
                 new Document("$limit", n))
         )) {
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) document.get("username"));
-            rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getSet(statName)));
+            rows.add(user);
         }
 
         return rows;
