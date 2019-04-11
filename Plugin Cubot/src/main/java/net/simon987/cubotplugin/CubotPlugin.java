@@ -19,9 +19,8 @@ public class CubotPlugin extends ServerPlugin {
         listeners.add(new PutItemCommandListener());
         listeners.add(new PopItemCommandListener());
         //Leaderboard
-        listeners.add(new DeathCountListener());
-        listeners.add(new ExecutionTimeListener());
-        listeners.add(new WalkDistanceListener());
+        listeners.add(new DeathListener());
+        listeners.add(new WalkListener());
 
         GameRegistry registry = gameServer.getRegistry();
 

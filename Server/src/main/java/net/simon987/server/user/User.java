@@ -70,6 +70,10 @@ public class User implements MongoSerializable {
         return user;
     }
 
+    public void addTime(int time){
+        this.stats.incrementStat("executionTime", time);
+    }
+
     public String getUserCode() {
         return userCode;
     }

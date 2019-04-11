@@ -58,7 +58,7 @@ public class UserStatsHelper {
         ArrayList<Map.Entry<User, Map<String, Integer>>> rows = new ArrayList<>();
 
         ArrayList<Map.Entry<User, ArrayList>> vaults = new ArrayList<>(this.getTopNSetLength("completedVaults", n));
-        ArrayList<Map.Entry<User, Integer>>  deaths = new ArrayList<>(this.getTopN("deathCount", n));
+        ArrayList<Map.Entry<User, Integer>>  deaths = new ArrayList<>(this.getTopN("death", n));
         ArrayList<Map.Entry<User, Integer>>  time = new ArrayList<>(this.getTopN("executionTime", n));
         ArrayList<Map.Entry<User, Integer>>  distance = new ArrayList<>(this.getTopN("walkDistance", n));
         
@@ -66,7 +66,7 @@ public class UserStatsHelper {
             User user = vaults.get(i).getKey();
             Map<String, Integer> allStats = new HashMap();
             allStats.put("completedVaults", vaults.get(i).getValue().size());
-            allStats.put("deathCount", deaths.get(i).getValue());
+            allStats.put("death", deaths.get(i).getValue());
             allStats.put("executionTime", time.get(i).getValue());
             allStats.put("walkDistance", distance.get(i).getValue());
             rows.add(new AbstractMap.SimpleEntry<>(user, allStats));

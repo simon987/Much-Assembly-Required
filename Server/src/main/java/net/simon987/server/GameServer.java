@@ -176,6 +176,8 @@ public class GameServer implements Runnable {
                     user.getControlledUnit().getCpu().reset();
                     int cost = user.getControlledUnit().getCpu().execute(timeout);
                     user.getControlledUnit().spendEnergy(cost);
+                    user.addTime(cost);
+
                 } catch (Exception e) {
                     LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
                     e.printStackTrace();

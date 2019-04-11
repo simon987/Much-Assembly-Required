@@ -104,16 +104,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
     private Map<Class<? extends HardwareModule>, Integer> hardwareModules = new HashMap<>();
 
     /**
-    *  In game timer
-    */
-    private int time;
-    
-    /**
-    * Real Life Timer for getting execution time
-    */
-    private RealLifeTimer timer;
-
-    /**
      * Cubot's brain box
      */
     private CPU cpu;
@@ -139,10 +129,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         hp = document.getInteger("hp");
         shield = document.getInteger("shield");
         setDirection(Direction.getDirection(document.getInteger("direction")));
-
-        timer = new RealLifeTimer();
-        timer.run();
-        time = timer.getTime();
 
         IServerConfiguration config = GameServer.INSTANCE.getConfig();
         maxHp = config.getInt("cubot_max_hp");
@@ -173,12 +159,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
      */
     @Override
     public void update() {
-        int executionTime = timer.getTime();
-        if(executionTime > time && currentAction != Action.IDLE){
-            GameEvent event1 = new ExecutionTimeEvent(this, executionTime - time);
-            GameServer.INSTANCE.getEventDispatcher().dispatch(event1);
-        }
-        time = executionTime;
 
         if (currentAction == Action.WALKING) {
             if (spendEnergy(100)) {
@@ -186,7 +166,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
                     //Couldn't walk
                     currentAction = Action.IDLE;
                 }else{
-                    GameEvent event2 = new WalkDistanceEvent(this);
+                    GameEvent event2 = new WalkEvent(this);
                     GameServer.INSTANCE.getEventDispatcher().dispatch(event2);
                 }
             } else {
@@ -289,7 +269,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         currentStatus = 0;
         lastStatus = 0;
         addStatus(CubotStatus.FACTORY_NEW);
-        time = timer.getTime();
 
         for (HardwareModule module : hardwareAddresses.values()) {
             module.reset();
@@ -298,7 +277,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
 
     @Override
     public boolean onDeadCallback() {
-        GameEvent event = new DeathCountEvent(this);
+        GameEvent event = new DeathEvent(this);
         GameServer.INSTANCE.getEventDispatcher().dispatch(event);
 
         reset();

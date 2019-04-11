@@ -26,7 +26,7 @@
                     <tr>
                         <td>$row.getKey().getUsername()</td>
                         <td>$row.getValue().get("completedVaults")</td>
-                        <td>$row.getValue().get("deathCount")</td>
+                        <td>$row.getValue().get("death")</td>
                         <td>$row.getValue().get("executionTime")</td>
                         <td>$row.getValue().get("walkDistance")</td>
                     </tr>
