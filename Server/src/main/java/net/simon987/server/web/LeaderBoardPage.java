@@ -16,7 +16,7 @@ public class LeaderBoardPage implements TemplateViewRoute {
     public ModelAndView handle(Request request, Response response) {
         Map<String, Object> model = new HashMap<>(2);
         model.put("session", request.session());
-        model.put("stats", GameServer.INSTANCE.getUserStatsHelper().getTopNAll(25));
+        model.put("stats", GameServer.INSTANCE.getUserStatsHelper().getLeaderboardStats(25));
         return new ModelAndView(model, "leaderboard.vm");
     }
 }

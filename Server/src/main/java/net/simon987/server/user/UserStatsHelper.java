@@ -39,8 +39,9 @@ public class UserStatsHelper {
         for (Document dbUser : users.find().sort(orderBy).limit(n)) {
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
             int val = 0;
-            if(user.getStats().getInt(statName) > 0)
+            if (user.getStats().getInt(statName) > 0) {
                 val = user.getStats().getInt(statName);
+            }
             rows.add(new AbstractMap.SimpleEntry<>(user, val));
         }
 
@@ -48,27 +49,23 @@ public class UserStatsHelper {
     }
 
     /**
-     * Get top n players along with all their stat values, in descending order
+     * Get top n players along with all their stat values, in descending order of completed vaults
      *
-     * @param n        Maximum number of players
+     * @param n Maximum number of players
      * @return Top n players, in User,value format, in descending order
      */
-    public ArrayList<Map.Entry<User, Map<String, Integer>>> getTopNAll(int n) {
+    public ArrayList<Map.Entry<User, Map<String, Integer>>> getLeaderboardStats(int n) {
 
-        ArrayList<Map.Entry<User, Map<String, Integer>>> rows = new ArrayList<>();
+        ArrayList<Map.Entry<User, Map<String, Integer>>> rows = new ArrayList<>(n);
 
-        ArrayList<Map.Entry<User, ArrayList>> vaults = new ArrayList<>(this.getTopNSetLength("completedVaults", n));
-        ArrayList<Map.Entry<User, Integer>>  deaths = new ArrayList<>(this.getTopN("death", n));
-        ArrayList<Map.Entry<User, Integer>>  time = new ArrayList<>(this.getTopN("executionTime", n));
-        ArrayList<Map.Entry<User, Integer>>  distance = new ArrayList<>(this.getTopN("walkDistance", n));
-        
-        for (int i = 0; i < vaults.size() ; i++) {
-            User user = vaults.get(i).getKey();
-            Map<String, Integer> allStats = new HashMap();
-            allStats.put("completedVaults", vaults.get(i).getValue().size());
-            allStats.put("death", deaths.get(i).getValue());
-            allStats.put("executionTime", time.get(i).getValue());
-            allStats.put("walkDistance", distance.get(i).getValue());
+        List<User> users = getTopNSetSize("completedVaults", n);
+
+        for (User user : users) {
+            Map<String, Integer> allStats = new HashMap<>();
+            allStats.put("completedVaults", user.getStats().getSet("completedVaults").size());
+            allStats.put("death", user.getStats().getInt("death"));
+            allStats.put("executionTime", user.getStats().getInt("executionTime"));
+            allStats.put("walkDistance", user.getStats().getInt("walkDistance"));
             rows.add(new AbstractMap.SimpleEntry<>(user, allStats));
         }
 
@@ -82,9 +79,9 @@ public class UserStatsHelper {
      * @param n        Maximum number of players
      * @return Top n players, in User,set format, in descending order
      */
-    public ArrayList<Map.Entry<User, ArrayList>> getTopNSetLength(String statName, int n) {
+    private List<User> getTopNSetSize(String statName, int n) {
 
-        ArrayList<Map.Entry<User, ArrayList>> rows = new ArrayList<>();
+        ArrayList<User> rows = new ArrayList<>();
 
         List<Object> ifNullList = new ArrayList<>(2);
         ifNullList.add("$stats." + statName);
@@ -100,7 +97,7 @@ public class UserStatsHelper {
                 new Document("$limit", n))
         )) {
             User user = GameServer.INSTANCE.getGameUniverse().getUser((String) document.get("username"));
-            rows.add(new AbstractMap.SimpleEntry<>(user, user.getStats().getSet(statName)));
+            rows.add(user);
         }
 
         return rows;
