@@ -1,5 +1,7 @@
 package net.simon987.cubotplugin;
 
+import net.simon987.cubotplugin.event.CubotWalkEvent;
+import net.simon987.cubotplugin.event.DeathEvent;
 import net.simon987.server.GameServer;
 import net.simon987.server.IServerConfiguration;
 import net.simon987.server.assembly.CPU;
@@ -7,12 +9,11 @@ import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.assembly.exception.CancelledException;
+import net.simon987.server.event.GameEvent;
 import net.simon987.server.game.item.Item;
 import net.simon987.server.game.item.ItemVoid;
 import net.simon987.server.game.objects.*;
 import net.simon987.server.user.User;
-import net.simon987.server.event.GameEvent;
-import net.simon987.cubotplugin.event.*;
 import org.bson.Document;
 import org.json.simple.JSONObject;
 
@@ -154,9 +155,6 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         return MAP_INFO;
     }
 
-    /**
-     * Called every tick
-     */
     @Override
     public void update() {
         if (currentAction == Action.WALKING) {
@@ -165,8 +163,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
                     //Couldn't walk
                     currentAction = Action.IDLE;
                 }else{
-                    GameEvent event2 = new WalkEvent(this);
-                    GameServer.INSTANCE.getEventDispatcher().dispatch(event2);
+                    GameServer.INSTANCE.getEventDispatcher().dispatch(new CubotWalkEvent(this));
                 }
             } else {
                 currentAction = Action.IDLE;

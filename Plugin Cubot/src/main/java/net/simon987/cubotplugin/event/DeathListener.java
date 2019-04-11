@@ -4,7 +4,6 @@ import net.simon987.server.event.GameEvent;
 import net.simon987.server.event.GameEventListener;
 import net.simon987.server.game.objects.ControllableUnit;
 import net.simon987.server.game.objects.GameObject;
-import net.simon987.server.logging.LogManager;
 
 public class DeathListener implements GameEventListener {
 
@@ -18,8 +17,7 @@ public class DeathListener implements GameEventListener {
         DeathEvent DeathEvent = (DeathEvent) event;
         GameObject object = DeathEvent.getSource();
         if (object instanceof ControllableUnit) {
-            ((ControllableUnit) object).getParent().getStats().incrementStat("death",
-                    1);
+            ((ControllableUnit) object).getParent().getStats().incrementStat("death", 1);
         }
     }
 }
