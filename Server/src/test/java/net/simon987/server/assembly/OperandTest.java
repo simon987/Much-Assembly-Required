@@ -127,11 +127,13 @@ public class OperandTest {
         }
 
         //Invalid operands
-        try{ new Operand("aa", labels, registerSet, 0); } catch (InvalidOperandException e){}
+        try{ new Operand("aa", labels, registerSet, 0); } catch (InvalidOperandException e){
+                //It's not a valid Operand; that's okey, just continue; VALID FOR ALL THE OTHER CATCH SENTENCES
+        }
         try{   new Operand("a1", labels, registerSet, 0); } catch (InvalidOperandException e){}
         try{   new Operand("a_", labels, registerSet, 0); } catch (InvalidOperandException e){}
         try{   new Operand("_a", labels, registerSet, 0); } catch (InvalidOperandException e){}
-        try{   new Operand("_1", labels, registerSet, 0); } catch (InvalidOperandException e){}
+        try{   new Operand("_1", labels, registerSet, 0); } catch (InvalidOperandException e){        }
         try{    new Operand("S", labels, registerSet, 0); } catch (InvalidOperandException e){}
         try{   new Operand("label1_", labels, registerSet, 0); } catch (InvalidOperandException e){}
         try{   new Operand("+label1", labels, registerSet, 0); } catch (InvalidOperandException e){}
