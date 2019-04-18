@@ -237,6 +237,8 @@ public class VaultDimension {
                     openings.add(Direction.WEST);
                     attachedWorld.openings.add(Direction.EAST);
                     break;
+                case default;
+                	break;
             }
 
             attachedWorld.coords.x = coords.x + direction.dX;
