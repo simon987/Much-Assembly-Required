@@ -7,13 +7,29 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 
 public class AndInstructionTest {
+
+    ServerConfiguration getConfig() {
+        String filePath = "config.properties";
+
+        if (!new File(filePath).exists()) {
+            File fallback = new File("Server/src/main/resources/", filePath);
+            if (fallback.exists()) {
+                filePath = fallback.getAbsolutePath();
+            } else {
+                throw new AssertionError("'config.properties' and 'Server/src/main/resources/config.properties' cannot be found with working directory: " + new File("").getAbsolutePath());
+            }
+        }
+
+        ServerConfiguration config = new ServerConfiguration(filePath);
+        return config;
+    }
+
     @Test
     public void executeTargetTarget() {
-
-        ServerConfiguration config = new ServerConfiguration("config.properties");
-        int memorySize = config.getInt("memory_size");
+        int memorySize = getConfig().getInt("memory_size");
 
         //Memory
         Memory memory = new Memory(memorySize);
@@ -53,9 +69,7 @@ public class AndInstructionTest {
 
     @Test
     public void executeTargetImm() {
-
-        ServerConfiguration config = new ServerConfiguration("config.properties");
-        int memorySize = config.getInt("memory_size");
+        int memorySize = getConfig().getInt("memory_size");
 
         //Memory
         Memory memory = new Memory(memorySize);
