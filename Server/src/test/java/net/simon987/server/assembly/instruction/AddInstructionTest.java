@@ -1,6 +1,6 @@
 package net.simon987.server.assembly.instruction;
 
-import net.simon987.server.ServerConfiguration;
+import net.simon987.server.ConfigHelper;
 import net.simon987.server.assembly.Memory;
 import net.simon987.server.assembly.Register;
 import net.simon987.server.assembly.RegisterSet;
@@ -9,32 +9,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-
 public class AddInstructionTest {
-
-    ServerConfiguration getConfig() {
-        String filePath = "config.properties";
-
-        if (!new File(filePath).exists()) {
-            File fallback = new File("Server/src/main/resources/", filePath);
-            if (fallback.exists()) {
-                filePath = fallback.getAbsolutePath();
-            } else {
-                throw new AssertionError("'config.properties' and 'Server/src/main/resources/config.properties' cannot be found with working directory: " + new File("").getAbsolutePath());
-            }
-        }
-
-        ServerConfiguration config = new ServerConfiguration(filePath);
-        return config;
-    }
 
     /**
      * ADD mem/reg, mem/reg
      */
     @Test
     public void addTargetTarget() {
-        int memorySize = getConfig().getInt("memory_size");
+        int memorySize = ConfigHelper.getConfig().getInt("memory_size");
 
         //Memory
         Memory memory = new Memory(memorySize);
@@ -144,7 +126,7 @@ public class AddInstructionTest {
      */
     @Test
     public void addTargetImm() {
-        int memorySize = getConfig().getInt("memory_size");
+        int memorySize = ConfigHelper.getConfig().getInt("memory_size");
 
         //Memory
         Memory memory = new Memory(memorySize);

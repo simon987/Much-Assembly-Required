@@ -237,7 +237,7 @@ public class VaultDimension {
                     openings.add(Direction.WEST);
                     attachedWorld.openings.add(Direction.EAST);
                     break;
-                case default;
+                default:
                 	break;
             }
 
