@@ -157,32 +157,19 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
 
     public int getAdjacentTileCount(boolean diagonals) {
 
+        int[] xPositions = {1, 0, -1, 0, 1, -1, 1, -1};
+        int[] yPositions = {0, 1, 0, -1, 1, 1, -1, -1};
+
+        int range = diagonals ? xPositions.length : xPositions.length / 2;
+
         int count = 0;
 
-        if (getWorld().getTileMap().isInBounds(x + 1, y) && !getWorld().isTileBlocked(x + 1, y)) {
-            count++;
-        }
-        if (getWorld().getTileMap().isInBounds(x, y + 1) && !getWorld().isTileBlocked(x, y + 1)) {
-            count++;
-        }
-        if (getWorld().getTileMap().isInBounds(x - 1, y) && !getWorld().isTileBlocked(x - 1, y)) {
-            count++;
-        }
-        if (getWorld().getTileMap().isInBounds(x, y - 1) && !getWorld().isTileBlocked(x, y - 1)) {
-            count++;
-        }
+        for (int index = 0; index < range; index++) {
+            int currentX = x + xPositions[index];
+            int currentY = y + yPositions[index];
 
-        if (diagonals) {
-            if (getWorld().getTileMap().isInBounds(x + 1, y + 1) && !getWorld().isTileBlocked(x + 1, y + 1)) {
-                count++;
-            }
-            if (getWorld().getTileMap().isInBounds(x - 1, y + 1) && !getWorld().isTileBlocked(x - 1, y + 1)) {
-                count++;
-            }
-            if (getWorld().getTileMap().isInBounds(x + 1, y - 1) && !getWorld().isTileBlocked(x + 1, y - 1)) {
-                count++;
-            }
-            if (getWorld().getTileMap().isInBounds(x - 1, y - 1) && !getWorld().isTileBlocked(x - 1, y - 1)) {
+            if (getWorld().getTileMap().isInBounds(currentX, currentY) &&
+                    !getWorld().isTileBlocked(currentX, currentY)) {
                 count++;
             }
         }
