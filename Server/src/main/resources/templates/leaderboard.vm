@@ -16,7 +16,7 @@
                 <tr>
                     <th>Player</th>
                     <th>Completed vaults</th>
-                    <th>Death counts</th>
+                    <th>Death count</th>
                     <th>Total execution time (ms)</th>
                     <th>Walk distance</th>
                 </tr>
