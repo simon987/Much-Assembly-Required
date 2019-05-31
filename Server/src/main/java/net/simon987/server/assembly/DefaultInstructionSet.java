@@ -30,26 +30,26 @@ public class DefaultInstructionSet implements InstructionSet {
         defaultInstruction = nop;
 
         add(nop);
-        add(new BrkInstruction());
-        add(new MovInstruction());
         add(new AddInstruction());
-        add(new SubInstruction());
         add(new AndInstruction());
-        add(new OrInstruction());
-        add(new ShlInstruction());
-        add(new ShrInstruction());
-        add(new XorInstruction());
-        add(new TestInstruction());
+        add(new BrkInstruction());
         add(new CmpInstruction());
+        add(new DecInstruction());
+        add(new IncInstruction());
+        add(new MovInstruction());
         add(new NegInstruction());
         add(new NotInstruction());
-        add(new RorInstruction());
-        add(new RolInstruction());
+        add(new OrInstruction());
         add(new RclInstruction());
         add(new RcrInstruction());
+        add(new RolInstruction());
+        add(new RorInstruction());
         add(new SarInstruction());
-        add(new IncInstruction());
-        add(new DecInstruction());
+        add(new ShlInstruction());
+        add(new ShrInstruction());
+        add(new SubInstruction());
+        add(new TestInstruction());
+        add(new XorInstruction());
 
         // 'abstract' instruction
         add(new SetccInstruction());
