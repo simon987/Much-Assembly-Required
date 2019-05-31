@@ -16,6 +16,11 @@ public class JncInstruction extends Instruction {
         this.cpu = cpu;
     }
 
+    public JncInstruction(String alias, CPU cpu) {
+        super(alias, OPCODE);
+        this.cpu = cpu;
+    }
+
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
         if (!status.isCarryFlag()) {

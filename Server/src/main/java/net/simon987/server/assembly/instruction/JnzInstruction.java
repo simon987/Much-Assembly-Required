@@ -17,6 +17,11 @@ public class JnzInstruction extends Instruction {
         this.cpu = cpu;
     }
 
+    public JnzInstruction(String alias, CPU cpu) {
+        super(alias, OPCODE);
+        this.cpu = cpu;
+    }
+
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
         if (!status.isZeroFlag()) {

@@ -17,6 +17,11 @@ public class JlInstruction extends Instruction {
         this.cpu = cpu;
     }
 
+    public JlInstruction(String alias, CPU cpu) {
+        super(alias, OPCODE);
+        this.cpu = cpu;
+    }
+
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
         if (status.isSignFlag() != status.isOverflowFlag()) {
