@@ -412,6 +412,8 @@ public class World implements MongoSerializable {
      */
     public Point getRandomTileWithAdjacent(int n, int tile) {
         int counter = 0;
+        int[] xPositions = {1, 0, -1, 0, 1, -1, 1, -1};
+        int[] yPositions = {0, 1, 0, -1, 1, 1, -1, -1};
         while (true) {
             counter++;
 
@@ -425,29 +427,10 @@ public class World implements MongoSerializable {
             if (rTile != null) {
                 int adjacentTiles = 0;
 
-                if (tileMap.isInBounds(rTile.x, rTile.y - 1) && !isTileBlocked(rTile.x, rTile.y - 1)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x + 1, rTile.y) && !isTileBlocked(rTile.x + 1, rTile.y)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x, rTile.y + 1) && !isTileBlocked(rTile.x, rTile.y + 1)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x - 1, rTile.y) && !isTileBlocked(rTile.x - 1, rTile.y)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x + 1, rTile.y + 1) && !isTileBlocked(rTile.x + 1, rTile.y + 1)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x - 1, rTile.y + 1) && !isTileBlocked(rTile.x - 1, rTile.y + 1)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x + 1, rTile.y - 1) && !isTileBlocked(rTile.x + 1, rTile.y - 1)) {
-                    adjacentTiles++;
-                }
-                if (tileMap.isInBounds(rTile.x - 1, rTile.y - 1) && !isTileBlocked(rTile.x - 1, rTile.y - 1)) {
-                    adjacentTiles++;
+                for (int idx = 0; idx < xPositions.length; idx++) {
+                    if (tileMap.isInBounds(rTile.x + xPositions[idx], rTile.y + yPositions[idx]) && !isTileBlocked(rTile.x + xPositions[idx], rTile.y + yPositions[idx])) {
+                        adjacentTiles++;
+                    }
                 }
 
                 if (adjacentTiles >= n) {
