@@ -93,6 +93,20 @@ public class CPU implements MongoSerializable {
         instructionSet.add(new RetInstruction(this));
         instructionSet.add(new XchgInstruction(this));
 
+        // add Jcc Aliases
+        instructionSet.add(new JaeInstruction(this));
+        instructionSet.add(new JbeInstruction(this));
+        instructionSet.add(new JbInstruction(this));
+        instructionSet.add(new JeInstruction(this));
+        instructionSet.add(new JnaeInstruction(this));
+        instructionSet.add(new JnaeInstruction(this));
+        instructionSet.add(new JnbInstruction(this));
+        instructionSet.add(new JneInstruction(this));
+        instructionSet.add(new JngeInstruction(this));
+        instructionSet.add(new JngInstruction(this));
+        instructionSet.add(new JnleInstruction(this));
+        instructionSet.add(new JnlInstruction(this));
+
         status = new Status();
     }
 
@@ -130,6 +144,20 @@ public class CPU implements MongoSerializable {
         instructionSet.add(new PushInstruction(this));
         instructionSet.add(new RetInstruction(this));
         instructionSet.add(new XchgInstruction(this));
+
+        // add Jcc Aliases
+        instructionSet.add(new JaeInstruction(this));
+        instructionSet.add(new JbeInstruction(this));
+        instructionSet.add(new JbInstruction(this));
+        instructionSet.add(new JeInstruction(this));
+        instructionSet.add(new JnaeInstruction(this));
+        instructionSet.add(new JnaeInstruction(this));
+        instructionSet.add(new JnbInstruction(this));
+        instructionSet.add(new JneInstruction(this));
+        instructionSet.add(new JngeInstruction(this));
+        instructionSet.add(new JngInstruction(this));
+        instructionSet.add(new JnleInstruction(this));
+        instructionSet.add(new JnlInstruction(this));
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
