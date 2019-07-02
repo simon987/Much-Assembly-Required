@@ -1,22 +1,18 @@
 
-plugins/Plugin NPC.jar
-plugins/Plugin Misc HW.jar
-plugins/Plant.jar
-plugins/Cubot.jar
-.idea/*
+.idea/
+out/
+data/
+history
 mar.log
 mar.log.lck
 *.iml
 *.class
 */target/*
-plugins/*.jar
-save.json
-Server/Server.iml
 target/*
-Server/Server.iml
-Server/src/main/java/META-INF/MANIFEST.MF
+META-INF/
 .settings
 .project
 .classpath
+
 # VSCode Workspace
 .vscode/
