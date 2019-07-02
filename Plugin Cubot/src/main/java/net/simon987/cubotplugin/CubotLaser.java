@@ -4,10 +4,7 @@ import net.simon987.server.GameServer;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.item.Item;
-import net.simon987.server.game.objects.Action;
-import net.simon987.server.game.objects.Attackable;
-import net.simon987.server.game.objects.GameObject;
-import net.simon987.server.game.objects.InventoryHolder;
+import net.simon987.server.game.objects.*;
 import org.bson.Document;
 
 import java.awt.*;
@@ -32,7 +29,7 @@ public class CubotLaser extends HardwareModule {
         super(null, unit);
     }
 
-    public CubotLaser(Document document, Cubot cubot) {
+    public CubotLaser(Document document, ControllableUnit cubot) {
         super(document, cubot);
     }
 

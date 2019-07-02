@@ -16,6 +16,7 @@ public class ConstructionArmHardware extends HardwareModule {
 
     public static final int DEFAULT_ADDRESS = 0x0010;
 
+    private static final int OK = 0;
     private static final int ERR_TILE_BLOCKED = 1;
     private static final int ERR_NOT_ENOUGH_ENERGY = 2;
     private static final int ERR_MEM_READ = 3;
@@ -41,8 +42,6 @@ public class ConstructionArmHardware extends HardwareModule {
         Register regB = getCpu().getRegisterSet().getRegister("B");
 
         if (a == PLACE_CONSTRUCTION_SITE) {
-            System.out.println("DEBUG PLACE CONTRUCTION SITE");
-
             char[] bluePrintData = getCpu().getMemory().read(x, BluePrint.DATA_LENGTH);
 
             if (bluePrintData == null) {
@@ -74,9 +73,7 @@ public class ConstructionArmHardware extends HardwareModule {
             constructionSite.setObjectId(new ObjectId());
 
             unit.getWorld().addObject(constructionSite);
-            regB.setValue(0);
-
-            System.out.println("OK");
+            regB.setValue(OK);
         }
     }
 

@@ -70,6 +70,11 @@ public class BiomassBlob extends GameObject implements InventoryHolder {
     }
 
     @Override
+    public boolean canPlaceItem(int itemId) {
+        return false;
+    }
+
+    @Override
     public boolean canTakeItem(int itemId) {
         return itemId == ItemBiomass.ID && biomassCount >= 1;
     }

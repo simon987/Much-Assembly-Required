@@ -46,6 +46,9 @@ public class GameRegistry {
         if (hardware.containsKey(type)) {
 
             try {
+                System.out.println(type);
+                System.out.println(hardware.get(type));
+
                 return hardware.get(type).getConstructor(Document.class, ControllableUnit.class).newInstance(document, controllableUnit);
             } catch (InstantiationException | IllegalAccessException |
                     InvocationTargetException | NoSuchMethodException e) {
