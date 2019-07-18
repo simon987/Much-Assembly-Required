@@ -67,6 +67,10 @@ public class World implements MongoSerializable {
         return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y).isBlocked();
     }
 
+    public boolean canBuild(int x, int y) {
+        return x == 0 || y == 0 || x == worldSize-1 || y == worldSize-1;
+    }
+
     /**
      * Computes the world's unique id from its coordinates.
      *

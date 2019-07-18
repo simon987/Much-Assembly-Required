@@ -883,7 +883,7 @@ class Obstacle extends GameObject {
         mar.game.tweens.removeFrom(this);
         mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
         mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.portal.tint;
+        this.tint = config.obstacle.tint;
 
         this.text.visible = false;
     }

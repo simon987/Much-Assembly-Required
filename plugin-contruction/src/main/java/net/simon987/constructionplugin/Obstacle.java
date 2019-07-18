@@ -18,13 +18,15 @@ public class Obstacle extends Structure implements Attackable, Updatable {
 
     public Obstacle() {
         super(1, 1);
+
+        setHp(MAX_HP);
     }
 
     public Obstacle(Document document) {
         super(document, 1, 1);
 
-        hp = document.getInteger(hp);
-        color = document.getInteger(color);
+        hp = document.getInteger("hp");
+        color = document.getInteger("color");
     }
 
     @Override

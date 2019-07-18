@@ -57,7 +57,8 @@ public class ConstructionArmHardware extends HardwareModule {
 
             Point frontTile = unit.getFrontTile();
 
-            if (unit.getWorld().isTileBlocked(frontTile.x, frontTile.y)) {
+            if (unit.getWorld().isTileBlocked(frontTile.x, frontTile.y) ||
+                    unit.getWorld().canBuild(frontTile.x, frontTile.y)) {
                 regB.setValue(ERR_TILE_BLOCKED);
                 return;
             }
@@ -68,9 +69,10 @@ public class ConstructionArmHardware extends HardwareModule {
             }
 
             GameObject constructionSite = new ConstructionSite(bluePrint);
+            constructionSite.setObjectId(new ObjectId());
+            constructionSite.setWorld(unit.getWorld());
             constructionSite.setX(frontTile.x);
             constructionSite.setY(frontTile.y);
-            constructionSite.setObjectId(new ObjectId());
 
             unit.getWorld().addObject(constructionSite);
             regB.setValue(OK);

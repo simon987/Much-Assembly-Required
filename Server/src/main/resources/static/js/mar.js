@@ -1,12 +1,8 @@
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
-            ({__proto__: []} instanceof Array && function (d, b) {
-                d.__proto__ = b;
-            }) ||
-            function (d, b) {
-                for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-            };
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -476,13 +472,13 @@ var Debug = (function () {
         mar.client.sendDebugCommand({ t: "debug", command: "setEnergy", objectId: objectId, amount: amount });
     };
     Debug.saveGame = function () {
-        mar.client.sendDebugCommand({t: "debug", command: "saveGame"});
+        mar.client.sendDebugCommand({ t: "debug", command: "saveGame" });
     };
     Debug.popItem = function (objectId) {
-        mar.client.sendDebugCommand({t: "debug", command: "popItem", objectId: objectId});
+        mar.client.sendDebugCommand({ t: "debug", command: "popItem", objectId: objectId });
     };
     Debug.putItem = function (objectId, item) {
-        mar.client.sendDebugCommand({t: "debug", command: "putItem", objectId: objectId, item: item});
+        mar.client.sendDebugCommand({ t: "debug", command: "putItem", objectId: objectId, item: item });
     };
     Debug.setInventoryPosition = function (objectId, position) {
         mar.client.sendDebugCommand({
@@ -588,9 +584,11 @@ var AuthListener = (function () {
                 console.log("[MAR] Auth successful");
             }
             mar.client.requestUserInfo();
-        } else if (message.m == "forbidden") {
+        }
+        else if (message.m == "forbidden") {
             alert("Authentication failed. Guest accounts are blocked on this server");
-        } else {
+        }
+        else {
             alert("Authentication failed. Please make sure you are logged in and reload the page.");
         }
     };
@@ -746,9 +744,7 @@ var GameClient = (function () {
                 if (DEBUG) {
                     console.log("[MAR] Received server info " + xhr.responseText);
                 }
-                setTimeout(function () {
-                    return self.connectToGameServer(JSON.parse(xhr.responseText));
-                }, 100);
+                setTimeout(function () { return self.connectToGameServer(JSON.parse(xhr.responseText)); }, 100);
             }
         };
         xhr.send(null);
@@ -828,7 +824,6 @@ var GameClient = (function () {
     };
     return GameClient;
 }());
-var game = PIXI.game;
 var ObjectType;
 (function (ObjectType) {
     ObjectType["CUBOT"] = "net.simon987.cubotplugin.Cubot";
@@ -1227,7 +1222,8 @@ var HarvesterNPC = (function (_super) {
     HarvesterNPC.prototype.getEnergy = function (json) {
         if (json.hasOwnProperty("net.simon987.npcplugin.NpcBattery")) {
             return json["net.simon987.npcplugin.NpcBattery"].energy;
-        } else {
+        }
+        else {
             return 1000;
         }
     };
@@ -1458,7 +1454,6 @@ var ElectricBox = (function (_super) {
 }(GameObject));
 var Obstacle = (function (_super) {
     __extends(Obstacle, _super);
-
     function Obstacle(json) {
         var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", "objects/obstacle") || this;
         _this.anchor.set(0.5, 0.3);
@@ -1470,28 +1465,26 @@ var Obstacle = (function (_super) {
         _this.tileY = json.y;
         return _this;
     }
-
     Obstacle.prototype.updateObject = function (json) {
     };
     Obstacle.prototype.onTileHover = function () {
         mar.game.tweens.removeFrom(this);
-        mar.game.add.tween(this).to({isoZ: 25}, 200, Phaser.Easing.Quadratic.InOut, true);
-        mar.game.add.tween(this.scale).to({x: 1.1, y: 1.1}, 200, Phaser.Easing.Linear.None, true);
+        mar.game.add.tween(this).to({ isoZ: 25 }, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this.scale).to({ x: 1.1, y: 1.1 }, 200, Phaser.Easing.Linear.None, true);
         this.tint = config.cubot.hoverTint;
         this.text.visible = true;
     };
     Obstacle.prototype.onTileExit = function () {
         mar.game.tweens.removeFrom(this);
-        mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
-        mar.game.add.tween(this.scale).to({x: 1, y: 1}, 200, Phaser.Easing.Linear.None, true);
-        this.tint = config.portal.tint;
+        mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
+        mar.game.add.tween(this.scale).to({ x: 1, y: 1 }, 200, Phaser.Easing.Linear.None, true);
+        this.tint = config.obstacle.tint;
         this.text.visible = false;
     };
     return Obstacle;
 }(GameObject));
 var ConstructionSite = (function (_super) {
     __extends(ConstructionSite, _super);
-
     function ConstructionSite(json) {
         var _this = _super.call(this, Util.getIsoX(json.x), Util.getIsoY(json.y), 15, "sheet", ConstructionSite.getTargetSprite(json.blueprint.target)) || this;
         _this.anchor.set(0.5, 0.31);
@@ -1504,7 +1497,6 @@ var ConstructionSite = (function (_super) {
         _this.tileY = json.y;
         return _this;
     }
-
     ConstructionSite.getTargetSprite = function (targetType) {
         switch (targetType) {
             case ObjectType.OBSTACLE:
@@ -1514,20 +1506,20 @@ var ConstructionSite = (function (_super) {
     ConstructionSite.prototype.updateObject = function (json) {
     };
     ConstructionSite.prototype.setUpAlphaTween = function () {
-        var alphaTween = mar.game.add.tween(this).to({alpha: 0.5}, 2000, Phaser.Easing.Linear.None, true, 0, -1);
+        var alphaTween = mar.game.add.tween(this).to({ alpha: 0.5 }, 2000, Phaser.Easing.Linear.None, true, 0, -1);
         alphaTween.yoyo(true, 3000);
     };
     ConstructionSite.prototype.onTileHover = function () {
         mar.game.tweens.removeFrom(this);
-        mar.game.add.tween(this).to({isoZ: 19}, 200, Phaser.Easing.Quadratic.InOut, true);
-        mar.game.add.tween(this.scale).to({x: 1.03, y: 1.03}, 200, Phaser.Easing.Linear.None, true);
+        mar.game.add.tween(this).to({ isoZ: 19 }, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this.scale).to({ x: 1.03, y: 1.03 }, 200, Phaser.Easing.Linear.None, true);
         this.setUpAlphaTween();
         this.text.visible = true;
     };
     ConstructionSite.prototype.onTileExit = function () {
         mar.game.tweens.removeFrom(this);
-        mar.game.add.tween(this).to({isoZ: 15}, 400, Phaser.Easing.Bounce.Out, true);
-        mar.game.add.tween(this.scale).to({x: 1.03, y: 1.03}, 200, Phaser.Easing.Linear.None, true);
+        mar.game.add.tween(this).to({ isoZ: 15 }, 400, Phaser.Easing.Bounce.Out, true);
+        mar.game.add.tween(this.scale).to({ x: 1.03, y: 1.03 }, 200, Phaser.Easing.Linear.None, true);
         this.setUpAlphaTween();
         this.text.visible = false;
     };
@@ -1730,7 +1722,7 @@ var MagneticTile = (function (_super) {
         return _this;
     }
     MagneticTile.prototype.onHover = function () {
-        mar.game.add.tween(this).to({isoZ: this.baseZ + 30}, 200, Phaser.Easing.Quadratic.InOut, true);
+        mar.game.add.tween(this).to({ isoZ: this.baseZ + 30 }, 200, Phaser.Easing.Quadratic.InOut, true);
         mar.tileIndicator.tileX = this.tileX;
         mar.tileIndicator.tileY = this.tileY;
         mar.tileIndicator.tileType = this.tileType;

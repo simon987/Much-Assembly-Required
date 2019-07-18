@@ -2,11 +2,13 @@ package net.simon987.constructionplugin;
 
 import net.simon987.server.GameServer;
 import net.simon987.server.game.item.Item;
-import net.simon987.server.game.objects.InventoryHolder;
-import net.simon987.server.game.objects.Structure;
-import net.simon987.server.game.objects.Updatable;
+import net.simon987.server.game.objects.*;
+import net.simon987.server.game.world.World;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.json.simple.JSONObject;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class ConstructionSite extends Structure implements Updatable, InventoryHolder {
 
@@ -47,7 +49,31 @@ public class ConstructionSite extends Structure implements Updatable, InventoryH
 
     @Override
     public boolean placeItem(Item item) {
-        return bluePrint.placeItem(item);
+        boolean ok = bluePrint.placeItem(item);
+
+        if (ok && bluePrint.isCompleted()) {
+            instantiateTargetObject();
+            setDead(true);
+        }
+
+        return ok;
+    }
+
+    private void instantiateTargetObject() {
+        Class<? extends GameObject> targetClass = bluePrint.getTargetObject();
+        try {
+            GameObject targetObj = targetClass.getConstructor().newInstance();
+
+            targetObj.setWorld(getWorld());
+            targetObj.setObjectId(new ObjectId());
+            targetObj.setX(getX());
+            targetObj.setY(getY());
+
+            getWorld().addObject(targetObj);
+
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
