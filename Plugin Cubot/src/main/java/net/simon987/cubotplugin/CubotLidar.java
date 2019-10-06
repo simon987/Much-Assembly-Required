@@ -125,6 +125,9 @@ public class CubotLidar extends HardwareModule {
                 getCpu().getRegisterSet().getRegister("X").setValue(unit.getWorld().getX());
                 getCpu().getRegisterSet().getRegister("Y").setValue(unit.getWorld().getY());
                 break;
+                
+            default:
+                	break;
 
         }
     }
