@@ -89,6 +89,8 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
                 case WEST:
                     setX(nextWorld.getWorldSize() - 1);
                     break;
+                default:
+                	break;
             }
 
             return true;
