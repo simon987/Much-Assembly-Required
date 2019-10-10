@@ -105,7 +105,7 @@ public class DefaultInstructionSet implements InstructionSet {
         }
     }
     /**
-     * Get an instruction frim its mnemonic
+     * Get an instruction from its mnemonic
      */
     @Override
     public Instruction get(String mnemonic) {
