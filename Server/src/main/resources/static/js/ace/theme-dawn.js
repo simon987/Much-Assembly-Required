@@ -1,4 +1,4 @@
-define("ace/theme/dawn", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/dawn", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = false;
     exports.cssClass = "ace-dawn";
