@@ -1,4 +1,4 @@
-define("ace/theme/terminal", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/terminal", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = true;
     exports.cssClass = "ace-terminal-theme";
