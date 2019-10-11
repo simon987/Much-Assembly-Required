@@ -1,4 +1,4 @@
-define("ace/theme/vibrant_ink", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/vibrant_ink", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = true;
     exports.cssClass = "ace-vibrant-ink";
