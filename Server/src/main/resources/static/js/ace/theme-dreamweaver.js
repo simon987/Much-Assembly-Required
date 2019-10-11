@@ -1,4 +1,4 @@
-define("ace/theme/dreamweaver", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/dreamweaver", ["require", "exports", "ace/lib/dom"], function (require, exports) {
     exports.isDark = false;
     exports.cssClass = "ace-dreamweaver";
     exports.cssText = ".ace-dreamweaver .ace_gutter {\
