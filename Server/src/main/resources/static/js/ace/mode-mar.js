@@ -95,7 +95,7 @@ define("ace/mode/mar_rules", ["require", "exports", "ace/lib/oop", "ace/mode/tex
     exports.MarHighlightRules = MarHighlightRules;
 });
 
-define("ace/mode/mar", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/mar_rules"], function (require, exports, module) {
+define("ace/mode/mar", ["require", "exports", "ace/lib/oop", "ace/mode/text", "ace/mode/mar_rules"], function (require, exports) {
     "use strict";
 
     var oop = require("../lib/oop");
