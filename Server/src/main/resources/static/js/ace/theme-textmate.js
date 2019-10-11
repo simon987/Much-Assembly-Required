@@ -1,4 +1,4 @@
-define("ace/theme/textmate", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/textmate", ["require", "exports", "ace/lib/dom"], function (require, exports) {
     "use strict";
 
     exports.isDark = false;
