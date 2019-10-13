@@ -1,4 +1,4 @@
-define("ace/theme/cobalt", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/cobalt", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = true;
     exports.cssClass = "ace-cobalt";

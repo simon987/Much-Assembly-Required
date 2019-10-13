@@ -1,4 +1,4 @@
-define("ace/theme/dracula", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/dracula", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = true;
     exports.cssClass = "ace-dracula";

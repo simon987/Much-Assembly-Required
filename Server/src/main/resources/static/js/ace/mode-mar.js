@@ -33,7 +33,7 @@
  * IT MIGHT NOT BE PERFECT ...But it's a good start from an existing *.tmlanguage file. *
  * fileTypes                                                                            *
  ****************************************************************************************/
-define("ace/mode/mar_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports, module) {
+define("ace/mode/mar_rules", ["require", "exports", "ace/lib/oop", "ace/mode/text_highlight_rules"], function (require, exports) {
     "use strict";
 
     var oop = require("../lib/oop");
@@ -95,7 +95,7 @@ define("ace/mode/mar_rules", ["require", "exports", "module", "ace/lib/oop", "ac
     exports.MarHighlightRules = MarHighlightRules;
 });
 
-define("ace/mode/mar", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/mar_rules"], function (require, exports, module) {
+define("ace/mode/mar", ["require", "exports", "ace/lib/oop", "ace/mode/text", "ace/mode/mar_rules"], function (require, exports) {
     "use strict";
 
     var oop = require("../lib/oop");
