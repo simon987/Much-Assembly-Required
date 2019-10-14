@@ -3,8 +3,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/simon987/much-assembly-required/badge)](https://www.codefactor.io/repository/github/simon987/much-assembly-required)
 [![Build Status](https://ci.simon987.net/buildStatus/icon?job=Much-Assembly-Required)](https://ci.simon987.net/job/Much-Assembly-Required/)
 
-Program the 8086-like microprocessor of a robot in a grid-based multiplayer world. The game is web based so no installation is required.
-In its current state, players can walk around the game universe and collect Biomass blobs & Iron/copper ore using the online code editor.
+**Much Assembly Required** is a web-based assembly programming game. Program the 8086-like microprocessor of a robot in a grid-based multiplayer world. The game is web based so no installation is required. In its current state, players can walk around the game universe and collect Biomass blobs & Iron/copper ore using the online code editor.
 
 ![screenshot from 2017-11-12 13-01-43](https://user-images.githubusercontent.com/7120851/32701793-e5d07e98-c7a9-11e7-9931-f8db7b287994.png)
 
