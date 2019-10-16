@@ -260,6 +260,15 @@ function getOperandType(text, result) {
 
 }
 
+function produceError(result, currentLine, errorString) {
+    result.annotations.push({
+        row: currentLine,
+        column: 0,
+        text: errorString,
+        type: "error"
+    });
+}
+
 function parseInstruction(line, result, currentLine) {
     line = removeComment(line);
     line = removeLabel(line);
@@ -287,12 +296,7 @@ function parseInstruction(line, result, currentLine) {
 
                 //Validate operand number
                 if (!new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr)\\b').test(mnemonic.toLowerCase())) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with 2 operands is illegal",
-                        type: "error"
-                    });
+                    produceError(result, currentLine, mnemonic + " instruction with 2 operands is illegal");
                     return;
                 }
 
@@ -300,32 +304,17 @@ function parseInstruction(line, result, currentLine) {
                 var o1Type = getOperandType(strO1, result);
                 var o2Type = getOperandType(strO2, result);
                 if (o1Type === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO1,
-                        type: "error"
-                    });
+                    produceError(result, currentLine, "Invalid operand: " + strO1);
                     return;
                 }
                 if (o2Type === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO2,
-                        type: "error"
-                    });
+                    produceError(result, currentLine, "Invalid operand: " + strO2);
                     return;
                 }
 
                 //Check for illegal operand combos:
                 if (o1Type === OPERAND_IMM) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Destination operand can't be an immediate value",
-                        type: "error"
-                    });
+                    produceError(result, currentLine, "Destination operand can't be an immediate value");
                 }
 
 
@@ -335,33 +324,18 @@ function parseInstruction(line, result, currentLine) {
 
                 //Validate operand number
                 if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with 1 operand is illegal",
-                        type: "error"
-                    });
+                    produceError(result, currentLine, mnemonic + " instruction with 1 operand is illegal");
                     return;
                 }
 
                 //Validate operand type
                 if (getOperandType(strO1, result) === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO1,
-                        type: "error"
-                    });
+                    produceError(result, currentLine, "Invalid operand: " + strO1);
                 }
 
                 if (new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
                     if (getOperandType(strO1, result) === OPERAND_IMM) {
-                        result.annotations.push({
-                            row: currentLine,
-                            column: 0,
-                            text: "Invalid operand type: " + strO1,
-                            type: "error"
-                        });
+                        produceError(result, currentLine, "Invalid operand type: " + strO1);
                     }
                 }
 
@@ -370,23 +344,13 @@ function parseInstruction(line, result, currentLine) {
                 if (!new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase())) {
 
                     //Validate operand number
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with no operand is illegal",
-                        type: "error"
-                    });
+                    produceError(result, currentLine, mnemonic + " instruction with no operand is illegal");
                 }
             }
 
 
         } else {
-            result.annotations.push({
-                row: currentLine,
-                column: 0,
-                text: "Unknown mnemonic: " + mnemonic,
-                type: "error"
-            });
+            produceError(result, currentLine, "Unknown mnemonic: " + mnemonic);
         }
 
     }
