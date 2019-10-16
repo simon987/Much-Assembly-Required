@@ -54,12 +54,7 @@ function checkForEQUInstruction(line, result, currentLine) {
             result.labels.push(tokens[0]);
             return true;
         } else {
-            result.annotations.push({
-                row: currentLine,
-                column: 0,
-                text: "Usage: constant_name EQU immediate_value",
-                type: "error"
-            });
+            produceError(result, currentLine, "Usage: constant_name EQU immediate_value");
             return true;
         }
     } else {
@@ -102,12 +97,7 @@ function checkForORGInstruction(line, result, currentLine) {
             if (!isNaN(num) && num === Math.floor(num)) {
                 return true;
             } else {
-                result.annotations.push({
-                    row: currentLine,
-                    column: 0,
-                    text: "Invalid operand: " + tokens[1],
-                    type: "error"
-                });
+                produceError(result, currentLine, "Invalid operand: " + tokens[1]);
                 return true
             }
         }
@@ -140,13 +130,7 @@ function parseDWInstruction(line, result, currentLine) {
                 var strText = values[i].substr(1, values[i].length - 2);
 
                 if (strText.match(MALFORMED_UTF16_RE) != null) {
-
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Malformed UTF-16 escape sequence",
-                        type: "error"
-                    });
+                    produceError(result, currentLine, "Malformed UTF-16 escape sequence");
                     return true;
                 }
 
@@ -157,15 +141,8 @@ function parseDWInstruction(line, result, currentLine) {
                 // console.log("is Imm " + values[i]);
 
             } else {
-
-                result.annotations.push({
-                    row: currentLine,
-                    column: 0,
-                    text: "Usage: DW IMM, IMM ...",
-                    type: "error"
-                });
+                produceError(result, currentLine, "Usage: DW IMM, IMM ...");
                 return true;
-
             }
         }
 
