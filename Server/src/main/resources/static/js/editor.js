@@ -269,6 +269,25 @@ function produceError(result, currentLine, errorString) {
     });
 }
 
+function isValidMnemonic(mnemonic) {
+    return isDoubleOpMnemonic(mnemonic) || isSingleOpMnemonic(mnemonic) || isZeroOpMnemonic(mnemonic);
+}
+
+function isDoubleOpMnemonic(mnemonic) {
+    return new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr)\\b').test(mnemonic.toLowerCase());
+}
+
+function isSingleOpMnemonic(mnemonic) {
+    return new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|' +
+                      'jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|' +
+                      'setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|' +
+                      'setno|sets|setns)\\b').test(mnemonic.toLowerCase());
+}
+
+function isZeroOpMnemonic(mnemonic) {
+    return new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase());
+}
+
 function parseInstruction(line, result, currentLine) {
     line = removeComment(line);
     line = removeLabel(line);
@@ -283,22 +302,18 @@ function parseInstruction(line, result, currentLine) {
 
     if (!parseDWInstruction(line, result, currentLine)) {
 
-        if (new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|hwi|hwq|nop|neg|' +
-            'seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns|' +
-            'call|ret|jmp|jnz|jg|jl|jge|jle|int|jz|js|jns|brk|not|jc|jnc|ror|rol|sal|sar|jo|jno|inc|dec|rcl|xchg|rcr|pushf|popf|ja|jna)\\b').test(mnemonic.toLowerCase())) {
+        if (isValidMnemonic(mnemonic)) {
 
 
             if (line.indexOf(",") !== -1) {
                 //2 Operands
-                var strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
-                var strO2 = line.substring(line.indexOf(',') + 1).trim();
-
-
-                //Validate operand number
-                if (!new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr)\\b').test(mnemonic.toLowerCase())) {
+                if (!isDoubleOpMnemonic(mnemonic)) {
                     produceError(result, currentLine, mnemonic + " instruction with 2 operands is illegal");
                     return;
                 }
+                
+                var strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
+                var strO2 = line.substring(line.indexOf(',') + 1).trim();
 
                 //Validate operand type
                 var o1Type = getOperandType(strO1, result);
@@ -320,13 +335,12 @@ function parseInstruction(line, result, currentLine) {
 
             } else if (tokens.length > 1) {
                 //1 Operand
-                strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
-
-                //Validate operand number
-                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
+                if (!isSingleOpMnemonic(mnemonic)) {
                     produceError(result, currentLine, mnemonic + " instruction with 1 operand is illegal");
                     return;
                 }
+                
+                strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
 
                 //Validate operand type
                 if (getOperandType(strO1, result) === OPERAND_INVALID) {
@@ -340,10 +354,8 @@ function parseInstruction(line, result, currentLine) {
                 }
 
             } else {
-                //No operand
-                if (!new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase())) {
-
-                    //Validate operand number
+                //No Operand
+                if (!isZeroOpMnemonic(mnemonic)) {
                     produceError(result, currentLine, mnemonic + " instruction with no operand is illegal");
                 }
             }
