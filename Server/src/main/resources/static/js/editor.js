@@ -237,11 +237,11 @@ function getOperandType(text, result) {
 
 }
 
-function produceError(result, currentLine, errorString) {
+function produceError(result, currentLine, explanation) {
     result.annotations.push({
         row: currentLine,
         column: 0,
-        text: errorString,
+        text: explanation,
         type: "error"
     });
 }
@@ -289,23 +289,23 @@ function parseInstruction(line, result, currentLine) {
                     return;
                 }
                 
-                var strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
-                var strO2 = line.substring(line.indexOf(',') + 1).trim();
+                var op1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
+                var op2 = line.substring(line.indexOf(',') + 1).trim();
 
                 //Validate operand type
-                var o1Type = getOperandType(strO1, result);
-                var o2Type = getOperandType(strO2, result);
-                if (o1Type === OPERAND_INVALID) {
-                    produceError(result, currentLine, "Invalid operand: " + strO1);
+                var op1Type = getOperandType(op1, result);
+                var op2Type = getOperandType(op2, result);
+                if (op1Type === OPERAND_INVALID) {
+                    produceError(result, currentLine, "Invalid operand: " + op1);
                     return;
                 }
-                if (o2Type === OPERAND_INVALID) {
-                    produceError(result, currentLine, "Invalid operand: " + strO2);
+                if (op2Type === OPERAND_INVALID) {
+                    produceError(result, currentLine, "Invalid operand: " + op2);
                     return;
                 }
 
                 //Check for illegal operand combos:
-                if (o1Type === OPERAND_IMM) {
+                if (op1Type === OPERAND_IMM) {
                     produceError(result, currentLine, "Destination operand can't be an immediate value");
                 }
 
@@ -317,16 +317,16 @@ function parseInstruction(line, result, currentLine) {
                     return;
                 }
                 
-                strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
+                var op1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
 
                 //Validate operand type
-                if (getOperandType(strO1, result) === OPERAND_INVALID) {
-                    produceError(result, currentLine, "Invalid operand: " + strO1);
+                if (getOperandType(op1, result) === OPERAND_INVALID) {
+                    produceError(result, currentLine, "Invalid operand: " + op1);
                 }
 
                 if (new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
-                    if (getOperandType(strO1, result) === OPERAND_IMM) {
-                        produceError(result, currentLine, "Invalid operand type: " + strO1);
+                    if (getOperandType(op1, result) === OPERAND_IMM) {
+                        produceError(result, currentLine, "Invalid operand type: " + op1);
                     }
                 }
 
