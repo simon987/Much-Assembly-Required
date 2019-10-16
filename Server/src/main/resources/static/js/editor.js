@@ -176,7 +176,9 @@ function parseDWInstruction(line, result, currentLine) {
 }
 
 function isLabel(text, result) {
-    for (i = 0; i < result.labels.length; i++) {
+    if (result === undefined) { return false; }
+    
+    for (var i = 0; i < result.labels.length; i++) {
         if (text === result.labels[i]) {
             return true;
         }
@@ -201,7 +203,7 @@ function isRegisterOp(text) {
 
 function getOffsetOperandType(text) {
     
-    var offset = "";
+    var offset;
     if (isRegisterOp(text.substring(0, 2))) {
         offset = text.substring(2);
     } else if (isRegisterOp(text.substring(0, 1))) {
