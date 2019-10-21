@@ -256,13 +256,17 @@ function isDoubleOpMnemonic(mnemonic) {
 
 function isSingleOpMnemonic(mnemonic) {
     return new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|' +
-                      'jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|' +
-                      'setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|' +
-                      'setno|sets|setns)\\b').test(mnemonic.toLowerCase());
+                      'jc|jnc|jo|jno|inc|dec|ja|jna)\\b').test(mnemonic.toLowerCase()) || 
+            isSetMnemonic(mnemonic);
 }
 
 function isZeroOpMnemonic(mnemonic) {
     return new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase());
+}
+
+function isSetMnemonic(mnemonic) {
+    return new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|' +
+                      'setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase());
 }
 
 function parseInstruction(line, result, currentLine) {
@@ -275,7 +279,6 @@ function parseInstruction(line, result, currentLine) {
     if (mnemonic === undefined || mnemonic === "") {
         return; //Line is empty
     }
-
 
     if (!parseDWInstruction(line, result, currentLine)) {
 
@@ -324,7 +327,7 @@ function parseInstruction(line, result, currentLine) {
                     produceError(result, currentLine, "Invalid operand: " + op1);
                 }
 
-                if (new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
+                if (isSetMnemonic(mnemonic)) {
                     if (getOperandType(op1, result) === OPERAND_IMM) {
                         produceError(result, currentLine, "Invalid operand type: " + op1);
                     }
@@ -341,7 +344,6 @@ function parseInstruction(line, result, currentLine) {
         } else {
             produceError(result, currentLine, "Unknown mnemonic: " + mnemonic);
         }
-
     }
 }
 
