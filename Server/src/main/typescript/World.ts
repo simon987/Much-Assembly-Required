@@ -296,7 +296,6 @@ class World {
 
                 this.tiles.push(tile);
                 mar.isoGroup.add(tile);
-
             }
         }
 
@@ -318,6 +317,10 @@ class World {
         mar.game.world.height = (size + 2) * 64;
     }
 
+    /**
+     * Set Message text
+     * @param msg string to set as the message
+     */
     public setBigMessage(msg: string) {
         this.bigMessage = mar.game.add.text(908, 450, msg, {
             fontSize: 46,
@@ -478,5 +481,3 @@ class WorldArrow extends Phaser.Plugin.Isometric.IsoSprite {
     }
 
 }
-
-
