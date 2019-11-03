@@ -1,4 +1,4 @@
-define("ace/theme/merbivore_soft", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/merbivore_soft", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = true;
     exports.cssClass = "ace-merbivore-soft";

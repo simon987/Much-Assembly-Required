@@ -1,4 +1,4 @@
-define("ace/theme/mono_industrial", ["require", "exports", "module", "ace/lib/dom"], function (require, exports, module) {
+define("ace/theme/mono_industrial", ["require", "exports", "ace/lib/dom"], function (require, exports) {
 
     exports.isDark = true;
     exports.cssClass = "ace-mono-industrial";

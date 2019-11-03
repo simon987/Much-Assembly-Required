@@ -156,6 +156,9 @@ public class VaultWorldGenerator {
                     map.setTileAt(floorTile, 1, worldSize / 2 - 1);
                     roomCenters.add(new Point(1, worldSize / 2 - 1));
                     break;
+                default:
+                    
+                	break;
             }
         }
 

@@ -8,6 +8,7 @@ remote.allowAnyHosts = true
 remote.retryCount = 3
 remote.retryWaitSec = 3
 logLevel = 'FINER'
+remote.port = 2299
 
 pipeline {
     agent any

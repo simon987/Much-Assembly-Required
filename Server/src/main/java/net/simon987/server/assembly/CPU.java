@@ -236,104 +236,11 @@ public class CPU implements MongoSerializable {
             ip++;
             instruction.execute(status);
         } else if (source == Operand.IMMEDIATE_VALUE) {
-            ip++;
-            int sourceValue = memory.get(ip);
-
-            if (destination == 0) {
-                //Single operand
-                ip++;
-                instruction.execute(sourceValue, status);
-            } else if (destination == Operand.IMMEDIATE_VALUE) {
-                //Destination is an immediate value too
-                //this shouldn't happen
-                LogManager.LOGGER.severe("Trying to execute an instruction with 2" +
-                        "immediate values as operands"); //todo remove debug info
-
-            } else if (destination == Operand.IMMEDIATE_VALUE_MEM) {
-                //Destination is memory immediate
-                ip += 2;
-                instruction.execute(memory, memory.get(ip - 1), sourceValue, status);
-            } else if (destination <= registerSetSize) {
-                //Destination is a register
-                ip++;
-                instruction.execute(registerSet, destination, sourceValue, status);
-
-            } else if (destination <= registerSetSize * 2) {
-                //Destination is [reg]
-                ip++;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize), sourceValue, status);
-            } else {
-                //Assuming that destination is [reg + x]
-                ip += 2;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1),
-                        sourceValue, status);
-            }
-
+            executeImmediateValue(instruction, source, destination);
         } else if (source == Operand.IMMEDIATE_VALUE_MEM) {
-            //Source is [x]
-            ip++;
-            int sourceValue = memory.get(memory.get(ip));
-
-            if (destination == 0) {
-                //Single operand
-                ip++;
-                instruction.execute(memory, memory.get(ip - 1), status);
-            } else if (destination == Operand.IMMEDIATE_VALUE) {
-                //Destination is an immediate value
-
-                //this shouldn't happen
-                LogManager.LOGGER.severe("Trying to execute an instruction with an" +
-                        "immediate values as dst operand"); //todo remove debug info
-            } else if (destination == Operand.IMMEDIATE_VALUE_MEM) {
-                //Destination is memory immediate too
-                ip += 2;
-                instruction.execute(memory, memory.get(ip - 1), sourceValue, status);
-            } else if (destination <= registerSetSize) {
-                //Destination is a register
-                ip++;
-                instruction.execute(registerSet, destination, sourceValue, status);
-            } else if (destination <= registerSetSize * 2) {
-                //Destination is [reg]
-                ip++;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize), sourceValue, status);
-            } else {
-                //Assuming that destination is [reg + x]
-                ip += 2;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1), sourceValue, status);
-            }
-
+            executeImmediateValueMem(instruction, source, destination);
         } else if (source <= registerSetSize) {
-            //Source is a register
-
-            if (destination == 0) {
-                //Single operand
-                ip++;
-                instruction.execute(registerSet, source, status);
-
-            } else if (destination == Operand.IMMEDIATE_VALUE) {
-                //Destination is an immediate value
-                //this shouldn't happen
-                LogManager.LOGGER.severe("Trying to execute an instruction with an" +
-                        "immediate values as dst operand"); //todo remove debug info
-            } else if (destination == Operand.IMMEDIATE_VALUE_MEM) {
-                //Destination is memory immediate
-                ip += 2;
-                instruction.execute(memory, memory.get(ip - 1), registerSet, source, status);
-            } else if (destination <= registerSetSize) {
-                //Destination is a register too
-                ip++;
-                instruction.execute(registerSet, destination, registerSet, source, status);
-            } else if (destination <= registerSetSize * 2) {
-                //Destination is [reg]
-                ip++;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize), registerSet, source, status);
-            } else {
-                //Assuming that destination is [reg + x]
-                ip += 2;
-                instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1),
-                        registerSet, source, status);
-            }
-
+            executeSourceIsRegister(instruction, source, destination);
         } else if (source <= registerSetSize * 2) {
             //Source is [reg]
             if (destination == 0) {
@@ -400,6 +307,107 @@ public class CPU implements MongoSerializable {
                 instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1),
                         memory, registerSet.get(source - registerSetSize - registerSetSize) + sourceDisp, status);
             }
+        }
+    }
+
+    private void executeSourceIsRegister(Instruction instruction, int source, int destination) {
+        //Source is a register
+        if (destination == 0) {
+            //Single operand
+            ip++;
+            instruction.execute(registerSet, source, status);
+
+        } else if (destination == Operand.IMMEDIATE_VALUE) {
+            //Destination is an immediate value
+            //this shouldn't happen
+            LogManager.LOGGER.severe("Trying to execute an instruction with an" +
+                    "immediate values as dst operand"); //todo remove debug info
+        } else if (destination == Operand.IMMEDIATE_VALUE_MEM) {
+            //Destination is memory immediate
+            ip += 2;
+            instruction.execute(memory, memory.get(ip - 1), registerSet, source, status);
+        } else if (destination <= registerSetSize) {
+            //Destination is a register too
+            ip++;
+            instruction.execute(registerSet, destination, registerSet, source, status);
+        } else if (destination <= registerSetSize * 2) {
+            //Destination is [reg]
+            ip++;
+            instruction.execute(memory, registerSet.get(destination - registerSetSize), registerSet, source, status);
+        } else {
+            //Assuming that destination is [reg + x]
+            ip += 2;
+            instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1),
+                    registerSet, source, status);
+        }
+    }
+
+    private void executeImmediateValue(Instruction instruction, int source, int destination) {
+        ip++;
+        int sourceValue = memory.get(ip);
+
+        if (destination == 0) {
+            //Single operand
+            ip++;
+            instruction.execute(sourceValue, status);
+        } else if (destination == Operand.IMMEDIATE_VALUE) {
+            //Destination is an immediate value too
+            //this shouldn't happen
+            LogManager.LOGGER.severe("Trying to execute an instruction with 2" +
+                    "immediate values as operands"); //todo remove debug info
+
+        } else if (destination == Operand.IMMEDIATE_VALUE_MEM) {
+            //Destination is memory immediate
+            ip += 2;
+            instruction.execute(memory, memory.get(ip - 1), sourceValue, status);
+        } else if (destination <= registerSetSize) {
+            //Destination is a register
+            ip++;
+            instruction.execute(registerSet, destination, sourceValue, status);
+
+        } else if (destination <= registerSetSize * 2) {
+            //Destination is [reg]
+            ip++;
+            instruction.execute(memory, registerSet.get(destination - registerSetSize), sourceValue, status);
+        } else {
+            //Assuming that destination is [reg + x]
+            ip += 2;
+            instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1),
+                    sourceValue, status);
+        }
+    }
+
+    private void executeImmediateValueMem(Instruction instruction, int source, int destination) {
+        //Source is [x]
+        ip++;
+        int sourceValue = memory.get(memory.get(ip));
+
+        if (destination == 0) {
+            //Single operand
+            ip++;
+            instruction.execute(memory, memory.get(ip - 1), status);
+        } else if (destination == Operand.IMMEDIATE_VALUE) {
+            //Destination is an immediate value
+
+            //this shouldn't happen
+            LogManager.LOGGER.severe("Trying to execute an instruction with an" +
+                    "immediate values as dst operand"); //todo remove debug info
+        } else if (destination == Operand.IMMEDIATE_VALUE_MEM) {
+            //Destination is memory immediate too
+            ip += 2;
+            instruction.execute(memory, memory.get(ip - 1), sourceValue, status);
+        } else if (destination <= registerSetSize) {
+            //Destination is a register
+            ip++;
+            instruction.execute(registerSet, destination, sourceValue, status);
+        } else if (destination <= registerSetSize * 2) {
+            //Destination is [reg]
+            ip++;
+            instruction.execute(memory, registerSet.get(destination - registerSetSize), sourceValue, status);
+        } else {
+            //Assuming that destination is [reg + x]
+            ip += 2;
+            instruction.execute(memory, registerSet.get(destination - registerSetSize - registerSetSize) + memory.get(ip - 1), sourceValue, status);
         }
     }
 

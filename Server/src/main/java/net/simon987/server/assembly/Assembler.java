@@ -170,7 +170,7 @@ public class Assembler {
                         } catch (IllegalArgumentException e) {
                             throw new InvalidOperandException(
                                     "Invalid string operand \"" + string + "\": " + e.getMessage(),
-                                currentLine);
+                                    currentLine);
                         }
 
                         out.write(string.getBytes(StandardCharsets.UTF_16BE));
@@ -218,6 +218,17 @@ public class Assembler {
 
         return bos.toByteArray();
 
+    }
+
+    /**
+     * Parse the DW instruction (Define word). Handles DUP operator
+     *
+     * @param line        Current line. assuming that comments and labels are removed
+     * @param currentLine Current line number
+     * @return Encoded instruction, null if the line is not a DW instruction
+     */
+    private static byte[] parseDWInstruction(String line, int currentLine) throws AssemblyException {
+        return parseDWInstruction(line, null, currentLine);
     }
 
     /**
@@ -272,17 +283,6 @@ public class Assembler {
     }
 
     /**
-     * Parse the DW instruction (Define word). Handles DUP operator
-     *
-     * @param line        Current line. assuming that comments and labels are removed
-     * @param currentLine Current line number
-     * @return Encoded instruction, null if the line is not a DW instruction
-     */
-    private static byte[] parseDWInstruction(String line, int currentLine) throws AssemblyException {
-        return parseDWInstruction(line, null, currentLine);
-    }
-
-    /**
      * Check for and handle section declarations (.text and .data)
      *
      * @param line Current line
@@ -318,7 +318,7 @@ public class Assembler {
         /*  the EQU pseudo instruction is equivalent to the #define compiler directive in C/C++
          *  usage: constant_name EQU <immediate_value>
          *  A constant treated the same way as a label.
-        */
+         */
         line = line.trim();
         String[] tokens = line.split("\\s+");
 
@@ -362,7 +362,47 @@ public class Assembler {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         //Pass 1: Get code origin
-        for (currentLine = 0; currentLine < lines.length; currentLine++) {
+        getCodeOrigin(lines, result);
+        //Pass 2: Save label names and location
+        saveLabelNamesAndLocation(lines, result);
+        //Pass 3: encode instructions
+        encodeInstructions(lines, result, out);
+
+
+        //If the code contains OffsetOverFlowException(s), don't bother writing the assembled bytes to memory
+        boolean writeToMemory = true;
+        for (Exception e : result.exceptions) {
+            if (e instanceof OffsetOverflowException) {
+                writeToMemory = false;
+                break;
+            }
+        }
+
+        if (writeToMemory) {
+            result.bytes = out.toByteArray();
+        } else {
+            result.bytes = new byte[0];
+            LogManager.LOGGER.fine("Skipping writing assembled bytes to memory. (OffsetOverflowException)");
+        }
+
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LogManager.LOGGER.info("Assembled " + result.bytes.length + " bytes (" + result.exceptions.size() + " errors)");
+        for (AssemblyException e : result.exceptions) {
+            LogManager.LOGGER.severe(e.getMessage() + '@' + e.getLine());
+        }
+        LogManager.LOGGER.info('\n' + Util.toHex(result.bytes));
+
+        return result;
+
+    }
+
+    private void getCodeOrigin(String[] lines, AssemblyResult result) {
+        for (int currentLine = 0; currentLine < lines.length; currentLine++) {
             try {
                 checkForORGInstruction(lines[currentLine], result, currentLine);
 
@@ -373,10 +413,11 @@ public class Assembler {
                 //Ignore error
             }
         }
+    }
 
-        //Pass 2: Save label names and location
+    private void saveLabelNamesAndLocation(String[] lines, AssemblyResult result) {
         int currentOffset = 0;
-        for (currentLine = 0; currentLine < lines.length; currentLine++) {
+        for (int currentLine = 0; currentLine < lines.length; currentLine++) {
             try {
                 checkForLabel(lines[currentLine], result, (char)currentOffset);
 
@@ -394,11 +435,11 @@ public class Assembler {
 
             }
         }
+    }
 
-
-        //Pass 3: encode instructions
-        currentOffset = 0;
-        for (currentLine = 0; currentLine < lines.length; currentLine++) {
+    private void encodeInstructions(String[] lines, AssemblyResult result, ByteArrayOutputStream out) {
+        int currentOffset = 0;
+        for (int currentLine = 0; currentLine < lines.length; currentLine++) {
 
             String line = lines[currentLine];
 
@@ -439,36 +480,6 @@ public class Assembler {
                 ioE.printStackTrace();
             }
         }
-
-        //If the code contains OffsetOverFlowException(s), don't bother writing the assembled bytes to memory
-        boolean writeToMemory = true;
-        for (Exception e : result.exceptions) {
-            if (e instanceof OffsetOverflowException) {
-                writeToMemory = false;
-            }
-        }
-
-        if (writeToMemory) {
-            result.bytes = out.toByteArray();
-        } else {
-            result.bytes = new byte[0];
-            LogManager.LOGGER.fine("Skipping writing assembled bytes to memory. (OffsetOverflowException)");
-        }
-
-        try {
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        LogManager.LOGGER.info("Assembled " + result.bytes.length + " bytes (" + result.exceptions.size() + " errors)");
-        for (AssemblyException e : result.exceptions) {
-            LogManager.LOGGER.severe(e.getMessage() + '@' + e.getLine());
-        }
-        LogManager.LOGGER.info('\n' + Util.toHex(result.bytes));
-
-        return result;
-
     }
 
     /**
