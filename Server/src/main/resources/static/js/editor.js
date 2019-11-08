@@ -201,7 +201,7 @@ function isRegisterOp(text) {
     return new RegExp('^(a|b|c|d|x|y|bp|sp)$').test(text.toLowerCase());
 }
 
-function getOffsetOperandType(text) {
+function getOffsetOperandType(text, result) {
     
     var offset;
     if (isRegisterOp(text.substring(0, 2))) {
@@ -247,7 +247,7 @@ function getOperandType(text, result) {
             return OPERAND_MEM_IMM;
         }
 
-        return getOffsetOperandType(text);
+        return getOffsetOperandType(text, result);
     }
 
     return OPERAND_INVALID;
