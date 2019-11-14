@@ -19,9 +19,9 @@ public class AchievementListener implements GameEventListener {
         if (object instanceof ControllableUnit) {
             final String achievement = achievementEvent.getAchievement();
             final ControllableUnit unit = (ControllableUnit) object;
-            LogManager.LOGGER.info(unit.getParent().getUsername() + " Completed achievement: " + achievement);
 
-            ((ControllableUnit) object).getParent().getStats().addToStringSet("achievements", achievement);
+            LogManager.LOGGER.info(unit.getParent().getUsername() + " Completed achievement: " + achievement);
+            unit.getParent().getStats().addToStringSet("achievements", achievement);
         }
     }
 }
