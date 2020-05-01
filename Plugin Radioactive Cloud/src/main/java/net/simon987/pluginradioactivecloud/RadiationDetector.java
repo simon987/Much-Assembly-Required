@@ -39,11 +39,16 @@ public class RadiationDetector extends HardwareModule {
             case RADIATION_POLL_ALPHA: //Set register B to alpha level
                 
                 break;
+
             case RADIATION_POLL_BETA: //Set register B to beta level
                 
                 break;
+
             case RADIATION_POLL_GAMMA: //Set register B to gamma level
                 
+                break;
+
+            default:
                 break;
 		}
 
