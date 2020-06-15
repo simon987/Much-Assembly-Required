@@ -114,7 +114,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>5.1.5.RELEASE</version>
+            <version>5.1.11.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.sparkjava</groupId>
