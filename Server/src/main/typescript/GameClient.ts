@@ -84,7 +84,7 @@ class TickListener implements MessageListener {
         }
 
         //Update console screen
-        if (message.c != undefined) {
+        if (message.console_message_buffer != undefined) {
             mar.client.consoleScreen.handleConsoleBufferUpdate(
                 message.console_message_buffer,
                 message.console_mode as ConsoleMode);
