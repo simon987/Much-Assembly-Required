@@ -3,4 +3,4 @@ COPY /. /app/
 WORKDIR /app
 RUN mvn package
 WORKDIR /app/target
-CMD ["java", "-jar", "/app/target/server-1.4a.jar"]
+CMD ["java", "-jar", "/app/target/server-1.6a.jar"]

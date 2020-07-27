@@ -1,8 +1,4 @@
 
-plugins/Plugin NPC.jar
-plugins/Plugin Misc HW.jar
-plugins/Plant.jar
-plugins/Cubot.jar
 .idea/*
 mar.log
 mar.log.lck
@@ -13,8 +9,8 @@ plugins/*.jar
 save.json
 Server/Server.iml
 target/*
-Server/Server.iml
-Server/src/main/java/META-INF/MANIFEST.MF
+src/main/java/META-INF/MANIFEST.MF
+src/main/resources/static/js/mar.js
 .settings
 .project
 .classpath

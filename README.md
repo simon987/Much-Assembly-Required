@@ -44,7 +44,7 @@ mvn package
 
 # Run
 cd target
-java -jar server-1.4a.jar
+java -jar muchassemblyrequired-*.jar
 ```
 
 ## Windows (tested on Windows 10)
@@ -75,7 +75,7 @@ mongod
 ```batch
 :: Runs the MAR server
 cd Much-Assembly-Required\target
-java -jar server-1.4a.jar
+java -jar muchassemblyrequired-*.jar
 ```
 
 ## macOS (tested on Sierra 10.12.6)
@@ -136,7 +136,7 @@ If you do not wish to use the default data directory (/data/db), follow the step
 
    # Run
    cd target
-   java -jar server-1.4a.jar
+   java -jar muchassemblyrequired-*.jar
    ```
 
 ## Docker
@@ -154,18 +154,6 @@ application's directory:
 
 Make sure to change `mongo_address` in `config.properties` to `mongodb`.
 
-
-## Vagrant
-### Requirements
-1. [Vagrant](https://www.vagrantup.com/downloads.html)
-2. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-
-### Installation
-
-When vagrant is installed, you can build and start this application by running the following
-command inside this application's directory:
-
-`vagrant up`
 
 # Running
 

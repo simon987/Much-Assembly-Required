@@ -1,5 +1,5 @@
-Server/src/main/resources/static/css/bootstrap4-neon-glow.min linguist-vendored
-Server/src/main/resources/static/css/bootstrap-grid.min linguist-vendored
-Server/src/main/resources/static/css/bootstrap-reboot.min linguist-vendored
-Server/src/main/resources/static/js/* linguist-vendored
-Server/src/main/resources/static/js/ace/* linguist-vendored
+src/main/resources/static/css/bootstrap4-neon-glow.min linguist-vendored
+src/main/resources/static/css/bootstrap-grid.min linguist-vendored
+src/main/resources/static/css/bootstrap-reboot.min linguist-vendored
+src/main/resources/static/js/* linguist-vendored
+src/main/resources/static/js/ace/* linguist-vendored
