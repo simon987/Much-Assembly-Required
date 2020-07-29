@@ -63,7 +63,7 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
     @Override
     public void update() {
 
-        Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
+        Settlement settlement = Settlement.MAP.get(getWorld().getId());
 
         if (settlement == null) {
             //Only happens when server is killed during save function
@@ -133,7 +133,7 @@ public class Factory extends Structure implements Updatable, MessageReceiver {
     public boolean sendMessage(char[] message) {
 
         if (locked) {
-            Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
+            Settlement settlement = Settlement.MAP.get(getWorld().getId());
 
             if (Arrays.equals(settlement.getPassword(), message)) {
                 this.locked = false;

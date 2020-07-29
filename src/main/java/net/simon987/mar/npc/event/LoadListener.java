@@ -1,6 +1,6 @@
 package net.simon987.mar.npc.event;
 
-import net.simon987.mar.npc.NpcPlugin;
+import net.simon987.mar.npc.HackedNPC;
 import net.simon987.mar.npc.Settlement;
 import net.simon987.mar.server.GameServer;
 import net.simon987.mar.server.event.GameEvent;
@@ -28,14 +28,14 @@ public class LoadListener implements GameEventListener {
         }
 
         for (String world : settlements.keySet()) {
-            NpcPlugin.settlementMap.put(world, new Settlement((Document) settlements.get(world)));
+            Settlement.MAP.put(world, new Settlement((Document) settlements.get(world)));
         }
 
         try {
             InputStream is = new FileInputStream("defaultHackedCubotHardware.json");
             Scanner scanner = new Scanner(is).useDelimiter("\\A");
             String json = scanner.next();
-            NpcPlugin.DEFAULT_HACKED_NPC = Document.parse(json);
+            HackedNPC.DEFAULT_HACKED_NPC = Document.parse(json);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

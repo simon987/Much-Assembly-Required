@@ -11,6 +11,8 @@ import org.bson.types.ObjectId;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Settlement implements MongoSerializable {
 
@@ -19,6 +21,8 @@ public class Settlement implements MongoSerializable {
     private VaultDoor vaultDoor = null;
     private final World world;
     private final DifficultyLevel difficultyLevel;
+
+    public static Map<String, Settlement> MAP = new ConcurrentHashMap<>();
 
     private final List<NonPlayerCharacter> npcs = new ArrayList<>();
 

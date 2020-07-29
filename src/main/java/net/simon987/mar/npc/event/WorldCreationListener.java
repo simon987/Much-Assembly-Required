@@ -1,6 +1,5 @@
 package net.simon987.mar.npc.event;
 
-import net.simon987.mar.npc.NpcPlugin;
 import net.simon987.mar.npc.Settlement;
 import net.simon987.mar.server.event.GameEvent;
 import net.simon987.mar.server.event.GameEventListener;
@@ -38,7 +37,7 @@ public class WorldCreationListener implements GameEventListener {
 
             try {
                 Settlement settlement = new Settlement(world);
-                NpcPlugin.settlementMap.put(world.getId(), settlement);
+                Settlement.MAP.put(world.getId(), settlement);
             } catch (WorldGenerationException e) {
                 LogManager.LOGGER.fine(String.format("Exception during settlement generation: %s.",
                         e.getMessage()));

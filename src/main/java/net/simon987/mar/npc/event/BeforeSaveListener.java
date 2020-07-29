@@ -1,6 +1,6 @@
 package net.simon987.mar.npc.event;
 
-import net.simon987.mar.npc.NpcPlugin;
+import net.simon987.mar.npc.Settlement;
 import net.simon987.mar.server.GameServer;
 import net.simon987.mar.server.event.BeforeSaveEvent;
 import net.simon987.mar.server.event.GameEvent;
@@ -17,8 +17,8 @@ public class BeforeSaveListener implements GameEventListener {
     @Override
     public void handle(GameEvent event) {
         Document settlements = new Document();
-        for (String world : NpcPlugin.settlementMap.keySet()) {
-            settlements.put(world, NpcPlugin.settlementMap.get(world).mongoSerialise());
+        for (String world : Settlement.MAP.keySet()) {
+            settlements.put(world, Settlement.MAP.get(world).mongoSerialise());
         }
 
         GameServer.INSTANCE.getUniverse().store.put("settlement_map", settlements);

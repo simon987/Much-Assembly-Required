@@ -42,8 +42,8 @@ public class RadioReceiverHardware extends HardwareModule {
 
             List<char[]> messages = new ArrayList<>(6);
 
-            for (String world : NpcPlugin.settlementMap.keySet()) {
-                RadioTower tower = NpcPlugin.settlementMap.get(world).getRadioTower();
+            for (String world : Settlement.MAP.keySet()) {
+                RadioTower tower = Settlement.MAP.get(world).getRadioTower();
 
                 if (tower != null && Util.manhattanDist(
                         tower.getWorld().getX(), tower.getWorld().getY(),

@@ -20,6 +20,8 @@ import java.util.Map;
 
 public class HackedNPC extends NonPlayerCharacter implements ControllableUnit {
 
+    public static Document DEFAULT_HACKED_NPC;
+
     private static final int MEM_SIZE = GameServer.INSTANCE.getConfig().getInt("hacked_npc_mem_size");
     private static final boolean DIE_ON_NO_ENERGY = GameServer.INSTANCE.getConfig().getInt("hacked_npc_die_on_no_energy") != 0;
 
@@ -43,7 +45,7 @@ public class HackedNPC extends NonPlayerCharacter implements ControllableUnit {
         cpu.setHardwareHost(this);
         cpu.getMemory().write(cpu.getCodeSectionOffset(), program, 0, program.length);
 
-        for (Object serialisedHw : (List) NpcPlugin.DEFAULT_HACKED_NPC.get("hardware")) {
+        for (Object serialisedHw : (List) DEFAULT_HACKED_NPC.get("hardware")) {
             HardwareModule hardware = GameServer.INSTANCE.getRegistry().deserializeHardware((Document) serialisedHw, this);
             hardware.setCpu(cpu);
             attachHardware(hardware, ((Document) serialisedHw).getInteger("address"));

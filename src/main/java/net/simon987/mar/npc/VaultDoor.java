@@ -66,7 +66,7 @@ public class VaultDoor extends Structure implements MessageReceiver, Enterable, 
     @Override
     public boolean sendMessage(char[] message) {
 
-        Settlement settlement = NpcPlugin.settlementMap.get(getWorld().getId());
+        Settlement settlement = Settlement.MAP.get(getWorld().getId());
 
         System.out.println("message: " + new String(message));
         System.out.println("password: " + new String(settlement.getPassword()));
