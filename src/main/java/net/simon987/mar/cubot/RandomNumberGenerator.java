@@ -1,4 +1,4 @@
-package net.simon987.mar.mischwplugin;
+package net.simon987.mar.cubot;
 
 import net.simon987.mar.server.assembly.HardwareModule;
 import net.simon987.mar.server.assembly.Status;

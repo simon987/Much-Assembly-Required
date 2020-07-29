@@ -44,6 +44,11 @@ public class CpuInitialisationListener implements GameEventListener {
         CubotShield shieldHw = new CubotShield(cubot);
         shieldHw.setCpu(cpu);
 
+        Clock clockHw = new Clock();
+        clockHw.setCpu(cpu);
+        RandomNumberGenerator rngHw = new RandomNumberGenerator();
+        rngHw.setCpu(cpu);
+
         cubot.attachHardware(legHw, CubotLeg.DEFAULT_ADDRESS);
         cubot.attachHardware(laserHw, CubotLaser.DEFAULT_ADDRESS);
         cubot.attachHardware(radarHw, CubotLidar.DEFAULT_ADDRESS);
@@ -57,5 +62,8 @@ public class CpuInitialisationListener implements GameEventListener {
         cubot.attachHardware(comPortHw, CubotComPort.DEFAULT_ADDRESS);
         cubot.attachHardware(coreHw, CubotCore.DEFAULT_ADDRESS);
         cubot.attachHardware(shieldHw, CubotShield.DEFAULT_ADDRESS);
+
+        cubot.attachHardware(clockHw, Clock.DEFAULT_ADDRESS);
+        cubot.attachHardware(rngHw, RandomNumberGenerator.DEFAULT_ADDRESS);
     }
 }
