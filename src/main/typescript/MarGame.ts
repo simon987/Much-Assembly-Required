@@ -21,6 +21,7 @@ class MarGame {
     constructor() {
 
         let self = this;
+        window["PhaserGlobal"] = {hideBanner: 1};
         this.game = new Phaser.Game(RENDERER_WIDTH, RENDERER_HEIGHT, Phaser.AUTO, 'game', null, true, false);
 
         this.bootState = {
