@@ -24,7 +24,7 @@ public class ObjInfoCommandListener implements GameEventListener {
 
         if (e.getName().equals("objInfo")) {
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
+            World world = GameServer.INSTANCE.getUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
                     false, e.getString("dimension"));
 
             try {

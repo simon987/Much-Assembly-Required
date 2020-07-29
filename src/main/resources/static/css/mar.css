@@ -1,3 +1,7 @@
+*, *:focus {
+    outline: none !important;
+}
+
 @font-face {
     font-family: 'Material Icons';
     font-style: normal;
@@ -219,6 +223,10 @@
 
 .dropdown-header {
     color: #aaadc7;
+}
+
+.dropdown-item {
+    color: #fff;
 }
 
 .container {

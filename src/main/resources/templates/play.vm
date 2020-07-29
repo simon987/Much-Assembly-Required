@@ -3,11 +3,16 @@
     #set ($title = $gamePageTitle)
     #set ($cur_page = "play")
     #parse("head.vm")
+<style>
+    html, body {
+        overflow-y: hidden;
+    }
+</style>
 <body>
 
     #parse("header.vm")
 
-<div class="container">
+<div class="container" style="max-width: 100%; padding-bottom: 2em">
     <div class="card text-center">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
@@ -47,18 +52,22 @@
         </div>
         <div class="card-body">
 
-        ## GAME / WORLD
+            ## GAME / WORLD
             <div id="world-tab">
                 <div id="game" tabindex="0"></div>
             </div>
 
-        ## EDITOR
+            ## EDITOR
             <div id="editor-tab" style="display: none">
                 #if($session.attribute("username"))
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <select title="Select Theme" class="form-control" id="editorTheme"></select>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <select title="Keymap" class="form-control" id="editorKeymap"></select>
                         </div>
 
                         <div class="col-sm-2">
@@ -105,18 +114,14 @@
 
                     <div id="editor"></div>
 
-                    <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
                 #else
                     <p style="text-align: left"><a href="/account">Login</a> to use the editor</p>
                 #end
-                <script src="js/editor.js"></script>
 
             </div>
         </div>
     </div>
 </div>
-
-    #parse("footer.vm")
 
 <div class="bottom-panel" style="height: 0">
     <div class="splitter-horizontal"></div>
@@ -147,6 +152,8 @@
                     <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(4)">64 chars</button>
                 </div>
             </div>
+            </p>
+
             <p>
                 <button id="resetButton" class="btn btn-danger btn-shadow" style="margin-left: 0"
                         data-container="body" data-toggle="popover" data-trigger="hover"
@@ -161,20 +168,26 @@
     </div>
 </div>
 
-<script>
-    $(".bottom-panel").resizable({
-        handleSelector: ".splitter-horizontal",
-        resizeWidth: false,
-        resizeHeightFrom: "top"
-    });
-
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
-</script>
-
+<script src="js/ace/ace.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-resizable.min.js"></script>
 <script src="js/phaser.js"></script>
 <script src="js/phaser-plugin-isometric.js"></script>
 <script src="js/mar.js"></script>
+<script src="js/editor.js"></script>
+
+<script>
+$(".bottom-panel").resizable({
+    handleSelector: ".splitter-horizontal",
+    resizeWidth: false,
+    resizeHeightFrom: "top"
+});
+
+$(function () {
+    $('[data-toggle="popover"]').popover()
+})
+</script>
 </body>
 </html>

@@ -463,14 +463,16 @@ var editorThemeOptions = {
         "theme/gob", "theme/gruvbox", "theme/idle_fingers",
         "theme/iplastic", "theme/katzenmilch", "theme/kr_theme",
         "theme/kuroir", "theme/merbivore", "theme/merbivore_soft",
-        "theme/mono_industrial", "theme/monokai", "theme/pastel_on_dark",
+        "theme/mono_industrial", "theme/monokai", "theme/nord_dark", "theme/pastel_on_dark",
         "theme/solarized_dark", "theme/solarized_light", "theme/sqlserver",
         "theme/terminal", "theme/textmate", "theme/tomorrow",
         "theme/tomorrow_night_blue", "theme/tomorrow_night_bright", "theme/tomorrow_night_eighties",
-        "theme/tomorrow_night", "theme/twilight", "theme/vibrant_ink", "theme/xcode"
+        "theme/tomorrow_night", "theme/twilight", "theme/vibrant_ink", "theme/xcode",
     ],
-    defaultTheme: "theme/tomorrow_night"
+    defaultTheme: "theme/tomorrow_night_eighties"
 };
+
+const editorKeymapSelect = document.getElementById("editorKeymap");
 
 //Get the stored default theme
 if (editorStorage) {
@@ -478,6 +480,7 @@ if (editorStorage) {
     if (storedTheme !== null && editorThemeOptions.available.indexOf(storedTheme) !== -1) {
         editorThemeOptions.defaultTheme = storedTheme;
     }
+
 }
 
 //Cache element reference
@@ -525,6 +528,33 @@ editorThemeOptions.available.forEach(function (theme) {
 
 //Manually call handler once
 editorOnThemeChange();
+
+editorKeymapOptions = [
+    "default",
+    "vim",
+    "emacs",
+    "sublime",
+    "vscode"
+];
+
+editorKeymapOptions.forEach(function (map) {
+    const option = document.createElement("option");
+    option.value = map === "default" ? "" : map;
+    option.text = map;
+    editorKeymapSelect.appendChild(option);
+});
+
+function onKeyMapSelect() {
+    editorStorage.setItem("editorKeymap", editorKeymapSelect.selectedIndex.toString());
+    editor.setKeyboardHandler("ace/keyboard/" + editorKeymapSelect.value);
+}
+
+editorKeymapSelect.addEventListener("change", onKeyMapSelect);
+
+if (editorStorage.getItem("editorKeymap") !== null) {
+    editorKeymapSelect.selectedIndex = Number(editorStorage.getItem("editorKeymap"));
+    onKeyMapSelect();
+}
 
 //------ Floppy upload form code ------------------
 

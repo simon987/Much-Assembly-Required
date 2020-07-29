@@ -37,7 +37,7 @@ public class UserStatsHelper {
         Document orderBy = new Document("$stats." + statName, -1);
 
         for (Document dbUser : users.find().sort(orderBy).limit(n)) {
-            User user = GameServer.INSTANCE.getGameUniverse().getUser((String) dbUser.get("username"));
+            User user = GameServer.INSTANCE.getUniverse().getUser((String) dbUser.get("username"));
             int val = 0;
             if (user.getStats().getInt(statName) > 0) {
                 val = user.getStats().getInt(statName);
@@ -96,7 +96,7 @@ public class UserStatsHelper {
                 new Document("$sort", new Document("setLength", -1)),
                 new Document("$limit", n))
         )) {
-            User user = GameServer.INSTANCE.getGameUniverse().getUser((String) document.get("username"));
+            User user = GameServer.INSTANCE.getUniverse().getUser((String) document.get("username"));
             rows.add(user);
         }
 

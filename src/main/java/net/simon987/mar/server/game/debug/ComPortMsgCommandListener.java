@@ -24,7 +24,7 @@ public class ComPortMsgCommandListener implements GameEventListener {
 
             ObjectId objectId = e.getObjectId("objectId");
 
-            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(objectId);
+            GameObject object = GameServer.INSTANCE.getUniverse().getObject(objectId);
 
             if (object != null) {
 

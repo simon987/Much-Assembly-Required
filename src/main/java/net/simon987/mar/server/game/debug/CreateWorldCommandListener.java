@@ -20,7 +20,7 @@ public class CreateWorldCommandListener implements GameEventListener {
 
         if (e.getName().equals("createWorld")) {
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
+            World world = GameServer.INSTANCE.getUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
                     true, e.getString("dimension"));
 
             if (world != null) {

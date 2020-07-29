@@ -1,28 +1,28 @@
 {
   "hardware": [
     {
-      "type": "net.simon987.cubotplugin.CubotLeg",
+      "type": "net.simon987.mar.cubot.CubotLeg",
       "address": 1
     },
     {
-      "type": "net.simon987.cubotplugin.CubotLaser",
+      "type": "net.simon987.mar.cubot.CubotLaser",
       "address": 2
     },
     {
-      "type": "net.simon987.cubotplugin.CubotLidar",
+      "type": "net.simon987.mar.cubot.CubotLidar",
       "address": 3
     },
     {
-      "type": "net.simon987.cubotplugin.CubotDrill",
+      "type": "net.simon987.mar.cubot.CubotDrill",
       "address": 5
     },
     {
-      "type": "net.simon987.npcplugin.NpcInventory",
+      "type": "net.simon987.mar.cubot.NpcInventory",
       "item": null,
       "address": 6
     },
     {
-      "type": "net.simon987.mischwplugin.RandomNumberGenerator",
+      "type": "net.simon987.mar.mischwplugin.RandomNumberGenerator",
       "address": 7
     },
     {
@@ -30,7 +30,7 @@
       "address": 8
     },
     {
-      "type": "net.simon987.cubotplugin.CubotHologram",
+      "type": "net.simon987.mar.cubot.CubotHologram",
       "color": 0,
       "value": 0,
       "string": "",
@@ -38,24 +38,24 @@
       "address": 9
     },
     {
-      "type": "net.simon987.npcplugin.NpcBattery",
+      "type": "net.simon987.mar.npc.NpcBattery",
       "energy": 60000,
       "max_energy": 60000,
       "address": 262
     },
     {
-      "type": "net.simon987.npcplugin.RadioReceiverHardware",
+      "type": "net.simon987.mar.npc.RadioReceiverHardware",
       "cubot": {
         "$oid": "5c1d43e40d3d2530aba636df"
       },
       "address": 12
     },
     {
-      "type": "net.simon987.cubotplugin.CubotComPort",
+      "type": "net.simon987.mar.npc.CubotComPort",
       "address": 13
     },
     {
-      "type": "net.simon987.cubotplugin.CubotCore",
+      "type": "net.simon987.mar.npc.CubotCore",
       "address": 14
     }
   ]

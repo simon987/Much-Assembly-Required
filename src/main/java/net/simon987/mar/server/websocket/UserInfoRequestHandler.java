@@ -32,7 +32,7 @@ public class UserInfoRequestHandler implements MessageHandler {
             }
 
             json.put("t", "userInfo");
-            json.put("maxWidth", GameServer.INSTANCE.getGameUniverse().getMaxWidth());
+            json.put("maxWidth", GameServer.INSTANCE.getUniverse().getMaxWidth());
             user.getWebSocket().getRemote().sendString(json.toJSONString());
         }
     }

@@ -17,7 +17,7 @@ public class AccountPage implements TemplateViewRoute {
 
 
         if (request.session().attribute("username") != null) {
-            model.put("user", GameServer.INSTANCE.getGameUniverse().getUser(request.session().attribute("username")));
+            model.put("user", GameServer.INSTANCE.getUniverse().getUser(request.session().attribute("username")));
         }
 
         return new ModelAndView(model, "account.vm");

@@ -288,7 +288,7 @@ public class Cubot extends GameObject implements Updatable, ControllableUnit, Me
         int spawnX = config.getInt("new_user_worldX") + random.nextInt(5);
         int spawnY = config.getInt("new_user_worldY") + random.nextInt(5);
         String dimension = config.getString("new_user_dimension");
-        this.setWorld(GameServer.INSTANCE.getGameUniverse().getWorld(spawnX, spawnY, true, dimension));
+        this.setWorld(GameServer.INSTANCE.getUniverse().getWorld(spawnX, spawnY, true, dimension));
 
         Point point = this.getWorld().getRandomPassableTile();
         this.setX(point.x);

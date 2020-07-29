@@ -15,17 +15,16 @@ import net.simon987.mar.cubot.*;
 import net.simon987.mar.cubot.event.*;
 import net.simon987.mar.mischwplugin.Clock;
 import net.simon987.mar.mischwplugin.RandomNumberGenerator;
-import net.simon987.mar.npcplugin.*;
-import net.simon987.mar.npcplugin.event.VaultCompleteListener;
-import net.simon987.mar.npcplugin.event.VaultWorldUpdateListener;
-import net.simon987.mar.npcplugin.world.TileVaultFloor;
-import net.simon987.mar.npcplugin.world.TileVaultWall;
+import net.simon987.mar.npc.*;
+import net.simon987.mar.npc.event.BeforeSaveListener;
+import net.simon987.mar.npc.event.LoadListener;
+import net.simon987.mar.npc.event.VaultCompleteListener;
+import net.simon987.mar.npc.event.VaultWorldUpdateListener;
+import net.simon987.mar.npc.world.TileVaultFloor;
+import net.simon987.mar.npc.world.TileVaultWall;
 import net.simon987.mar.server.crypto.CryptoProvider;
 import net.simon987.mar.server.crypto.SecretKeyGenerator;
-import net.simon987.mar.server.event.GameEvent;
-import net.simon987.mar.server.event.GameEventDispatcher;
-import net.simon987.mar.server.event.GameEventListener;
-import net.simon987.mar.server.event.TickEvent;
+import net.simon987.mar.server.event.*;
 import net.simon987.mar.server.game.GameUniverse;
 import net.simon987.mar.server.game.debug.*;
 import net.simon987.mar.server.game.item.ItemCopper;
@@ -41,6 +40,7 @@ import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GameServer implements Runnable {
 
@@ -128,7 +128,6 @@ public class GameServer implements Runnable {
         listeners.add(new SetEnergyCommandListener());
         listeners.add(new SaveGameCommandListener());
 
-
         // Biomass
         listeners.add(new WorldCreationListener());
         listeners.add(new WorldUpdateListener(config));
@@ -147,12 +146,12 @@ public class GameServer implements Runnable {
         listeners.add(new WalkListener());
 
         // NPC
-
-        listeners.add(new net.simon987.mar.npcplugin.event.WorldCreationListener(config.getInt("settlement_spawn_rate")));
-        listeners.add(new net.simon987.mar.npcplugin.event.CpuInitialisationListener());
+        listeners.add(new net.simon987.mar.npc.event.WorldCreationListener(config.getInt("settlement_spawn_rate")));
+        listeners.add(new net.simon987.mar.npc.event.CpuInitialisationListener());
         listeners.add(new VaultWorldUpdateListener(config));
         listeners.add(new VaultCompleteListener());
-
+        listeners.add(new LoadListener());
+        listeners.add(new BeforeSaveListener());
     }
 
     private void registerGameObjects() {
@@ -199,7 +198,7 @@ public class GameServer implements Runnable {
         gameRegistry.registerGameObject(Factory.class);
         gameRegistry.registerGameObject(RadioTower.class);
         gameRegistry.registerGameObject(VaultDoor.class);
-        gameRegistry.registerGameObject(net.simon987.mar.npcplugin.Obstacle.class);
+        gameRegistry.registerGameObject(net.simon987.mar.npc.Obstacle.class);
         gameRegistry.registerGameObject(ElectricBox.class);
         gameRegistry.registerGameObject(Portal.class);
         gameRegistry.registerGameObject(VaultExitPortal.class);
@@ -213,7 +212,7 @@ public class GameServer implements Runnable {
         gameRegistry.registerTile(TileVaultWall.ID, TileVaultWall.class);
     }
 
-    public GameUniverse getGameUniverse() {
+    public GameUniverse getUniverse() {
         return gameUniverse;
     }
 
@@ -308,7 +307,7 @@ public class GameServer implements Runnable {
         Document whereQuery = new Document();
         whereQuery.put("shouldUpdate", true);
         MongoCursor<Document> cursor = worlds.find(whereQuery).iterator();
-        GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
+        GameUniverse universe = GameServer.INSTANCE.getUniverse();
         while (cursor.hasNext()) {
             World w = World.deserialize(cursor.next());
             universe.addWorld(w);
@@ -326,16 +325,20 @@ public class GameServer implements Runnable {
             Document serverObj = cursor.next();
             gameUniverse.setTime((long) serverObj.get("time"));
 
-            // TODO: load gameUniverse.store data
+            gameUniverse.store = (Map<String, Document>) serverObj.get("store");
         }
 
-        LogManager.LOGGER.info("Done loading! W:" + GameServer.INSTANCE.getGameUniverse().getWorldCount() +
-                " | U:" + GameServer.INSTANCE.getGameUniverse().getUserCount());
+        eventDispatcher.dispatch(new LoadEvent());
+
+        LogManager.LOGGER.info("Done loading! W:" + GameServer.INSTANCE.getUniverse().getWorldCount() +
+                " | U:" + GameServer.INSTANCE.getUniverse().getUserCount());
     }
 
     public void save() {
 
-        LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
+        LogManager.LOGGER.info("Saving to MongoDB | W:" + gameUniverse.getWorldCount() + " | U:" + gameUniverse.getUserCount());
+
+        eventDispatcher.dispatch(new BeforeSaveEvent());
 
         ClientSession session = null;
         try {
@@ -358,7 +361,7 @@ public class GameServer implements Runnable {
             MongoCollection<Document> server = db.getCollection("server");
 
             int insertedWorlds = 0;
-            GameUniverse universe = GameServer.INSTANCE.getGameUniverse();
+            GameUniverse universe = GameServer.INSTANCE.getUniverse();
             for (World w : universe.getWorlds()) {
                 insertedWorlds++;
                 worlds.replaceOne(new Document("_id", w.getId()), w.mongoSerialise(), updateOptions);
@@ -370,7 +373,7 @@ public class GameServer implements Runnable {
                 }
             }
 
-            for (User u : GameServer.INSTANCE.getGameUniverse().getUsers()) {
+            for (User u : GameServer.INSTANCE.getUniverse().getUsers()) {
                 if (!u.isGuest()) {
                     users.replaceOne(new Document("_id", u.getUsername()), u.mongoSerialise(), updateOptions);
                 }
@@ -378,6 +381,7 @@ public class GameServer implements Runnable {
 
             Document serverObj = new Document();
             serverObj.put("time", gameUniverse.getTime());
+            serverObj.put("store", gameUniverse.store);
 
             //A constant id ensures only one entry is kept and updated, instead of a new entry created every save.
             server.replaceOne(new Document("_id", "serverinfo"), serverObj, updateOptions);

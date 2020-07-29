@@ -25,7 +25,7 @@ public class SpawnObjCommandListener implements GameEventListener {
         if (e.getName().equals("spawnObj")) {
 
             try {
-                World world = GameServer.INSTANCE.getGameUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
+                World world = GameServer.INSTANCE.getUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
                         false, e.getString("dimension"));
 
                 Document dbObj = Document.parse(e.getString("data"));

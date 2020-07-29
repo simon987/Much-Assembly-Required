@@ -31,11 +31,12 @@ public class SocketServer {
     private final GuestPolicy guestPolicy;
 
     public SocketServer(GuestPolicy guestPolicy) {
-
         this.guestPolicy = guestPolicy;
 
+        int createNew = GameServer.INSTANCE.getConfig().getInt("wg_createNewOnRequest");
+
         messageDispatcher.addHandler(new UserInfoRequestHandler());
-        messageDispatcher.addHandler(new TerrainRequestHandler());
+        messageDispatcher.addHandler(new TerrainRequestHandler(createNew != 0));
         messageDispatcher.addHandler(new ObjectsRequestHandler());
         messageDispatcher.addHandler(new CodeUploadHandler());
         messageDispatcher.addHandler(new CodeRequestHandler());
@@ -96,7 +97,7 @@ public class SocketServer {
     }
 
     private void doPostAuthGuest(Session session, OnlineUser onlineUser) {
-        User guestUser = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(GameServer.INSTANCE.getGameUniverse().getGuestUsername(), false);
+        User guestUser = GameServer.INSTANCE.getUniverse().getOrCreateUser(GameServer.INSTANCE.getUniverse().getGuestUsername(), false);
         onlineUser.setUser(guestUser);
         onlineUser.setAuthenticated(true);
         onlineUser.getUser().setGuest(true);

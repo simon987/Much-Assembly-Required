@@ -27,7 +27,7 @@ public class ObjectsRequestHandler implements MessageHandler {
                 return;
             }
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(x, y, false, dimension);
+            World world = GameServer.INSTANCE.getUniverse().getWorld(x, y, false, dimension);
 
             if (world != null) {
 

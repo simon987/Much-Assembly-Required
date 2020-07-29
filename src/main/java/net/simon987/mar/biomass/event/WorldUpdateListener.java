@@ -50,12 +50,12 @@ public class WorldUpdateListener implements GameEventListener {
 
                 //Set a timer for respawn_time ticks
                 if (!worldWaitMap.containsKey(world) || worldWaitMap.get(world) == 0L) {
-                    worldWaitMap.put(world, GameServer.INSTANCE.getGameUniverse().getTime() + waitTime);
+                    worldWaitMap.put(world, GameServer.INSTANCE.getUniverse().getTime() + waitTime);
                 } else {
 
                     long waitUntil = worldWaitMap.get(world);
 
-                    if (GameServer.INSTANCE.getGameUniverse().getTime() >= waitUntil) {
+                    if (GameServer.INSTANCE.getUniverse().getTime() >= waitUntil) {
 
                         //If the timer was set less than respawn_time ticks ago, respawn the blobs
                         ArrayList<BiomassBlob> newBlobs = WorldUtils.generateBlobs(world, minBlobCount,

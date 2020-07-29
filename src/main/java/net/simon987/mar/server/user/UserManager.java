@@ -63,7 +63,7 @@ public class UserManager {
         }
 
         try {
-            User user = GameServer.INSTANCE.getGameUniverse().getOrCreateUser(username, true);
+            User user = GameServer.INSTANCE.getUniverse().getOrCreateUser(username, true);
             user.setUsername(username);
 
             String salt = BCrypt.gensalt();
@@ -106,7 +106,7 @@ public class UserManager {
             throw new RegistrationException("Password must be 8-96 characters");
         }
 
-        User user = GameServer.INSTANCE.getGameUniverse().getUser(username);
+        User user = GameServer.INSTANCE.getUniverse().getUser(username);
 
         String salt = BCrypt.gensalt();
         String hashedPassword = BCrypt.hashpw(newPassword, salt);
@@ -123,7 +123,7 @@ public class UserManager {
      */
     public String generateAndGetToken(String username) {
 
-        User user = GameServer.INSTANCE.getGameUniverse().getUser(username);
+        User user = GameServer.INSTANCE.getUniverse().getUser(username);
 
         if (user == null) {
             return null;
@@ -146,7 +146,7 @@ public class UserManager {
      */
     public User validateAuthToken(String token) {
 
-        for (User user : GameServer.INSTANCE.getGameUniverse().getUsers()) {
+        for (User user : GameServer.INSTANCE.getUniverse().getUsers()) {
 
             if (user.getAccessToken() != null && user.getAccessToken().equals(token)) {
                 user.setAccessToken(""); //Token is erased when used

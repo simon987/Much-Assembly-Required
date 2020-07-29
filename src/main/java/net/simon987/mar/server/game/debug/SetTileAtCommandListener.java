@@ -20,7 +20,7 @@ public class SetTileAtCommandListener implements GameEventListener {
 
         if (e.getName().equals("setTileAt")) {
 
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
+            World world = GameServer.INSTANCE.getUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
                     false, e.getString("dimension"));
 
             if (world != null) {

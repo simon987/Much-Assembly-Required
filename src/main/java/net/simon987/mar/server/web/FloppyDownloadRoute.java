@@ -19,7 +19,7 @@ public class FloppyDownloadRoute implements Route {
             response.header("Content-Disposition", "filename=\"floppy.bin\"");
 
             try {
-                return GameServer.INSTANCE.getGameUniverse().getUser(username).getControlledUnit().getFloppyData().getBytes();
+                return GameServer.INSTANCE.getUniverse().getUser(username).getControlledUnit().getFloppyData().getBytes();
             } catch (Exception e) {
                 String message = "Encountered exception while reading floppy data: " + e.getMessage();
 

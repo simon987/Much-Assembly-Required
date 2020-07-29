@@ -23,8 +23,8 @@ public class TpObjectCommandListener implements GameEventListener {
 
         if (e.getName().equals("tpObj")) {
 
-            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getObjectId("objectId"));
-            World world = GameServer.INSTANCE.getGameUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
+            GameObject object = GameServer.INSTANCE.getUniverse().getObject(e.getObjectId("objectId"));
+            World world = GameServer.INSTANCE.getUniverse().getWorld(e.getInt("worldX"), e.getInt("worldY"),
                     false, e.getString("dimension"));
 
             if (object != null) {

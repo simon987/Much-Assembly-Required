@@ -16,8 +16,6 @@ public class PlayPage implements TemplateViewRoute {
 
         String autoLogin = GameServer.INSTANCE.getConfig().getString("autologin");
         if (autoLogin != null && !autoLogin.equals("")) {
-            AlertMessage[] messages = {new AlertMessage("Logged in as " + autoLogin, AlertType.SUCCESS)};
-            request.session().attribute("messages", messages);
             request.session().attribute("username", autoLogin);
         }
 

@@ -21,7 +21,7 @@ public class UserInfoCommandListener implements GameEventListener {
 
         if (e.getName().equals("userInfo")) {
 
-            User user = GameServer.INSTANCE.getGameUniverse().getUser(e.getString("username"));
+            User user = GameServer.INSTANCE.getUniverse().getUser(e.getString("username"));
 
             if (user != null) {
 

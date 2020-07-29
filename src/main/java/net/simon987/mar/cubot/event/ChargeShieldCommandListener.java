@@ -23,7 +23,7 @@ public class ChargeShieldCommandListener implements GameEventListener {
 
         if (e.getName().equals("chargeShield")) {
 
-            GameObject cubot = GameServer.INSTANCE.getGameUniverse().getObject(e.getObjectId("objectId"));
+            GameObject cubot = GameServer.INSTANCE.getUniverse().getObject(e.getObjectId("objectId"));
 
             if (cubot != null) {
 

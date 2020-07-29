@@ -28,7 +28,7 @@ public class ObjectDeathListener implements GameEventListener {
     @Override
     public void handle(GameEvent event) {
 
-        if (event.getSource().getClass().getCanonicalName().equals("net.simon987.mar.npcplugin.HarvesterNPC")) {
+        if (event.getSource().getClass().getCanonicalName().equals("net.simon987.mar.npc.HarvesterNPC")) {
             //An HarvesterNPC ObjectDeathEvent is received
             GameObject dyingHarvesterNPC = (GameObject) event.getSource();
 

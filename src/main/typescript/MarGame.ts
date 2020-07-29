@@ -27,14 +27,14 @@ class MarGame {
         this.bootState = {
             preload: function () {
                 if (DEBUG) {
-                    console.log("[MAR] Loading sprites.png as JSONHash");
+                    console.log("[MAR] Loading sprites.png as JSONHash");
                 }
                 this.game.load.atlasJSONHash("sheet", "./images/sprites.png", "./images/sprites.json").onLoadComplete.add(function () {
                     self.game.time.advancedTiming = true;
 
                     //Add and enable the isometric plug-in.
                     if (DEBUG) {
-                        console.log("[MAR] Enabling isometric plugin");
+                        console.log("[MAR] Enabling isometric plugin");
                     }
                     self.game.plugins.add(new Phaser.Plugin.Isometric(self.game));
 
@@ -45,8 +45,8 @@ class MarGame {
                     self.game.world.setBounds(0, 0, 2200, 1100);
 
                     //Make camera more or less centered (tested on 1080 screen)
-                    self.game.camera.x = 280;
-                    self.game.camera.y = 90;
+                    self.game.camera.x = 220;
+                    self.game.camera.y = 80;
 
                     self.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
                     self.game.scale.pageAlignHorizontally = true;
@@ -275,8 +275,6 @@ class MarGame {
         this.animationFrames.vaultDoorScreen.push("objects/VaultDoorScreen/1");
         this.animationFrames.vaultDoorScreen.push("objects/VaultDoorScreen/1");
         this.animationFrames.vaultDoorScreen.push("objects/VaultDoorScreen/1");
-
-
     }
 
     private initialiseStaticHud() {

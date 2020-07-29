@@ -22,7 +22,7 @@ public class SetInventoryPosition implements GameEventListener {
 
         if (e.getName().equals("setInventoryPosition")) {
 
-            GameObject object = GameServer.INSTANCE.getGameUniverse().getObject(e.getObjectId("objectId"));
+            GameObject object = GameServer.INSTANCE.getUniverse().getObject(e.getObjectId("objectId"));
 
             if (object != null) {
 

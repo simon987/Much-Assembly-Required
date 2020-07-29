@@ -32,7 +32,7 @@ public class GameUniverse {
 
     private final int maxWidth = 0xFFFF;
 
-    private final Map<String, Document> store;
+    public Map<String, Document> store;
 
     public GameUniverse(IServerConfiguration config) {
 

@@ -65,7 +65,7 @@ public abstract class GameObject implements JSONSerializable, MongoSerializable 
 
         if (newX < 0 || newY < 0 || newX >= world.getWorldSize() || newY >= world.getWorldSize()) {
             //Next tile is out of world bounds, move to next world
-            World nextWorld = GameServer.INSTANCE.getGameUniverse().getWorld(
+            World nextWorld = GameServer.INSTANCE.getUniverse().getWorld(
                     world.getX() + direction.dX, world.getY() + direction.dY, true, world.getDimension());
 
             //Move object to next World

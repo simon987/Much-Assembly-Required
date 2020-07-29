@@ -33,7 +33,7 @@ public class FloppyUploadRoute implements Route {
                         if (bytesRead == 1474560) {
 
                             try {
-                                GameServer.INSTANCE.getGameUniverse().getUser(username).getControlledUnit().getFloppyData().setBytes(bytes);
+                                GameServer.INSTANCE.getUniverse().getUser(username).getControlledUnit().getFloppyData().setBytes(bytes);
                                 return "ok";
                             } catch (Exception e) {
                                 String message = "Encountered exception while writing floppy data: " + e.getMessage();

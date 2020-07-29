@@ -9,6 +9,12 @@ import java.io.IOException;
 
 public class TerrainRequestHandler implements MessageHandler {
 
+    private final boolean createNewOnRequest;
+
+    public TerrainRequestHandler(boolean createNewOnRequest) {
+        this.createNewOnRequest = createNewOnRequest;
+    }
+
     @Override
     public void handle(OnlineUser user, JSONObject json) throws IOException {
         if (json.get("t").equals("terrain") && json.containsKey("x") && json.containsKey("y") &&
@@ -17,9 +23,10 @@ public class TerrainRequestHandler implements MessageHandler {
             LogManager.LOGGER.fine("Terrain request from " + user.getUser().getUsername());
             World world;
             try {
-                world = GameServer.INSTANCE.getGameUniverse().getWorld(
+                world = GameServer.INSTANCE.getUniverse().getWorld(
                         Long.valueOf((long) json.get("x")).intValue(),
-                        Long.valueOf((long) json.get("y")).intValue(), false,
+                        Long.valueOf((long) json.get("y")).intValue(),
+                        createNewOnRequest,
                         (String) json.get("dimension"));
             } catch (NullPointerException e) {
                 LogManager.LOGGER.severe("FIXME: handle TerrainRequestHandler");

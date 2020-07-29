@@ -27,7 +27,7 @@ public class Clock extends HardwareModule {
     @Override
     public void handleInterrupt(Status status) {
 
-        int time = (int) GameServer.INSTANCE.getGameUniverse().getTime();
+        int time = (int) GameServer.INSTANCE.getUniverse().getTime();
 
         //Will need to be changed to quadword in about 136 years
         getCpu().getRegisterSet().getRegister("B").setValue(Util.getHigherWord(time));

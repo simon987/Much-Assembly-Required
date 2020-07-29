@@ -549,8 +549,8 @@ class HarvesterNPC extends Cubot {
     }
 
     protected getEnergy(json): number {
-        if (json.hasOwnProperty("net.simon987.mar.npcplugin.NpcBattery")) {
-            return json["net.simon987.mar.npcplugin.NpcBattery"].energy;
+        if (json.hasOwnProperty("net.simon987.mar.npc.NpcBattery")) {
+            return json["net.simon987.mar.npc.NpcBattery"].energy;
         } else {
             return 1000; //arbitrary number so that the lowEnergy color thresh doesn't trigger
         }
