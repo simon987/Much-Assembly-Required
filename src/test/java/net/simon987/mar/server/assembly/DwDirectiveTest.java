@@ -6,22 +6,18 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class OrgDirectiveTest {
-
+public class DwDirectiveTest {
     @Test
-    public void orgWikiExample() {
+    public void dwStringWikiExample() {
         String code = "" +
-                "ORG 0x8000            \n" +
-                "my_var: DW 0x1234     \n" +
+                "my_str: DW \"Hello\"  \n" +
                 ".text                 \n" +
-                "MOV A, my_var         \n" +
+                "MOV A, [my_str]       \n" +
                 "brk                   \n";
 
         TestExecutionResult res = TestHelper.executeCode(code);
 
         assertTrue(res.ar.exceptions.isEmpty());
-        assertEquals(0x8000, res.ar.origin);
-        assertEquals(0x1234, res.memValue(0x8000));
-        assertEquals(0x8000, res.regValue("A"));
+        assertEquals('H', res.regValue("A"));
     }
 }
