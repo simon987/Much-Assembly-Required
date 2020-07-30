@@ -11,7 +11,7 @@ public class TestExecutionResult {
 
     public List<FakeHardwareHost.HwiCall> hwiHistory;
 
-    private AssemblyResult ar;
+    public AssemblyResult ar;
 
     public TestExecutionResult(CpuState state, List<FakeHardwareHost.HwiCall> hwiHistory, AssemblyResult ar) {
         this.state = state;

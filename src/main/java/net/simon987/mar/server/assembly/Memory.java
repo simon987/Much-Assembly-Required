@@ -192,7 +192,7 @@ public class Memory implements Target, MongoSerializable, Cloneable {
     public Memory clone() {
         Memory memory = new Memory(words.length);
         memory.words = new char[words.length];
-        System.arraycopy(memory.words, 0, words, 0, words.length);
+        System.arraycopy(words, 0, memory.words, 0, words.length);
         return memory;
     }
 }
