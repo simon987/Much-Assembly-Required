@@ -3,7 +3,7 @@ package net.simon987.mar.server.assembly;
 /**
  * Represents the state of the processor
  */
-public class Status {
+public class Status implements Cloneable {
 
     /**
      * Set to true when the result of
@@ -147,5 +147,15 @@ public class Status {
         setZeroFlag((stat & (1 << 2)) != 0);
         setCarryFlag((stat & (1 << 1)) != 0);
         setOverflowFlag((stat & 1) != 0);
+    }
+
+    @Override
+    public Status clone() {
+        try {
+            return (Status) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import net.simon987.mar.server.assembly.Assembler;
 import net.simon987.mar.server.assembly.AssemblyResult;
 import net.simon987.mar.server.assembly.CPU;
 import net.simon987.mar.server.assembly.exception.CancelledException;
+import net.simon987.mar.server.event.CpuInitialisationEvent;
 import net.simon987.mar.server.event.GameEvent;
 import net.simon987.mar.server.event.GameEventListener;
 import net.simon987.mar.server.event.UserCreationEvent;
@@ -55,13 +56,20 @@ public class UserCreationListener implements GameEventListener {
 
         //Create CPU
         try {
-            cubot.setCpu(new CPU(GameServer.INSTANCE.getConfig(), cubot));
+            CPU cpu = new CPU(config);
+            cubot.setCpu(cpu);
             cubot.getCpu().setHardwareHost(cubot);
             user.setUserCode(config.getString("new_user_code"));
 
+            GameEvent initEvent = new CpuInitialisationEvent(cpu, cubot);
+            GameServer.INSTANCE.getEventDispatcher().dispatch(event);
+            if (initEvent.isCancelled()) {
+                throw new CancelledException();
+            }
+
             //Compile user code
-            AssemblyResult ar = new Assembler(cubot.getCpu().getInstructionSet(), cubot.getCpu().getRegisterSet(),
-                    GameServer.INSTANCE.getConfig()).parse(user.getUserCode());
+            AssemblyResult ar = new Assembler(cpu.getInstructionSet(), cpu.getRegisterSet(),
+                    config).parse(user.getUserCode());
 
             cubot.getCpu().getMemory().clear();
 

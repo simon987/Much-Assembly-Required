@@ -98,7 +98,7 @@ public class CPU implements MongoSerializable {
     /**
      * Creates a new CPU
      */
-    public CPU(IServerConfiguration config, ControllableUnit unit) throws CancelledException {
+    public CPU(IServerConfiguration config) throws CancelledException {
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
         codeSectionOffset = config.getInt("org_offset");
@@ -132,12 +132,6 @@ public class CPU implements MongoSerializable {
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
-
-        GameEvent event = new CpuInitialisationEvent(this, unit);
-        GameServer.INSTANCE.getEventDispatcher().dispatch(event);
-        if (event.isCancelled()) {
-            throw new CancelledException();
-        }
     }
 
     public void reset() {
@@ -398,15 +392,20 @@ public class CPU implements MongoSerializable {
 
     public static CPU deserialize(Document obj, ControllableUnit unit) throws CancelledException {
 
-        CPU cpu = new CPU(GameServer.INSTANCE.getConfig(), unit);
+        CPU cpu = new CPU(GameServer.INSTANCE.getConfig());
 
         cpu.codeSectionOffset = obj.getInteger("codeSegmentOffset");
 
         cpu.memory = new Memory((Document) obj.get("memory"));
         cpu.registerSet = RegisterSet.deserialize((Document) obj.get("registerSet"));
 
-        return cpu;
+        GameEvent event = new CpuInitialisationEvent(cpu, unit);
+        GameServer.INSTANCE.getEventDispatcher().dispatch(event);
+        if (event.isCancelled()) {
+            throw new CancelledException();
+        }
 
+        return cpu;
     }
 
     public InstructionSet getInstructionSet() {
@@ -465,5 +464,16 @@ public class CPU implements MongoSerializable {
 
     public void setHardwareHost(HardwareHost hardwareHost) {
         this.hardwareHost = hardwareHost;
+    }
+
+    /**
+     * For testing/debugging, this creates an copy (please be mindful of the memory usage)
+     */
+    public CpuState getState() {
+        return new CpuState(
+                registerSet.clone(),
+                memory.clone(),
+                status.clone()
+        );
     }
 }

@@ -21,7 +21,7 @@ import java.util.zip.InflaterOutputStream;
 /**
  * Represents the available memory for a CPU in the game universe
  */
-public class Memory implements Target, MongoSerializable {
+public class Memory implements Target, MongoSerializable, Cloneable {
 
 
     /**
@@ -105,6 +105,7 @@ public class Memory implements Target, MongoSerializable {
         address = (char) address;
 
         if (address >= words.length) {
+            Thread.dumpStack();
             LogManager.LOGGER.info("DEBUG: Trying to set memory out of bounds: " + address);
             return;
         }
@@ -117,25 +118,25 @@ public class Memory implements Target, MongoSerializable {
      *
      * @param blockSize Block size (in words) in which to randomly flip one bit
      */
-     public void corrupt(int blockSize) {
-         Random rand = new Random();
+    public void corrupt(int blockSize) {
+        Random rand = new Random();
 
-         // Increment offset by blockSize
-         for (int offset = 0; offset < words.length; offset += blockSize) {
+        // Increment offset by blockSize
+        for (int offset = 0; offset < words.length; offset += blockSize) {
 
-             // Calculate address to corrupt by adding a random value between 0 to (blocksize-1) to offset
-             int address = rand.nextInt(blockSize) + offset;
+            // Calculate address to corrupt by adding a random value between 0 to (blocksize-1) to offset
+            int address = rand.nextInt(blockSize) + offset;
 
-             // Checking here avoids having a protected area at the end of the address space
-             if(address < words.length) {
+            // Checking here avoids having a protected area at the end of the address space
+            if (address < words.length) {
 
-                 // Calculate bitmask by left-shifting 1 by a random value between 0 and 15
-                 int bitmask = 1 << rand.nextInt(16);
+                // Calculate bitmask by left-shifting 1 by a random value between 0 and 15
+                int bitmask = 1 << rand.nextInt(16);
 
-                 // Flip the bit with XOR
-                 words[address] ^= bitmask;
-             }
-         }
+                // Flip the bit with XOR
+                words[address] ^= bitmask;
+            }
+        }
     }
 
     /**
@@ -185,5 +186,13 @@ public class Memory implements Target, MongoSerializable {
 
     public char[] getWords() {
         return words;
+    }
+
+    @Override
+    public Memory clone() {
+        Memory memory = new Memory(words.length);
+        memory.words = new char[words.length];
+        System.arraycopy(memory.words, 0, words, 0, words.length);
+        return memory;
     }
 }

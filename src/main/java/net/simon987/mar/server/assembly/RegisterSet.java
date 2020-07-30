@@ -2,29 +2,23 @@ package net.simon987.mar.server.assembly;
 
 
 import net.simon987.mar.server.io.MongoSerializable;
-import net.simon987.mar.server.logging.LogManager;
 import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * A set of registers for a CPU
  */
-public class RegisterSet implements Target, MongoSerializable {
+public class RegisterSet implements Target, MongoSerializable, Cloneable {
 
-    /**
-     * List of registers
-     */
-    private final HashMap<Integer, Register> registers = new HashMap<>(8);
+    // TODO configurable number of registers
+    private static final int REG_COUNT = 8 + 1;
 
+    private final Register[] registers = new Register[REG_COUNT];
 
-    /**
-     * Create an empty Register set
-     */
     public RegisterSet() {
 
     }
@@ -40,9 +34,8 @@ public class RegisterSet implements Target, MongoSerializable {
 
         name = name.toUpperCase();
 
-        for (Integer i : registers.keySet()) {
-            if (registers.get(i).getName().equals(name)) {
-
+        for (int i = 1; i < REG_COUNT; i++) {
+            if (registers[i].getName().equals(name)) {
                 return i;
             }
         }
@@ -56,7 +49,7 @@ public class RegisterSet implements Target, MongoSerializable {
      * @param index index of the register
      */
     public Register getRegister(int index) {
-        return registers.get(index);
+        return registers[index];
     }
 
     /**
@@ -68,7 +61,8 @@ public class RegisterSet implements Target, MongoSerializable {
 
         name = name.toUpperCase();
 
-        for (Register r : registers.values()) {
+        for (Register r : registers) {
+            if (r == null) continue;
             if (r.getName().equals(name)) {
                 return r;
             }
@@ -86,15 +80,11 @@ public class RegisterSet implements Target, MongoSerializable {
      */
     @Override
     public int get(int address) {
-
-        Register register = registers.get(address);
-
-        if (register != null) {
-            return register.getValue();
-        } else {
+        if (address <= 0 || address >= REG_COUNT) {
             return 0;
         }
 
+        return registers[address].getValue();
     }
 
     /**
@@ -105,23 +95,17 @@ public class RegisterSet implements Target, MongoSerializable {
      */
     @Override
     public void set(int address, int value) {
-
-        Register register = registers.get(address);
-
-        if (register != null) {
-            register.setValue(value);
-        } else {
-            LogManager.LOGGER.info("DEBUG: trying to set unknown reg index : " + address);
+        if (address <= 0 || address >= REG_COUNT) {
+            return;
         }
-    }
 
-    public void put(int index, Register register) {
-        registers.put(index, register);
+        registers[address].setValue(value);
     }
 
     public void clear() {
-        for (Register register : registers.values()) {
-            register.setValue(0);
+        for (Register r : registers) {
+            if (r == null) continue;
+            r.setValue(0);
         }
     }
 
@@ -134,24 +118,24 @@ public class RegisterSet implements Target, MongoSerializable {
      * @param index Index of the register
      * @param reg   Register to add
      */
-    void addRegister(int index, Register reg) {
-        registers.put(index, reg);
+    public void put(int index, Register reg) {
+        registers[index] = reg;
     }
 
     int size() {
-        return registers.size();
+        return REG_COUNT - 1;
     }
 
 
     @Override
     public Document mongoSerialise() {
         List<Document> registers = new ArrayList<>();
-        for (Integer index : this.registers.keySet()) {
+        for (int i = 1; i < REG_COUNT; i++) {
             Document register = new Document();
 
-            register.put("index", index);
-            register.put("name", getRegister(index).getName());
-            register.put("value", (int) getRegister(index).getValue());
+            register.put("index", i);
+            register.put("name", getRegister(i).getName());
+            register.put("value", (int) getRegister(i).getValue());
 
             registers.add(register);
         }
@@ -169,11 +153,12 @@ public class RegisterSet implements Target, MongoSerializable {
         List registers = (ArrayList) obj.get("registers");
 
         for (Object sRegister : registers) {
+            if (sRegister == null) continue;
 
             Register register = new Register((String) ((Document) sRegister).get("name"));
             register.setValue(((Document) sRegister).getInteger("value"));
 
-            registerSet.registers.put(((Document) sRegister).getInteger("index"), register);
+            registerSet.put(((Document) sRegister).getInteger("index"), register);
 
         }
 
@@ -191,7 +176,7 @@ public class RegisterSet implements Target, MongoSerializable {
             Register register = new Register((String) jsonRegister.get("name"));
             register.setValue((int) (long) jsonRegister.get("value"));
 
-            registerSet.registers.put((int) (long) jsonRegister.get("index"), register);
+            registerSet.put((int) (long) jsonRegister.get("index"), register);
 
         }
 
@@ -202,10 +187,20 @@ public class RegisterSet implements Target, MongoSerializable {
     public String toString() {
         String str = "";
 
-        for (Integer index : registers.keySet()) {
-            str += index + " " + registers.get(index).getName() + "=" + Util.toHex(registers.get(index).getValue()) + "\n";
+        for (int i = 1; i < REG_COUNT; i++) {
+            str += i + " " + getRegister(i).getName() + "=" + Util.toHex(getRegister(i).getValue()) + "\n";
         }
 
         return str;
+    }
+
+    @Override
+    public RegisterSet clone() {
+        RegisterSet rs = new RegisterSet();
+
+        for (int i = 1; i < REG_COUNT; i++) {
+            rs.put(i, getRegister(i).clone());
+        }
+        return rs;
     }
 }

@@ -74,5 +74,4 @@ public class RegisterSetTest {
         //Test unknown indexes
         registerSet.set(3, 10);
     }
-
 }

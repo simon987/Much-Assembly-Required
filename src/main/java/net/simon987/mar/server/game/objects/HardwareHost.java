@@ -12,5 +12,4 @@ public interface HardwareHost {
     boolean hardwareInterrupt(int address, Status status);
 
     int hardwareQuery(int address);
-
 }

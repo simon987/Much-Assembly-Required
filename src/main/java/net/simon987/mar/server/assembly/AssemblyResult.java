@@ -22,7 +22,7 @@ public class AssemblyResult {
     /**
      * A list of labels
      */
-    HashMap<String, Character> labels = new HashMap<>(20);
+    public HashMap<String, Character> labels = new HashMap<>(20);
     /**
      * List of exceptions encountered during the assembly attempt,
      * they will be displayed in the editor

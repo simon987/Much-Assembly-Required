@@ -3,7 +3,7 @@ package net.simon987.mar.server.assembly;
 /**
  * Represents a register in a cpu
  */
-public class Register {
+public class Register implements Cloneable {
 
     /**
      * Name of the register
@@ -46,5 +46,15 @@ public class Register {
 
         return name + "=" + value;
 
+    }
+
+    @Override
+    public Register clone() {
+        try {
+            return (Register) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

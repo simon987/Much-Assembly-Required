@@ -23,17 +23,12 @@ public class HwiInstruction extends Instruction {
     @Override
     public Status execute(Target src, int srcIndex, Status status) {
         status.setErrorFlag(cpu.getHardwareHost().hardwareInterrupt(src.get(srcIndex), cpu.getStatus()));
-
         return status;
     }
 
     @Override
     public Status execute(int src, Status status) {
-
         status.setErrorFlag(cpu.getHardwareHost().hardwareInterrupt(src, cpu.getStatus()));
-
         return status;
     }
-
-
 }
