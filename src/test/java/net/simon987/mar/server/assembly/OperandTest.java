@@ -150,4 +150,20 @@ public class OperandTest {
         try{    new Operand("[A+A+]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
         try{    new Operand("[A+[1]]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
     }
+
+    @Test
+    public void octalLiteral() throws Exception {
+        Operand op = new Operand("0600", new HashMap<>(), new DefaultRegisterSet(), 0);
+        assertEquals(OperandType.IMMEDIATE16, op.getType());
+        assertEquals(Operand.IMMEDIATE_VALUE, op.getValue());
+        assertEquals(384, op.getData());
+    }
+
+    @Test
+    public void binaryLiteral() throws Exception {
+        Operand op = new Operand("0b1000", new HashMap<>(), new DefaultRegisterSet(), 0);
+        assertEquals(OperandType.IMMEDIATE16, op.getType());
+        assertEquals(Operand.IMMEDIATE_VALUE, op.getValue());
+        assertEquals(0b1000, op.getData());
+    }
 }
