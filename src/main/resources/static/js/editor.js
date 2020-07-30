@@ -184,8 +184,7 @@ function getOperandType(text, result) {
     }
 
     //Check IMM
-    if (!isNaN(Number(text)) && Number(text) === Math.floor(Number(text)) && text.indexOf("o") === -1
-        && text.indexOf("0e") !== 0) {
+    if (!isNaN(Number(text)) && Number(text) === Math.floor(Number(text)) && text.indexOf("0e") !== 0) {
         return OPERAND_IMM;
     }
 

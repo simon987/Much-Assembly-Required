@@ -14,10 +14,9 @@ import java.util.List;
  */
 public class RegisterSet implements Target, MongoSerializable, Cloneable {
 
-    // TODO configurable number of registers
-    private static final int REG_COUNT = 8 + 1;
+    private int size = 0;
 
-    private final Register[] registers = new Register[REG_COUNT];
+    private final Register[] registers = new Register[16];
 
     public RegisterSet() {
 
@@ -34,7 +33,7 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
 
         name = name.toUpperCase();
 
-        for (int i = 1; i < REG_COUNT; i++) {
+        for (int i = 1; i <= size; i++) {
             if (registers[i].getName().equals(name)) {
                 return i;
             }
@@ -80,7 +79,7 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
      */
     @Override
     public int get(int address) {
-        if (address <= 0 || address >= REG_COUNT) {
+        if (address <= 0 || address > size) {
             return 0;
         }
 
@@ -95,7 +94,7 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
      */
     @Override
     public void set(int address, int value) {
-        if (address <= 0 || address >= REG_COUNT) {
+        if (address <= 0 || address > size) {
             return;
         }
 
@@ -120,17 +119,18 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
      */
     public void put(int index, Register reg) {
         registers[index] = reg;
+        size = Math.max(index, size);
     }
 
     int size() {
-        return REG_COUNT - 1;
+        return size;
     }
 
 
     @Override
     public Document mongoSerialise() {
         List<Document> registers = new ArrayList<>();
-        for (int i = 1; i < REG_COUNT; i++) {
+        for (int i = 1; i <= size; i++) {
             Document register = new Document();
 
             register.put("index", i);
@@ -187,7 +187,7 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
     public String toString() {
         String str = "";
 
-        for (int i = 1; i < REG_COUNT; i++) {
+        for (int i = 1; i <= size; i++) {
             str += i + " " + getRegister(i).getName() + "=" + Util.toHex(getRegister(i).getValue()) + "\n";
         }
 
@@ -198,7 +198,7 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
     public RegisterSet clone() {
         RegisterSet rs = new RegisterSet();
 
-        for (int i = 1; i < REG_COUNT; i++) {
+        for (int i = 1; i <= size; i++) {
             rs.put(i, getRegister(i).clone());
         }
         return rs;

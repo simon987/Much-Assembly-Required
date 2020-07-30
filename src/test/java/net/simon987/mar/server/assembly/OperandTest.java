@@ -5,9 +5,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.*;
 
 
 public class OperandTest {
@@ -127,28 +125,106 @@ public class OperandTest {
         }
 
         //Invalid operands
-        try{ new Operand("aa", labels, registerSet, 0); } catch (InvalidOperandException ignored){
+        try {
+            new Operand("aa", labels, registerSet, 0);
+        } catch (InvalidOperandException ignored) {
             //It's not a valid Operand; that's okay, just continue; VALID FOR ALL THE OTHER CATCH SENTENCES
         }
-        try{   new Operand("a1", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{   new Operand("a_", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{   new Operand("_a", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{   new Operand("_1", labels, registerSet, 0); } catch (InvalidOperandException ignored){        }
-        try{    new Operand("S", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{   new Operand("label1_", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{   new Operand("+label1", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[- 12]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[12+1]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[+label1", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[*12]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{     new Operand("[-A]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[A B]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{     new Operand("[A + B]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[A + -1]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{  new Operand("[A + ]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[A+A+]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
-        try{    new Operand("[A+[1]]", labels, registerSet, 0); } catch (InvalidOperandException ignored){}
+        try {
+            new Operand("a1", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("a_", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("_a", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("_1", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("S", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("label1_", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("+label1", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[- 12]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[12+1]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[+label1", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[*12]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[-A]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[A B]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[A + B]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[A + -1]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[A + ]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[A+A+]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
+        try {
+            new Operand("[A+[1]]", labels, registerSet, 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
     }
 
     @Test
@@ -157,6 +233,23 @@ public class OperandTest {
         assertEquals(OperandType.IMMEDIATE16, op.getType());
         assertEquals(Operand.IMMEDIATE_VALUE, op.getValue());
         assertEquals(384, op.getData());
+    }
+
+    @Test
+    public void octalLiteralPrefix2() throws Exception {
+        Operand op = new Operand("0o600", new HashMap<>(), new DefaultRegisterSet(), 0);
+        assertEquals(OperandType.IMMEDIATE16, op.getType());
+        assertEquals(Operand.IMMEDIATE_VALUE, op.getValue());
+        assertEquals(384, op.getData());
+    }
+
+    @Test
+    public void octalLiteralPrefix2Invalid() {
+        try {
+            Operand op = new Operand("0o609", new HashMap<>(), new DefaultRegisterSet(), 0);
+            fail();
+        } catch (InvalidOperandException ignored) {
+        }
     }
 
     @Test

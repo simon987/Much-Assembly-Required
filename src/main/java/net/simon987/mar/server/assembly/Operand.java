@@ -133,6 +133,14 @@ public class Operand {
                 } catch (NumberFormatException e2) {
                     return false;
                 }
+            } else if (text.startsWith("0o")) {
+                try {
+                    data = Integer.parseInt(text.substring(2), 8);
+                    value = IMMEDIATE_VALUE;
+                    return true;
+                } catch (NumberFormatException e2) {
+                    return false;
+                }
             }
 
             return false;
