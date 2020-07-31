@@ -32,9 +32,7 @@ public class DivInstruction extends Instruction {
                 (cpu.getRegisterSet().getRegister("A").getValue() & 0xFFFF);
 
         if (src.get(srcIndex) == 0) {
-            //Division by 0
-            status.setBreakFlag(true);
-            status.setErrorFlag(true);
+            cpu.interrupt(IntInstruction.INT_DIVISION_BY_ZERO);
         } else {
             cpu.getRegisterSet().getRegister("A").setValue((char) (source / (char) src.get(srcIndex)));
             cpu.getRegisterSet().getRegister("Y").setValue((char) (source % (char) src.get(srcIndex)));
@@ -52,14 +50,11 @@ public class DivInstruction extends Instruction {
                 (cpu.getRegisterSet().getRegister("A").getValue() & 0xFFFF);
 
         if (src == 0) {
-            //Division by 0
-            status.setBreakFlag(true);
-            status.setErrorFlag(true);
+            cpu.interrupt(IntInstruction.INT_DIVISION_BY_ZERO);
         } else {
             cpu.getRegisterSet().getRegister("A").setValue((char) (source / (char) src));
             cpu.getRegisterSet().getRegister("Y").setValue((char) (source % (char) src));
         }
-
 
         return status;
     }

@@ -154,7 +154,6 @@ public class CPU implements MongoSerializable {
 
         registerSetSize = registerSet.size();
 
-        // status.breakFlag = true;
         while (!status.isBreakFlag()) {
             counter++;
 
