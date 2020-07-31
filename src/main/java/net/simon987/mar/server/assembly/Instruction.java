@@ -59,7 +59,6 @@ public abstract class Instruction {
      */
     public Status execute(Target dst, int dstIndex, int src, Status status) {
 
-
         return status;
     }
 

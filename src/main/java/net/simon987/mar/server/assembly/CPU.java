@@ -45,6 +45,11 @@ public class CPU implements MongoSerializable {
      */
     private int codeSectionOffset;
 
+    private int interruptVectorTableOffset;
+    private final int graceInstructionCount;
+    private int graceInstructionLeft;
+    private boolean isGracePeriod;
+
     /**
      * Instruction pointer, always points to the next instruction
      */
@@ -57,14 +62,10 @@ public class CPU implements MongoSerializable {
 
     private int registerSetSize;
 
-    private static final char EXECUTION_COST_ADDR = 0x0050;
-    private static final char EXECUTED_INS_ADDR = 0x0051;
+    private static final char EXECUTION_COST_ADDR = 0x0150;
+    private static final char EXECUTED_INS_ADDR = 0x0151;
 
-    public CPU() {
-        instructionSet = new DefaultInstructionSet();
-        registerSet = new DefaultRegisterSet();
-        codeSectionOffset = GameServer.INSTANCE.getConfig().getInt("org_offset");
-
+    private void addInstructions() {
         instructionSet.add(new JmpInstruction(this));
         instructionSet.add(new JnzInstruction(this));
         instructionSet.add(new JzInstruction(this));
@@ -91,7 +92,20 @@ public class CPU implements MongoSerializable {
         instructionSet.add(new PopfInstruction(this));
         instructionSet.add(new JnaInstruction(this));
         instructionSet.add(new JaInstruction(this));
+        instructionSet.add(new IntInstruction(this));
+        instructionSet.add(new IretInstruction(this));
+    }
 
+    public CPU() {
+        instructionSet = new DefaultInstructionSet();
+        registerSet = new DefaultRegisterSet();
+        IServerConfiguration config = GameServer.INSTANCE.getConfig();
+        codeSectionOffset = config.getInt("org_offset");
+        graceInstructionCount = config.getInt("grace_instruction_count");
+
+        interruptVectorTableOffset = config.getInt("ivt_offset");
+
+        addInstructions();
         status = new Status();
     }
 
@@ -102,41 +116,32 @@ public class CPU implements MongoSerializable {
         instructionSet = new DefaultInstructionSet();
         registerSet = new DefaultRegisterSet();
         codeSectionOffset = config.getInt("org_offset");
+        graceInstructionCount = config.getInt("grace_instruction_count");
 
-        instructionSet.add(new JmpInstruction(this));
-        instructionSet.add(new JnzInstruction(this));
-        instructionSet.add(new JzInstruction(this));
-        instructionSet.add(new JgInstruction(this));
-        instructionSet.add(new JgeInstruction(this));
-        instructionSet.add(new JleInstruction(this));
-        instructionSet.add(new JlInstruction(this));
-        instructionSet.add(new PushInstruction(this));
-        instructionSet.add(new PopInstruction(this));
-        instructionSet.add(new CallInstruction(this));
-        instructionSet.add(new RetInstruction(this));
-        instructionSet.add(new MulInstruction(this));
-        instructionSet.add(new DivInstruction(this));
-        instructionSet.add(new JnsInstruction(this));
-        instructionSet.add(new JsInstruction(this));
-        instructionSet.add(new HwiInstruction(this));
-        instructionSet.add(new HwqInstruction(this));
-        instructionSet.add(new XchgInstruction(this));
-        instructionSet.add(new JcInstruction(this));
-        instructionSet.add(new JncInstruction(this));
-        instructionSet.add(new JnoInstruction(this));
-        instructionSet.add(new JoInstruction(this));
-        instructionSet.add(new PushfInstruction(this));
-        instructionSet.add(new PopfInstruction(this));
-        instructionSet.add(new JnaInstruction(this));
-        instructionSet.add(new JaInstruction(this));
+        interruptVectorTableOffset = config.getInt("ivt_offset");
+
+        addInstructions();
 
         status = new Status();
         memory = new Memory(config.getInt("memory_size"));
     }
 
+    /**
+     * Sets the IP to IVT + number and pushes flags then the old IP
+     */
+    public void interrupt(int number) {
+        Instruction push = instructionSet.get(PushInstruction.OPCODE);
+        push.execute(status.toWord(), status);
+        push.execute(ip, status);
+
+        this.setIp((char) memory.get(interruptVectorTableOffset + number));
+    }
+
     public void reset() {
         status.clear();
         ip = codeSectionOffset;
+        graceInstructionLeft = graceInstructionCount;
+        isGracePeriod = false;
     }
 
     public int execute(int timeout) {
@@ -151,16 +156,15 @@ public class CPU implements MongoSerializable {
         while (!status.isBreakFlag()) {
             counter++;
 
-            if (counter % 10000 == 0) {
-                if (System.currentTimeMillis() > (startTime + timeout)) {
-                    LogManager.LOGGER.fine("CPU Timeout " + this + " after " + counter + "instructions (" + timeout + "ms): " + (double) counter / ((double) timeout / 1000) / 1000000 + "MHz");
-
-                    //Write execution cost and instruction count to memory
-                    memory.set(EXECUTION_COST_ADDR, timeout);
-                    memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
-                    memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
-
+            if (isGracePeriod) {
+                if (graceInstructionLeft-- == 0) {
+                    writeExecutionStats(timeout, counter);
                     return timeout;
+                }
+            } else if (counter % 10000 == 0) {
+                if (System.currentTimeMillis() > (startTime + timeout)) {
+                    interrupt(32);
+                    isGracePeriod = true;
                 }
             }
 
@@ -184,13 +188,15 @@ public class CPU implements MongoSerializable {
 
 //        LogManager.LOGGER.fine(counter + " instruction in " + elapsed + "ms : " + (double) counter / (elapsed / 1000) / 1000000 + "MHz");
 
-
-        //Write execution cost and instruction count to memory
-        memory.set(EXECUTION_COST_ADDR, elapsed);
-        memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
-        memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
+        writeExecutionStats(elapsed, counter);
 
         return elapsed;
+    }
+
+    private void writeExecutionStats(int timeout, int counter) {
+        memory.set(EXECUTION_COST_ADDR, timeout);
+        memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
+        memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
     }
 
     public void executeInstruction(Instruction instruction, int source, int destination) {

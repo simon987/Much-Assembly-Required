@@ -8,8 +8,6 @@ import net.simon987.mar.server.assembly.exception.CancelledException;
 
 public class TestHelper {
 
-    private static final int TIMEOUT = 100;
-
     public static Assembler getTestAsm() {
         IServerConfiguration config = getTestConfig();
         CPU cpu = getTestCpu();
@@ -20,7 +18,9 @@ public class TestHelper {
         IServerConfiguration configuration = new FakeConfiguration();
 
         configuration.setInt("memory_size", 65536);
-        configuration.setInt("org_offset", 400);
+        configuration.setInt("org_offset", 4096);
+        configuration.setInt("ivt_offset", 0);
+        configuration.setInt("grace_instruction_count", 10000);
         return configuration;
     }
 
@@ -36,6 +36,10 @@ public class TestHelper {
     }
 
     public static TestExecutionResult executeCode(String code) {
+        return executeCode(code, 100);
+    }
+
+    public static TestExecutionResult executeCode(String code, int timeout) {
         AssemblyResult ar = getTestAsm().parse(code);
         CPU cpu = TestHelper.getTestCpu();
 
@@ -50,7 +54,7 @@ public class TestHelper {
         cpu.setCodeSectionOffset(ar.getCodeSectionOffset());
 
         cpu.reset();
-        cpu.execute(TIMEOUT);
+        cpu.execute(timeout);
 
         return new TestExecutionResult(cpu.getState(), host.callHistory, ar);
     }

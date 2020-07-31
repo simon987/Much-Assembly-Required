@@ -133,7 +133,7 @@ public class Status implements Cloneable {
         this.errorFlag = errorFlag;
     }
 
-    public char toByte() {
+    public char toWord() {
         char stat = 0;
         stat = (char) (stat | ((signFlag ? 1 : 0) << 3));
         stat = (char) (stat | ((zeroFlag ? 1 : 0) << 2));
@@ -142,7 +142,7 @@ public class Status implements Cloneable {
         return stat;
     }
 
-    public void fromByte(char stat) {
+    public void fromWord(char stat) {
         setSignFlag((stat & (1 << 3)) != 0);
         setZeroFlag((stat & (1 << 2)) != 0);
         setCarryFlag((stat & (1 << 1)) != 0);

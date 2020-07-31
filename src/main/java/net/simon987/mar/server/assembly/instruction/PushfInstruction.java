@@ -28,7 +28,7 @@ public class PushfInstruction extends Instruction {
         sp.setValue(sp.getValue() - 1);
 
         // Push the current flags
-        cpu.getMemory().set(sp.getValue(), status.toByte());
+        cpu.getMemory().set(sp.getValue(), status.toWord());
 
         return status;
     }

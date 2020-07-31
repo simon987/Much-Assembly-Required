@@ -29,7 +29,7 @@ public class PopfInstruction extends Instruction {
         char flags = (char) cpu.getMemory().get(sp.getValue());
 
         // Overwrite the CPU flags
-        status.fromByte(flags);
+        status.fromWord(flags);
 
         // Increment SP
         sp.setValue(sp.getValue() + 1);
