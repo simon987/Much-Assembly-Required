@@ -1,11 +1,14 @@
 package net.simon987.mar.server.assembly.instruction;
 
+import net.simon987.mar.server.TestExecutionResult;
 import net.simon987.mar.server.assembly.Register;
 import net.simon987.mar.server.assembly.RegisterSet;
 import net.simon987.mar.server.assembly.Status;
+import net.simon987.mar.server.assembly.TestHelper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class SetaInstructionTest {
@@ -23,6 +26,21 @@ public class SetaInstructionTest {
         status.clear();
 
         instruction = new SetaInstruction();
+    }
+
+    @Test
+    public void setaSimple1() {
+        String code = "" +
+                "MOV A, 3        \n" +
+                "MOV B, 3        \n" +
+                "CMP A, B        \n" +
+                "SETE X          \n" +
+                "brk             \n";
+
+        TestExecutionResult res = TestHelper.executeCode(code);
+
+        assertTrue(res.ar.exceptions.isEmpty());
+        assertEquals(1, res.regValue("X"));
     }
 
     /**
