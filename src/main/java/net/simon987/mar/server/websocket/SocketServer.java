@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebSocket
+@WebSocket(maxTextMessageSize = SocketServer.MAX_TXT_MESSAGE_SIZE)
 public class SocketServer {
+
+    static final int MAX_TXT_MESSAGE_SIZE = 1024 * 1024 * 10;
 
     private final OnlineUserManager onlineUserManager = new OnlineUserManager();
 
