@@ -12,6 +12,10 @@ public class IntInstruction extends Instruction {
     public static final int OPCODE = 48;
     private final CPU cpu;
 
+    public static final int INT_DIVISION_BY_ZERO = 0;
+    public static final int INT_INTO_DETECTED_OVERFLOW = 4;
+    public static final int INT_EXEC_LIMIT_REACHED = 32;
+
     public IntInstruction(CPU cpu) {
         super("int", OPCODE);
         this.cpu = cpu;

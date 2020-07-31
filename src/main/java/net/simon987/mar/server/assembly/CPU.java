@@ -6,6 +6,7 @@ import net.simon987.mar.server.assembly.exception.CancelledException;
 import net.simon987.mar.server.assembly.instruction.*;
 import net.simon987.mar.server.event.CpuInitialisationEvent;
 import net.simon987.mar.server.event.GameEvent;
+import net.simon987.mar.server.game.GameUniverse;
 import net.simon987.mar.server.game.objects.ControllableUnit;
 import net.simon987.mar.server.game.objects.HardwareHost;
 import net.simon987.mar.server.io.MongoSerializable;
@@ -47,7 +48,7 @@ public class CPU implements MongoSerializable {
 
     private int interruptVectorTableOffset;
     private final int graceInstructionCount;
-    private int graceInstructionLeft;
+    private int graceInstructionsLeft;
     private boolean isGracePeriod;
 
     /**
@@ -93,6 +94,7 @@ public class CPU implements MongoSerializable {
         instructionSet.add(new JnaInstruction(this));
         instructionSet.add(new JaInstruction(this));
         instructionSet.add(new IntInstruction(this));
+        instructionSet.add(new IntoInstruction(this));
         instructionSet.add(new IretInstruction(this));
     }
 
@@ -140,7 +142,7 @@ public class CPU implements MongoSerializable {
     public void reset() {
         status.clear();
         ip = codeSectionOffset;
-        graceInstructionLeft = graceInstructionCount;
+        graceInstructionsLeft = graceInstructionCount;
         isGracePeriod = false;
     }
 
@@ -157,13 +159,13 @@ public class CPU implements MongoSerializable {
             counter++;
 
             if (isGracePeriod) {
-                if (graceInstructionLeft-- == 0) {
+                if (graceInstructionsLeft-- == 0) {
                     writeExecutionStats(timeout, counter);
                     return timeout;
                 }
             } else if (counter % 10000 == 0) {
                 if (System.currentTimeMillis() > (startTime + timeout)) {
-                    interrupt(32);
+                    interrupt(IntInstruction.INT_EXEC_LIMIT_REACHED);
                     isGracePeriod = true;
                 }
             }
