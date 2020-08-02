@@ -36,10 +36,10 @@ public class TestHelper {
     }
 
     public static TestExecutionResult executeCode(String code) {
-        return executeCode(code, 100);
+        return executeCode(code, 10000);
     }
 
-    public static TestExecutionResult executeCode(String code, int timeout) {
+    public static TestExecutionResult executeCode(String code, int allocation) {
         AssemblyResult ar = getTestAsm().parse(code);
         CPU cpu = TestHelper.getTestCpu();
 
@@ -53,8 +53,9 @@ public class TestHelper {
         cpu.getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
         cpu.setCodeSectionOffset(ar.getCodeSectionOffset());
 
+        cpu.setInstructionAlloction(allocation);
         cpu.reset();
-        cpu.execute(timeout);
+        cpu.execute();
 
         return new TestExecutionResult(cpu.getState(), host.callHistory, ar);
     }

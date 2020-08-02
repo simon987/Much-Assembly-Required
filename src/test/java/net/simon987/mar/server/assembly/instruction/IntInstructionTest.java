@@ -40,7 +40,7 @@ public class IntInstructionTest {
                 "MOV Y, 0x4567          \n" +
                 "brk                    \n";
 
-        TestExecutionResult res = TestHelper.executeCode(code, 10);
+        TestExecutionResult res = TestHelper.executeCode(code, 30);
 
         assertEquals(0x1234, res.regValue("X"));
         assertEquals(0, res.regValue("Y"));
