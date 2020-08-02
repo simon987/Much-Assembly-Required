@@ -185,13 +185,20 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
 
     @Override
     public String toString() {
-        String str = "";
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 1; i <= size; i++) {
-            str += i + " " + getRegister(i).getName() + "=" + Util.toHex(getRegister(i).getValue()) + "\n";
+            Register reg = getRegister(i);
+            sb.append(reg.getName());
+            sb.append("=");
+            if (i == size) {
+                sb.append(String.format("%04X", (int)reg.getValue()));
+            } else {
+                sb.append(String.format("%04X ", (int)reg.getValue()));
+            }
         }
 
-        return str;
+        return sb.toString();
     }
 
     @Override

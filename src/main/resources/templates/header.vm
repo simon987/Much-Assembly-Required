@@ -23,6 +23,16 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link" href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLWRjMjRkZTg2N2EyNWRjN2YyMDc0YzIyMTUyYzFiNTBmMTU3OGQ1ZjA0MWY0M2IyYjUxZTA4NjRkMWVkNDk2NzY"><i
+                        class="mi">chat</i> Slack</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="https://github.com/simon987/Much-Assembly-Required/wiki"><i
+                        class="mi">launch</i> Documentation</a>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link" target="_blank" href="https://github.com/simon987/Much-Assembly-Required"><img
                         width="23px" src="images/GitHub-Mark-32px.png"> Contribute</a>
             </li>

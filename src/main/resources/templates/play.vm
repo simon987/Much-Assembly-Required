@@ -3,11 +3,6 @@
     #set ($title = $gamePageTitle)
     #set ($cur_page = "play")
     #parse("head.vm")
-<style>
-    html, body {
-        overflow-y: hidden;
-    }
-</style>
 <body>
 
     #parse("header.vm")
@@ -29,19 +24,13 @@
                             class="mi">code</i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link regular-screen" target="_blank"
-                       href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i>
-                        Documentation</a>
-                    <a class="nav-link small-screen" target="_blank"
-                       href="https://github.com/simon987/Much-Assembly-Required/wiki"><i class="mi">launch</i></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link regular-screen" target="_blank"
-                       href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLWRjMjRkZTg2N2EyNWRjN2YyMDc0YzIyMTUyYzFiNTBmMTU3OGQ1ZjA0MWY0M2IyYjUxZTA4NjRkMWVkNDk2NzY"><i
-                            class="mi">chat</i> Slack</a>
-                    <a class="nav-link small-screen" target="_blank"
-                       href="https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMjY3Mjc1OTUwNjEwLWRjMjRkZTg2N2EyNWRjN2YyMDc0YzIyMTUyYzFiNTBmMTU3OGQ1ZjA0MWY0M2IyYjUxZTA4NjRkMWVkNDk2NzY"><i
-                            class="mi">chat</i></a>
+                    <a id="tab-debug" class="nav-link regular-screen" href="#" onclick="tabDebuggerClick()"><i
+                            class="mi">bug_report</i> Debugger
+                        <span id="paused" style="display: none" class="badge badge-danger"><i
+                                class="mi">pause</i></span>
+                    </a>
+                    <a id="tab-debug-sm" class="nav-link small-screen" href="#" onclick="tabDebuggerClick()"><i
+                            class="mi">bug_report</i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link regular-screen" onclick="mar.client.findMyRobot()" href="#"><i class="mi">my_location</i>
@@ -119,75 +108,97 @@
                 #end
 
             </div>
-        </div>
-    </div>
-</div>
 
-<div class="bottom-panel" style="height: 0">
-    <div class="splitter-horizontal"></div>
-    <div class="console-wrapper">
-        <div class="console-side-bar">
-            <p>
-                <button id="colorButton" class="btn btn-outline-info"
-                        data-container="body" data-toggle="popover" data-trigger="hover"
-                        data-placement="right" data-content="Invert colors"><i class="mi">invert_colors_off</i></button>
-            </p>
-            <p>
-                <button id="scrollButton" class="btn btn-outline-info"
-                        data-container="body" data-toggle="popover" data-trigger="hover"
-                        data-placement="right" data-content="Toggle auto scroll"><i class="mi">swap_vert</i></button>
-            </p>
-            <p>
-            <div class="btn-group dropright">
-                <button type="button" class="btn btn-shadow btn-info" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                    <i class="mi">short_text</i>
-                </button>
-                <div class="dropdown-menu">
-                    <h6 class="dropdown-header">Line width</h6>
-                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(0)">16 chars</button>
-                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(1)">24 chars</button>
-                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(2)">40 chars</button>
-                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(3)">56 chars</button>
-                    <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(4)">64 chars</button>
+
+            ## DEBUGGER
+            <div id="debug-tab" style="display: none">
+                <div class="row">
+                    <div class="col-grow">
+                        <button class="btn btn-shadow btn-primary text-mono"
+                                onclick="mar.client.debugStep('step')" href="#">
+                            <i class="mi">arrow_downward</i>Step</button>
+                        <button class="btn btn-shadow btn-primary text-mono"
+                                onclick="mar.client.debugStep('continue')" href="#">
+                            <i class="mi">arrow_forward</i>Continue</button>
+                        <div id="state-disassembly"></div>
+                    </div>
+                    <div class="col-shrink">
+                        <div id="state-registers"></div>
+                        <div id="state-status"></div>
+                        <div id="state-memory"></div>
+                    </div>
                 </div>
             </div>
-            </p>
-
-            <p>
-                <button id="resetButton" class="btn btn-danger btn-shadow" style="margin-left: 0"
-                        data-container="body" data-toggle="popover" data-trigger="hover"
-                        data-placement="right" data-content="Clear console"><i class="mi">delete_sweep</i></button>
-            </p>
-        </div>
-        <div class="noisy">
-            <div id="consoleText" class="piece output noclick ctr-selection ctr-text"></div>
-            <div class="piece scanlines noclick"></div>
-            <div class="piece glow noclick"></div>
         </div>
     </div>
-</div>
 
-<script src="js/ace/ace.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery-resizable.min.js"></script>
-<script src="js/phaser.js"></script>
-<script src="js/phaser-plugin-isometric.js"></script>
-<script src="js/mar.js"></script>
-<script src="js/editor.js"></script>
+    <div class="bottom-panel" style="height: 0">
+        <div class="splitter-horizontal"></div>
+        <div class="console-wrapper">
+            <div class="console-side-bar">
+                <p>
+                    <button id="colorButton" class="btn btn-outline-info"
+                            data-container="body" data-toggle="popover" data-trigger="hover"
+                            data-placement="right" data-content="Invert colors"><i class="mi">invert_colors_off</i>
+                    </button>
+                </p>
+                <p>
+                    <button id="scrollButton" class="btn btn-outline-info"
+                            data-container="body" data-toggle="popover" data-trigger="hover"
+                            data-placement="right" data-content="Toggle auto scroll"><i class="mi">swap_vert</i>
+                    </button>
+                </p>
+                <p>
+                <div class="btn-group dropright">
+                    <button type="button" class="btn btn-shadow btn-info" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        <i class="mi">short_text</i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <h6 class="dropdown-header">Line width</h6>
+                        <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(0)">16 chars</button>
+                        <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(1)">24 chars</button>
+                        <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(2)">40 chars</button>
+                        <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(3)">56 chars</button>
+                        <button class="dropdown-item" onclick="mar.client.consoleScreen.setMode(4)">64 chars</button>
+                    </div>
+                </div>
+                </p>
 
-<script>
-$(".bottom-panel").resizable({
-    handleSelector: ".splitter-horizontal",
-    resizeWidth: false,
-    resizeHeightFrom: "top"
-});
+                <p>
+                    <button id="resetButton" class="btn btn-danger btn-shadow" style="margin-left: 0"
+                            data-container="body" data-toggle="popover" data-trigger="hover"
+                            data-placement="right" data-content="Clear console"><i class="mi">delete_sweep</i></button>
+                </p>
+            </div>
+            <div class="noisy">
+                <div id="consoleText" class="piece output noclick ctr-selection ctr-text"></div>
+                <div class="piece scanlines noclick"></div>
+                <div class="piece glow noclick"></div>
+            </div>
+        </div>
+    </div>
 
-$(function () {
-    $('[data-toggle="popover"]').popover()
-})
-</script>
+    <script src="js/ace/ace.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-resizable.min.js"></script>
+    <script src="js/phaser.js"></script>
+    <script src="js/phaser-plugin-isometric.js"></script>
+    <script src="js/mar.js"></script>
+    <script src="js/editor.js"></script>
+
+    <script>
+    $(".bottom-panel").resizable({
+        handleSelector: ".splitter-horizontal",
+        resizeWidth: false,
+        resizeHeightFrom: "top"
+    });
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+    </script>
 </body>
 </html>

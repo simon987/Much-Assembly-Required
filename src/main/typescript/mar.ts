@@ -262,6 +262,14 @@ class Debug {
 
 }
 
+window.addEventListener("keydown", ev => {
+    if (ev.key === "F8") {
+        mar.client.debugStep("step");
+    } else if (ev.key === "F9") {
+        mar.client.debugStep("continue");
+    }
+})
+
 DEBUG = false;
 
 let mar = new MarGame();

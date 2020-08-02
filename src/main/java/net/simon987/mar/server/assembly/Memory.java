@@ -195,4 +195,31 @@ public class Memory implements Target, MongoSerializable, Cloneable {
         System.arraycopy(words, 0, memory.words, 0, words.length);
         return memory;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("      ");
+        for (int i = 0; i < 16; i++) {
+            result.append(String.format("%4X ", i));
+        }
+        result.append("\n");
+        result.append("   0  ");
+
+        int count = 1;
+        for (int i = 0; i < words.length; i++) {
+            result.append(String.format("%04X ", (int) words[i]));
+            if (count == 16) {
+                count = 0;
+                result.append("\n");
+                if (i + 1 != words.length) {
+                    result.append(String.format("%4X  ", i + 1));
+                }
+            }
+            count++;
+        }
+
+        return result.toString();
+    }
 }

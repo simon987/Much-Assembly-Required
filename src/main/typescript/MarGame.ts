@@ -1,5 +1,23 @@
 class MarGame {
 
+    disassembly : string[];
+    pausedLine: number = -1;
+
+    _isPaused = false
+
+    get isPaused() {
+        return this._isPaused
+    }
+
+    set isPaused(val) {
+        if (val) {
+            document.getElementById("paused").style.display = "";
+        } else {
+            document.getElementById("paused").style.display = "none";
+        }
+        this._isPaused = val;
+    }
+
     isoGroup: Phaser.Group;
     textGroup: Phaser.Group;
     hudGroup: Phaser.Group;

@@ -62,7 +62,7 @@ public class UserCreationListener implements GameEventListener {
             user.setUserCode(config.getString("new_user_code"));
 
             GameEvent initEvent = new CpuInitialisationEvent(cpu, cubot);
-            GameServer.INSTANCE.getEventDispatcher().dispatch(event);
+            GameServer.INSTANCE.getEventDispatcher().dispatch(initEvent);
             if (initEvent.isCancelled()) {
                 throw new CancelledException();
             }

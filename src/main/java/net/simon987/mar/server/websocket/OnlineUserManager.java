@@ -1,5 +1,6 @@
 package net.simon987.mar.server.websocket;
 
+import net.simon987.mar.server.user.User;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.ArrayList;
@@ -21,6 +22,21 @@ public class OnlineUserManager {
         }
 
         return null;
+    }
+
+    public List<OnlineUser> getUser(User user) {
+
+        List<OnlineUser> _onlineUsers = new ArrayList<>(onlineUsers);
+
+        List<OnlineUser> result = new ArrayList<>();
+
+        for (OnlineUser onlineUser : _onlineUsers) {
+            if (onlineUser.getUser().equals(user)) {
+                result.add(onlineUser);
+            }
+        }
+
+        return result;
     }
 
     /**

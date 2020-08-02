@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Result of an assembly attempt
@@ -59,8 +61,14 @@ public class AssemblyResult {
      */
     private boolean dataSectionSet = false;
 
+    public final Map<Integer, Integer> codeLineMap;
+
+    public List<String> disassemblyLines;
+
     AssemblyResult(IServerConfiguration config) {
         origin = config.getInt("org_offset");
+        codeLineMap = new HashMap<>();
+        disassemblyLines = new ArrayList<>();
     }
 
     /**

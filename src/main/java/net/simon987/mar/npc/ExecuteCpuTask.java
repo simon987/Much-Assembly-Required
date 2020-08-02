@@ -5,7 +5,7 @@ import net.simon987.mar.server.game.objects.Action;
 
 public class ExecuteCpuTask extends NPCTask {
 
-    private static final int MAX_EXEC_TIME = GameServer.INSTANCE.getConfig().getInt("npc_exec_time");
+    private static final int MAX_EXEC_INSTRUCTIONS = GameServer.INSTANCE.getConfig().getInt("npc_exec_instructions");
 
     @Override
     public boolean checkCompleted() {
@@ -18,9 +18,10 @@ public class ExecuteCpuTask extends NPCTask {
         HackedNPC hNpc = (HackedNPC) npc;
 
         //Execute code
-        int timeout = Math.min(hNpc.getEnergy(), MAX_EXEC_TIME);
+        int allocation = Math.min(hNpc.getEnergy() * 10000, MAX_EXEC_INSTRUCTIONS);
         hNpc.getCpu().reset();
-        int cost = hNpc.getCpu().execute(timeout);
+        hNpc.getCpu().setInstructionAlloction(allocation);
+        int cost = hNpc.getCpu().execute();
         hNpc.spendEnergy(cost);
 
         if (hNpc.getCurrentAction() == Action.WALKING) {

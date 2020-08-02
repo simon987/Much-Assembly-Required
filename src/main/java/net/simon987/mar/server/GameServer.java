@@ -22,6 +22,7 @@ import net.simon987.mar.npc.event.VaultCompleteListener;
 import net.simon987.mar.npc.event.VaultWorldUpdateListener;
 import net.simon987.mar.npc.world.TileVaultFloor;
 import net.simon987.mar.npc.world.TileVaultWall;
+import net.simon987.mar.server.assembly.CPU;
 import net.simon987.mar.server.crypto.CryptoProvider;
 import net.simon987.mar.server.crypto.SecretKeyGenerator;
 import net.simon987.mar.server.event.*;
@@ -41,6 +42,9 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class GameServer implements Runnable {
 
@@ -53,7 +57,7 @@ public class GameServer implements Runnable {
 
     private SocketServer socketServer;
 
-    private final int maxExecutionTime;
+    private final int maxExecutionInstructions;
 
     private final DayNightCycle dayNightCycle;
 
@@ -68,6 +72,8 @@ public class GameServer implements Runnable {
     private final GameRegistry gameRegistry;
 
     private String secretKey;
+
+    public final ReadWriteLock execLock;
 
     public GameServer() {
         this.config = new ServerConfiguration("config.properties");
@@ -86,7 +92,7 @@ public class GameServer implements Runnable {
         gameUniverse.setMongo(mongo);
         gameRegistry = new GameRegistry();
 
-        maxExecutionTime = config.getInt("user_timeout");
+        maxExecutionInstructions = config.getInt("user_instructions_per_tick");
 
         cryptoProvider = new CryptoProvider();
 
@@ -104,7 +110,7 @@ public class GameServer implements Runnable {
         registerEventListeners();
         registerGameObjects();
 
-
+        execLock = new ReentrantReadWriteLock();
     }
 
     private void registerEventListeners() {
@@ -266,12 +272,14 @@ public class GameServer implements Runnable {
             if (user.getControlledUnit() != null && user.getControlledUnit().getCpu() != null) {
                 try {
 
-                    int timeout = Math.min(user.getControlledUnit().getEnergy(), maxExecutionTime);
+                    CPU cpu = user.getControlledUnit().getCpu();
+                    int allocation = Math.min(user.getControlledUnit().getEnergy() * CPU.INSTRUCTION_COST, maxExecutionInstructions);
+                    cpu.setInstructionAlloction(allocation);
 
-                    user.getControlledUnit().getCpu().reset();
-                    int cost = user.getControlledUnit().getCpu().execute(timeout);
-                    user.getControlledUnit().spendEnergy(cost);
-                    user.addTime(cost);
+                    if (!cpu.isPaused()) {
+                        cpu.reset();
+                        executeUserCode(user);
+                    }
 
                 } catch (Exception e) {
                     LogManager.LOGGER.severe("Error executing " + user.getUsername() + "'s code");
@@ -281,6 +289,7 @@ public class GameServer implements Runnable {
         }
 
         //Process each worlds
+        GameServer.INSTANCE.execLock.writeLock().lock();
         for (World world : gameUniverse.getWorlds()) {
             if (world.shouldUpdate()) {
                 world.update();
@@ -291,8 +300,21 @@ public class GameServer implements Runnable {
         if (gameUniverse.getTime() % config.getInt("save_interval") == 0) {
             save();
         }
+        GameServer.INSTANCE.execLock.writeLock().unlock();
 
         socketServer.tick();
+    }
+
+    public void executeUserCode(User user) {
+        GameServer.INSTANCE.execLock.readLock().lock();
+        int cost = user.getControlledUnit().getCpu().execute();
+        user.getControlledUnit().spendEnergy(cost);
+        user.addTime(cost);
+        GameServer.INSTANCE.execLock.readLock().unlock();
+
+        if (user.getControlledUnit().getCpu().isPaused()) {
+            socketServer.promptUserPausedState(user);
+        }
     }
 
     void load() {

@@ -29,6 +29,9 @@ public class CodeUploadHandler implements MessageHandler {
                             cpu.getRegisterSet(),
                             GameServer.INSTANCE.getConfig()).parse(user.getUser().getUserCode());
 
+                    user.getUser().setCodeLineMap(ar.codeLineMap);
+                    user.getUser().setDisassembly(ar.disassemblyLines);
+
                     cpu.getMemory().clear();
 
                     //Write assembled code to mem
@@ -37,14 +40,12 @@ public class CodeUploadHandler implements MessageHandler {
                     cpu.getMemory().write((char) ar.origin, assembledCode, 0, assembledCode.length);
                     cpu.setCodeSectionOffset(ar.getCodeSectionOffset());
 
+                    cpu.reset();
                     //Clear keyboard buffer
                     if (user.getUser().getControlledUnit() != null &&
                             user.getUser().getControlledUnit().getKeyboardBuffer() != null) {
                         user.getUser().getControlledUnit().getKeyboardBuffer().clear();
                     }
-
-                    //Clear registers
-                    cpu.getRegisterSet().clear();
 
                     JSONObject response = new JSONObject();
                     response.put("t", "codeResponse");

@@ -8,6 +8,8 @@ import net.simon987.mar.server.game.objects.ControllableUnit;
 import net.simon987.mar.server.io.MongoSerializable;
 import org.bson.Document;
 
+import java.util.*;
+
 public class User implements MongoSerializable {
 
     private String username;
@@ -22,6 +24,10 @@ public class User implements MongoSerializable {
     private boolean moderator = false;
 
     private UserStats stats;
+
+    private Map<Integer, Integer> codeLineMap;
+
+    private List<String> disassemblyLines;
 
     public User() throws CancelledException {
         GameEvent event = new UserCreationEvent(this);
@@ -49,6 +55,16 @@ public class User implements MongoSerializable {
         dbObject.put("password", password);
         dbObject.put("moderator", moderator);
         dbObject.put("stats", stats.mongoSerialise());
+        dbObject.put("disassembly", disassemblyLines);
+
+        List<List<Integer>> codeLineList = new ArrayList<>();
+        if (codeLineMap != null) {
+            for (int offset: codeLineMap.keySet()) {
+                codeLineList.add(Arrays.asList(offset, codeLineMap.get(offset)));
+            }
+        }
+        dbObject.put("codeLineMap", codeLineList);
+
 
         return dbObject;
     }
@@ -59,9 +75,19 @@ public class User implements MongoSerializable {
         user.getControlledUnit().setParent(user);
         user.username = (String) obj.get("username");
         user.userCode = (String) obj.get("code");
+
         user.password = (String) obj.get("password");
         user.moderator = (boolean) obj.get("moderator");
         user.stats = new UserStats((Document) obj.get("stats"));
+
+        List<List<Integer>> codeLineList = (List<List<Integer>>) obj.get("codeLineMap");
+        if (codeLineList != null) {
+            user.codeLineMap = new HashMap<>(codeLineList.size());
+            for (List<Integer> tuple: codeLineList) {
+                user.codeLineMap.put(tuple.get(0), tuple.get(1));
+            }
+        }
+        user.disassemblyLines = (List<String>) obj.get("disassembly");
 
         return user;
     }
@@ -76,6 +102,14 @@ public class User implements MongoSerializable {
 
     public void setUserCode(String userCode) {
         this.userCode = userCode;
+    }
+
+    public void setCodeLineMap(Map<Integer, Integer> codeLineMap) {
+        this.codeLineMap = codeLineMap;
+    }
+
+    public Map<Integer, Integer> getCodeLineMap() {
+        return codeLineMap;
     }
 
     public String getUsername() {
@@ -124,5 +158,28 @@ public class User implements MongoSerializable {
 
     public UserStats getStats() {
         return stats;
+    }
+
+    public List<String> getDisassembly() {
+        return disassemblyLines;
+    }
+
+    public void setDisassembly(List<String> disassemblyLines) {
+        this.disassemblyLines = disassemblyLines;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
     }
 }

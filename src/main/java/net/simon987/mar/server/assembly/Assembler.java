@@ -61,7 +61,6 @@ public class Assembler {
      * @return The line without its label part
      */
     private static String removeLabel(String line) {
-
         return line.replaceAll(labelPattern, "");
     }
 
@@ -246,7 +245,7 @@ public class Assembler {
             int factor = Integer.decode(valueTokens[0]);
 
             if (factor > MEM_SIZE) {
-                throw new InvalidOperandException("Factor '"+factor+"' exceeds total memory size", currentLine);
+                throw new InvalidOperandException("Factor '" + factor + "' exceeds total memory size", currentLine);
             }
 
             String value = valueTokens[1].substring(4, valueTokens[1].lastIndexOf(')'));
@@ -285,14 +284,15 @@ public class Assembler {
      *
      * @param line Current line
      */
-    private static void checkForSectionDeclaration(String line, AssemblyResult result,
-                                                   int currentLine, int currentOffset) throws AssemblyException {
+    private void checkForSectionDeclaration(String line, AssemblyResult result,
+                                            int currentLine, int currentOffset) throws AssemblyException {
 
         String[] tokens = line.split("\\s+");
 
         if (tokens[0].toUpperCase().equals(".TEXT")) {
 
             result.defineSection(Section.TEXT, currentLine, currentOffset);
+            result.disassemblyLines.add(".text");
             throw new PseudoInstructionException(currentLine);
 
         } else if (tokens[0].toUpperCase().equals(".DATA")) {
@@ -417,10 +417,10 @@ public class Assembler {
         int currentOffset = 0;
         for (int currentLine = 0; currentLine < lines.length; currentLine++) {
             try {
-                checkForLabel(lines[currentLine], result, (char)currentOffset);
+                checkForLabel(lines[currentLine], result, (char) currentOffset);
 
                 //Increment offset
-                currentOffset += parseInstruction(lines[currentLine], currentLine, instructionSet).length / 2;
+                currentOffset += parseInstruction(result, lines[currentLine], currentLine, currentOffset, instructionSet).length / 2;
 
                 if (currentOffset >= MEM_SIZE) {
                     throw new OffsetOverflowException(currentOffset, MEM_SIZE, currentLine);
@@ -455,8 +455,15 @@ public class Assembler {
                 checkForEQUInstruction(line, result.labels, currentLine);
                 checkForORGInstruction(line, result, currentLine);
 
+                for (String label : result.labels.keySet()) {
+                    if (result.labels.get(label) == result.origin + currentOffset) {
+                        result.disassemblyLines.add(String.format("                     %s:", label));
+                    }
+                }
+
                 //Encode instruction
-                byte[] bytes = parseInstruction(line, currentLine, result.labels, instructionSet);
+                byte[] bytes = parseInstruction(result, line, currentLine, result.origin + currentOffset, result.labels, instructionSet);
+                result.codeLineMap.put(result.origin + currentOffset, result.disassemblyLines.size() - 1);
                 currentOffset += bytes.length / 2;
 
                 if (currentOffset >= MEM_SIZE) {
@@ -487,8 +494,8 @@ public class Assembler {
      * @param currentLine Current line
      * @return The encoded instruction
      */
-    private byte[] parseInstruction(String line, int currentLine, InstructionSet instructionSet) throws AssemblyException {
-        return parseInstruction(line, currentLine, null, instructionSet, true);
+    private byte[] parseInstruction(AssemblyResult result, String line, int currentLine, int offset, InstructionSet instructionSet) throws AssemblyException {
+        return parseInstruction(result, line, currentLine, offset, null, instructionSet, true);
     }
 
     /**
@@ -499,10 +506,10 @@ public class Assembler {
      * @param labels      List of labels
      * @return The encoded instruction
      */
-    private byte[] parseInstruction(String line, int currentLine, HashMap<String, Character> labels,
-                                    InstructionSet instructionSet)
+    private byte[] parseInstruction(AssemblyResult result, String line, int currentLine, int offset,
+                                    HashMap<String, Character> labels, InstructionSet instructionSet)
             throws AssemblyException {
-        return parseInstruction(line, currentLine, labels, instructionSet, false);
+        return parseInstruction(result, line, currentLine, offset, labels, instructionSet, false);
     }
 
     /**
@@ -514,7 +521,7 @@ public class Assembler {
      * @param assumeLabels Assume that unknown operands are labels
      * @return The encoded instruction
      */
-    private byte[] parseInstruction(String line, int currentLine, HashMap<String, Character> labels,
+    private byte[] parseInstruction(AssemblyResult result, String line, int currentLine, int offset, HashMap<String, Character> labels,
                                     InstructionSet instructionSet, boolean assumeLabels)
             throws AssemblyException {
 
@@ -555,6 +562,8 @@ public class Assembler {
             throw new InvalidMnemonicException(mnemonic, currentLine);
         }
 
+        StringBuilder disassembly = new StringBuilder();
+
         //Check operands and encode instruction
         final int beginIndex = line.indexOf(mnemonic) + mnemonic.length();
         if (line.contains(",")) {
@@ -576,6 +585,17 @@ public class Assembler {
             //Get instruction by name
             instructionSet.get(mnemonic).encode(out, o1, o2, currentLine);
 
+            if (!assumeLabels) {
+                byte[] bytes = out.toByteArray();
+                for (int i = 0; i < bytes.length; i += 2) {
+                    disassembly.append(String.format("%02X%02X ", bytes[i], bytes[i + 1]));
+                }
+                result.disassemblyLines.add(String.format(
+                        "%04X  %-15s  %s %s, %s", offset, disassembly, mnemonic.toUpperCase(),
+                        o1.toString(registerSet), o2.toString(registerSet)
+                ));
+            }
+
         } else if (tokens.length > 1) {
             //1 operand
 
@@ -591,12 +611,32 @@ public class Assembler {
             //Encode instruction
             //Get instruction by name
             instructionSet.get(mnemonic).encode(out, o1, currentLine);
+
+            if (!assumeLabels) {
+                byte[] bytes = out.toByteArray();
+                for (int i = 0; i < bytes.length; i += 2) {
+                    disassembly.append(String.format("%02X%02X ", bytes[i], bytes[i + 1]));
+                }
+                result.disassemblyLines.add(String.format(
+                        "%04X  %-15s  %s %s", offset, disassembly, mnemonic.toUpperCase(), o1.toString(registerSet)
+                ));
+            }
         } else {
             //No operand
 
             //Encode instruction
             //Get instruction by name
             instructionSet.get(mnemonic).encode(out, currentLine);
+
+            if (!assumeLabels) {
+                byte[] bytes = out.toByteArray();
+                for (int i = 0; i < bytes.length; i += 2) {
+                    disassembly.append(String.format("%02X%02X ", bytes[i], bytes[i + 1]));
+                }
+                result.disassemblyLines.add(String.format(
+                        "%04X  %-15s  %s", offset, disassembly, mnemonic.toUpperCase()
+                ));
+            }
         }
 
         return out.toByteArray();

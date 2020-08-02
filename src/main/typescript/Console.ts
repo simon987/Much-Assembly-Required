@@ -6,7 +6,7 @@ let defaultText =
     "|___|___||   __|___._|____||__|__||__||____|_____|__| |   __|\n" +
     "         |__|                                         |__|\n" +
     "\n" +
-    "Version 1.5A, 1985-05-17\n" +
+    "Version 1.6A, 1985-05-17\n" +
     "Initialising Universal Communication Port connection...Done\n" +
     "Current date is 2790-04-28\n" +
     "Cubot Status: Much Assembly Required";

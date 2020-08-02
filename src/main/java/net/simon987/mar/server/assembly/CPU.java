@@ -20,10 +20,9 @@ import org.bson.Document;
  */
 public class CPU implements MongoSerializable {
 
-    /**
-     *
-     */
     private final Status status;
+
+    private boolean trapFlag = false;
 
     /**
      * Memory associated with the CPU, 64kb max
@@ -50,11 +49,14 @@ public class CPU implements MongoSerializable {
     private final int graceInstructionCount;
     private int graceInstructionsLeft;
     private boolean isGracePeriod;
+    private int instructionAllocation;
 
     /**
      * Instruction pointer, always points to the next instruction
      */
     private int ip;
+
+    public static final int INSTRUCTION_COST = 10000;
 
     /**
      * Hardware is connected to the hardwareHost
@@ -132,6 +134,12 @@ public class CPU implements MongoSerializable {
      * Sets the IP to IVT + number and pushes flags then the old IP
      */
     public void interrupt(int number) {
+
+        if (number == 3) {
+            trapFlag = true;
+            return;
+        }
+
         Instruction push = instructionSet.get(PushInstruction.OPCODE);
         push.execute(status.toWord(), status);
         push.execute(ip, status);
@@ -144,11 +152,15 @@ public class CPU implements MongoSerializable {
         ip = codeSectionOffset;
         graceInstructionsLeft = graceInstructionCount;
         isGracePeriod = false;
+        trapFlag = false;
     }
 
-    public int execute(int timeout) {
+    public void setInstructionAlloction(int instructionAllocation) {
+        this.instructionAllocation = instructionAllocation;
+    }
 
-        long startTime = System.currentTimeMillis();
+    public int execute() {
+
         int counter = 0;
         status.clear();
 
@@ -158,44 +170,52 @@ public class CPU implements MongoSerializable {
             counter++;
 
             if (isGracePeriod) {
-                if (graceInstructionsLeft-- == 0) {
-                    writeExecutionStats(timeout, counter);
-                    return timeout;
+                if (graceInstructionsLeft-- <= 0) {
+                    writeExecutionStats(counter);
+                    return counter / INSTRUCTION_COST;
                 }
-            } else if (counter % 10000 == 0) {
-                if (System.currentTimeMillis() > (startTime + timeout)) {
-                    interrupt(IntInstruction.INT_EXEC_LIMIT_REACHED);
-                    isGracePeriod = true;
-                }
+            } else if (instructionAllocation-- <= 0) {
+                interrupt(IntInstruction.INT_EXEC_LIMIT_REACHED);
+                isGracePeriod = true;
             }
 
-            //fetch instruction
-            int machineCode = memory.get(ip);
+            step();
 
-            /*
-             * Contents of machineCode should look like this:
-             * SSSS SDDD DDOO OOOO
-             * Where S is source, D is destination and O is the opCode
-             */
-            Instruction instruction = instructionSet.get(machineCode & 0x03F); // 0000 0000 00XX XXXX
-
-            int source = (machineCode >> 11) & 0x001F; // XXXX X000 0000 0000
-            int destination = (machineCode >> 6) & 0x001F; // 0000 0XXX XX00 0000
-
-            executeInstruction(instruction, source, destination);
-//            LogManager.LOGGER.info(instruction.getMnemonic());
+            if (trapFlag) {
+                break;
+            }
         }
-        int elapsed = (int) (System.currentTimeMillis() - startTime);
 
 //        LogManager.LOGGER.fine(counter + " instruction in " + elapsed + "ms : " + (double) counter / (elapsed / 1000) / 1000000 + "MHz");
 
-        writeExecutionStats(elapsed, counter);
+        writeExecutionStats(counter);
 
-        return elapsed;
+        return counter / INSTRUCTION_COST;
     }
 
-    private void writeExecutionStats(int timeout, int counter) {
-        memory.set(EXECUTION_COST_ADDR, timeout);
+    public void step() {
+        //fetch instruction
+        int machineCode = memory.get(ip);
+
+        /*
+         * Contents of machineCode should look like this:
+         * SSSS SDDD DDOO OOOO
+         * Where S is source, D is destination and O is the opCode
+         */
+        Instruction instruction = instructionSet.get(machineCode & 0x03F); // 0000 0000 00XX XXXX
+
+        int source = (machineCode >> 11) & 0x001F; // XXXX X000 0000 0000
+        int destination = (machineCode >> 6) & 0x001F; // 0000 0XXX XX00 0000
+
+        executeInstruction(instruction, source, destination);
+//        LogManager.LOGGER.info(instruction.getMnemonic());
+
+        if (status.isBreakFlag()) {
+            trapFlag = false;
+        }
+    }
+
+    private void writeExecutionStats(int counter) {
         memory.set(EXECUTED_INS_ADDR, Util.getHigherWord(counter));
         memory.set(EXECUTED_INS_ADDR + 1, Util.getLowerWord(counter));
     }
@@ -458,7 +478,6 @@ public class CPU implements MongoSerializable {
 
     @Override
     public String toString() {
-
         String str = registerSet.toString();
         str += status.toString();
 
@@ -482,5 +501,13 @@ public class CPU implements MongoSerializable {
                 memory.clone(),
                 status.clone()
         );
+    }
+
+    public boolean isPaused() {
+        return trapFlag;
+    }
+
+    public void setTrapFlag(boolean trapFlag) {
+        this.trapFlag = trapFlag;
     }
 }

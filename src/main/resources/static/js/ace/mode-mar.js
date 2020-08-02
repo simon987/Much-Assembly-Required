@@ -47,12 +47,12 @@ ace.define("ace/mode/mar_rules", ["require", "exports", "ace/lib/oop", "ace/mode
             start:
                 [{
                     token: 'keyword.function.assembly',
-                    regex: '\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|dw|nop|equ|neg|hwq|not|ror|rol|sal|sar|inc|dec|rcl|xchg|rcr|pushf|popf)\\b',
+                    regex: '\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|dw|nop|equ|neg|hwq|not|ror|rol|sal|sar|inc|dec|rcl|xchg|rcr|pushf|popf|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b',
                     caseInsensitive: true
                 },
                     {
                         token: 'keyword.operator.assembly',
-                        regex: '\\b(?:call|ret|jmp|jnz|jg|jl|jge|jle|hwi|jz|js|jns|jc|jnc|jo|jno|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b',
+                        regex: '\\b(?:call|ret|jmp|jnz|jg|jl|jge|jle|hwi|jz|js|jns|jc|jnc|jo|jno|ja|jna|int|iret|into)\\b',
                         caseInsensitive: true
                     },
                     {

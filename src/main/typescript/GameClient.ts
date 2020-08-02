@@ -119,6 +119,93 @@ class UserInfoListener implements MessageListener {
     }
 }
 
+class PausedPromptListener implements MessageListener {
+
+    getListenedMessageType() {
+        return "paused";
+    }
+
+    handle(message): void {
+        mar.pausedLine = message.line;
+        mar.isPaused = true;
+        if (!message.stateSent) {
+            mar.client.requestState();
+        }
+
+        if (mar.disassembly == null) {
+            mar.client.requestDisassembly();
+        }
+    }
+}
+
+class StateListener implements MessageListener {
+
+    getListenedMessageType() {
+        return "state";
+    }
+
+    handle(message): void {
+        const stateMemory = document.getElementById("state-memory");
+        while (stateMemory.firstChild) {
+            stateMemory.removeChild(stateMemory.firstChild);
+        }
+        const stateRegisters = document.getElementById("state-registers");
+        while (stateRegisters.firstChild) {
+            stateRegisters.removeChild(stateRegisters.firstChild);
+        }
+        const stateStatus = document.getElementById("state-status");
+        while (stateStatus.firstChild) {
+            stateStatus.removeChild(stateStatus.firstChild);
+        }
+
+        stateMemory.insertAdjacentHTML("beforeend", message.memory.replace(/(0000 )+/g, '<span class="_0">$&</span>'));
+        // stateMemory.insertAdjacentHTML("beforeend", message.memory);
+        stateRegisters.insertAdjacentHTML("beforeend", message.registers.replace(/(0000 )+/g, '<span class="_0">$&</span>'));
+
+        stateStatus.insertAdjacentHTML("beforeend", message.status.replace(/=0/g, '=<span class="_0">0</span>'));
+        updateDisassemblyPane()
+    }
+}
+
+function updateDisassemblyPane() {
+    const line = mar.pausedLine;
+    const lines = mar.disassembly.slice();
+    const stateDisassembly = document.getElementById("state-disassembly");
+
+    while (stateDisassembly.firstChild) {
+        stateDisassembly.removeChild(stateDisassembly.firstChild);
+    }
+
+    if (line != -1 && mar.isPaused) {
+        lines[line] = `<span id="disassembly-hl">${lines[line]}</span>`
+    }
+
+    stateDisassembly.innerHTML = lines.join("\n")
+        .replace(/^\s*([a-zA-Z_]\w*):/gm, '<span class="_l">                      $1:</span>')
+        .replace(/^.*INT 0003$/gm, '<span class="i3">$&</span>')
+        .replace(/^[0-9A-F]{4}/gm, '<span class="_a">$&</span>')
+        .replace(/ (MOV|ADD|SUB|AND|OR|TEST|CMP|SHL|SHR|MUL|PUSH|POP|DIV|XOR|DW|NOP|EQU|NEG|HWQ|NOT|ROR|ROL|SAL|SAR|INC|DEC|RCL|XCHG|RCR|PUSHF|POPF|INT|IRET|INTO|SETA|SETNBE|SETAE|SETNB|SETNC|SETBE|SETNA|SETB|SETC|SETNAE|SETE|SETZ|SETNE|SETNZ|SETG|SETNLE|SETGE|SETNL|SETLE|SETNG|SETL|SETNGE|SETO|SETNO|SETS|SETNS)/g, '<span class="_k"> $1</span>')
+        .replace(/ (CALL|RET|JMP|JNZ|JG|JL|JGE|JLE|HWI|JZ|JS|JNS|JC|JNC|JO|JNO|JA|JNA) /g, '<span class="_o"> $1 </span>')
+        .replace(/ (BRK)$/gm, '<span class="_b"> $1</span>')
+
+    const hl = document.getElementById("disassembly-hl");
+    if (hl != null) {
+        hl.scrollIntoView({block: "center"});
+    }
+}
+
+class DisassemblyListener implements MessageListener {
+
+    getListenedMessageType() {
+        return "disassembly";
+    }
+
+    handle(message): void {
+        mar.disassembly = message.lines;
+        updateDisassemblyPane();
+    }
+}
+
 
 class AuthListener implements MessageListener {
 
@@ -241,6 +328,7 @@ class CodeResponseListener implements MessageListener {
     }
 
     handle(message): void {
+        mar.client.requestDisassembly();
         alert("Uploaded and assembled " + message.bytes + " bytes (" + message.exceptions + " errors)");
     }
 
@@ -311,6 +399,7 @@ class GameClient {
         if (DEBUG) {
             console.log("[MAR] Uploaded code");
         }
+        mar.isPaused = false;
 
         this.socket.send(JSON.stringify({t: "uploadCode", code: code}))
     }
@@ -341,6 +430,35 @@ class GameClient {
         }
 
         this.socket.send(JSON.stringify({t: "object", x: this.worldX, y: this.worldY, dimension: this.dimension}));
+    }
+
+    public requestState(): void {
+        if (DEBUG) {
+            console.log("[MAR] Requesting CPU state");
+        }
+
+        this.socket.send(JSON.stringify({t: "stateRequest"}))
+    }
+
+    public requestDisassembly(): void {
+        if (DEBUG) {
+            console.log("[MAR] Requesting disassembly");
+        }
+
+        this.socket.send(JSON.stringify({t: "disassemblyRequest"}))
+    }
+
+    public debugStep(mode): void {
+        if (DEBUG) {
+            console.log("[MAR] Debug step " + mode);
+        }
+
+        if (mode == "continue") {
+            mar.isPaused = false;
+            updateDisassemblyPane();
+        }
+
+        this.socket.send(JSON.stringify({t: "debugStep", mode: mode}))
     }
 
     public sendDebugCommand(json): void {
@@ -411,6 +529,9 @@ class GameClient {
             self.listeners.push(new CodeResponseListener());
             self.listeners.push(new CodeListener());
             self.listeners.push(new DebugResponseListener());
+            self.listeners.push(new StateListener());
+            self.listeners.push(new DisassemblyListener());
+            self.listeners.push(new PausedPromptListener());
 
             self.socket.onmessage = function (received) {
 

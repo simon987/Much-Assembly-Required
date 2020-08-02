@@ -56,10 +56,14 @@ public class Status implements Cloneable {
     }
 
     public String toString() {
-        return "" + (signFlag ? 1 : 0) + ' ' +
-                (zeroFlag ? 1 : 0) + ' ' +
-                (carryFlag ? 1 : 0) + ' ' +
-                (overflowFlag ? 1 : 0) + '\n';
+        return String.format(
+                "C=%d Z=%s S=%s O=%s B=%s",
+                carryFlag ? 1 : 0,
+                zeroFlag ? 1 : 0,
+                signFlag ? 1 : 0,
+                overflowFlag ? 1 : 0,
+                breakFlag ? 1 : 0
+        );
     }
 
     /**

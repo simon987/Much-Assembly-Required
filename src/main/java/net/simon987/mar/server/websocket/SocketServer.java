@@ -16,6 +16,7 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @WebSocket(maxTextMessageSize = SocketServer.MAX_TXT_MESSAGE_SIZE)
 public class SocketServer {
@@ -44,6 +45,9 @@ public class SocketServer {
         messageDispatcher.addHandler(new CodeRequestHandler());
         messageDispatcher.addHandler(new KeypressHandler());
         messageDispatcher.addHandler(new DebugCommandHandler());
+        messageDispatcher.addHandler(new StateRequestHandler());
+        messageDispatcher.addHandler(new DisassemblyRequestHandler());
+        messageDispatcher.addHandler(new DebugStepHandler());
     }
 
     @OnWebSocketConnect
@@ -117,6 +121,10 @@ public class SocketServer {
         onlineUser.setAuthenticated(true);
 
         sendString(session, AUTH_OK_MESSAGE);
+
+        if (user.getControlledUnit().getCpu().isPaused()) {
+            promptUserPausedState(user);
+        }
     }
 
     /**
@@ -185,5 +193,14 @@ public class SocketServer {
         jsonInts.addAll(ints);
 
         return jsonInts;
+    }
+
+    public void promptUserPausedState(User user) {
+        for (OnlineUser onlineUser : onlineUserManager.getUser(user)) {
+            Map<Integer, Integer> lineMap = user.getCodeLineMap();
+            Integer line = lineMap.get(user.getControlledUnit().getCpu().getIp());
+
+            sendString(onlineUser.getWebSocket(), DebugStepHandler.pausedStatePrompt(line, false));
+        }
     }
 }

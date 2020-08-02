@@ -264,6 +264,22 @@ public class Operand {
                 } catch (NumberFormatException e2) {
                     return false;
                 }
+            } else if (expr.startsWith("+0o")) {
+                try {
+                    data = Integer.parseInt(expr.substring(3), 8);
+                    value += registerSet.size() * 2; //refers to memory with disp
+                    return true;
+                } catch (NumberFormatException e2) {
+                    return false;
+                }
+            } else if (expr.startsWith("-0o")) {
+                try {
+                    data = -Integer.parseInt(expr.substring(3), 8);
+                    value += registerSet.size() * 2; //refers to memory with disp
+                    return true;
+                } catch (NumberFormatException e2) {
+                    return false;
+                }
             }
 
             return false;
@@ -280,5 +296,21 @@ public class Operand {
 
     public int getData() {
         return data;
+    }
+
+    public String toString(RegisterSet registerSet) {
+        switch (type) {
+            case REGISTER16:
+                return registerSet.getRegister(value).getName();
+            case MEMORY_IMM16:
+                return String.format("[%04X]", data);
+            case MEMORY_REG16:
+                return String.format("[%s]", registerSet.getRegister(value - registerSet.size()).getName());
+            case MEMORY_REG_DISP16:
+                return String.format("[%s + %04X]", registerSet.getRegister(value - registerSet.size() * 2).getName(), data);
+            case IMMEDIATE16:
+                return String.format("%04X", data);
+        }
+        return null;
     }
 }

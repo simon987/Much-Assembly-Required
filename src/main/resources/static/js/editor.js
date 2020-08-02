@@ -27,10 +27,9 @@ function removeComment(line) {
 function checkForLabel(line, result) {
     line = removeComment(line);
 
-    var match;
-    if ((match = /^[a-zA-Z_]\w*:/.exec(line)) !== null) {
-
-        result.labels.push(match[0].substring(0, match[0].length - 1));
+    let match;
+    if ((match = /^\s*([a-zA-Z_]\w*):/.exec(line)) !== null) {
+        result.labels.push(match[1]);
     }
 }
 
@@ -333,7 +332,7 @@ function parseInstruction(line, result, currentLine) {
                 strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
 
                 //Validate operand number
-                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
+                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns|int)\\b').test(mnemonic.toLowerCase())) {
                     result.annotations.push({
                         row: currentLine,
                         column: 0,
@@ -366,7 +365,7 @@ function parseInstruction(line, result, currentLine) {
 
             } else {
                 //No operand
-                if (!new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase())) {
+                if (!new RegExp('\\b(?:ret|brk|nop|pushf|popf|into|iret)\\b').test(mnemonic.toLowerCase())) {
 
                     //Validate operand number
                     result.annotations.push({
@@ -422,24 +421,32 @@ function parse() {
     editor.getSession().setAnnotations(result.annotations);
 }
 
+function hideTabs() {
+    ["tab-world", "tab-world-sm", "tab-editor", "tab-editor-sm", "tab-debug", "tab-debug-sm"]
+        .forEach(tab => document.getElementById(tab).classList.remove("active"));
+    ["world-tab", "editor-tab", "debug-tab"]
+        .forEach(tab => document.getElementById(tab).setAttribute("style", "display: none"))
+}
+
 function tabWorldClick() {
+    hideTabs();
     document.getElementById("tab-world").classList.add("active");
     document.getElementById("tab-world-sm").classList.add("active");
-    document.getElementById("tab-editor").classList.remove("active");
-    document.getElementById("tab-editor-sm").classList.remove("active");
-
     document.getElementById("world-tab").setAttribute("style", "");
-    document.getElementById("editor-tab").setAttribute("style", "display: none");
 }
 
 function tabEditorClick() {
-    document.getElementById("tab-world").classList.remove("active");
-    document.getElementById("tab-world-sm").classList.remove("active");
+    hideTabs();
     document.getElementById("tab-editor").classList.add("active");
     document.getElementById("tab-editor-sm").classList.add("active");
-
-    document.getElementById("world-tab").setAttribute("style", "display: none");
     document.getElementById("editor-tab").setAttribute("style", "");
+}
+
+function tabDebuggerClick() {
+    hideTabs();
+    document.getElementById("tab-debug").classList.add("active");
+    document.getElementById("tab-debug-sm").classList.add("active");
+    document.getElementById("debug-tab").setAttribute("style", "");
 }
 
 //-----

@@ -47,20 +47,20 @@ public class Util {
 
     public static String toHex(byte[] byteArray) {
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         int count = 0;
 
         for (byte b : byteArray) {
-            result += String.format("%02X ", b);
+            result.append(String.format("%02X ", b));
             if (count == 16) {
                 count = -1;
-                result += "\n";
+                result.append("\n");
             }
             count++;
         }
 
-        return result;
+        return result.toString();
     }
 
     /**
