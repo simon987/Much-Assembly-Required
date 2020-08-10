@@ -45,6 +45,10 @@ public class Util {
         return String.format("%04X ", a);
     }
 
+    public static String toHex16(int a) {
+        return String.format("%04X", a & 0x0000FFFF);
+    }
+
     public static String toHex(byte[] byteArray) {
 
         StringBuilder result = new StringBuilder();

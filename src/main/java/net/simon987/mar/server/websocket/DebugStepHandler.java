@@ -31,7 +31,7 @@ public class DebugStepHandler implements MessageHandler {
 
             CPU cpu = user.getUser().getControlledUnit().getCpu();
 
-            if (!cpu.isPaused()) {
+            if (!cpu.isPaused() || cpu.isExecuting()) {
                 return;
             }
 

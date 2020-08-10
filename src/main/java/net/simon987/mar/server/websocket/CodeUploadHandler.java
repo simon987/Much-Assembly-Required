@@ -41,6 +41,7 @@ public class CodeUploadHandler implements MessageHandler {
                     cpu.setCodeSectionOffset(ar.getCodeSectionOffset());
 
                     cpu.reset();
+                    cpu.getRegisterSet().clear();
                     //Clear keyboard buffer
                     if (user.getUser().getControlledUnit() != null &&
                             user.getUser().getControlledUnit().getKeyboardBuffer() != null) {

@@ -276,7 +276,7 @@ public class GameServer implements Runnable {
                     int allocation = Math.min(user.getControlledUnit().getEnergy() * CPU.INSTRUCTION_COST, maxExecutionInstructions);
                     cpu.setInstructionAlloction(allocation);
 
-                    if (!cpu.isPaused()) {
+                    if (!cpu.isPaused() && !cpu.isExecuting()) {
                         cpu.reset();
                         executeUserCode(user);
                     }

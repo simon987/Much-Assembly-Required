@@ -23,6 +23,7 @@ public class CPU implements MongoSerializable {
     private final Status status;
 
     private boolean trapFlag = false;
+    private boolean executing = false;
 
     /**
      * Memory associated with the CPU, 64kb max
@@ -161,6 +162,7 @@ public class CPU implements MongoSerializable {
 
     public int execute() {
 
+        executing = true;
         int counter = 0;
         status.clear();
 
@@ -190,6 +192,7 @@ public class CPU implements MongoSerializable {
 
         writeExecutionStats(counter);
 
+        executing = false;
         return counter / INSTRUCTION_COST;
     }
 
@@ -505,6 +508,10 @@ public class CPU implements MongoSerializable {
 
     public boolean isPaused() {
         return trapFlag;
+    }
+
+    public boolean isExecuting() {
+        return executing;
     }
 
     public void setTrapFlag(boolean trapFlag) {

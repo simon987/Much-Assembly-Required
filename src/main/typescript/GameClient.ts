@@ -158,40 +158,60 @@ class StateListener implements MessageListener {
             stateStatus.removeChild(stateStatus.firstChild);
         }
 
-        stateMemory.insertAdjacentHTML("beforeend", message.memory.replace(/(0000 )+/g, '<span class="_0">$&</span>'));
-        // stateMemory.insertAdjacentHTML("beforeend", message.memory);
-        stateRegisters.insertAdjacentHTML("beforeend", message.registers.replace(/(0000 )+/g, '<span class="_0">$&</span>'));
+        // stateMemory.insertAdjacentHTML("beforeend", message.memory.replace(/(0000 )+/g, '<span class="_0">$&</span>'));
+        stateMemory.insertAdjacentHTML("beforeend", message.memory);
+        let registers = "";
+        let regKeys = Object.keys(message.registers);
+        for (let i = 0; i < regKeys.length; i++) {
+            registers += regKeys[i] + "=" + message.registers[regKeys[i]].toString(16).padStart(4, "0").toUpperCase()
+            if (i != regKeys.length - 1) {
+                registers += " ";
+            }
+        }
+        stateRegisters.insertAdjacentHTML("beforeend", registers.replace(/(0000)+/g, '<span class="_0">$&</span>'));
 
         stateStatus.insertAdjacentHTML("beforeend", message.status.replace(/=0/g, '=<span class="_0">0</span>'));
         updateDisassemblyPane()
     }
 }
 
+function hlDisassembly(lines) {
+    let text = ""
+    for (let i = 0; i < lines.length; i++) {
+        text += "<span id='line-" + i + "'>" + lines[i]
+                .replace(/^\s*([a-zA-Z_]\w*):/gm, '<span class="_l">                      $1:</span>')
+                .replace(/^.*INT 0003$/gm, '<span class="i3">$&</span>')
+                .replace(/^[0-9A-F]{4}/gm, '<span class="_a">$&</span>')
+                .replace(/ (MOV|ADD|SUB|AND|OR|TEST|CMP|SHL|SHR|MUL|PUSH|POP|DIV|XOR|DW|NOP|EQU|NEG|HWQ|NOT|ROR|ROL|SAL|SAR|INC|DEC|RCL|XCHG|RCR|PUSHF|POPF|INT|IRET|INTO|SETA|SETNBE|SETAE|SETNB|SETNC|SETBE|SETNA|SETB|SETC|SETNAE|SETE|SETZ|SETNE|SETNZ|SETG|SETNLE|SETGE|SETNL|SETLE|SETNG|SETL|SETNGE|SETO|SETNO|SETS|SETNS)/g, '<span class="_k"> $1</span>')
+                .replace(/ (CALL|RET|JMP|JNZ|JG|JL|JGE|JLE|HWI|JZ|JS|JNS|JC|JNC|JO|JNO|JA|JNA)/g, '<span class="_o"> $1 </span>')
+                .replace(/ (BRK)$/gm, '<span class="_b"> $1</span>')
+            + "</span>\n";
+    }
+    return text;
+}
+
 function updateDisassemblyPane() {
+
     const line = mar.pausedLine;
-    const lines = mar.disassembly.slice();
+    if (mar.disassembly == undefined || line == -1 || !mar.isPaused) {
+        return;
+    }
+
     const stateDisassembly = document.getElementById("state-disassembly");
 
-    while (stateDisassembly.firstChild) {
-        stateDisassembly.removeChild(stateDisassembly.firstChild);
-    }
+    if (!mar.disassemblyInitialized) {
+        mar.disassemblyInitialized = true;
+        while (stateDisassembly.firstChild) {
+            stateDisassembly.removeChild(stateDisassembly.firstChild);
+        }
 
-    if (line != -1 && mar.isPaused) {
-        lines[line] = `<span id="disassembly-hl">${lines[line]}</span>`
+        stateDisassembly.innerHTML = hlDisassembly(mar.disassembly)
+    } else {
+        [].forEach.call(document.getElementsByClassName("disassembly-hl"), el => el.setAttribute("class", null));
     }
-
-    stateDisassembly.innerHTML = lines.join("\n")
-        .replace(/^\s*([a-zA-Z_]\w*):/gm, '<span class="_l">                      $1:</span>')
-        .replace(/^.*INT 0003$/gm, '<span class="i3">$&</span>')
-        .replace(/^[0-9A-F]{4}/gm, '<span class="_a">$&</span>')
-        .replace(/ (MOV|ADD|SUB|AND|OR|TEST|CMP|SHL|SHR|MUL|PUSH|POP|DIV|XOR|DW|NOP|EQU|NEG|HWQ|NOT|ROR|ROL|SAL|SAR|INC|DEC|RCL|XCHG|RCR|PUSHF|POPF|INT|IRET|INTO|SETA|SETNBE|SETAE|SETNB|SETNC|SETBE|SETNA|SETB|SETC|SETNAE|SETE|SETZ|SETNE|SETNZ|SETG|SETNLE|SETGE|SETNL|SETLE|SETNG|SETL|SETNGE|SETO|SETNO|SETS|SETNS)/g, '<span class="_k"> $1</span>')
-        .replace(/ (CALL|RET|JMP|JNZ|JG|JL|JGE|JLE|HWI|JZ|JS|JNS|JC|JNC|JO|JNO|JA|JNA) /g, '<span class="_o"> $1 </span>')
-        .replace(/ (BRK)$/gm, '<span class="_b"> $1</span>')
-
-    const hl = document.getElementById("disassembly-hl");
-    if (hl != null) {
-        hl.scrollIntoView({block: "center"});
-    }
+    const lineElem = document.getElementById("line-" + line);
+    lineElem.classList.add("disassembly-hl");
+    lineElem.scrollIntoView({block: "center"});
 }
 
 class DisassemblyListener implements MessageListener {

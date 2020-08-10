@@ -1,6 +1,7 @@
 package net.simon987.mar.server.assembly;
 
 
+import net.simon987.mar.server.io.JSONSerializable;
 import net.simon987.mar.server.io.MongoSerializable;
 import org.bson.Document;
 import org.json.simple.JSONArray;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * A set of registers for a CPU
  */
-public class RegisterSet implements Target, MongoSerializable, Cloneable {
+public class RegisterSet implements Target, MongoSerializable, Cloneable, JSONSerializable {
 
     private int size = 0;
 
@@ -209,5 +210,22 @@ public class RegisterSet implements Target, MongoSerializable, Cloneable {
             rs.put(i, getRegister(i).clone());
         }
         return rs;
+    }
+
+    @Override
+    public JSONObject jsonSerialise() {
+        JSONObject json = new JSONObject();
+
+        for (int i = 1; i <= size; i++) {
+            Register reg = getRegister(i);
+            json.put(reg.getName(), (int)reg.getValue());
+        }
+
+        return json;
+    }
+
+    @Override
+    public JSONObject debugJsonSerialise() {
+        return jsonSerialise();
     }
 }

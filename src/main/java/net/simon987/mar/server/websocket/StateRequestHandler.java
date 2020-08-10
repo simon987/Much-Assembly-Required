@@ -35,7 +35,7 @@ public class StateRequestHandler implements MessageHandler {
         response.put("t", "state");
         response.put("memory", cpu.getMemory().toString());
         response.put("status", cpu.getStatus().toString());
-        response.put("registers", cpu.getRegisterSet().toString());
+        response.put("registers", cpu.getRegisterSet().jsonSerialise());
         Map<Integer, Integer> codeLineMap = user.getUser().getCodeLineMap();
         Integer line = codeLineMap == null ? null : codeLineMap.get(cpu.getIp());
         response.put("line", line == null ? 0 : line);

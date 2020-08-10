@@ -372,7 +372,7 @@
     text-align: right;
 }
 
-#disassembly-hl {
+.disassembly-hl {
     background: #ff000077;
     display: inline-block;
     width: 100%;

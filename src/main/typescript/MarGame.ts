@@ -1,6 +1,7 @@
 class MarGame {
 
     disassembly : string[];
+    disassemblyInitialized = false
     pausedLine: number = -1;
 
     _isPaused = false
