@@ -303,13 +303,13 @@ public class Operand {
             case REGISTER16:
                 return registerSet.getRegister(value).getName();
             case MEMORY_IMM16:
-                return String.format("[%04X]", data);
+                return String.format("[%s]", Util.toHex16(data));
             case MEMORY_REG16:
                 return String.format("[%s]", registerSet.getRegister(value - registerSet.size()).getName());
             case MEMORY_REG_DISP16:
-                return String.format("[%s + %04X]", registerSet.getRegister(value - registerSet.size() * 2).getName(), data);
+                return String.format("[%s + %s]", registerSet.getRegister(value - registerSet.size() * 2).getName(), Util.toHex16(data));
             case IMMEDIATE16:
-                return String.format("%04X", data);
+                return Util.toHex16(data);
         }
         return null;
     }
