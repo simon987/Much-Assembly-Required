@@ -20,11 +20,13 @@ Chat: [Slack](https://join.slack.com/t/muchassemblyrequired/shared_invite/enQtMj
 On Ubuntu 16.04:
 ```bash
 sudo apt install git maven openjdk-8-jdk mongodb
+sudo npm install -g typescript
 ```
 
 On Arch:
 ``` bash
 sudo pacman -S git maven mongodb jdk8-opendjk
+sudo npm install -g typescript
 
 # Don't forget to start mongodb
 sudo systemctl start mongodb.service
