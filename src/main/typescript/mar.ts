@@ -1,7 +1,7 @@
 // Typescript V2.4.1
 
 let RENDERER_WIDTH = document.getElementById("game").clientWidth * window.devicePixelRatio;
-let RENDERER_HEIGHT = (window.innerHeight - 220) * window.devicePixelRatio;
+let RENDERER_HEIGHT = (window.innerHeight - 220);
 
 let DEBUG: boolean;
 
