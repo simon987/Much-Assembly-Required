@@ -36,8 +36,13 @@ public class RadiationDetector extends HardwareModule {
   }
 
   /**
-   * Find tiles between two given coordinates.
+   * Finds the tiles between the two tiles located at the given coordinates. The
+   * tiles located at the coordinates are not included in the list.
    * 
+   * @param x0 x-coordinate of first point
+   * @param y0 y-coordinate of first point
+   * @param x1 x-coordinate of second point
+   * @param y1 y-coordinate of second point
    * @return List of tile coordinates. An empty list indicates tiles are next to
    *         each other.
    */
@@ -93,6 +98,19 @@ public class RadiationDetector extends HardwareModule {
     }
 
     return ret;
+  }
+
+  /**
+   * Finds the Euclidean Distance between two coordinates.
+   * 
+   * @param x0 x-coordinate of first point
+   * @param y0 y-coordinate of first point
+   * @param x1 x-coordinate of second point
+   * @param y1 y-coordinate of second point
+   * @return distance between two points
+   */
+  public double getDistanceOfCoords(int x0, int y0, int x1, int y1) {
+    return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
   }
 
   public RadiationDetector(ControllableUnit unit) {
