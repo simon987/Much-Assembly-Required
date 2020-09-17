@@ -2,10 +2,14 @@ package net.simon987.pluginradioactivecloud;
 
 import java.util.ArrayList;
 
+import javax.lang.model.type.UnionType;
+
 import org.bson.Document;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
 import net.simon987.server.game.objects.ControllableUnit;
+import net.simon987.server.game.objects.GameObject;
+import net.simon987.server.game.objects.Radioactive;
 
 public class RadiationDetector extends HardwareModule {
 
@@ -130,7 +134,30 @@ public class RadiationDetector extends HardwareModule {
   @Override
   public void handleInterrupt(Status status) {
 
-    // Fill in
+    // Find all game entities in world
+    ArrayList<GameObject> entities = new ArrayList<>(unit.getWorld().getGameObjects());
+
+    // Check for alpha particles by finding Radioactive entities
+    int alphaParticles = 0;
+    for (GameObject entity : entities) {
+      if (entity instanceof Radioactive) {
+        // Calculate distance between object and cubot
+        double pathLength = getDistanceOfCoords(unit.getX(), unit.getY(), entity.getX(), entity.getY());
+        alphaParticles += ((Radioactive) entity).getAlphaCounts(pathLength);
+
+        // Get all tiles in between cubot and Radioactive entity
+        ArrayList<Tuple> tiles = getTiles(unit.getX(), unit.getY(), entity.getX(), entity.getY());
+        for (Tuple tup : tiles) {
+          // If intermediary tile is blocked, reduce alphaParticles by 5
+          if (unit.getWorld().isTileBlocked(tup.x, tup.y)) {
+            alphaParticles -= 5;
+          }
+        }
+      }
+    }
+
+    // Save Alpha Radioactive Particles to register B
+    getCpu().getRegisterSet().getRegister("B").setValue(alphaParticles);
   }
 
   @Override
