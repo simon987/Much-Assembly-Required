@@ -9,4 +9,12 @@ public interface Radioactive {
   public default int getAlphaCounts(double distance) {
     return (int) (1000 * 1.0 / (distance * distance));
   }
+
+  public default int getBetaCounts(double distance) {
+    return (int) (2000 * 1.0 / (distance * distance));
+  }
+
+  public default int getGammaCounts(double distance) {
+    return (int) (5000 * 1.0 / (distance * distance));
+  }
 }

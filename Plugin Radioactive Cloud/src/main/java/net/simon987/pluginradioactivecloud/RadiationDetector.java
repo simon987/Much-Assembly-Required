@@ -23,6 +23,13 @@ public class RadiationDetector extends HardwareModule {
   public static final char HWID = 0x010F;
 
   /**
+   * Radiation Constants
+   */
+  private static final int ALPHA_BLOCKED_VALUE = 5;
+  private static final int BETA_BLOCKED_VALUE = 2;
+  private static final int GAMMA_BLOCKED_VALUE = 1;
+
+  /**
    * Helper class for getTiles
    */
   private class Tuple {
@@ -50,9 +57,9 @@ public class RadiationDetector extends HardwareModule {
 
     ArrayList<Tuple> ret = new ArrayList<>();
     double slope;
-    if (x1 > x0)
+    if (x1 > x0) {
       slope = (y1 - y0) / (double) (x1 - x0);
-    else {
+    } else {
       slope = (y0 - y1) / (double) (x0 - x1);
 
       // Swap values so that x0 < x1. This preps the following code where y is
@@ -69,15 +76,15 @@ public class RadiationDetector extends HardwareModule {
     // If slope is zero or undefined, return tiles directly along the
     // appropriate cardinal direction.
     if (x0 == x1) {
-      int smaller = y0 < y1 ? y0 : y1;
-      int larger = y0 > y1 ? y0 : y1;
+      int smaller = Math.min(y0, y1);
+      int larger = Math.max(y0, y1);
       System.out.printf("%d %d", smaller, larger);
       for (int i = smaller + 1; i < larger; i++) {
         ret.add(new Tuple(x0, i));
       }
     } else if (y0 == y1) {
-      int smaller = x0 < x1 ? x0 : x1;
-      int larger = x0 > x1 ? x0 : x1;
+      int smaller = Math.min(x0, x1);
+      int larger = Math.max(x0, x1);
       for (int i = smaller + 1; i < larger; i++) {
         ret.add(new Tuple(i, y0));
       }
@@ -129,25 +136,37 @@ public class RadiationDetector extends HardwareModule {
 
     // Check for alpha particles by finding Radioactive entities
     int alphaParticles = 0;
+    int betaParticles = 0;
+    int gammaParticles = 0;
     for (GameObject entity : entities) {
       if (entity instanceof Radioactive) {
         // Calculate distance between object and cubot
         double pathLength = getDistanceOfCoords(unit.getX(), unit.getY(), entity.getX(), entity.getY());
         alphaParticles += ((Radioactive) entity).getAlphaCounts(pathLength);
+        betaParticles += ((Radioactive) entity).getBetaCounts(pathLength);
+        gammaParticles += ((Radioactive) entity).getGammaCounts(pathLength);
 
         // Get all tiles in between cubot and Radioactive entity
         ArrayList<Tuple> tiles = getTiles(unit.getX(), unit.getY(), entity.getX(), entity.getY());
         for (Tuple tup : tiles) {
           // If intermediary tile is blocked, reduce alphaParticles by 5
           if (unit.getWorld().isTileBlocked(tup.x, tup.y)) {
-            alphaParticles -= 5;
+            alphaParticles -= ALPHA_BLOCKED_VALUE;
+            betaParticles -= BETA_BLOCKED_VALUE;
+            gammaParticles -= GAMMA_BLOCKED_VALUE;
           }
         }
       }
     }
 
-    // Save Alpha Radioactive Particles to register B
-    getCpu().getRegisterSet().getRegister("B").setValue(alphaParticles);
+    // Save Alpha Radioactive Particles to register A
+    getCpu().getRegisterSet().getRegister("A").setValue(alphaParticles);
+
+    // Save Beta Radioactive Particles to register B
+    getCpu().getRegisterSet().getRegister("B").setValue(betaParticles);
+
+    // Save Gamma Radioactive Particles to register C
+    getCpu().getRegisterSet().getRegister("C").setValue(gammaParticles);
   }
 
   @Override
