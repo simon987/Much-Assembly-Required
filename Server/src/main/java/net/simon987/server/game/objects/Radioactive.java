@@ -6,5 +6,7 @@ package net.simon987.server.game.objects;
 
 public interface Radioactive {
 
-
+  public static int getAlphaCounts(double distance) {
+    return (int) (1000 * 1.0 / (distance * distance));
+  }
 }
