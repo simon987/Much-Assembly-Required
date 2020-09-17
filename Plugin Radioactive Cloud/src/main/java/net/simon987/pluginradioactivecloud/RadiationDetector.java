@@ -13,6 +13,7 @@ import net.simon987.server.game.objects.Radioactive;
 
 public class RadiationDetector extends HardwareModule {
 
+  // NEEDS TO BE CHANGED
   // Need to change to whatever the last unique address is
   public static final int DEFAULT_ADDRESS = 0x010F;
 
@@ -20,11 +21,6 @@ public class RadiationDetector extends HardwareModule {
    * Hardware ID (Should be unique) -- NEEDS TO BE CHANGED
    */
   public static final char HWID = 0x010F;
-
-  /**
-   * Radiation detected by cubot
-   */
-  private double currentRadiation = 0;
 
   /**
    * Helper class for getTiles
@@ -119,16 +115,10 @@ public class RadiationDetector extends HardwareModule {
 
   public RadiationDetector(ControllableUnit unit) {
     super(null, unit);
-
-    // Set default values
-    currentRadiation = 0;
   }
 
   public RadiationDetector(Document document, ControllableUnit cubot) {
     super(document, cubot);
-
-    // Set default values
-    currentRadiation = 0;
   }
 
   @Override
