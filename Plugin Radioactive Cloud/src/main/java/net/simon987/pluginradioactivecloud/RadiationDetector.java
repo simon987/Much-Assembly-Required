@@ -2,8 +2,6 @@ package net.simon987.pluginradioactivecloud;
 
 import java.util.ArrayList;
 
-import javax.lang.model.type.UnionType;
-
 import org.bson.Document;
 import net.simon987.server.assembly.HardwareModule;
 import net.simon987.server.assembly.Status;
@@ -13,14 +11,15 @@ import net.simon987.server.game.objects.Radioactive;
 
 public class RadiationDetector extends HardwareModule {
 
-  // NEEDS TO BE CHANGED
-  // Need to change to whatever the last unique address is
-  public static final int DEFAULT_ADDRESS = 0x010F;
+  /**
+   * Should be unique and same as HWID
+   */
+  public static final int DEFAULT_ADDRESS = 0x000E;
 
   /**
-   * Hardware ID (Should be unique) -- NEEDS TO BE CHANGED
+   * Hardware ID (Should be unique)
    */
-  public static final char HWID = 0x010F;
+  public static final char HWID = 0x000E;
 
   /**
    * Radiation Constants
