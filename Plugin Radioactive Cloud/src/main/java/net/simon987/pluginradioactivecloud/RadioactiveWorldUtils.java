@@ -12,7 +12,7 @@ import java.util.Random;
 public class RadioactiveWorldUtils {
 
   /**
-   * Generate a list of biomass blobs for a world
+   * Generate a list of radioactive obstacles for a world
    */
   public static ArrayList<RadioactiveObstacle> generateRadioactiveObstacles(World world, int minCount, int maxCount) {
 
@@ -24,15 +24,7 @@ public class RadioactiveWorldUtils {
     // of radioactive objects, set the desired amount of radioactive objects to the
     // plain tile count
     TileMap m = world.getTileMap();
-    int plainCount = 0;
-    for (int y = 0; y < world.getWorldSize(); y++) {
-      for (int x = 0; x < world.getWorldSize(); x++) {
-
-        if (m.getTileIdAt(x, y) == TilePlain.ID) {
-          plainCount++;
-        }
-      }
-    }
+    int plainCount = world.getCount(TilePlain.ID);
 
     if (radioactiveObjCount > plainCount) {
       radioactiveObjCount = plainCount;

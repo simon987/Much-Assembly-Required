@@ -24,15 +24,7 @@ public class WorldUtils {
         // of blobs,
         // set the desired amount of blobs to the plain tile count
         TileMap m = world.getTileMap();
-        int plainCount = 0;
-        for (int y = 0; y < world.getWorldSize(); y++) {
-            for (int x = 0; x < world.getWorldSize(); x++) {
-
-                if (m.getTileIdAt(x, y) == TilePlain.ID) {
-                    plainCount++;
-                }
-            }
-        }
+        int plainCount = world.getCount(TilePlain.ID);
 
         if (blobCount > plainCount) {
             blobCount = plainCount;
