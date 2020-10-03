@@ -3,8 +3,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/simon987/much-assembly-required/badge)](https://www.codefactor.io/repository/github/simon987/much-assembly-required)
 [![Build Status](https://ci.simon987.net/buildStatus/icon?job=Much-Assembly-Required)](https://ci.simon987.net/job/Much-Assembly-Required/)
 
-Program the 8086-like microprocessor of a robot in a grid-based multiplayer world. The game is web based so no installation is required.
-In its current state, players can walk around the game universe and collect Biomass blobs & Iron/copper ore using the online code editor.
+**Much Assembly Required** allows you to program the 8086-like microprocessor of a robot in a grid-based multiplayer world. The game is web based so no installation is required. In its current state, players can walk around the game universe and collect Biomass blobs and Iron/copper ore using the online code editor.
 
 ![screenshot from 2017-11-12 13-01-43](https://user-images.githubusercontent.com/7120851/32701793-e5d07e98-c7a9-11e7-9931-f8db7b287994.png)
 
@@ -51,12 +50,12 @@ java -jar server-1.4a.jar
 
 Installation instructions:
 1. Download the JDK from [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
-Install the JDK and update your PATH and JAVA_HOME enviroment variables.
+Install the JDK and update your PATH and JAVA_HOME environment variables.
 2. Download Maven from [here](https://maven.apache.org/).
-Install Maven (following the README) and update your PATH enviroment variable.
+Install Maven (following the README) and update your PATH environment variable.
 3. Download Mongo DB Community from [here](https://www.mongodb.com/download-center#community).
 Install Mongo DB following the instructions [here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/).
-Update your PATH enviroment variable.
+Update your PATH environment variable.
 
 Building instructions:
 ```batch
