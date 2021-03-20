@@ -19,7 +19,7 @@ services:
           - ./data/db:/data/db
         ports:
             - 27017:27017
-        command: mongod --smallfiles --logpath=/dev/null --port 27017
+        command: mongod --logpath=/dev/null --port 27017
         healthcheck:
           test: echo 'db.stats().ok' | mongo localhost:27017/mar --quiet
           interval: 2s
