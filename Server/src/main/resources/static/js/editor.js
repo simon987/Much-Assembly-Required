@@ -334,6 +334,7 @@ function parseInstruction(line, result, currentLine) {
     
     line = removeComment(line);
     line = removeLabel(line);
+    var mnemonic = getTokens(line)[0];       //this is the instruction IE opcode, like mov, add, pop, etc...
 
     //handle abort cases
     if (mnemonic === undefined || mnemonic === "") {
@@ -346,7 +347,7 @@ function parseInstruction(line, result, currentLine) {
         return
     }
 
-    var mnemonic = getTokens(line)[0];       //this is the instruction IE opcode, like mov, add, pop, etc...
+
     instructionAnalyzer(line, result, mnemonic)
     return
 }
