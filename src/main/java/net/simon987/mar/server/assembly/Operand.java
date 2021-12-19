@@ -1,8 +1,10 @@
 package net.simon987.mar.server.assembly;
 
+import net.simon987.mar.server.assembly.exception.AssemblyException;
 import net.simon987.mar.server.assembly.exception.InvalidOperandException;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Represents an operand of an instruction. An operand can refer to a
@@ -167,6 +169,127 @@ public class Operand {
             return true;
         } else {
             return false;
+        }
+    }
+
+
+
+    /**
+     * Interface allowing parse states to be manipulated, evaluated, and stacked.
+     */
+    private static class ParseOperator {
+        public int getPrecedence() {
+            return 0;
+        }
+        public int apply(int other) {
+            return other;
+        }
+
+        public final int closeExpect;
+
+        public ParseOperator(int closeExpect) {
+            this.closeExpect = closeExpect;
+        }
+    }
+
+    private static class ParseOperatorUnary extends ParseOperator {
+        TokenParser.UnaryOperatorType op;
+        @Override
+        public int getPrecedence() {
+            return 0;
+        }
+
+        @Override
+        public int apply(int other) {
+            return op.apply(other);
+        }
+
+        public ParseOperatorUnary(int closeExpect, TokenParser.UnaryOperatorType op) {
+            super(closeExpect);
+            this.op = op;
+        }
+    }
+
+    private static class ParseOperatorBinary extends ParseOperator {
+        private final TokenParser.BinaryOperatorType op;
+        private final int value;
+        @Override
+        public int getPrecedence() {
+            return op.precedence;
+        }
+
+        @Override
+        public int apply(int other) {
+            return op.apply(value, other);
+        }
+
+        public ParseOperatorBinary(int closeExpect, TokenParser.BinaryOperatorType op, int value) {
+            super(closeExpect);
+            this.op = op;
+            this.value = value;
+        }
+    }
+
+    private int parseConstExpression(String text, int line, HashMap<String, Character> labels)
+            throws AssemblyException {
+        TokenParser parser = new TokenParser(text, line, labels);
+        Stack<ParseOperator> parseOps = new Stack<>();
+        int closeExpect = -1; // No closing parenthesis expected
+        TokenParser.ParseContext context = TokenParser.ParseContext.Value;
+        int lastValue = 0;
+        while (true) {
+            TokenParser.TokenType ty = parser.GetNextToken(true, context);
+            if (context == TokenParser.ParseContext.Value) {
+                // Parse value
+                if (ty == TokenParser.TokenType.UnaryOperator) {
+                    parseOps.push(new ParseOperatorUnary(closeExpect, parser.lastUnary));
+                    closeExpect = -1;
+                }
+                else if (ty == TokenParser.TokenType.GroupOperator) {
+                    if (parser.lastGroup.end) throw new AssemblyException("Unexpected group close", line);
+                    if (closeExpect != -1) parseOps.push(new ParseOperator(closeExpect));
+                    closeExpect = parser.lastGroup.groupType;
+                } else if (ty == TokenParser.TokenType.Constant) {
+                    lastValue = parser.lastInt;
+                    context = TokenParser.ParseContext.TackOn;
+                } else throw new AssemblyException("Value not found", line);
+            } else {
+                // Parse modifier
+                if (ty == TokenParser.TokenType.EOF || ty == TokenParser.TokenType.GroupOperator) {
+                    if (ty == TokenParser.TokenType.GroupOperator && !parser.lastGroup.end)
+                        throw new AssemblyException("Unexpected group open", line);
+                    if (closeExpect != -1) throw new AssemblyException("Found empty group", line);
+
+                    //Evaluation chain
+                    while (!parseOps.isEmpty()) {
+                        ParseOperator op = parseOps.peek();
+                        if (op.closeExpect != -1) {
+                            if (ty == TokenParser.TokenType.EOF) throw new AssemblyException("Unclosed group", line);
+                            else if (op.closeExpect != parser.lastGroup.groupType)
+                                throw new AssemblyException("Unmatched group ends", line);
+                            lastValue = op.apply(lastValue);
+                            parseOps.pop();
+                            break;
+                        }
+                        lastValue = op.apply(lastValue);
+                        parseOps.pop();
+                    }
+                    if (parseOps.isEmpty() && ty == TokenParser.TokenType.EOF) return lastValue;
+                }
+                else if (ty == TokenParser.TokenType.BinaryOperator) {
+                    TokenParser.BinaryOperatorType bop = parser.lastBinary;
+                    while (closeExpect == -1 && !parseOps.empty()) {
+                        ParseOperator op = parseOps.peek();
+                        if (bop.precedence <= op.getPrecedence()) break;
+                        lastValue = op.apply(lastValue);
+                        closeExpect = op.closeExpect;
+                        parseOps.pop();
+                    }
+                    parseOps.push(new ParseOperatorBinary(closeExpect, bop, lastValue));
+                    closeExpect = -1;
+                }
+                else throw new AssemblyException("Modifier or end not found", line);
+            }
         }
     }
 

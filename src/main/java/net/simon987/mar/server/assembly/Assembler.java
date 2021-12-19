@@ -541,19 +541,15 @@ public class Assembler {
 
         //Check for DW instruction
         try {
-            if (assumeLabels) {
-                byte[] bytes = parseDWInstruction(line, currentLine);
-                if (bytes != null) {
-                    out.write(bytes);
-                    return out.toByteArray();
-                }
-            } else {
-                byte[] bytes = parseDWInstruction(line, labels, currentLine);
-                if (bytes != null) {
-                    out.write(bytes);
-                    return out.toByteArray();
-                }
+            byte[] bytes;
+            if (assumeLabels) bytes = parseDWInstruction(line, currentLine);
+            else bytes = parseDWInstruction(line, labels, currentLine);
+
+            if (bytes != null) {
+                out.write(bytes);
+                return out.toByteArray();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
