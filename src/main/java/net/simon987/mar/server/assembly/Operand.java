@@ -27,8 +27,8 @@ public class Operand {
     private OperandType type;
 
     /**
-     * Value of the the operand, this is the part that will
-     * written into the instruction.
+     * Value of the operand, this is the part that will
+     * be written into the instruction.
      */
     private int value = 0;
 
@@ -73,40 +73,59 @@ public class Operand {
         this.text = text.replace(",", "");
         this.text = this.text.trim();
 
+        if (parseReg(this.text, registerSet)) {
+            return;
+        }
+        if (parseConstExpression(line, labels)) {
+            type = OperandType.IMMEDIATE16;
+            value = IMMEDIATE_VALUE;
+            return;
+        }
+        if (this.text.startsWith("[") && this.text.endsWith("]")) {
 
-        if (!parseImmediate(this.text) && !parseReg(this.text, registerSet) && !parseLabel(this.text, labels)) {
-            if (this.text.startsWith("[") && this.text.endsWith("]")) {
-
-                //Remove []s
-                this.text = this.text.substring(1, this.text.length() - 1);
-
-                if (parseImmediate(this.text) || parseLabel(this.text, labels)) {
-                    //Operand refers to memory
-                    type = OperandType.MEMORY_IMM16;
-                    value = Operand.IMMEDIATE_VALUE_MEM;
-
-                } else if (!parseRegExpr(registerSet, labels)) {
-
-                    if (labels == null) {
-                        type = OperandType.MEMORY_IMM16;
-                        data = 0;
-                    } else {
-                        throw new InvalidOperandException("Invalid operand " + this.text, line);
-                    }
-
-                }
-
-            } else {
+            //Remove []s
+            this.text = this.text.substring(1, this.text.length() - 1);
+            if (parseConstExpression(line, labels)) {
+                type = OperandType.MEMORY_IMM16;
+                value = Operand.IMMEDIATE_VALUE_MEM;
+                return;
+            }
+            if (!parseRegExpr(registerSet, labels)) {
                 if (labels == null) {
-                    type = OperandType.IMMEDIATE16;
+                    type = OperandType.MEMORY_IMM16;
                     data = 0;
                 } else {
                     throw new InvalidOperandException("Invalid operand " + this.text, line);
                 }
+
+            }
+        } else {
+            if (labels == null) {
+                type = OperandType.IMMEDIATE16;
+                data = 0;
+            } else {
+                throw new InvalidOperandException("Invalid operand " + this.text, line);
             }
         }
     }
 
+    /**
+     * Parses a constant expression made of operators, literals, and labels as a single immediate.
+     * Sets data to this value.
+     * @param line The current line of compilation
+     * @param labels The labels known to the compiler
+     * @return true on success, false otherwise.
+     */
+    private boolean parseConstExpression(int line, HashMap<String, Character> labels) {
+        TokenParser parser = new TokenParser(text, line, labels);
+        if (labels == null) return false;
+        try {
+            data = parser.parseConstExpression();
+            return true;
+        } catch (AssemblyException ex) {
+            return false;
+        }
+    }
 
     /**
      * Attempt to parse an integer

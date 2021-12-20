@@ -304,6 +304,10 @@ public class Assembler {
         }
     }
 
+    private static final Pattern EQU_PATTERN = Pattern.compile("([\\w]+)[^\\S\\n]+EQU[^\\S\\n]+(.+)",
+                Pattern.CASE_INSENSITIVE
+            );
+
     /**
      * Check for and handle the EQU instruction
      *
@@ -311,30 +315,25 @@ public class Assembler {
      * @param labels      Map of labels. Constants will be added as labels
      * @param currentLine Current line number
      */
-    private static void checkForEQUInstruction(String line, HashMap<String, Character> labels, int currentLine)
+    private static void checkForEQUInstruction(String line, HashMap<String, Character> labels,
+                                               int currentLine, RegisterSet registers)
             throws AssemblyException {
         /*  the EQU pseudo instruction is equivalent to the #define compiler directive in C/C++
          *  usage: constant_name EQU <immediate_value>
          *  A constant treated the same way as a label.
          */
         line = line.trim();
-        String[] tokens = line.split("\\s+");
 
+        Matcher matcher = EQU_PATTERN.matcher(line);
 
-        if (line.toUpperCase().matches(".*\\bEQU\\b.*")) {
-            if (tokens[1].toUpperCase().equals("EQU") && tokens.length == 3) {
-                try {
-                    //Save value as a label
-                    labels.put(tokens[0], (char) (int) Integer.decode(tokens[2]));
-                } catch (NumberFormatException e) {
-                    throw new InvalidOperandException("Usage: constant_name EQU immediate_value", currentLine);
-                }
-            } else {
-                throw new InvalidOperandException("Usage: constant_name EQU immediate_value", currentLine);
-            }
-
+        if (matcher.lookingAt()) {
+            //Save value as a label
+            TokenParser parser = new TokenParser(matcher.group(2), currentLine, labels);
+            char value = (char)parser.parseConstExpression();
+            labels.put(matcher.group(1), value);
             throw new PseudoInstructionException(currentLine);
         }
+
     }
 
     /**
@@ -452,7 +451,7 @@ public class Assembler {
 
                 //Check for pseudo instructions
                 checkForSectionDeclaration(line, result, currentLine, currentOffset);
-                checkForEQUInstruction(line, result.labels, currentLine);
+                checkForEQUInstruction(line, result.labels, currentLine, registerSet);
                 checkForORGInstruction(line, result, currentLine);
 
                 for (String label : result.labels.keySet()) {

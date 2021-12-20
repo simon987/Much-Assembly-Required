@@ -165,6 +165,7 @@ public class OperandTest {
             fail();
         } catch (InvalidOperandException ignored) {
         }
+        /* Tests disabled due to compile time constant folding.
         try {
             new Operand("[- 12]", labels, registerSet, 0);
             fail();
@@ -174,7 +175,7 @@ public class OperandTest {
             new Operand("[12+1]", labels, registerSet, 0);
             fail();
         } catch (InvalidOperandException ignored) {
-        }
+        } */
         try {
             new Operand("[+label1", labels, registerSet, 0);
             fail();
