@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.simon987.mar.server.assembly.exception.AssemblyException;
+import org.apache.velocity.runtime.directive.Parse;
 
 public class TokenParser {
 
@@ -151,16 +152,16 @@ public class TokenParser {
     }
 
     private static final Pattern BINARY_OPERATOR_PATTERN = Pattern.compile("(<<|>>|[\\-+*/<>&|^])");
-    private static final Pattern UNARY_OPERATOR_PATTERN = Pattern.compile("([\\-!])");
+    private static final Pattern UNARY_OPERATOR_PATTERN = Pattern.compile("([\\-~])");
     private static final Pattern GROUP_OPERATOR_PATTERN = Pattern.compile("([()])");
-    private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("([\\w])");
+    private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("([\\w]+)");
     private static final Pattern NUMBER_PATTERN_16 = Pattern.compile("0[xX]([\\da-fA-F]+)(?![\\w\\d])");
     private static final Pattern NUMBER_PATTERN_8 = Pattern.compile("0[oO]([0-7]+)(?![\\w\\d])");
     private static final Pattern NUMBER_PATTERN_2 = Pattern.compile("0[bB]([01]+)(?![\\w\\d])");
     private static final Pattern NUMBER_PATTERN_10 = Pattern.compile("(\\d+)(?![\\w\\d])");
     private static final Pattern NUMBER_PATTERN_START = Pattern.compile("(\\d)");
+    private static final Pattern RESET_PATTERN = Pattern.compile("[^\\w\\d]");
     private static final Pattern SPACE_PATTERN = Pattern.compile("[^\\S\\n]+");
-
 
     /**
      * @param sequence The characters to parse
@@ -203,7 +204,7 @@ public class TokenParser {
      * @throws AssemblyException if an unrecognized token is found,
      * or if the found token is not supported in the current context.
      */
-    public TokenType GetNextToken(boolean eatSpace, ParseContext context) throws AssemblyException {
+    public TokenType getNextToken(boolean eatSpace, ParseContext context) throws AssemblyException {
         if (start >= end) return TokenType.EOF;
         matcher.region(start, end);
         if (matcher.usePattern(SPACE_PATTERN).lookingAt()) {
@@ -214,12 +215,13 @@ public class TokenParser {
         }
         matcher.usePattern(GROUP_OPERATOR_PATTERN);
         if (matcher.lookingAt()) {
-            start = matcher.end();
+            start = matcher.end(1);
             String symbol = matcher.group(1);
             lastGroup = GroupOperatorType.stringMap.get(symbol);
 
             // Should never happen unless the regex does not agree with GroupOperatorType.
             if (lastGroup == null) throw new AssemblyException("Group operator not supported", line);
+
             return TokenType.GroupOperator;
         }
         if (context == ParseContext.TackOn) {
@@ -236,17 +238,23 @@ public class TokenParser {
         }
         else {
             if (matcher.usePattern(NUMBER_PATTERN_START).lookingAt()) {
+
                 try {
                     if (matcher.usePattern(NUMBER_PATTERN_10).lookingAt())
                         lastInt = Integer.parseInt(matcher.group(1), 10);
                     else if (matcher.usePattern(NUMBER_PATTERN_16).lookingAt())
-                        lastInt = Integer.parseInt( matcher.group(1), 16);
+                        lastInt = Integer.parseInt(matcher.group(1), 16);
                     else if (matcher.usePattern(NUMBER_PATTERN_2).lookingAt())
                         lastInt = Integer.parseInt(matcher.group(1), 2);
                     else if (matcher.usePattern(NUMBER_PATTERN_8).lookingAt())
                         lastInt = Integer.parseInt(matcher.group(1), 8);
-                    else throw new AssemblyException("Invalid number found.", line);
+                    else {
+                        if (matcher.usePattern(RESET_PATTERN).find()) start = matcher.start();
+                        else start = end;
+                        throw new AssemblyException("Invalid number found.", line);
+                    }
                 } catch (NumberFormatException ex) {
+                    start = matcher.end(1);
                     throw new AssemblyException("Number parsing failed", line);
                 }
                 start = matcher.end(1);
@@ -254,25 +262,28 @@ public class TokenParser {
                 return TokenType.Constant;
             }
             if (matcher.usePattern(IDENTIFIER_PATTERN).lookingAt()) {
-                start = matcher.end();
+                start = matcher.end(1);
                 String identifier = matcher.group(1);
                 Character val = labels.get(identifier);
 
                 if (val == null) throw new AssemblyException("Unknown label found", line);
 
+                lastInt = val;
                 return TokenType.Constant;
             }
             matcher.usePattern(UNARY_OPERATOR_PATTERN);
             if (matcher.lookingAt()) {
-                start = matcher.end();
+                start = matcher.end(1);
                 String symbol = matcher.group(1);
                 lastUnary = UnaryOperatorType.stringMap.get(symbol);
 
                 // Should never happen unless the regex does not agree with UnaryOperatorType.
                 if (lastUnary == null) throw new AssemblyException("Unary operator not supported", line);
-                return TokenType.BinaryOperator;
+                return TokenType.UnaryOperator;
             }
         }
+        if (matcher.usePattern(RESET_PATTERN).find()) start = matcher.end();
+        else start = end;
         throw new AssemblyException("Invalid token found", line);
     }
 

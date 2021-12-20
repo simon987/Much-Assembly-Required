@@ -230,7 +230,7 @@ public class Operand {
         }
     }
 
-    private int parseConstExpression(String text, int line, HashMap<String, Character> labels)
+    public static int parseConstExpression(String text, int line, HashMap<String, Character> labels)
             throws AssemblyException {
         TokenParser parser = new TokenParser(text, line, labels);
         Stack<ParseOperator> parseOps = new Stack<>();
@@ -238,7 +238,7 @@ public class Operand {
         TokenParser.ParseContext context = TokenParser.ParseContext.Value;
         int lastValue = 0;
         while (true) {
-            TokenParser.TokenType ty = parser.GetNextToken(true, context);
+            TokenParser.TokenType ty = parser.getNextToken(true, context);
             if (context == TokenParser.ParseContext.Value) {
                 // Parse value
                 if (ty == TokenParser.TokenType.UnaryOperator) {
@@ -258,23 +258,38 @@ public class Operand {
                 if (ty == TokenParser.TokenType.EOF || ty == TokenParser.TokenType.GroupOperator) {
                     if (ty == TokenParser.TokenType.GroupOperator && !parser.lastGroup.end)
                         throw new AssemblyException("Unexpected group open", line);
-                    if (closeExpect != -1) throw new AssemblyException("Found empty group", line);
+                    if (closeExpect != -1) {
+                        if (ty == TokenParser.TokenType.EOF)
+                            throw new AssemblyException("Unclosed group", line);
+                        else if (closeExpect != parser.lastGroup.groupType)
+                            throw new AssemblyException("Unmatched group ends", line);
+                        else {
+                            closeExpect = -1;
+                            continue;
+                        }
+                    }
+
+                    boolean completed = false;
 
                     //Evaluation chain
                     while (!parseOps.isEmpty()) {
-                        ParseOperator op = parseOps.peek();
+                        ParseOperator op = parseOps.pop();
                         if (op.closeExpect != -1) {
                             if (ty == TokenParser.TokenType.EOF) throw new AssemblyException("Unclosed group", line);
                             else if (op.closeExpect != parser.lastGroup.groupType)
                                 throw new AssemblyException("Unmatched group ends", line);
                             lastValue = op.apply(lastValue);
-                            parseOps.pop();
+                            completed = true;
                             break;
                         }
                         lastValue = op.apply(lastValue);
-                        parseOps.pop();
                     }
-                    if (parseOps.isEmpty() && ty == TokenParser.TokenType.EOF) return lastValue;
+                    if (!completed) {
+                        if (ty == TokenParser.TokenType.EOF) return lastValue;
+                        else if (parser.lastGroup.groupType != -1)
+                            throw new AssemblyException("Unexpected group close", line);
+                    }
+
                 }
                 else if (ty == TokenParser.TokenType.BinaryOperator) {
                     TokenParser.BinaryOperatorType bop = parser.lastBinary;
@@ -287,6 +302,7 @@ public class Operand {
                     }
                     parseOps.push(new ParseOperatorBinary(closeExpect, bop, lastValue));
                     closeExpect = -1;
+                    context = TokenParser.ParseContext.Value;
                 }
                 else throw new AssemblyException("Modifier or end not found", line);
             }
