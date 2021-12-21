@@ -1,5 +1,6 @@
 package net.simon987.mar.server.assembly;
 
+import net.simon987.mar.server.assembly.exception.AssemblyException;
 import net.simon987.mar.server.assembly.exception.InvalidOperandException;
 
 import java.util.HashMap;
@@ -25,8 +26,8 @@ public class Operand {
     private OperandType type;
 
     /**
-     * Value of the the operand, this is the part that will
-     * written into the instruction.
+     * Value of the operand, this is the part that will
+     * be written into the instruction.
      */
     private int value = 0;
 
@@ -34,14 +35,14 @@ public class Operand {
      * Data of the operand. This will be appended after the instruction.
      * For example, "[AX+3]" value={index of AX] + {number of registers}, Data=3
      */
-    private int data = 0;
+    private char data = 0;
 
     public Operand(OperandType type, int value) {
         this.type = type;
         this.value = value;
     }
 
-    public Operand(OperandType type, int value, int data) {
+    public Operand(OperandType type, int value, char data) {
         this(type, value);
         this.data = data;
     }
@@ -71,101 +72,56 @@ public class Operand {
         this.text = text.replace(",", "");
         this.text = this.text.trim();
 
+        if (parseReg(this.text, registerSet)) {
+            return;
+        }
+        if (parseConstExpression(line, labels)) {
+            type = OperandType.IMMEDIATE16;
+            value = IMMEDIATE_VALUE;
+            return;
+        }
+        if (this.text.startsWith("[") && this.text.endsWith("]")) {
 
-        if (!parseImmediate(this.text) && !parseReg(this.text, registerSet) && !parseLabel(this.text, labels)) {
-            if (this.text.startsWith("[") && this.text.endsWith("]")) {
-
-                //Remove []s
-                this.text = this.text.substring(1, this.text.length() - 1);
-
-                if (parseImmediate(this.text) || parseLabel(this.text, labels)) {
-                    //Operand refers to memory
-                    type = OperandType.MEMORY_IMM16;
-                    value = Operand.IMMEDIATE_VALUE_MEM;
-
-                } else if (!parseRegExpr(registerSet, labels)) {
-
-                    if (labels == null) {
-                        type = OperandType.MEMORY_IMM16;
-                        data = 0;
-                    } else {
-                        throw new InvalidOperandException("Invalid operand " + this.text, line);
-                    }
-
-                }
-
-            } else {
+            //Remove []s
+            this.text = this.text.substring(1, this.text.length() - 1);
+            if (parseConstExpression(line, labels)) {
+                type = OperandType.MEMORY_IMM16;
+                value = Operand.IMMEDIATE_VALUE_MEM;
+                return;
+            }
+            if (!parseRegExpr(registerSet, labels, line)) {
                 if (labels == null) {
-                    type = OperandType.IMMEDIATE16;
+                    type = OperandType.MEMORY_IMM16;
                     data = 0;
                 } else {
                     throw new InvalidOperandException("Invalid operand " + this.text, line);
                 }
+
             }
-        }
-    }
-
-
-    /**
-     * Attempt to parse an integer
-     *
-     * @param text Text to parse, can be a label or immediate value (hex or dec)
-     * @return true if successful, false otherwise
-     */
-    private boolean parseImmediate(String text) {
-
-        text = text.trim();
-
-        try {
-            //Try IMM
-            type = OperandType.IMMEDIATE16;
-            data = Integer.decode(text);
-            value = IMMEDIATE_VALUE;
-            return true;
-        } catch (NumberFormatException e) {
-
-            //Try Binary number (format 0bXXXX)
-            if (text.startsWith("0b")) {
-                try {
-                    data = Integer.parseInt(text.substring(2), 2);
-                    value = IMMEDIATE_VALUE;
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (text.startsWith("0o")) {
-                try {
-                    data = Integer.parseInt(text.substring(2), 8);
-                    value = IMMEDIATE_VALUE;
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-    }
-
-    /**
-     * Attempt to parse a user-defined label
-     *
-     * @param text   Text to parse
-     * @param labels Map of labels
-     * @return true if parsing is successful, false otherwise
-     */
-    private boolean parseLabel(String text, HashMap<String, Character> labels) {
-
-        text = text.trim();
-
-        if (labels == null) {
-            return false;
-        } else if (labels.containsKey(text)) {
-            type = OperandType.IMMEDIATE16;
-            data = labels.get(text);
-            value = IMMEDIATE_VALUE;
-            return true;
         } else {
+            if (labels == null) {
+                type = OperandType.IMMEDIATE16;
+                data = 0;
+            } else {
+                throw new InvalidOperandException("Invalid operand " + this.text, line);
+            }
+        }
+    }
+
+    /**
+     * Parses a constant expression made of operators, literals, and labels as a single immediate.
+     * Sets data to this value.
+     * @param line The current line of compilation
+     * @param labels The labels known to the compiler
+     * @return true on success, false otherwise.
+     */
+    private boolean parseConstExpression(int line, HashMap<String, Character> labels) {
+        TokenParser parser = new TokenParser(text, line, labels);
+        if (labels == null) return false;
+        try {
+            data = parser.parseConstExpression();
+            return true;
+        } catch (AssemblyException ex) {
             return false;
         }
     }
@@ -196,7 +152,7 @@ public class Operand {
      *
      * @return true if successful
      */
-    private boolean parseRegExpr(RegisterSet registerSet, HashMap<String, Character> labels) {
+    private boolean parseRegExpr(RegisterSet registerSet, HashMap<String, Character> labels, int line) {
 
         String expr;
 
@@ -216,7 +172,10 @@ public class Operand {
             return false;
         }
 
-        if (expr.replaceAll("\\s+", "").isEmpty()) {
+        //Remove white space
+        expr = expr.replaceAll("\\s+", "");
+
+        if (expr.isEmpty()) {
             //No data specified
             type = OperandType.MEMORY_REG16;
             value += registerSet.size(); //refers to memory.
@@ -224,64 +183,22 @@ public class Operand {
             return true;
         }
 
-        //Remove white space
-        expr = expr.replaceAll("\\s+", "");
-
-        try {
-            type = OperandType.MEMORY_REG_DISP16;
-
-            if (labels != null) {
-
-                Character address = labels.get(expr.replaceAll("[^A-Za-z0-9_]", ""));
-                if (address != null) {
-                    data = (expr.startsWith("-")) ? -address : address;
-                    value += registerSet.size() * 2;//refers to memory with disp
-
-                    return true;
-                }
-            }
-
-            //label is invalid
-            data = Integer.decode(expr);
-            value += registerSet.size() * 2; //refers to memory with disp
+        if (!expr.startsWith("-") && !expr.startsWith("+")) {
+            return false;
+        }
+        type = OperandType.MEMORY_REG_DISP16;
+        value += registerSet.size() * 2;
+        if (labels == null) {
+            data = 0;
             return true;
-        } catch (NumberFormatException e) {
+        }
 
-            //Integer.decode failed, try binary
-            if (expr.startsWith("+0b")) {
-                try {
-                    data = Integer.parseInt(expr.substring(3), 2);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (expr.startsWith("-0b")) {
-                try {
-                    data = -Integer.parseInt(expr.substring(3), 2);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (expr.startsWith("+0o")) {
-                try {
-                    data = Integer.parseInt(expr.substring(3), 8);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (expr.startsWith("-0o")) {
-                try {
-                    data = -Integer.parseInt(expr.substring(3), 8);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            }
-
+        expr = "0" + expr;
+        TokenParser parser = new TokenParser(expr, line, labels);
+        try {
+            data = parser.parseConstExpression();
+            return true;
+        } catch (AssemblyException ex) {
             return false;
         }
     }
@@ -294,7 +211,7 @@ public class Operand {
         return value;
     }
 
-    public int getData() {
+    public char getData() {
         return data;
     }
 

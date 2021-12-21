@@ -79,7 +79,7 @@ public class Assembler {
         String[] tokens = line.trim().split("\\s+");
         String mnemonic = tokens[0];
 
-        if (mnemonic.toUpperCase().equals("ORG")) {
+        if (mnemonic.equalsIgnoreCase("ORG")) {
             if (tokens.length > 1) {
                 try {
                     result.origin = (Integer.decode(tokens[1]));
@@ -124,6 +124,9 @@ public class Assembler {
         return line.replaceAll("\\s+", "").isEmpty();
     }
 
+
+    private static final Pattern DUP_PATTERN = Pattern.compile("(.+)\\s+DUP(.+)");
+    private static final Pattern STRING_PATTERN = Pattern.compile("\"(.*)\"$");
     /**
      * Parse the DW instruction (Define word). Handles DUP operator
      *
@@ -132,7 +135,7 @@ public class Assembler {
      * @param labels      Map of labels
      * @return Encoded instruction, null if the line is not a DW instruction
      */
-    private static byte[] parseDWInstruction(String line, HashMap<String, Character> labels, int currentLine)
+    private byte[] parseDWInstruction(String line, HashMap<String, Character> labels, int currentLine)
             throws InvalidOperandException {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -140,7 +143,7 @@ public class Assembler {
 
         //System.out.println(line);
 
-        if (line.length() >= 2 && line.substring(0, 2).toUpperCase().equals("DW")) {
+        if (line.length() >= 2 && line.substring(0, 2).equalsIgnoreCase("DW")) {
 
             try {
 
@@ -150,18 +153,10 @@ public class Assembler {
                 for (String value : values) {
 
                     value = value.trim();
-
-                    String[] valueTokens = value.split("\\s+");
-
-                    //Handle DUP operator
-                    if (valueTokens.length == 2 && valueTokens[1].toUpperCase().contains("DUP(")) {
-                        out.write(parseDUPOperator16(valueTokens, labels, currentLine));
-                    } else if (value.startsWith("\"") && value.endsWith("\"")) {
-                        //Handle string
-
-                        //Unescape the string
-                        String string = value.substring(1, value.length() - 1);
-
+                    Matcher m = STRING_PATTERN.matcher(value);
+                    if (m.lookingAt()) {
+                        // Parse string
+                        String string = m.group(1);
                         try {
                             string = StringEscapeUtils.unescapeJava(string);
                         } catch (IllegalArgumentException e) {
@@ -169,39 +164,39 @@ public class Assembler {
                                     "Invalid string operand \"" + string + "\": " + e.getMessage(),
                                     currentLine);
                         }
-
                         out.write(string.getBytes(StandardCharsets.UTF_16BE));
-                    } else if (labels != null && labels.containsKey(value)) {
-                        //Handle label
-                        out.writeChar(labels.get(value));
-
-                    } else {
-                        //Handle integer value
+                        continue;
+                    }
+                    int factor;
+                    if (m.usePattern(DUP_PATTERN).lookingAt()) {
+                        // Get DUP factor
+                        TokenParser parser = new TokenParser(m.group(1), currentLine, new HashMap<>());
                         try {
-                            out.writeChar(Integer.decode(value));
-
-                        } catch (NumberFormatException e) {
-                            //Handle assumed label
-                            if (labels == null) {
-
-                                // Write placeholder word
-                                out.writeChar(0);
-
-                            } else {
-
-                                //Integer.decode failed, try binary
-                                if (value.startsWith("0b")) {
-                                    try {
-                                        out.writeChar(Integer.parseInt(value.substring(2), 2));
-                                    } catch (NumberFormatException e2) {
-                                        throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
-                                    }
-                                } else {
-                                    throw new InvalidOperandException("Invalid operand \"" + value + '"', currentLine);
-
-                                }
+                            if (TokenParser.TokenType.Constant !=
+                                    parser.getNextToken(true, TokenParser.ParseContext.Value)) {
+                                throw new InvalidOperandException("Invalid DUP factor " + m.group(1), currentLine);
                             }
+                        } catch (AssemblyException ae) {
+                            throw new InvalidOperandException("Couldn't parse DUP factor " + m.group(1), currentLine);
                         }
+                        factor = parser.lastInt;
+                        if (factor > MEM_SIZE) {
+                            throw new InvalidOperandException(
+                                    "Factor '" + factor + "' exceeds total memory size", currentLine);
+                        }
+
+                        value = m.group(2);
+                    }
+                    else {
+                        // Parse as single number
+                        factor = 1;
+                    }
+
+                    Operand operand = new Operand(value, labels, registerSet, currentLine);
+                    char s = (char)operand.getData();
+                    for (int i = 0; i < factor; i++) {
+                        out.write(Util.getHigherByte(s));
+                        out.write(Util.getLowerByte(s));
                     }
                 }
 
@@ -224,59 +219,8 @@ public class Assembler {
      * @param currentLine Current line number
      * @return Encoded instruction, null if the line is not a DW instruction
      */
-    private static byte[] parseDWInstruction(String line, int currentLine) throws AssemblyException {
+    private byte[] parseDWInstruction(String line, int currentLine) throws AssemblyException {
         return parseDWInstruction(line, null, currentLine);
-    }
-
-    /**
-     * Parse the dup operator
-     *
-     * @param valueTokens Value tokens e.g. {"8", "DUP(12)"}
-     * @param labels      Map of labels
-     * @return The encoded instruction
-     */
-    private static byte[] parseDUPOperator16(String[] valueTokens, HashMap<String, Character> labels, int currentLine)
-            throws InvalidOperandException {
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        try {
-
-            int factor = Integer.decode(valueTokens[0]);
-
-            if (factor > MEM_SIZE) {
-                throw new InvalidOperandException("Factor '" + factor + "' exceeds total memory size", currentLine);
-            }
-
-            String value = valueTokens[1].substring(4, valueTokens[1].lastIndexOf(')'));
-
-            //Handle label
-            if (labels != null && labels.containsKey(value)) {
-                //Label value is casted to byte
-                for (int i = 0; i < factor; i++) {
-                    char s = labels.get(value);
-
-                    out.write(Util.getHigherByte(s));
-                    out.write(Util.getLowerByte(s));
-                }
-
-            } else {
-                //Handle integer value
-                char s = (char) (int) Integer.decode(value);
-
-                for (int i = 0; i < factor; i++) {
-                    out.write(Util.getHigherByte(s));
-                    out.write(Util.getLowerByte(s));
-                }
-            }
-
-
-        } catch (NumberFormatException e) {
-            throw new InvalidOperandException("Usage: <factor> DUP(<value>)", currentLine);
-        }
-
-        return out.toByteArray();
-
     }
 
     /**
@@ -289,13 +233,13 @@ public class Assembler {
 
         String[] tokens = line.split("\\s+");
 
-        if (tokens[0].toUpperCase().equals(".TEXT")) {
+        if (tokens[0].equalsIgnoreCase(".TEXT")) {
 
             result.defineSection(Section.TEXT, currentLine, currentOffset);
             result.disassemblyLines.add(".text");
             throw new PseudoInstructionException(currentLine);
 
-        } else if (tokens[0].toUpperCase().equals(".DATA")) {
+        } else if (tokens[0].equalsIgnoreCase(".DATA")) {
 
             LogManager.LOGGER.fine("DEBUG: .data @" + currentLine);
 
@@ -304,6 +248,9 @@ public class Assembler {
         }
     }
 
+    private static final Pattern EQU_PATTERN = Pattern.compile("([\\w]+)\\s+EQU\\s+(.+)",
+                Pattern.CASE_INSENSITIVE);
+
     /**
      * Check for and handle the EQU instruction
      *
@@ -311,30 +258,25 @@ public class Assembler {
      * @param labels      Map of labels. Constants will be added as labels
      * @param currentLine Current line number
      */
-    private static void checkForEQUInstruction(String line, HashMap<String, Character> labels, int currentLine)
+    private static void checkForEQUInstruction(String line, HashMap<String, Character> labels,
+                                               int currentLine)
             throws AssemblyException {
         /*  the EQU pseudo instruction is equivalent to the #define compiler directive in C/C++
          *  usage: constant_name EQU <immediate_value>
          *  A constant treated the same way as a label.
          */
         line = line.trim();
-        String[] tokens = line.split("\\s+");
 
+        Matcher matcher = EQU_PATTERN.matcher(line);
 
-        if (line.toUpperCase().matches(".*\\bEQU\\b.*")) {
-            if (tokens[1].toUpperCase().equals("EQU") && tokens.length == 3) {
-                try {
-                    //Save value as a label
-                    labels.put(tokens[0], (char) (int) Integer.decode(tokens[2]));
-                } catch (NumberFormatException e) {
-                    throw new InvalidOperandException("Usage: constant_name EQU immediate_value", currentLine);
-                }
-            } else {
-                throw new InvalidOperandException("Usage: constant_name EQU immediate_value", currentLine);
-            }
-
+        if (matcher.lookingAt()) {
+            //Save value as a label
+            TokenParser parser = new TokenParser(matcher.group(2), currentLine, labels);
+            char value = (char)parser.parseConstExpression();
+            labels.put(matcher.group(1), value);
             throw new PseudoInstructionException(currentLine);
         }
+
     }
 
     /**
@@ -348,9 +290,6 @@ public class Assembler {
      * the errors, if any.
      */
     public AssemblyResult parse(String text) {
-
-        int currentLine;
-
         //Split in lines
         AssemblyResult result = new AssemblyResult(config);
         String[] lines = text.split("\n");
@@ -541,19 +480,15 @@ public class Assembler {
 
         //Check for DW instruction
         try {
-            if (assumeLabels) {
-                byte[] bytes = parseDWInstruction(line, currentLine);
-                if (bytes != null) {
-                    out.write(bytes);
-                    return out.toByteArray();
-                }
-            } else {
-                byte[] bytes = parseDWInstruction(line, labels, currentLine);
-                if (bytes != null) {
-                    out.write(bytes);
-                    return out.toByteArray();
-                }
+            byte[] bytes;
+            if (assumeLabels) bytes = parseDWInstruction(line, currentLine);
+            else bytes = parseDWInstruction(line, labels, currentLine);
+
+            if (bytes != null) {
+                out.write(bytes);
+                return out.toByteArray();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

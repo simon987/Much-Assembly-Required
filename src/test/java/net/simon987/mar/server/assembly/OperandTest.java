@@ -54,7 +54,7 @@ public class OperandTest {
             Operand imm2 = new Operand(" -12", labels, registerSet, 0);
             assertEquals(OperandType.IMMEDIATE16, imm2.getType());
             assertEquals(Operand.IMMEDIATE_VALUE, imm2.getValue());
-            assertEquals(-12, imm2.getData());
+            assertEquals((char)-12, imm2.getData());
 
             Operand imm3 = new Operand(" 0xABCD", labels, registerSet, 0);
             assertEquals(OperandType.IMMEDIATE16, imm3.getType());
@@ -75,7 +75,7 @@ public class OperandTest {
             Operand mem2 = new Operand("[-12    ]", labels, registerSet, 0);
             assertEquals(OperandType.MEMORY_IMM16, mem2.getType());
             assertEquals(Operand.IMMEDIATE_VALUE_MEM, mem2.getValue());
-            assertEquals(-12, mem2.getData());
+            assertEquals((char)-12, mem2.getData());
 
             Operand mem3 = new Operand(" [ 0xABCD]", labels, registerSet, 0);
             assertEquals(OperandType.MEMORY_IMM16, mem3.getType());
@@ -117,7 +117,7 @@ public class OperandTest {
             Operand mem10 = new Operand("[   B -    label1     ]", labels, registerSet, 0);
             assertEquals(OperandType.MEMORY_REG_DISP16, mem10.getType());
             assertEquals(2 + 2 * registerSet.size(), mem10.getValue());
-            assertEquals(-10, mem10.getData());
+            assertEquals((char)-10, mem10.getData());
 
 
         } catch (InvalidOperandException e) {
@@ -165,6 +165,7 @@ public class OperandTest {
             fail();
         } catch (InvalidOperandException ignored) {
         }
+        /* Tests disabled due to compile time constant folding.
         try {
             new Operand("[- 12]", labels, registerSet, 0);
             fail();
@@ -174,7 +175,7 @@ public class OperandTest {
             new Operand("[12+1]", labels, registerSet, 0);
             fail();
         } catch (InvalidOperandException ignored) {
-        }
+        } */
         try {
             new Operand("[+label1", labels, registerSet, 0);
             fail();
@@ -200,11 +201,13 @@ public class OperandTest {
             fail();
         } catch (InvalidOperandException ignored) {
         }
+        /* This should most likely be allowed under constant folding.
         try {
             new Operand("[A + -1]", labels, registerSet, 0);
             fail();
         } catch (InvalidOperandException ignored) {
         }
+        */
         try {
             new Operand("[A + ]", labels, registerSet, 0);
             fail();

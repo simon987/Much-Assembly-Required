@@ -17,7 +17,8 @@ enum TileType {
     VAULT_FLOOR,
     VAULT_WALL,
     FLUID,
-    MAGNETIC
+    MAGNETIC,
+    VOID
 }
 
 class Tile extends Phaser.Plugin.Isometric.IsoSprite {
@@ -70,7 +71,7 @@ class Tile extends Phaser.Plugin.Isometric.IsoSprite {
                 return new VaultFloorTile(x, y);
             case TileType.VAULT_WALL:
                 return new VaultWallTile(x, y);
-            case -1:
+            case TileType.VOID:
                 return new VoidTile(x, y);
             case TileType.FLUID:
                 return new FluidTile(x, y);

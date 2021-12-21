@@ -3697,19 +3697,19 @@ declare module Phaser {
         button: number;
         capture: boolean;
         callbackContext: any;
-        event: MSPointerEvent;
+        event: PointerEvent;
         game: Phaser.Game;
         input: Phaser.Input;
 
-        onPointerDown: (event: MSPointerEvent) => void;
-        onPointerMove: (event: MSPointerEvent) => void;
-        onPointerUp: (event: MSPointerEvent) => void;
-        mouseDownCallback: (event: MSPointerEvent) => void;
-        mouseMoveCallback: (event: MSPointerEvent) => void;
-        mouseUpCallback: (event: MSPointerEvent) => void;
-        pointerDownCallback: (event: MSPointerEvent) => void;
-        pointerMoveCallback: (event: MSPointerEvent) => void;
-        pointerUpCallback: (event: MSPointerEvent) => void;
+        onPointerDown: (event: PointerEvent) => void;
+        onPointerMove: (event: PointerEvent) => void;
+        onPointerUp: (event: PointerEvent) => void;
+        mouseDownCallback: (event: PointerEvent) => void;
+        mouseMoveCallback: (event: PointerEvent) => void;
+        mouseUpCallback: (event: PointerEvent) => void;
+        pointerDownCallback: (event: PointerEvent) => void;
+        pointerMoveCallback: (event: PointerEvent) => void;
+        pointerUpCallback: (event: PointerEvent) => void;
 
         start(): void;
 

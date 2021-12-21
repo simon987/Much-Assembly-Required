@@ -538,6 +538,8 @@ class GameClient {
                 console.log("[MAR] Connected. Sent auth request");
             }
 
+            if (info.token == null) throw new Error("Auth token not found");
+
             //Send auth request
             self.socket.send(info.token);
 
