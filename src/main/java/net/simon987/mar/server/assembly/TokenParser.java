@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.simon987.mar.server.assembly.exception.AssemblyException;
-import org.apache.velocity.runtime.directive.Parse;
 
 public class TokenParser {
 
@@ -360,7 +359,12 @@ public class TokenParser {
         throw new AssemblyException("Invalid token found", line);
     }
 
-    public int parseConstExpression()
+    /**
+     * Parses and evaluates a constant expression from the input.
+     * @return the value of the constant expression
+     * @throws AssemblyException when a constant expression cannot be parsed
+     */
+    public char parseConstExpression()
             throws AssemblyException {
         Stack<ParseOperator> parseOps = new Stack<>();
         int closeExpect = -1; // No closing parenthesis expected
@@ -423,7 +427,7 @@ public class TokenParser {
                     }
                     if (!completed) {
                         if (ty == TokenParser.TokenType.EOF) {
-                            return lastValue;
+                            return (char)lastValue;
                         } else if (lastGroup.groupType != -1) {
                             throw new AssemblyException("Unexpected group close", line);
                         }

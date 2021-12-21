@@ -59,4 +59,14 @@ public class DwDirectiveTest {
         assertTrue(res.ar.exceptions.isEmpty());
         assertEquals('"' ,res.memValue(res.ar.origin));
     }
+
+    @Test
+    public void dupTest() {
+        String code = "DW 10 DUP(4)";
+
+        TestExecutionResult res = TestHelper.executeCode(code);
+
+        assertTrue(res.ar.exceptions.isEmpty());
+        assertEquals(4 ,res.memValue(res.ar.origin));
+    }
 }

@@ -4,7 +4,6 @@ import net.simon987.mar.server.assembly.exception.AssemblyException;
 import net.simon987.mar.server.assembly.exception.InvalidOperandException;
 
 import java.util.HashMap;
-import java.util.Stack;
 
 /**
  * Represents an operand of an instruction. An operand can refer to a
@@ -36,14 +35,14 @@ public class Operand {
      * Data of the operand. This will be appended after the instruction.
      * For example, "[AX+3]" value={index of AX] + {number of registers}, Data=3
      */
-    private int data = 0;
+    private char data = 0;
 
     public Operand(OperandType type, int value) {
         this.type = type;
         this.value = value;
     }
 
-    public Operand(OperandType type, int value, int data) {
+    public Operand(OperandType type, int value, char data) {
         this(type, value);
         this.data = data;
     }
@@ -90,7 +89,7 @@ public class Operand {
                 value = Operand.IMMEDIATE_VALUE_MEM;
                 return;
             }
-            if (!parseRegExpr(registerSet, labels)) {
+            if (!parseRegExpr(registerSet, labels, line)) {
                 if (labels == null) {
                     type = OperandType.MEMORY_IMM16;
                     data = 0;
@@ -127,206 +126,6 @@ public class Operand {
         }
     }
 
-    /**
-     * Attempt to parse an integer
-     *
-     * @param text Text to parse, can be a label or immediate value (hex or dec)
-     * @return true if successful, false otherwise
-     */
-    private boolean parseImmediate(String text) {
-
-        text = text.trim();
-
-        try {
-            //Try IMM
-            type = OperandType.IMMEDIATE16;
-            data = Integer.decode(text);
-            value = IMMEDIATE_VALUE;
-            return true;
-        } catch (NumberFormatException e) {
-
-            //Try Binary number (format 0bXXXX)
-            if (text.startsWith("0b")) {
-                try {
-                    data = Integer.parseInt(text.substring(2), 2);
-                    value = IMMEDIATE_VALUE;
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (text.startsWith("0o")) {
-                try {
-                    data = Integer.parseInt(text.substring(2), 8);
-                    value = IMMEDIATE_VALUE;
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-    }
-
-    /**
-     * Attempt to parse a user-defined label
-     *
-     * @param text   Text to parse
-     * @param labels Map of labels
-     * @return true if parsing is successful, false otherwise
-     */
-    private boolean parseLabel(String text, HashMap<String, Character> labels) {
-
-        text = text.trim();
-
-        if (labels == null) {
-            return false;
-        } else if (labels.containsKey(text)) {
-            type = OperandType.IMMEDIATE16;
-            data = labels.get(text);
-            value = IMMEDIATE_VALUE;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-
-    /**
-     * Interface allowing parse states to be manipulated, evaluated, and stacked.
-     */
-    private static class ParseOperator {
-        public int getPrecedence() {
-            return 0;
-        }
-        public int apply(int other) {
-            return other;
-        }
-
-        public final int closeExpect;
-
-        public ParseOperator(int closeExpect) {
-            this.closeExpect = closeExpect;
-        }
-    }
-
-    private static class ParseOperatorUnary extends ParseOperator {
-        TokenParser.UnaryOperatorType op;
-        @Override
-        public int getPrecedence() {
-            return 0;
-        }
-
-        @Override
-        public int apply(int other) {
-            return op.apply(other);
-        }
-
-        public ParseOperatorUnary(int closeExpect, TokenParser.UnaryOperatorType op) {
-            super(closeExpect);
-            this.op = op;
-        }
-    }
-
-    private static class ParseOperatorBinary extends ParseOperator {
-        private final TokenParser.BinaryOperatorType op;
-        private final int value;
-        @Override
-        public int getPrecedence() {
-            return op.precedence;
-        }
-
-        @Override
-        public int apply(int other) {
-            return op.apply(value, other);
-        }
-
-        public ParseOperatorBinary(int closeExpect, TokenParser.BinaryOperatorType op, int value) {
-            super(closeExpect);
-            this.op = op;
-            this.value = value;
-        }
-    }
-
-    public static int parseConstExpression(String text, int line, HashMap<String, Character> labels)
-            throws AssemblyException {
-        TokenParser parser = new TokenParser(text, line, labels);
-        Stack<ParseOperator> parseOps = new Stack<>();
-        int closeExpect = -1; // No closing parenthesis expected
-        TokenParser.ParseContext context = TokenParser.ParseContext.Value;
-        int lastValue = 0;
-        while (true) {
-            TokenParser.TokenType ty = parser.getNextToken(true, context);
-            if (context == TokenParser.ParseContext.Value) {
-                // Parse value
-                if (ty == TokenParser.TokenType.UnaryOperator) {
-                    parseOps.push(new ParseOperatorUnary(closeExpect, parser.lastUnary));
-                    closeExpect = -1;
-                }
-                else if (ty == TokenParser.TokenType.GroupOperator) {
-                    if (parser.lastGroup.end) throw new AssemblyException("Unexpected group close", line);
-                    if (closeExpect != -1) parseOps.push(new ParseOperator(closeExpect));
-                    closeExpect = parser.lastGroup.groupType;
-                } else if (ty == TokenParser.TokenType.Constant) {
-                    lastValue = parser.lastInt;
-                    context = TokenParser.ParseContext.TackOn;
-                } else throw new AssemblyException("Value not found", line);
-            } else {
-                // Parse modifier
-                if (ty == TokenParser.TokenType.EOF || ty == TokenParser.TokenType.GroupOperator) {
-                    if (ty == TokenParser.TokenType.GroupOperator && !parser.lastGroup.end)
-                        throw new AssemblyException("Unexpected group open", line);
-                    if (closeExpect != -1) {
-                        if (ty == TokenParser.TokenType.EOF)
-                            throw new AssemblyException("Unclosed group", line);
-                        else if (closeExpect != parser.lastGroup.groupType)
-                            throw new AssemblyException("Unmatched group ends", line);
-                        else {
-                            closeExpect = -1;
-                            continue;
-                        }
-                    }
-
-                    boolean completed = false;
-
-                    //Evaluation chain
-                    while (!parseOps.isEmpty()) {
-                        ParseOperator op = parseOps.pop();
-                        if (op.closeExpect != -1) {
-                            if (ty == TokenParser.TokenType.EOF) throw new AssemblyException("Unclosed group", line);
-                            else if (op.closeExpect != parser.lastGroup.groupType)
-                                throw new AssemblyException("Unmatched group ends", line);
-                            lastValue = op.apply(lastValue);
-                            completed = true;
-                            break;
-                        }
-                        lastValue = op.apply(lastValue);
-                    }
-                    if (!completed) {
-                        if (ty == TokenParser.TokenType.EOF) return lastValue;
-                        else if (parser.lastGroup.groupType != -1)
-                            throw new AssemblyException("Unexpected group close", line);
-                    }
-
-                }
-                else if (ty == TokenParser.TokenType.BinaryOperator) {
-                    TokenParser.BinaryOperatorType bop = parser.lastBinary;
-                    while (closeExpect == -1 && !parseOps.empty()) {
-                        ParseOperator op = parseOps.peek();
-                        if (bop.precedence <= op.getPrecedence()) break;
-                        lastValue = op.apply(lastValue);
-                        closeExpect = op.closeExpect;
-                        parseOps.pop();
-                    }
-                    parseOps.push(new ParseOperatorBinary(closeExpect, bop, lastValue));
-                    closeExpect = -1;
-                    context = TokenParser.ParseContext.Value;
-                }
-                else throw new AssemblyException("Modifier or end not found", line);
-            }
-        }
-    }
 
     /**
      * Attempt to parse a register
@@ -354,7 +153,7 @@ public class Operand {
      *
      * @return true if successful
      */
-    private boolean parseRegExpr(RegisterSet registerSet, HashMap<String, Character> labels) {
+    private boolean parseRegExpr(RegisterSet registerSet, HashMap<String, Character> labels, int line) {
 
         String expr;
 
@@ -374,7 +173,10 @@ public class Operand {
             return false;
         }
 
-        if (expr.replaceAll("\\s+", "").isEmpty()) {
+        //Remove white space
+        expr = expr.replaceAll("\\s+", "");
+
+        if (expr.isEmpty()) {
             //No data specified
             type = OperandType.MEMORY_REG16;
             value += registerSet.size(); //refers to memory.
@@ -382,64 +184,22 @@ public class Operand {
             return true;
         }
 
-        //Remove white space
-        expr = expr.replaceAll("\\s+", "");
-
-        try {
-            type = OperandType.MEMORY_REG_DISP16;
-
-            if (labels != null) {
-
-                Character address = labels.get(expr.replaceAll("[^A-Za-z0-9_]", ""));
-                if (address != null) {
-                    data = (expr.startsWith("-")) ? -address : address;
-                    value += registerSet.size() * 2;//refers to memory with disp
-
-                    return true;
-                }
-            }
-
-            //label is invalid
-            data = Integer.decode(expr);
-            value += registerSet.size() * 2; //refers to memory with disp
+        if (!expr.startsWith("-") && !expr.startsWith("+")) {
+            return false;
+        }
+        type = OperandType.MEMORY_REG_DISP16;
+        value += registerSet.size() * 2;
+        if (labels == null) {
+            data = 0;
             return true;
-        } catch (NumberFormatException e) {
+        }
 
-            //Integer.decode failed, try binary
-            if (expr.startsWith("+0b")) {
-                try {
-                    data = Integer.parseInt(expr.substring(3), 2);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (expr.startsWith("-0b")) {
-                try {
-                    data = -Integer.parseInt(expr.substring(3), 2);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (expr.startsWith("+0o")) {
-                try {
-                    data = Integer.parseInt(expr.substring(3), 8);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            } else if (expr.startsWith("-0o")) {
-                try {
-                    data = -Integer.parseInt(expr.substring(3), 8);
-                    value += registerSet.size() * 2; //refers to memory with disp
-                    return true;
-                } catch (NumberFormatException e2) {
-                    return false;
-                }
-            }
-
+        expr = "0" + expr;
+        TokenParser parser = new TokenParser(expr, line, labels);
+        try {
+            data = parser.parseConstExpression();
+            return true;
+        } catch (AssemblyException ex) {
             return false;
         }
     }
@@ -452,7 +212,7 @@ public class Operand {
         return value;
     }
 
-    public int getData() {
+    public char getData() {
         return data;
     }
 
