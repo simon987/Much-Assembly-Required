@@ -84,10 +84,15 @@ public class TokenParser {
         final public static Map<String, BinaryOperatorType> stringMap = new HashMap<>();
 
         static {
-            for (BinaryOperatorType op : values()) stringMap.put(op.symbol, op);
+            for (BinaryOperatorType op : values()) {
+                stringMap.put(op.symbol, op);
+            }
         }
 
         public final String symbol;
+        /**
+         * An operator with higher precedence is evaluated first
+         */
         public final int precedence;
 
         BinaryOperatorType(final String symbol, final int precedence) {
@@ -261,21 +266,32 @@ public class TokenParser {
      * or if the found token is not supported in the current context.
      */
     public TokenType getNextToken(boolean eatSpace, ParseContext context) throws AssemblyException {
-        if (start >= end) return TokenType.EOF;
+        if (start >= end) {
+            return TokenType.EOF;
+        }
         matcher.region(start, end);
+
+        //Handle leading spaces
         if (matcher.usePattern(SPACE_PATTERN).lookingAt()) {
             start = matcher.end();
-            if (!eatSpace) return TokenType.Space;
-            if (start >= end) return TokenType.EOF;
+            if (!eatSpace) {
+                return TokenType.Space;
+            } else if (start >= end) {
+                return TokenType.EOF;
+            }
             matcher.region(start, end);
         }
+
+        //Group operators can occur in both contexts, i.e.:
+        //    ... + ( ...
+        //    ... y ) ...
         matcher.usePattern(GROUP_OPERATOR_PATTERN);
         if (matcher.lookingAt()) {
             start = matcher.end(1);
             String symbol = matcher.group(1);
             lastGroup = GroupOperatorType.stringMap.get(symbol);
 
-            // Should never happen unless the regex does not agree with GroupOperatorType.
+            //Should never happen unless the regex does not agree with GroupOperatorType.
             if (lastGroup == null) throw new AssemblyException("Group operator not supported", line);
 
             return TokenType.GroupOperator;
@@ -286,7 +302,7 @@ public class TokenParser {
                 String symbol = matcher.group(1);
                 lastBinary = BinaryOperatorType.stringMap.get(symbol);
 
-                // Should never happen unless the regex does not agree with BinaryOperatorType.
+                //Should never happen unless the regex does not agree with BinaryOperatorType.
                 if (lastBinary == null) throw new AssemblyException("Binary operator not supported", line);
 
                 return TokenType.BinaryOperator;
@@ -297,6 +313,7 @@ public class TokenParser {
                 start = matcher.end(1);
                 matcher.region(start, end);
                 try {
+                    //Attempt all supported radixes
                     if (matcher.usePattern(NUMBER_PATTERN_10).lookingAt()) {
                         lastInt = Integer.parseInt(matcher.group(1), 10);
                     } else if (matcher.usePattern(NUMBER_PATTERN_16).lookingAt()) {
@@ -346,6 +363,8 @@ public class TokenParser {
                 return TokenType.UnaryOperator;
             }
         }
+        //For debug purposes, attempt skip to the next token in case of failure.
+        //Not reliable enough for a debug tool.
         matcher.usePattern(RESET_PATTERN);
         if (matcher.lookingAt()) {
             start = matcher.end();
@@ -365,50 +384,56 @@ public class TokenParser {
     public char parseConstExpression()
             throws AssemblyException {
         Stack<ParseOperator> parseOps = new Stack<>();
-        int closeExpect = -1; // No closing parenthesis expected
+        //A value of -1 indicates that no extra closing parenthesis are expected,
+        //aside from those mandated by the stack.
+        int closeExpect = -1;
         TokenParser.ParseContext context = TokenParser.ParseContext.Value;
         int lastValue = 0;
         while (true) {
             TokenParser.TokenType ty = getNextToken(true, context);
             if (context == TokenParser.ParseContext.Value) {
-                // Parse value
+                //Parse value
                 if (ty == TokenParser.TokenType.UnaryOperator) {
+                    //Add unary operator to the stack
                     parseOps.push(new ParseOperatorUnary(closeExpect, lastUnary));
                     closeExpect = -1;
                 } else if (ty == TokenParser.TokenType.GroupOperator) {
                     if (lastGroup.end) {
                         throw new AssemblyException("Unexpected group close", line);
                     }
+                    //No need to push a pointless operator.
                     if (closeExpect != -1) {
                         parseOps.push(new ParseOperator(closeExpect));
                     }
                     closeExpect = lastGroup.groupType;
                 } else if (ty == TokenParser.TokenType.Constant) {
                     lastValue = lastInt;
+                    //Look for binary operators next
                     context = TokenParser.ParseContext.TackOn;
                 } else {
                     throw new AssemblyException("Value not found", line);
                 }
             } else {
-                // Parse modifier
+                //Parse modifier
                 if (ty == TokenParser.TokenType.EOF || ty == TokenParser.TokenType.GroupOperator) {
                     if (ty == TokenParser.TokenType.GroupOperator && !lastGroup.end) {
                         throw new AssemblyException("Unexpected group open", line);
                     }
+
                     if (closeExpect != -1) {
                         if (ty == TokenParser.TokenType.EOF) {
                             throw new AssemblyException("Unclosed group", line);
                         } else if (closeExpect != lastGroup.groupType) {
                             throw new AssemblyException("Unmatched group ends", line);
                         } else {
+                            //New group operator closes the stored group operator
                             closeExpect = -1;
                             continue;
                         }
                     }
 
                     boolean completed = false;
-
-                    //Evaluation chain
+                    //Evaluation chain, repeats as long as there are operators that do not require closing operators.
                     while (!parseOps.isEmpty()) {
                         ParseOperator op = parseOps.pop();
                         if (op.closeExpect != -1) {
@@ -417,6 +442,7 @@ public class TokenParser {
                             } else if (op.closeExpect != lastGroup.groupType) {
                                 throw new AssemblyException("Unmatched group ends", line);
                             }
+                            //Found matching operator, stop evaluating.
                             lastValue = op.apply(lastValue);
                             completed = true;
                             break;
@@ -424,6 +450,7 @@ public class TokenParser {
                         lastValue = op.apply(lastValue);
                     }
                     if (!completed) {
+                        // There are no more operators
                         if (ty == TokenParser.TokenType.EOF) {
                             return (char)lastValue;
                         } else if (lastGroup.groupType != -1) {
@@ -432,9 +459,12 @@ public class TokenParser {
                     }
                 } else if (ty == TokenParser.TokenType.BinaryOperator) {
                     TokenParser.BinaryOperatorType bop = lastBinary;
+                    //Given the new operator's precedence,
+                    //it may now be possible to evaluate some previous stack items.
                     while (closeExpect == -1 && !parseOps.empty()) {
                         ParseOperator op = parseOps.peek();
-                        if (bop.precedence <= op.getPrecedence()) {
+                        if (bop.precedence < op.getPrecedence()) {
+                            //The new operator is to be evaluated first.
                             break;
                         }
                         lastValue = op.apply(lastValue);
@@ -445,7 +475,9 @@ public class TokenParser {
                     closeExpect = -1;
                     context = TokenParser.ParseContext.Value;
                 }
-                else throw new AssemblyException("Modifier or end not found", line);
+                else {
+                    throw new AssemblyException("Modifier or end not found", line);
+                }
             }
         }
     }

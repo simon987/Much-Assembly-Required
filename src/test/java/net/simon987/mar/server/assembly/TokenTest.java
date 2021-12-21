@@ -141,6 +141,7 @@ public class TokenTest {
         assertParse((char)-170, "(10 * -((9 + 8)))");
         assertParse(170, "(-10 * -((9 + 8)))");
         assertParse(2, "(-3 + 5)");
+        assertParse(3, "10 - 4 - 3");
 
         failParse("1)");
         failParse("(1");
@@ -148,5 +149,10 @@ public class TokenTest {
         failParse("1 + 1)");
         failParse("((1 + 1)");
         failParse("(1 + 1))");
+        failParse("+ 1");
+        failParse("(+ 1)");
+        failParse("(1 +)");
+        failParse("1 + ()");
+        failParse("() + 1");
     }
 }
