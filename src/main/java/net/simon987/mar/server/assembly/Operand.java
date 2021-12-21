@@ -126,7 +126,6 @@ public class Operand {
         }
     }
 
-
     /**
      * Attempt to parse a register
      *

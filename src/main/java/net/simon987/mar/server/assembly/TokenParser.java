@@ -203,8 +203,6 @@ public class TokenParser {
         }
     }
 
-
-
     public enum ParseContext {
         TackOn, Value
     }
