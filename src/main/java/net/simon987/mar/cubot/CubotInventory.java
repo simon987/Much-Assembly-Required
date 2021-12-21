@@ -55,14 +55,19 @@ public class CubotInventory extends HardwareModule {
     private void scanItem() {
         int x = getCpu().getRegisterSet().getRegister("X").getValue();
         Item item = inventory.get(position);
-        item.digitize(unit.getCpu().getMemory(), x);
+        if (item != null) {
+            item.clear(unit);
+            inventory.remove(position);
+            item.digitize(unit.getCpu().getMemory(), x);
+        }
     }
 
     public Item clearItem() {
         Item item = inventory.get(position);
-        item.clear(unit);
-        inventory.remove(position);
-
+        if (item != null) {
+            item.clear(unit);
+            inventory.remove(position);
+        }
         return item;
     }
 
