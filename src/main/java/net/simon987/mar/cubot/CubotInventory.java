@@ -56,8 +56,6 @@ public class CubotInventory extends HardwareModule {
         int x = getCpu().getRegisterSet().getRegister("X").getValue();
         Item item = inventory.get(position);
         if (item != null) {
-            item.clear(unit);
-            inventory.remove(position);
             item.digitize(unit.getCpu().getMemory(), x);
         }
     }
