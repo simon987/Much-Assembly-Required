@@ -423,26 +423,6 @@ function parse() {
     editor.getSession().setAnnotations(result.annotations);
 }
 
-function tabWorldClick() {
-    document.getElementById("tab-world").classList.add("active");
-    document.getElementById("tab-world-sm").classList.add("active");
-    document.getElementById("tab-editor").classList.remove("active");
-    document.getElementById("tab-editor-sm").classList.remove("active");
-
-    document.getElementById("world-tab").setAttribute("style", "");
-    document.getElementById("editor-tab").setAttribute("style", "display: none");
-}
-
-function tabEditorClick() {
-    document.getElementById("tab-world").classList.remove("active");
-    document.getElementById("tab-world-sm").classList.remove("active");
-    document.getElementById("tab-editor").classList.add("active");
-    document.getElementById("tab-editor-sm").classList.add("active");
-
-    document.getElementById("world-tab").setAttribute("style", "display: none");
-    document.getElementById("editor-tab").setAttribute("style", "");
-}
-
 //-----
 
 //Check if browser supports local storage if not than bad luck, use something else than IE7
