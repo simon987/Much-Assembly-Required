@@ -175,6 +175,55 @@ function parseDWInstruction(line, result, currentLine) {
     }
 }
 
+function isLabel(text, result) {
+    if (result === undefined) { return false; }
+    
+    for (var i = 0; i < result.labels.length; i++) {
+        if (text === result.labels[i]) {
+            return true;
+        }
+    }
+}
+
+function isImmediateOp(text, result) {
+    return (isLabel(text, result) 
+        || !isNaN(Number(text)) 
+        && Number(text) === Math.floor(Number(text)) 
+        && text.indexOf("o") === -1
+        && text.indexOf("0e") !== 0);
+}
+
+function isMemoryOp(text) {
+    return text.startsWith("[") && text.endsWith("]");
+}
+
+function isRegisterOp(text) {
+    return new RegExp('^(a|b|c|d|x|y|bp|sp)$').test(text.toLowerCase());
+}
+
+function getOffsetOperandType(text, result) {
+    
+    var offset;
+    if (isRegisterOp(text.substring(0, 2))) {
+        offset = text.substring(2);
+    } else if (isRegisterOp(text.substring(0, 1))) {
+        offset = text.substring(1);
+    } else {
+        return OPERAND_INVALID;
+    }
+
+    //Remove either ONE '+' or ONE '-' else the operand is invalid
+    //Credit: https://github.com/KevinRamharak
+    offset = offset.replace(/[+-]/, '');
+
+    offset = offset.trim();
+
+    if(offset === "" || isImmediateOp(offset, result)){
+        return OPERAND_MEM_REG;
+    }
+    
+    return OPERAND_INVALID;
+}
 
 function getOperandType(text, result) {
 
@@ -183,81 +232,25 @@ function getOperandType(text, result) {
         return OPERAND_INVALID;
     }
 
-    //Check IMM
-    if (!isNaN(Number(text)) && Number(text) === Math.floor(Number(text)) && text.indexOf("o") === -1
-        && text.indexOf("0e") !== 0) {
+    if (isImmediateOp(text, result)) {
         return OPERAND_IMM;
     }
 
-    //Check REG
-    if (new RegExp('^(a|b|c|d|x|y|bp|sp)$').test(text.toLowerCase())) {
+    if (isRegisterOp(text)) {
         return OPERAND_REG;
     }
 
-    //Check Label
-    for (i = 0; i < result.labels.length; i++) {
-        if (text === result.labels[i]) {
-            return OPERAND_IMM;
-        }
-    }
-
-    //Check MEM_*
-    if (text.startsWith("[") && text.endsWith("]")) {
+    if (isMemoryOp(text)) {
         text = text.replace("[", "").replace("]", "");
-
-        //Check MEM_IMM
-        if (!isNaN(Number(text)) && Number(text) === Math.floor(Number(text))) {
+        
+        if(isImmediateOp(text, result)){
             return OPERAND_MEM_IMM;
         }
-        //Check MEM_Label
-        for (var i = 0; i < result.labels.length; i++) {
-            if (text === result.labels[i]) {
-                return OPERAND_MEM_IMM;
-            }
-        }
 
-        //Check for MEM_REG (+ x)
-        var expr = "";
-        if (new RegExp('^(bp|sp)$').test(text.toLowerCase().substring(0, 2).toLowerCase())) {
-            //Starts with 2-char register
-            expr = text.substring(2);
-        } else if (new RegExp('^(a|b|c|d|x|y)$').test(text.toLowerCase().substring(0, 1).toLowerCase())) {
-            //Starts with 1-char register
-            expr = text.substring(1);
-        } else {
-            return OPERAND_INVALID;
-        }
-
-
-        if (expr.replace(/\s+/g, '') === "") {
-            //No displacement specified
-            return OPERAND_MEM_REG;
-        }
-
-        //Remove white space
-        expr = expr.replace(/\s+/g, '');
-        //expr should now look like this: '+1' '-3' '+0x02' '+myLabel'
-
-        //Check for label
-        for (i = 0; i < result.labels.length; i++) {
-            if (expr.substring(1) === result.labels[i]) {
-                return OPERAND_MEM_REG;
-            }
-        }
-
-        //Remove either ONE '+' or ONE '-' else the operand is invalid
-        //Credit: https://github.com/KevinRamharak
-        expr = expr.replace(/[+-]/, '');
-
-        //Check for number
-        if (!isNaN(Number(expr)) && Number(expr) === Math.floor(Number(expr))) {
-            return OPERAND_MEM_REG;
-        }
-
+        return getOffsetOperandType(text, result);
     }
 
     return OPERAND_INVALID;
-
 }
 
 function parseInstruction(line, result, currentLine) {
