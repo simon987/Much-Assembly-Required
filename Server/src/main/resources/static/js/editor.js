@@ -54,12 +54,7 @@ function checkForEQUInstruction(line, result, currentLine) {
             result.labels.push(tokens[0]);
             return true;
         } else {
-            result.annotations.push({
-                row: currentLine,
-                column: 0,
-                text: "Usage: constant_name EQU immediate_value",
-                type: "error"
-            });
+            produceError(result, currentLine, "Usage: constant_name EQU immediate_value");
             return true;
         }
     } else {
@@ -102,12 +97,7 @@ function checkForORGInstruction(line, result, currentLine) {
             if (!isNaN(num) && num === Math.floor(num)) {
                 return true;
             } else {
-                result.annotations.push({
-                    row: currentLine,
-                    column: 0,
-                    text: "Invalid operand: " + tokens[1],
-                    type: "error"
-                });
+                produceError(result, currentLine, "Invalid operand: " + tokens[1]);
                 return true
             }
         }
@@ -140,13 +130,7 @@ function parseDWInstruction(line, result, currentLine) {
                 var strText = values[i].substr(1, values[i].length - 2);
 
                 if (strText.match(MALFORMED_UTF16_RE) != null) {
-
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Malformed UTF-16 escape sequence",
-                        type: "error"
-                    });
+                    produceError(result, currentLine, "Malformed UTF-16 escape sequence");
                     return true;
                 }
 
@@ -157,15 +141,8 @@ function parseDWInstruction(line, result, currentLine) {
                 // console.log("is Imm " + values[i]);
 
             } else {
-
-                result.annotations.push({
-                    row: currentLine,
-                    column: 0,
-                    text: "Usage: DW IMM, IMM ...",
-                    type: "error"
-                });
+                produceError(result, currentLine, "Usage: DW IMM, IMM ...");
                 return true;
-
             }
         }
 
@@ -260,6 +237,38 @@ function getOperandType(text, result) {
 
 }
 
+function produceError(result, currentLine, explanation) {
+    result.annotations.push({
+        row: currentLine,
+        column: 0,
+        text: explanation,
+        type: "error"
+    });
+}
+
+function isValidMnemonic(mnemonic) {
+    return isDoubleOpMnemonic(mnemonic) || isSingleOpMnemonic(mnemonic) || isZeroOpMnemonic(mnemonic);
+}
+
+function isDoubleOpMnemonic(mnemonic) {
+    return new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr)\\b').test(mnemonic.toLowerCase());
+}
+
+function isSingleOpMnemonic(mnemonic) {
+    return new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|' +
+                      'jc|jnc|jo|jno|inc|dec|ja|jna)\\b').test(mnemonic.toLowerCase()) || 
+            isSetMnemonic(mnemonic);
+}
+
+function isZeroOpMnemonic(mnemonic) {
+    return new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase());
+}
+
+function isSetMnemonic(mnemonic) {
+    return new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|' +
+                      'setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase());
+}
+
 function parseInstruction(line, result, currentLine) {
     line = removeComment(line);
     line = removeLabel(line);
@@ -271,124 +280,70 @@ function parseInstruction(line, result, currentLine) {
         return; //Line is empty
     }
 
-
     if (!parseDWInstruction(line, result, currentLine)) {
 
-        if (new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|hwi|hwq|nop|neg|' +
-            'seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns|' +
-            'call|ret|jmp|jnz|jg|jl|jge|jle|int|jz|js|jns|brk|not|jc|jnc|ror|rol|sal|sar|jo|jno|inc|dec|rcl|xchg|rcr|pushf|popf|ja|jna)\\b').test(mnemonic.toLowerCase())) {
+        if (isValidMnemonic(mnemonic)) {
 
 
             if (line.indexOf(",") !== -1) {
                 //2 Operands
-                var strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
-                var strO2 = line.substring(line.indexOf(',') + 1).trim();
-
-
-                //Validate operand number
-                if (!new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr)\\b').test(mnemonic.toLowerCase())) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with 2 operands is illegal",
-                        type: "error"
-                    });
+                if (!isDoubleOpMnemonic(mnemonic)) {
+                    produceError(result, currentLine, mnemonic + " instruction with 2 operands is illegal");
                     return;
                 }
+                
+                var op1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
+                var op2 = line.substring(line.indexOf(',') + 1).trim();
 
                 //Validate operand type
-                var o1Type = getOperandType(strO1, result);
-                var o2Type = getOperandType(strO2, result);
-                if (o1Type === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO1,
-                        type: "error"
-                    });
+                var op1Type = getOperandType(op1, result);
+                var op2Type = getOperandType(op2, result);
+                if (op1Type === OPERAND_INVALID) {
+                    produceError(result, currentLine, "Invalid operand: " + op1);
                     return;
                 }
-                if (o2Type === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO2,
-                        type: "error"
-                    });
+                if (op2Type === OPERAND_INVALID) {
+                    produceError(result, currentLine, "Invalid operand: " + op2);
                     return;
                 }
 
                 //Check for illegal operand combos:
-                if (o1Type === OPERAND_IMM) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Destination operand can't be an immediate value",
-                        type: "error"
-                    });
+                if (op1Type === OPERAND_IMM) {
+                    produceError(result, currentLine, "Destination operand can't be an immediate value");
                 }
 
 
             } else if (tokens.length > 1) {
                 //1 Operand
-                strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
-
-                //Validate operand number
-                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with 1 operand is illegal",
-                        type: "error"
-                    });
+                if (!isSingleOpMnemonic(mnemonic)) {
+                    produceError(result, currentLine, mnemonic + " instruction with 1 operand is illegal");
                     return;
                 }
+                
+                var op1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
 
                 //Validate operand type
-                if (getOperandType(strO1, result) === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO1,
-                        type: "error"
-                    });
+                if (getOperandType(op1, result) === OPERAND_INVALID) {
+                    produceError(result, currentLine, "Invalid operand: " + op1);
                 }
 
-                if (new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
-                    if (getOperandType(strO1, result) === OPERAND_IMM) {
-                        result.annotations.push({
-                            row: currentLine,
-                            column: 0,
-                            text: "Invalid operand type: " + strO1,
-                            type: "error"
-                        });
+                if (isSetMnemonic(mnemonic)) {
+                    if (getOperandType(op1, result) === OPERAND_IMM) {
+                        produceError(result, currentLine, "Invalid operand type: " + op1);
                     }
                 }
 
             } else {
-                //No operand
-                if (!new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase())) {
-
-                    //Validate operand number
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with no operand is illegal",
-                        type: "error"
-                    });
+                //No Operand
+                if (!isZeroOpMnemonic(mnemonic)) {
+                    produceError(result, currentLine, mnemonic + " instruction with no operand is illegal");
                 }
             }
 
 
         } else {
-            result.annotations.push({
-                row: currentLine,
-                column: 0,
-                text: "Unknown mnemonic: " + mnemonic,
-                type: "error"
-            });
+            produceError(result, currentLine, "Unknown mnemonic: " + mnemonic);
         }
-
     }
 }
 
