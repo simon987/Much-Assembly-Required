@@ -23,13 +23,14 @@ sudo apt install git maven openjdk-8-jdk mongodb
 
 On Arch:
 ``` bash
-sudo pacman -S git maven mongodb jdk8-opendjk
+sudo pacman -S git maven jdk8-opendjk
+yay -S mongodb-bin
 
 # Don't forget to start mongodb
 sudo systemctl start mongodb.service
 ```
 
-*If needed, visit [troubleshooting mongodb](https://wiki.archlinux.org/index.php/MongoDB#Troubleshooting).*
+*If needed, visit [yay installation](https://github.com/Jguer/yay#installation) and [troubleshooting mongodb](https://wiki.archlinux.org/index.php/MongoDB#Troubleshooting).*
 
 **Deploying server**
 
