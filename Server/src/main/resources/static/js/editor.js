@@ -260,136 +260,96 @@ function getOperandType(text, result) {
 
 }
 
-function parseInstruction(line, result, currentLine) {
-    line = removeComment(line);
-    line = removeLabel(line);
+function resultObjectBuilder (passedText)
+{
+    let resultObject = {row: currentLine, column: 0, type: "error", text: passedText}
+    return resultObject
+}
 
-    var tokens = getTokens(line);
-    var mnemonic = tokens[0];
+function instructionAnalyzer (passedCurrentLine, passedResult, passedMnemonic)
+{
+    //const allInstructions = "mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|hwi|hwq|nop|neg|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns|call|ret|jmp|jnz|jg|jl|jge|jle|int|jz|js|jns|brk|not|jc|jnc|ror|rol|sal|sar|jo|jno|inc|dec|rcl|xchg|rcr|pushf|popf|ja|jna".split("|");
+    
+    const twoArgInstructions = "mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr".split("|");
+    const oneArgInstructions = "push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns".split("|");
+    const zeroArgInstructions = "brk|into|iret|nop|popf|pushf|ret"
 
-    if (mnemonic === undefined || mnemonic === "") {
-        return; //Line is empty
-    }
+    const nonImmediateSet = "seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns".split("|")
 
+    //there are some duplicates here but it doesn't matter since we are just trying to find membership
+    const concatenatedInstructions = twoArgInstructions + oneArgInstructions + zeroArgInstructions
 
-    if (!parseDWInstruction(line, result, currentLine)) {
+    const instructionsByArgCount = [zeroArgInstructions, oneArgInstructions, twoArgInstructions]
 
-        if (new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|mul|push|pop|div|xor|hwi|hwq|nop|neg|' +
-            'seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns|' +
-            'call|ret|jmp|jnz|jg|jl|jge|jle|int|jz|js|jns|brk|not|jc|jnc|ror|rol|sal|sar|jo|jno|inc|dec|rcl|xchg|rcr|pushf|popf|ja|jna)\\b').test(mnemonic.toLowerCase())) {
+    let tokens = getTokens(passedCurrentLine)   // get the actual tokens
+    tokens.shift() //removing the first element from array, since that's the mnemonic and we already have that
+    const tokenCount = tokens.length()
+    
+    //select which set of instructions are admissable for this number of arguments
+    correspondingInstructionSet = instructionsByArgCount[tokenCount]
+    
+    if (correspondingInstructionSet.includes(passedMnemonic)) {
+        //this means that for the number of arguments is valid for this opcode, and that the code itself is a recognized code
 
-
-            if (line.indexOf(",") !== -1) {
-                //2 Operands
-                var strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length, line.indexOf(','));
-                var strO2 = line.substring(line.indexOf(',') + 1).trim();
-
-
-                //Validate operand number
-                if (!new RegExp('\\b(?:mov|add|sub|and|or|test|cmp|shl|shr|xor|rol|ror|sal|sar|rcl|xchg|rcr)\\b').test(mnemonic.toLowerCase())) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with 2 operands is illegal",
-                        type: "error"
-                    });
-                    return;
-                }
-
-                //Validate operand type
-                var o1Type = getOperandType(strO1, result);
-                var o2Type = getOperandType(strO2, result);
-                if (o1Type === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO1,
-                        type: "error"
-                    });
-                    return;
-                }
-                if (o2Type === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO2,
-                        type: "error"
-                    });
-                    return;
-                }
-
-                //Check for illegal operand combos:
-                if (o1Type === OPERAND_IMM) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Destination operand can't be an immediate value",
-                        type: "error"
-                    });
-                }
-
-
-            } else if (tokens.length > 1) {
-                //1 Operand
-                strO1 = line.substring(line.indexOf(mnemonic) + mnemonic.length).trim();
-
-                //Validate operand number
-                if (!new RegExp('\\b(?:push|mul|pop|div|neg|call|jnz|jg|jl|jge|jle|hwi|hwq|jz|js|jns|ret|jmp|not|jc|jnc|jo|jno|inc|dec|ja|jna|seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with 1 operand is illegal",
-                        type: "error"
-                    });
-                    return;
-                }
-
-                //Validate operand type
-                if (getOperandType(strO1, result) === OPERAND_INVALID) {
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: "Invalid operand: " + strO1,
-                        type: "error"
-                    });
-                }
-
-                if (new RegExp('\\b(?:seta|setnbe|setae|setnb|setnc|setbe|setna|setb|setc|setnae|sete|setz|setne|setnz|setg|setnle|setge|setnl|setle|setng|setl|setnge|seto|setno|sets|setns)\\b').test(mnemonic.toLowerCase())) {
-                    if (getOperandType(strO1, result) === OPERAND_IMM) {
-                        result.annotations.push({
-                            row: currentLine,
-                            column: 0,
-                            text: "Invalid operand type: " + strO1,
-                            type: "error"
-                        });
-                    }
-                }
-
-            } else {
-                //No operand
-                if (!new RegExp('\\b(?:ret|brk|nop|pushf|popf)\\b').test(mnemonic.toLowerCase())) {
-
-                    //Validate operand number
-                    result.annotations.push({
-                        row: currentLine,
-                        column: 0,
-                        text: mnemonic + " instruction with no operand is illegal",
-                        type: "error"
-                    });
-                }
-            }
-
-
-        } else {
-            result.annotations.push({
-                row: currentLine,
-                column: 0,
-                text: "Unknown mnemonic: " + mnemonic,
-                type: "error"
-            });
+        //handle cases for forbidden use of immediate values in one and two token cases
+        if (tokenCount === 2 && getOperandType(tokens[0] === OPERAND_IMM)) {
+            //fail because destination operand can't be immediate value
+            passedResult.annotations.push(resultObjectBuilder("Destination operand for: " + passedMnemonic + " can't be an immediate value"))
+            return
+        }
+        else if (tokenCount === 1 && nonImmediateSet.includes(passedMnemonic) && getOperandType(tokens[0] === OPERAND_IMM)) {
+            passedResult.annotations.push(resultObjectBuilder("Invalid operand type for: " + passedMnemonic + " operand must not be immediate value"))
+            return
         }
 
+        for (string in tokens) {
+            if (getOperandType(tokens[string]) === OPERAND_INVALID){
+                //fail for invalid operand type
+                passedResult.annotations.push(resultObjectBuilder("Invalid operand type: " + passedMnemonic))
+                return
+            }
+        }
+
+        //if we make it here then the operation type is a valid operation, the opcode is recognized, and the number of arguments is correct so why did we fail?
     }
+    else if (concatenatedInstructions.includes(passedMnemonic)) {
+            //wrong number of arguments for instruction, but it is SOMEWHERE in this list so it's got to be one of these 3 values
+            
+            let expectedNumber = 0
+            if ( twoArgInstructions.includes(passedMnemonic) ) { expectedNumber=2}
+            else if ( oneArgInstructions.includes(passedMnemonic) ) { expectedNumber=1}
+            else { expectedNumber=0 }
+
+            passedResult.annotations.push(resultObjectBuilder("Incorrect number of arguments for instruction: " + passedMnemonic + ", expected: " + expectedNumber + " Found: " + tokenCount))
+            return
+    }
+    else {
+        //unknown / invalid instruction failure
+        passedResult.annotations.push(resultObjectBuilder("Unknown mneomonic: " + passedMnemonic))
+        return
+    }
+}
+
+function parseInstruction(line, result, currentLine) {
+    
+    line = removeComment(line);
+    line = removeLabel(line);
+    var mnemonic = getTokens(line)[0];       //this is the instruction IE opcode, like mov, add, pop, etc...
+
+    //handle abort cases
+    if (mnemonic === undefined || mnemonic === "") {
+        return; //Line is empty, no instructions to process
+    }
+
+    //if the command works then we're done here
+    if (parseDWInstruction(line, result, currentLine)) {
+        //succesfull parsing, no errors to analyze
+        return
+    }
+
+
+    instructionAnalyzer(line, result, mnemonic)
+    return
 }
 
 function parse() {
