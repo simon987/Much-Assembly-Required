@@ -1,4 +1,4 @@
-### [Official website](https://muchassemblyrequired.com)
+# Much-Assembly-Required
 
 [![CodeFactor](https://www.codefactor.io/repository/github/simon987/much-assembly-required/badge)](https://www.codefactor.io/repository/github/simon987/much-assembly-required)
 [![Build Status](https://ci.simon987.net/buildStatus/icon?job=Much-Assembly-Required)](https://ci.simon987.net/job/Much-Assembly-Required/)
