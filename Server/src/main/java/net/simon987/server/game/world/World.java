@@ -61,7 +61,8 @@ public class World implements MongoSerializable {
     }
 
     /**
-     * Check if a tile is blocked, either by a game object or an impassable tile type
+     * Check if a tile is blocked, either by a game object or an impassable tile
+     * type
      */
     public boolean isTileBlocked(int x, int y) {
         return getGameObjectsBlockingAt(x, y).size() > 0 || tileMap.getTileAt(x, y).isBlocked();
@@ -70,8 +71,8 @@ public class World implements MongoSerializable {
     /**
      * Computes the world's unique id from its coordinates.
      *
-     * @param x     the x coordinate of the world
-     * @param y     the y coordinate of the world
+     * @param x the x coordinate of the world
+     * @param y the y coordinate of the world
      *
      * @return long
      */
@@ -84,7 +85,7 @@ public class World implements MongoSerializable {
      *
      * @return long
      */
-    public String getId(){
+    public String getId() {
         return World.idFromCoordinates(x, y, dimension);
     }
 
@@ -136,22 +137,22 @@ public class World implements MongoSerializable {
     }
 
     /**
-     * Update this World and its GameObjects
-     * <br>
+     * Update this World and its GameObjects <br>
      * The update is handled by plugins first
      */
     public void update() {
 
-        //Dispatch update event
+        // Dispatch update event
         GameEvent event = new WorldUpdateEvent(this);
-        GameServer.INSTANCE.getEventDispatcher().dispatch(event); //Ignore cancellation
+        GameServer.INSTANCE.getEventDispatcher().dispatch(event); // Ignore cancellation
 
         for (GameObject object : gameObjects.values()) {
-            //Clean up dead objects
+            // Clean up dead objects
             if (object.isDead()) {
                 if (!object.onDeadCallback()) {
                     removeObject(object);
-                    //LogManager.LOGGER.fine("Removed object " + object + " id: " + object.getObjectId());
+                    // LogManager.LOGGER.fine("Removed object " + object + " id: " +
+                    // object.getObjectId());
                 } else if (object instanceof Updatable) {
                     ((Updatable) object).update();
                 }
@@ -182,7 +183,7 @@ public class World implements MongoSerializable {
         dbObject.put("size", worldSize);
 
         dbObject.put("updatable", updatable);
-        dbObject.put("shouldUpdate",shouldUpdate());
+        dbObject.put("shouldUpdate", shouldUpdate());
 
         return dbObject;
     }
@@ -231,17 +232,17 @@ public class World implements MongoSerializable {
     }
 
     /**
-     * Get a binary representation of the map as an array of 16-bit bit fields, one word for each
-     * tile.
+     * Get a binary representation of the map as an array of 16-bit bit fields, one
+     * word for each tile.
      * <p>
-     * Each tile is represented as such: <code>OOOOOOOOTTTTTTTB</code> where O is the object,
-     * T the tile and B if the tile is blocked or not
+     * Each tile is represented as such: <code>OOOOOOOOTTTTTTTB</code> where O is
+     * the object, T the tile and B if the tile is blocked or not
      */
     public char[][] getMapInfo() {
 
         char[][] mapInfo = new char[worldSize][worldSize];
 
-        //Tile
+        // Tile
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 Tile tile = tileMap.getTileAt(x, y);
@@ -252,7 +253,8 @@ public class World implements MongoSerializable {
         }
 
         for (GameObject obj : gameObjects.values()) {
-            //Overwrite, only the last object on a tile is considered but the blocked bit is kept
+            // Overwrite, only the last object on a tile is considered but the blocked bit
+            // is kept
             mapInfo[obj.getX()][obj.getY()] &= 0x00FE;
             mapInfo[obj.getX()][obj.getY()] |= obj.getMapInfo();
         }
@@ -261,12 +263,11 @@ public class World implements MongoSerializable {
     }
 
     /**
-     * Get a random tile that is empty and passable
-     * The function ensures that a object spawned there will not be trapped
-     * and will be able to leave the World
+     * Get a random tile that is empty and passable The function ensures that a
+     * object spawned there will not be trapped and will be able to leave the World
      * <br>
-     * Note: This function is quite expensive and shouldn't be used
-     * by some HardwareModule in its current state
+     * Note: This function is quite expensive and shouldn't be used by some
+     * HardwareModule in its current state
      *
      * @return random non-blocked tile
      */
@@ -277,7 +278,7 @@ public class World implements MongoSerializable {
         while (true) {
             counter++;
 
-            //Prevent infinite loop
+            // Prevent infinite loop
             if (counter >= 1000) {
                 return null;
             }
@@ -318,10 +319,9 @@ public class World implements MongoSerializable {
     }
 
     /**
-     * Get the list of game objects that are exactly at a given location
-     * <br>
-     * Note: Objects like the Factory that are more than 1x1 tiles wide will only be returned
-     * when their exact coordinates are specified
+     * Get the list of game objects that are exactly at a given location <br>
+     * Note: Objects like the Factory that are more than 1x1 tiles wide will only be
+     * returned when their exact coordinates are specified
      *
      * @param x X coordinate on the World
      * @param y Y coordinate on the World
@@ -355,29 +355,28 @@ public class World implements MongoSerializable {
         return worldSize;
     }
 
-
     private GameUniverse universe = null;
 
-    public void setUniverse(GameUniverse universe){
+    public void setUniverse(GameUniverse universe) {
         this.universe = universe;
     }
 
     private ArrayList<World> getNeighbouringLoadedWorlds() {
         ArrayList<World> neighbouringWorlds = new ArrayList<>();
 
-        if (universe == null){
+        if (universe == null) {
             return neighbouringWorlds;
         }
 
-        for (int dx=-1; dx<=+1; dx+=2){
+        for (int dx = -1; dx <= +1; dx += 2) {
             World nw = universe.getLoadedWorld(x + dx, y, dimension);
-            if (nw != null){
+            if (nw != null) {
                 neighbouringWorlds.add(nw);
             }
         }
-        for (int dy=-1; dy<=+1; dy+=2){
+        for (int dy = -1; dy <= +1; dy += 2) {
             World nw = universe.getLoadedWorld(x, y + dy, dimension);
-            if (nw != null){
+            if (nw != null) {
                 neighbouringWorlds.add(nw);
             }
         }
@@ -385,14 +384,14 @@ public class World implements MongoSerializable {
         return neighbouringWorlds;
     }
 
-    public boolean canUnload(){
-        return updatable==0;
+    public boolean canUnload() {
+        return updatable == 0;
     }
 
-    public boolean shouldUnload(){
+    public boolean shouldUnload() {
         boolean res = canUnload();
 
-        for (World nw : getNeighbouringLoadedWorlds() ){
+        for (World nw : getNeighbouringLoadedWorlds()) {
             res &= nw.canUnload();
         }
 
@@ -403,6 +402,24 @@ public class World implements MongoSerializable {
         return gameObjects.values();
     }
 
+    /**
+     * Find the number of tiles of a given type on the world.
+     * 
+     * @param tileId id of tile
+     * @return number of occurrences
+     */
+    public int getCount(int tileId) {
+        int tileCount = 0;
+        for (int y = 0; y < getWorldSize(); y++) {
+            for (int x = 0; x < getWorldSize(); x++) {
+                if (tileMap.getTileIdAt(x, y) == tileId) {
+                    tileCount++;
+                }
+            }
+        }
+
+        return tileCount;
+    }
 
     /**
      * Get a random tile with N adjacent non-blocked tile
@@ -412,12 +429,12 @@ public class World implements MongoSerializable {
      */
     public Point getRandomTileWithAdjacent(int n, int tile) {
         int counter = 0;
-        int[] xPositions = {1, 0, -1, 0, 1, -1, 1, -1};
-        int[] yPositions = {0, 1, 0, -1, 1, 1, -1, -1};
+        int[] xPositions = { 1, 0, -1, 0, 1, -1, 1, -1 };
+        int[] yPositions = { 0, 1, 0, -1, 1, 1, -1, -1 };
         while (true) {
             counter++;
 
-            //Prevent infinite loop
+            // Prevent infinite loop
             if (counter >= 2500) {
                 return null;
             }
@@ -428,7 +445,8 @@ public class World implements MongoSerializable {
                 int adjacentTiles = 0;
 
                 for (int idx = 0; idx < xPositions.length; idx++) {
-                    if (tileMap.isInBounds(rTile.x + xPositions[idx], rTile.y + yPositions[idx]) && !isTileBlocked(rTile.x + xPositions[idx], rTile.y + yPositions[idx])) {
+                    if (tileMap.isInBounds(rTile.x + xPositions[idx], rTile.y + yPositions[idx])
+                            && !isTileBlocked(rTile.x + xPositions[idx], rTile.y + yPositions[idx])) {
                         adjacentTiles++;
                     }
                 }

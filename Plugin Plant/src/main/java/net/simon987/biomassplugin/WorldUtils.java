@@ -20,33 +20,25 @@ public class WorldUtils {
         int blobCount = random.nextInt(maxCount - minCount) + minCount;
         ArrayList<BiomassBlob> biomassBlobs = new ArrayList<>(blobCount);
 
-        //Count number of plain tiles. If there is less plain tiles than desired amount of blobs,
-        //set the desired amount of blobs to the plain tile count
+        // Count number of plain tiles. If there is less plain tiles than desired amount
+        // of blobs,
+        // set the desired amount of blobs to the plain tile count
         TileMap m = world.getTileMap();
-        int plainCount = 0;
-        for (int y = 0; y < world.getWorldSize(); y++) {
-            for (int x = 0; x < world.getWorldSize(); x++) {
-
-                if (m.getTileIdAt(x, y) == TilePlain.ID) {
-                    plainCount++;
-                }
-            }
-        }
+        int plainCount = world.getCount(TilePlain.ID);
 
         if (blobCount > plainCount) {
             blobCount = plainCount;
         }
 
-        outerLoop:
-        for (int i = 0; i < blobCount; i++) {
+        outerLoop: for (int i = 0; i < blobCount; i++) {
 
             Point p = m.getRandomTile(TilePlain.ID);
             if (p != null) {
 
-                //Don't block worlds
+                // Don't block worlds
                 int counter = 0;
-                while (p.x == 0 || p.y == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1 ||
-                        world.getGameObjectsAt(p.x, p.y).size() != 0) {
+                while (p.x == 0 || p.y == 0 || p.x == world.getWorldSize() - 1 || p.y == world.getWorldSize() - 1
+                        || world.getGameObjectsAt(p.x, p.y).size() != 0) {
                     p = m.getRandomTile(TilePlain.ID);
                     counter++;
 
@@ -57,7 +49,7 @@ public class WorldUtils {
 
                 for (BiomassBlob biomassBlob : biomassBlobs) {
                     if (biomassBlob.getX() == p.x && biomassBlob.getY() == p.y) {
-                        //There is already a blob here
+                        // There is already a blob here
                         continue outerLoop;
                     }
                 }
